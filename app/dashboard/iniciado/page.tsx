@@ -3,35 +3,32 @@
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { 
-  FaGraduationCap, 
-  FaChartLine, 
-  FaPlay, 
-  FaLock, 
-  FaCheckCircle, 
-  FaExclamationTriangle, 
-  FaArrowRight, 
-  FaBookOpen, 
-  FaClipboardList, 
-  FaShieldAlt, 
-  FaBrain, 
-  FaBullseye, 
-  FaCog, 
-  FaCalendar, 
-  FaMoneyBillWave, 
-  FaSignOutAlt, 
-  FaTools, 
-  FaClock, 
-  FaUser, 
-  FaStar, 
-  FaTrophy,
-  FaClipboardCheck,
-  FaChartBar,
-  FaNetworkWired,
-  FaShieldVirus,
-  FaCrown,
-  FaMedal,
-  FaFlag
-} from 'react-icons/fa';
+  BookOpen, 
+  TrendingUp, 
+  CheckCircle, 
+  Cog, 
+  Target, 
+  Crown, 
+  Network, 
+  DollarSign, 
+  Wrench, 
+  Play, 
+  Brain, 
+  Shield, 
+  BarChart3, 
+  Lock, 
+  Flag, 
+  Medal, 
+  User, 
+  Clock, 
+  Trophy, 
+  ListChecks, 
+  AlertTriangle, 
+  ArrowRight, 
+  Calendar, 
+  LogOut, 
+  Star
+} from 'lucide-react';
 import { useControlPoint } from '@/context/ControlPointContext';
 import ControlPointBadge from '@/components/ui/ControlPointBadge';
 
@@ -39,7 +36,7 @@ interface Module {
   id: string;
   title: string;
   path: string;
-  icon: React.ReactNode;
+  icon: React.JSX.Element;
   description: string;
   isCompleted?: boolean;
   isLocked?: boolean;
@@ -52,7 +49,7 @@ const theoreticalModulesNivel1: Module[] = [
     id: '1',
     title: 'Introducción a la Lógica Económica',
     path: '/dashboard/iniciado/Teorico/1-introduccion-logica-economica',
-    icon: <FaBookOpen />,
+    icon: <BookOpen />,
     description: 'Fundamentos de la economía y su aplicación en los mercados',
     isLocked: false,
     level: 'nivel1'
@@ -61,7 +58,7 @@ const theoreticalModulesNivel1: Module[] = [
     id: '2',
     title: 'Fuerzas del Mercado',
     path: '/dashboard/iniciado/Teorico/2-fuerzas-del-mercado',
-    icon: <FaChartLine />,
+    icon: <TrendingUp />,
     description: 'Oferta, demanda y las fuerzas que mueven los mercados',
     isLocked: false,
     level: 'nivel1'
@@ -70,7 +67,7 @@ const theoreticalModulesNivel1: Module[] = [
     id: 'PC1',
     title: 'Evaluación: Introducción a la Lógica Económica y Fuerzas del Mercado',
     path: '/dashboard/iniciado/puntos-de-control/teorico/pc1',
-    icon: <FaClipboardCheck />,
+    icon: <CheckCircle />,
     description: 'Punto de control: Evalúa los módulos "Introducción a la Lógica Económica" y "Fuerzas del Mercado"',
     isLocked: false,
     level: 'nivel1'
@@ -79,7 +76,7 @@ const theoreticalModulesNivel1: Module[] = [
     id: '3',
     title: 'Acción del Gobierno en los Mercados',
     path: '/dashboard/iniciado/Teorico/3-accion-gobierno-mercados',
-    icon: <FaCog />,
+    icon: <Cog />,
     description: 'Cómo las políticas gubernamentales afectan los mercados',
     isLocked: false,
     level: 'nivel1'
@@ -88,7 +85,7 @@ const theoreticalModulesNivel1: Module[] = [
     id: '4',
     title: 'Competencia Perfecta',
     path: '/dashboard/iniciado/Teorico/4-competencia-perfecta',
-    icon: <FaBullseye />,
+    icon: <Target />,
     description: 'Análisis de mercados en competencia perfecta',
     isLocked: false,
     level: 'nivel1'
@@ -97,7 +94,7 @@ const theoreticalModulesNivel1: Module[] = [
     id: 'PC2',
     title: 'Evaluación: Acción del Gobierno en los Mercados y Competencia Perfecta',
     path: '/dashboard/iniciado/puntos-de-control/teorico/pc2',
-    icon: <FaClipboardCheck />,
+    icon: <CheckCircle />,
     description: 'Punto de control: Evalúa los módulos "Acción del Gobierno en los Mercados" y "Competencia Perfecta"',
     isLocked: false,
     level: 'nivel1'
@@ -110,7 +107,7 @@ const theoreticalModulesNivel2: Module[] = [
     id: '5',
     title: 'Monopolio y Oligopolio',
     path: '/dashboard/iniciado/Teorico/5-monopolio-oligopolio',
-    icon: <FaCrown />,
+    icon: <Crown />,
     description: 'Análisis de mercados con poder de mercado concentrado',
     isLocked: true,
     level: 'nivel2'
@@ -119,7 +116,7 @@ const theoreticalModulesNivel2: Module[] = [
     id: '6',
     title: 'Tecnología Blockchain',
     path: '/dashboard/iniciado/Teorico/6-tecnologia-blockchain',
-    icon: <FaNetworkWired />,
+    icon: <Network />,
     description: 'Fundamentos de la tecnología blockchain y criptomonedas',
     isLocked: true,
     level: 'nivel2'
@@ -128,7 +125,7 @@ const theoreticalModulesNivel2: Module[] = [
     id: 'PC3',
     title: 'Evaluación: Monopolio y Oligopolio y Tecnología Blockchain',
     path: '/dashboard/iniciado/puntos-de-control/teorico/pc3',
-    icon: <FaClipboardCheck />,
+    icon: <CheckCircle />,
     description: 'Punto de control: Evalúa los módulos "Monopolio y Oligopolio" y "Tecnología Blockchain"',
     isLocked: true,
     level: 'nivel2'
@@ -137,7 +134,7 @@ const theoreticalModulesNivel2: Module[] = [
     id: '7',
     title: 'Criptomonedas',
     path: '/dashboard/iniciado/Teorico/7-criptomonedas',
-    icon: <FaMoneyBillWave />,
+    icon: <DollarSign />,
     description: 'Análisis fundamental de criptomonedas y tokens',
     isLocked: true,
     level: 'nivel2'
@@ -146,7 +143,7 @@ const theoreticalModulesNivel2: Module[] = [
     id: '8',
     title: 'Operaciones con Criptomonedas',
     path: '/dashboard/iniciado/Teorico/8-operaciones-criptomonedas',
-    icon: <FaTools />,
+    icon: <Wrench />,
     description: 'Técnicas avanzadas de trading en criptomonedas',
     isLocked: true,
     level: 'nivel2'
@@ -155,7 +152,7 @@ const theoreticalModulesNivel2: Module[] = [
     id: 'PC4',
     title: 'Evaluación: Criptomonedas y Operaciones con Criptomonedas',
     path: '/dashboard/iniciado/puntos-de-control/teorico/pc4',
-    icon: <FaClipboardCheck />,
+    icon: <CheckCircle />,
     description: 'Punto de control: Evalúa los módulos "Criptomonedas" y "Operaciones con Criptomonedas"',
     isLocked: true,
     level: 'nivel2'
@@ -168,7 +165,7 @@ const practicalModulesBase: Module[] = [
     id: '1',
     title: 'Introducción al Trading',
     path: '/dashboard/iniciado/Practico/1-introduccion-trading',
-    icon: <FaPlay />,
+    icon: <Play />,
     description: 'Fundamentos del trading y mentalidad correcta',
     isLocked: false,
     level: 'nivel1'
@@ -177,7 +174,7 @@ const practicalModulesBase: Module[] = [
     id: '2',
     title: 'Introducción al Análisis Técnico',
     path: '/dashboard/iniciado/Practico/2-introduccion-analisis-tecnico',
-    icon: <FaChartLine />,
+    icon: <TrendingUp />,
     description: 'Herramientas básicas del análisis técnico',
     isLocked: false,
     level: 'nivel1'
@@ -186,7 +183,7 @@ const practicalModulesBase: Module[] = [
     id: '3',
     title: 'Patrones de Vela',
     path: '/dashboard/iniciado/Practico/3-patrones-vela',
-    icon: <FaBookOpen />,
+    icon: <BookOpen />,
     description: 'Patrones de velas japonesas y su interpretación',
     isLocked: false,
     level: 'nivel1'
@@ -195,7 +192,7 @@ const practicalModulesBase: Module[] = [
     id: '4',
     title: 'Fibonacci y Medias Móviles',
     path: '/dashboard/iniciado/Practico/4-fibonacci-medias',
-    icon: <FaBullseye />,
+    icon: <Target />,
     description: 'Niveles de Fibonacci y medias móviles',
     isLocked: false,
     level: 'nivel1'
@@ -204,7 +201,7 @@ const practicalModulesBase: Module[] = [
     id: '5',
     title: 'Estocástico y Bandas de Bollinger',
     path: '/dashboard/iniciado/Practico/5-estocastico-bollinger',
-    icon: <FaCog />,
+    icon: <Cog />,
     description: 'Indicadores de sobrecompra y sobreventa',
     isLocked: false,
     level: 'nivel1'
@@ -213,7 +210,7 @@ const practicalModulesBase: Module[] = [
     id: '6',
     title: 'Indicadores RSI y MACD',
     path: '/dashboard/iniciado/Practico/6-indicadores-rsi-macd',
-    icon: <FaTools />,
+    icon: <Wrench />,
     description: 'Osciladores y confirmación de señales',
     isLocked: true,
     level: 'nivel2'
@@ -222,7 +219,7 @@ const practicalModulesBase: Module[] = [
     id: '7',
     title: 'Análisis Fundamental',
     path: '/dashboard/iniciado/Practico/7-analisis-fundamental',
-    icon: <FaBrain />,
+    icon: <Brain />,
     description: 'Análisis fundamental y factores que mueven el mercado',
     isLocked: true,
     level: 'nivel2'
@@ -231,7 +228,7 @@ const practicalModulesBase: Module[] = [
     id: '8',
     title: 'Correlaciones entre Mercados',
     path: '/dashboard/iniciado/Practico/8-correlaciones-mercados',
-    icon: <FaNetworkWired />,
+    icon: <Network />,
     description: 'Relaciones entre diferentes mercados financieros',
     isLocked: true,
     level: 'nivel2'
@@ -240,7 +237,7 @@ const practicalModulesBase: Module[] = [
     id: '9',
     title: 'Gestión de Riesgo',
     path: '/dashboard/iniciado/Practico/9-gestion-riesgo',
-    icon: <FaShieldVirus />,
+    icon: <Shield />,
     description: 'Estrategias de gestión de riesgo y protección de capital',
     isLocked: true,
     level: 'nivel2'
@@ -249,7 +246,7 @@ const practicalModulesBase: Module[] = [
     id: '10',
     title: 'Plan de Trading',
     path: '/dashboard/iniciado/Practico/10-plan-trading',
-    icon: <FaChartBar />,
+    icon: <BarChart3 />,
     description: 'Desarrollo de un plan de trading personalizado',
     isLocked: true,
     level: 'nivel2'
@@ -273,7 +270,7 @@ function buildPracticalModulesWithCheckpoints() {
         id: `PC${pcCount}`,
         title: `Evaluación: ${mod1} y ${mod2}`,
         path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
-        icon: <FaClipboardCheck />,
+        icon: <CheckCircle />,
         description: `Punto de control: Evalúa los módulos "${mod1}" y "${mod2}"`,
         isLocked: true,
         level: 'nivel1'
@@ -294,7 +291,7 @@ function buildPracticalModulesWithCheckpoints() {
         id: `PC${pcCount}`,
         title: `Evaluación: ${mod1} y ${mod2}`,
         path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
-        icon: <FaClipboardCheck />,
+        icon: <CheckCircle />,
         description: `Punto de control: Evalúa los módulos "${mod1}" y "${mod2}"`,
         isLocked: true,
         level: 'nivel2'
@@ -521,7 +518,7 @@ export default function IniciadoDashboard() {
               />
             ) : (
               <div className="w-20 h-20 rounded-full border-4 border-[#ec4d58] bg-[#1a1a1a] flex items-center justify-center profile-image">
-                <FaUser className="text-[#ec4d58] text-3xl" />
+                <User className="text-[#ec4d58] text-3xl" />
               </div>
             )}
           </div>
@@ -555,7 +552,7 @@ export default function IniciadoDashboard() {
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              <FaBookOpen className="inline mr-2" />
+              <BookOpen className="inline mr-2" />
               Teórico
             </button>
             <button
@@ -566,7 +563,7 @@ export default function IniciadoDashboard() {
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              <FaChartLine className="inline mr-2" />
+              <TrendingUp className="inline mr-2" />
               Práctico
             </button>
           </div>
@@ -597,7 +594,7 @@ export default function IniciadoDashboard() {
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-2">
-                    <FaMedal className="text-yellow-500 mr-2" />
+                    <Medal className="text-yellow-500 mr-2" />
                     <span className="text-sm font-semibold">Nivel 1</span>
                   </div>
                   <div className="text-xs text-gray-400">
@@ -609,7 +606,7 @@ export default function IniciadoDashboard() {
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-2">
-                    <FaCrown className={`mr-2 ${progress.canAccessNivel2 ? 'text-yellow-500' : 'text-gray-500'}`} />
+                    <Crown className={`mr-2 ${progress.canAccessNivel2 ? 'text-yellow-500' : 'text-gray-500'}`} />
                     <span className={`text-sm font-semibold ${progress.canAccessNivel2 ? 'text-white' : 'text-gray-500'}`}>
                       Nivel 2
                     </span>
@@ -651,7 +648,7 @@ export default function IniciadoDashboard() {
           <div className="w-full max-w-4xl">
             <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-6">
               <h3 className="text-lg font-bold text-[#ec4d58] mb-4 flex items-center">
-                <FaBullseye className="mr-2" />
+                <Target className="mr-2" />
                 Objetivos a Lograr
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -661,9 +658,9 @@ export default function IniciadoDashboard() {
                       objective.completed ? 'bg-green-500' : 'bg-gray-600'
                     }`}>
                       {objective.completed ? (
-                        <FaCheckCircle className="text-white text-sm" />
+                        <CheckCircle className="text-white text-sm" />
                       ) : (
-                        <FaFlag className="text-gray-400 text-sm" />
+                        <Flag className="text-gray-400 text-sm" />
                       )}
                     </div>
                     <span className={`text-sm ${objective.completed ? 'text-green-400 line-through' : 'text-gray-300'}`}>
@@ -762,7 +759,7 @@ export default function IniciadoDashboard() {
                           isLocked || isNivel2Locked ? 'bg-[#2a2a2a] text-gray-400' : 
                           'bg-[#ec4d58] text-white'
                         }`}>
-                          {isLocked || isNivel2Locked ? <FaLock /> : isCompleted ? <FaCheckCircle /> : module.icon}
+                          {isLocked || isNivel2Locked ? <Lock /> : isCompleted ? <CheckCircle /> : module.icon}
                         </div>
                         
                         <div className="absolute top-4 right-4">
@@ -781,7 +778,7 @@ export default function IniciadoDashboard() {
                         {isNivel2Locked && (
                           <div className="mt-auto mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
                             <div className="flex items-center justify-center gap-2 text-yellow-400">
-                              <FaLock className="text-sm" />
+                              <Lock className="text-sm" />
                               <span className="text-xs">Completa 50% del Nivel 1</span>
                             </div>
                           </div>
@@ -790,7 +787,7 @@ export default function IniciadoDashboard() {
                         {isControlPoint && !canTake && timeUntilNext > 0 && !isNivel2Locked && (
                           <div className="mt-auto cooldown-timer rounded-lg p-2 mb-4">
                             <div className="flex items-center justify-center gap-2 text-red-400">
-                              <FaClock className="text-sm" />
+                              <Clock className="text-sm" />
                               <span className="text-xs font-mono">{formatTime(timeUntilNext)}</span>
                             </div>
                             <p className="text-xs text-red-300 text-center mt-1">Próximo intento disponible</p>
@@ -806,7 +803,7 @@ export default function IniciadoDashboard() {
                               }`}
                               onClick={e => isNivel2Locked && e.preventDefault()}
                             >
-                              <FaClipboardCheck className="mr-2" />
+                              <CheckCircle className="mr-2" />
                               {isNivel2Locked ? 'Bloqueado' : canTake ? 'Tomar Evaluación' : 'Bloqueado'}
                             </Link>
                           ) : (
@@ -822,17 +819,17 @@ export default function IniciadoDashboard() {
                               >
                                 {isLocked || isNivel2Locked ? (
                                   <>
-                                    <FaLock className="mr-2" />
+                                    <Lock className="mr-2" />
                                     Bloqueado
                                   </>
                                 ) : isCompleted ? (
                                   <>
-                                    <FaCheckCircle className="mr-2" />
+                                    <CheckCircle className="mr-2" />
                                     Completado
                                   </>
                                 ) : (
                                   <>
-                                    <FaPlay className="mr-2" />
+                                    <Play className="mr-2" />
                                     Comenzar
                                   </>
                                 )}
@@ -867,7 +864,7 @@ export default function IniciadoDashboard() {
         <div className="grid md:grid-cols-2 gap-6">
           <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-6">
             <h3 className="text-xl font-bold text-[#ec4d58] mb-4 flex items-center">
-              <FaGraduationCap className="mr-3" />
+              <TrendingUp className="mr-3" />
               Próximos Pasos
             </h3>
             <p className="text-gray-300 mb-4">
@@ -878,13 +875,13 @@ export default function IniciadoDashboard() {
               className="inline-flex items-center px-4 py-2 bg-[#ec4d58] hover:bg-[#d63d47] text-white rounded-lg transition-colors"
             >
               Ver Todos los Módulos
-              <FaArrowRight className="ml-2" />
+              <ArrowRight className="ml-2" />
             </Link>
           </div>
 
           <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-6">
             <h3 className="text-xl font-bold text-[#ec4d58] mb-4 flex items-center">
-              <FaExclamationTriangle className="mr-3" />
+              <AlertTriangle className="mr-3" />
               Puntos de Control
             </h3>
             <p className="text-gray-300 mb-4">

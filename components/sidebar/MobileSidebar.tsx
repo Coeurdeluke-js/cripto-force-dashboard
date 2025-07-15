@@ -1,7 +1,7 @@
 import { sidebarItems } from "./sidebarItems";
 import Link from "next/link";
 import React from "react";
-import { FiUser, FiLogOut, FiChevronRight } from "react-icons/fi";
+import { Menu, X, ChevronRight, LogOut } from 'lucide-react';
 
 interface MobileSidebarProps {
   collapsed: boolean;
@@ -47,7 +47,7 @@ const MobileSidebar = ({ collapsed, onToggle }: MobileSidebarProps) => {
                   style={{ fontSize: 18 }}
                   aria-label="Expandir sidebar"
                 >
-                  <FiChevronRight />
+                  <ChevronRight />
                   <span className="text-[8px]">Abrir</span>
                 </button>
               )}
@@ -61,7 +61,7 @@ const MobileSidebar = ({ collapsed, onToggle }: MobileSidebarProps) => {
             className="group flex flex-col items-center justify-center text-[#fafafa] hover:text-[#ec4d58] transition-all duration-300 ease-in-out text-xs whitespace-nowrap py-1 px-0.5 hover:scale-105"
           >
             <span className="text-lg mb-0.5 transition-all duration-300 ease-in-out text-[#fafafa] group-hover:text-[#ec4d58] group-hover:scale-110">
-              <FiLogOut />
+              <LogOut />
             </span>
             <span className="text-[8px] leading-tight font-medium transition-all duration-300 ease-in-out text-[#fafafa] group-hover:text-[#ec4d58] break-words whitespace-normal">
               Salir

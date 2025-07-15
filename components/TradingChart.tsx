@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import { createChart } from "lightweight-charts";
-import { Candle } from "../hooks/useBinanceKlines";
+import { Candle } from "@/hooks/useBinanceKlines";
 
 interface TradingChartProps {
   candles: Candle[];
@@ -40,7 +40,9 @@ const TradingChart: React.FC<TradingChartProps> = ({ candles, loading, error, on
       wickUpColor: "#16a34a",
       wickDownColor: "#ec4d58",
     });
-    candleSeries.setData(candles);
+    // Convertir time a string para cumplir con el tipado de lightweight-charts
+    const fixedCandles = candles.map(c => ({ ...c, time: String(c.time) }));
+    candleSeries.setData(fixedCandles);
     chartInstance.current = chart;
     return () => {
       if (chartInstance.current && typeof chartInstance.current.remove === "function") {

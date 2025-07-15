@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FaArrowLeft, FaStar, FaGraduationCap, FaChartLine, FaUsers, FaTrophy } from 'react-icons/fa';
+import { MailOpen, ArrowLeft, Star, GraduationCap, TrendingUp, Users, Trophy } from 'lucide-react';
 
 export default function MensajeBienvenida() {
   return (
@@ -10,7 +10,7 @@ export default function MensajeBienvenida() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-[#ec4d58] to-[#d63d47] rounded-full mb-6">
-            <FaStar className="text-white text-3xl" />
+            <Star className="text-white text-3xl" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             ¡Bienvenido a Crypto Force!
@@ -49,7 +49,7 @@ export default function MensajeBienvenida() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="text-center p-6 bg-[#232323] rounded-xl">
               <div className="w-12 h-12 bg-[#ec4d58] rounded-lg flex items-center justify-center mx-auto mb-4">
-                <FaGraduationCap className="text-white text-xl" />
+                <GraduationCap className="text-white text-xl" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">Aprendizaje Estructurado</h3>
               <p className="text-gray-300 text-sm">
@@ -59,7 +59,7 @@ export default function MensajeBienvenida() {
 
             <div className="text-center p-6 bg-[#232323] rounded-xl">
               <div className="w-12 h-12 bg-[#ec4d58] rounded-lg flex items-center justify-center mx-auto mb-4">
-                <FaChartLine className="text-white text-xl" />
+                <TrendingUp className="text-white text-xl" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">Análisis Técnico</h3>
               <p className="text-gray-300 text-sm">
@@ -69,7 +69,7 @@ export default function MensajeBienvenida() {
 
             <div className="text-center p-6 bg-[#232323] rounded-xl">
               <div className="w-12 h-12 bg-[#ec4d58] rounded-lg flex items-center justify-center mx-auto mb-4">
-                <FaUsers className="text-white text-xl" />
+                <Users className="text-white text-xl" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">Comunidad</h3>
               <p className="text-gray-300 text-sm">
@@ -79,7 +79,7 @@ export default function MensajeBienvenida() {
 
             <div className="text-center p-6 bg-[#232323] rounded-xl">
               <div className="w-12 h-12 bg-[#ec4d58] rounded-lg flex items-center justify-center mx-auto mb-4">
-                <FaTrophy className="text-white text-xl" />
+                <Trophy className="text-white text-xl" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">Certificación</h3>
               <p className="text-gray-300 text-sm">
@@ -100,7 +100,7 @@ export default function MensajeBienvenida() {
               className="inline-flex items-center px-6 py-3 bg-[#ec4d58] hover:bg-[#d63d47] text-white rounded-lg transition-colors font-semibold"
             >
               Ir al Dashboard
-              <FaArrowLeft className="ml-2 rotate-180" />
+              <ArrowLeft className="ml-2 rotate-180" />
             </Link>
           </div>
         </div>
@@ -111,7 +111,7 @@ export default function MensajeBienvenida() {
             href="/dashboard/iniciado"
             className="inline-flex items-center px-4 py-2 text-gray-300 hover:text-white transition-colors"
           >
-            <FaArrowLeft className="mr-2" />
+            <ArrowLeft className="mr-2" />
             Volver al Dashboard
           </Link>
         </div>

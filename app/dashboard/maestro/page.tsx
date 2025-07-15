@@ -38,9 +38,9 @@ import {
 
 import { useEffect, useRef, useLayoutEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useBinanceKlines, INTERVALS } from '../../../hooks/useBinanceKlines';
+import { useBinanceKlines, INTERVALS } from '@/hooks/useBinanceKlines';
 
-const TradingChart = dynamic(() => import('../../../components/TradingChart'), { ssr: false });
+const TradingChart = dynamic(() => import('@/components/TradingChart'), { ssr: false });
 
 export default function MaestroDashboard() {
   const [activeTab, setActiveTab] = useState('metrics');

@@ -2,22 +2,22 @@
 import React from 'react';
 import Link from 'next/link';
 import BackButton from '@/components/ui/BackButton';
-import { TrendingUp, Oil, Gold, Copper, Target, Zap, BarChart3 } from 'lucide-react';
+import { TrendingUp, Droplet, Gem, Hammer, Target, Zap, BarChart3 } from 'lucide-react';
 
 export default function CorrelacionesMercadosPage() {
   const learningObjectives = [
     {
-      icon: <Oil className="w-6 h-6" />,
+      icon: <Droplet className="w-6 h-6" />,
       title: "Petróleo Crudo y Divisas",
       description: "Comprende la correlación entre el petróleo y divisas como CAD, USD y JPY."
     },
     {
-      icon: <Gold className="w-6 h-6" />,
+      icon: <Gem className="w-6 h-6" />,
       title: "Oro como Refugio Seguro",
       description: "Analiza la relación entre el oro y divisas como CHF y USD."
     },
     {
-      icon: <Copper className="w-6 h-6" />,
+      icon: <Hammer className="w-6 h-6" />,
       title: "Cobre y Economías",
       description: "Explora la correlación entre el cobre y el dólar australiano."
     },

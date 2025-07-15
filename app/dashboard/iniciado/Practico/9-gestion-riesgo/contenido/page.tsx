@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FaShieldAlt, FaExclamationTriangle, FaChartLine, FaBrain, FaClipboardCheck, FaChevronDown, FaChevronUp, FaQuestionCircle, FaLightbulb } from 'react-icons/fa';
+import { Shield, AlertTriangle, TrendingUp, Brain, CheckCircle, HelpCircle, Lightbulb, ChevronUp, ChevronDown } from 'lucide-react';
 
 interface CollapsibleSectionProps {
   title: string;
@@ -25,7 +25,7 @@ function CollapsibleSection({ title, children, icon, color }: CollapsibleSection
           </div>
           <h3 className="text-xl font-semibold text-white">{title}</h3>
         </div>
-        {isOpen ? <FaChevronUp className="text-white" /> : <FaChevronDown className="text-white" />}
+        {isOpen ? <ChevronUp className="text-white" /> : <ChevronDown className="text-white" />}
       </button>
       {isOpen && (
         <div className="px-6 pb-6">
@@ -45,7 +45,7 @@ export default function GestionRiesgoContenidoPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full mb-6">
-            <FaShieldAlt className="text-white text-2xl" />
+            <Shield className="text-white text-2xl" />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Lección 8: Gestión de Riesgo
@@ -59,7 +59,7 @@ export default function GestionRiesgoContenidoPage() {
           {/* Sección A */}
           <CollapsibleSection
             title="A) ¿Por qué la mayoría de los operadores pierden dinero?"
-            icon={<FaExclamationTriangle />}
+            icon={<AlertTriangle />}
             color="text-red-400"
           >
             <div className="space-y-4">
@@ -109,7 +109,7 @@ export default function GestionRiesgoContenidoPage() {
           {/* Sección B */}
           <CollapsibleSection
             title="B) El uso de Órdenes 'Stop-Loss' para Administrar el Riesgo"
-            icon={<FaShieldAlt />}
+            icon={<Shield />}
             color="text-blue-400"
           >
             <div className="space-y-4">
@@ -161,7 +161,7 @@ export default function GestionRiesgoContenidoPage() {
           {/* Sección C */}
           <CollapsibleSection
             title="C) Distintos Estilos para Operar"
-            icon={<FaChartLine />}
+            icon={<TrendingUp />}
             color="text-green-400"
           >
             <div className="space-y-4">
@@ -219,7 +219,7 @@ export default function GestionRiesgoContenidoPage() {
           {/* Sección D */}
           <CollapsibleSection
             title="D) Claves Útiles para Operar"
-            icon={<FaLightbulb />}
+            icon={<Lightbulb />}
             color="text-yellow-400"
           >
             <div className="space-y-4">
@@ -263,7 +263,7 @@ export default function GestionRiesgoContenidoPage() {
           {/* Sección E */}
           <CollapsibleSection
             title="E) Trabajo Práctico – Colocación de una Operación"
-            icon={<FaClipboardCheck />}
+            icon={<CheckCircle />}
             color="text-green-400"
           >
             <div className="space-y-4">
@@ -282,7 +282,7 @@ export default function GestionRiesgoContenidoPage() {
           {/* Sección F */}
           <CollapsibleSection
             title="F) La pregunta del Día"
-            icon={<FaQuestionCircle />}
+            icon={<HelpCircle />}
             color="text-purple-400"
           >
             <div className="space-y-4">
@@ -307,7 +307,7 @@ export default function GestionRiesgoContenidoPage() {
           {/* Sección G */}
           <CollapsibleSection
             title="G) La Psicología del Buen Operador"
-            icon={<FaBrain />}
+            icon={<Brain />}
             color="text-pink-400"
           >
             <div className="space-y-4">
@@ -353,7 +353,7 @@ export default function GestionRiesgoContenidoPage() {
           {/* Sección H */}
           <CollapsibleSection
             title="H) Prueba"
-            icon={<FaClipboardCheck />}
+            icon={<CheckCircle />}
             color="text-orange-400"
           >
             <div className="space-y-4">

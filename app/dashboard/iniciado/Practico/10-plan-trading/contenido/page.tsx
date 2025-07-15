@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FaClipboardList, FaBrain, FaChartLine, FaShieldAlt, FaCheckCircle, FaBookOpen, FaChevronDown, FaChevronUp, FaUser, FaTarget, FaCog, FaCalendar, FaMoneyBillWave, FaSignOutAlt, FaTools, FaClock, FaExclamationTriangle, FaGraduationCap, FaListUl } from 'react-icons/fa';
+import { ListChecks, TrendingUp, Shield, Brain, CheckCircle, BookOpen, AlertTriangle, GraduationCap, List, ChevronUp, ChevronDown } from 'lucide-react';
 
 interface CollapsibleSectionProps {
   title: string;
@@ -25,7 +25,7 @@ function CollapsibleSection({ title, children, icon, color }: CollapsibleSection
           </div>
           <h3 className="text-xl font-semibold text-white">{title}</h3>
         </div>
-        {isOpen ? <FaChevronUp className="text-white" /> : <FaChevronDown className="text-white" />}
+        {isOpen ? <ChevronUp className="text-white" /> : <ChevronDown className="text-white" />}
       </button>
       {isOpen && (
         <div className="px-6 pb-6">
@@ -45,7 +45,7 @@ export default function PlanTradingContenidoPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mb-6">
-            <FaClipboardList className="text-white text-2xl" />
+            <List className="text-white text-2xl" />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Plan de Trading - Plantilla Completa
@@ -59,7 +59,7 @@ export default function PlanTradingContenidoPage() {
           {/* Introducción */}
           <div className="bg-blue-500/10 backdrop-blur-lg rounded-2xl p-8 border border-blue-500/30">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-              <FaBookOpen className="mr-3 text-blue-400" />
+              <BookOpen className="mr-3 text-blue-400" />
               Introducción
             </h2>
             <div className="text-gray-300 space-y-4">
@@ -79,7 +79,7 @@ export default function PlanTradingContenidoPage() {
           {/* PLAN GENERAL DE TRADING */}
           <CollapsibleSection
             title="PLAN GENERAL DE TRADING"
-            icon={<FaBookOpen />}
+            icon={<BookOpen />}
             color="text-blue-400"
           >
             <div className="space-y-6">
@@ -133,7 +133,7 @@ export default function PlanTradingContenidoPage() {
           {/* PLANTILLA PLAN DE TRADING */}
           <CollapsibleSection
             title="PLANTILLA PLAN DE TRADING"
-            icon={<FaClipboardList />}
+            icon={<List />}
             color="text-green-400"
           >
             <div className="space-y-6">
@@ -478,7 +478,7 @@ export default function PlanTradingContenidoPage() {
           {/* EJEMPLOS DE PLAN DE OPERACIONES */}
           <CollapsibleSection
             title="EJEMPLOS DE PLAN DE OPERACIONES"
-            icon={<FaListUl />}
+            icon={<List />}
             color="text-purple-400"
           >
             <div className="space-y-4">

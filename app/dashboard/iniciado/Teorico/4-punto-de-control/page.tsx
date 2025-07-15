@@ -6,7 +6,7 @@ import { useControlPoint } from '@/context/ControlPointContext';
 import PreguntaCard from './components/PreguntaCard';
 import ControlPointModal from '@/components/ui/ControlPointModal';
 import { preguntas } from './components/preguntas';
-import { FaClock, FaExclamationTriangle } from 'react-icons/fa';
+import { Clock, AlertTriangle } from 'lucide-react';
 
 export default function PuntoDeControl4() {
   const [preguntaActual, setPreguntaActual] = useState(0);
@@ -212,7 +212,7 @@ export default function PuntoDeControl4() {
             
             {/* Timer */}
             <div className="mt-4 flex items-center justify-center gap-2">
-              <FaClock className="text-yellow-500" />
+              <Clock className="text-yellow-500" />
               <span className="text-lg font-mono text-yellow-500">
                 {formatTime(getTimeRemaining())}
               </span>

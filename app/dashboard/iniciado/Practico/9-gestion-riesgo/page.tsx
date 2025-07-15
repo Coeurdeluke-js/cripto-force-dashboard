@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FaShieldAlt, FaExclamationTriangle, FaChartLine, FaBrain, FaClipboardCheck } from 'react-icons/fa';
+import { Shield, AlertTriangle, TrendingUp, Brain, CheckCircle } from 'lucide-react';
 
 export default function GestionRiesgoPage() {
   return (
@@ -10,7 +10,7 @@ export default function GestionRiesgoPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-red-500 to-orange-500 rounded-full mb-6">
-            <FaShieldAlt className="text-white text-3xl" />
+            <Shield className="text-white text-3xl" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Gestión de Riesgo
@@ -23,7 +23,7 @@ export default function GestionRiesgoPage() {
         {/* Module Overview */}
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 mb-8">
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-            <FaExclamationTriangle className="mr-3 text-red-400" />
+            <AlertTriangle className="mr-3 text-red-400" />
             ¿Por qué es crucial la gestión de riesgo?
           </h2>
           <div className="grid md:grid-cols-2 gap-6 text-gray-300">
@@ -48,7 +48,7 @@ export default function GestionRiesgoPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 backdrop-blur-lg rounded-xl p-6 border border-red-500/30">
             <div className="flex items-center mb-4">
-              <FaExclamationTriangle className="text-red-400 text-2xl mr-3" />
+              <AlertTriangle className="text-red-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">¿Por qué pierden dinero?</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -58,7 +58,7 @@ export default function GestionRiesgoPage() {
 
           <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-lg rounded-xl p-6 border border-blue-500/30">
             <div className="flex items-center mb-4">
-              <FaShieldAlt className="text-blue-400 text-2xl mr-3" />
+              <Shield className="text-blue-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">Stop-Loss</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -68,7 +68,7 @@ export default function GestionRiesgoPage() {
 
           <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-lg rounded-xl p-6 border border-green-500/30">
             <div className="flex items-center mb-4">
-              <FaChartLine className="text-green-400 text-2xl mr-3" />
+              <TrendingUp className="text-green-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">Estilos de Trading</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -78,7 +78,7 @@ export default function GestionRiesgoPage() {
 
           <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-lg rounded-xl p-6 border border-purple-500/30">
             <div className="flex items-center mb-4">
-              <FaBrain className="text-purple-400 text-2xl mr-3" />
+              <Brain className="text-purple-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">Psicología del Trading</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -88,7 +88,7 @@ export default function GestionRiesgoPage() {
 
           <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-lg rounded-xl p-6 border border-yellow-500/30">
             <div className="flex items-center mb-4">
-              <FaClipboardCheck className="text-yellow-400 text-2xl mr-3" />
+              <CheckCircle className="text-yellow-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">Trabajo Práctico</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -98,7 +98,7 @@ export default function GestionRiesgoPage() {
 
           <div className="bg-gradient-to-br from-indigo-500/20 to-blue-500/20 backdrop-blur-lg rounded-xl p-6 border border-indigo-500/30">
             <div className="flex items-center mb-4">
-              <FaShieldAlt className="text-indigo-400 text-2xl mr-3" />
+              <Shield className="text-indigo-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">Claves Útiles</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -113,7 +113,7 @@ export default function GestionRiesgoPage() {
             href="/dashboard/iniciado/Practico/9-gestion-riesgo/contenido"
             className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
-            <FaShieldAlt className="mr-3" />
+            <Shield className="mr-3" />
             Comenzar Lección
           </Link>
         </div>

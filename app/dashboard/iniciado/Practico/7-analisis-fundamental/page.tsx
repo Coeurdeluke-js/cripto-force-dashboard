@@ -3,9 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import BackButton from '@/components/ui/BackButton';
 import { BookOpen, Users, TrendingUp, Shield, Target, Zap } from 'lucide-react';
-import dynamic from 'next/dynamic';
 
-const TradingViewChart = dynamic(() => import('./TradingViewChart'), { ssr: false });
 
 export default function AnalisisFundamentalPage() {
   const learningObjectives = [

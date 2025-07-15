@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FaClipboardList, FaChartLine, FaShieldAlt, FaBrain, FaCheckCircle, FaBookOpen } from 'react-icons/fa';
+import { ListChecks, TrendingUp, Shield, Brain, CheckCircle, BookOpen } from 'lucide-react';
 
 export default function PlanTradingPage() {
   return (
@@ -10,7 +10,7 @@ export default function PlanTradingPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mb-6">
-            <FaClipboardList className="text-white text-3xl" />
+            <ListChecks className="text-white text-3xl" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Plan de Trading
@@ -23,7 +23,7 @@ export default function PlanTradingPage() {
         {/* Module Overview */}
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 mb-8">
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-            <FaBookOpen className="mr-3 text-blue-400" />
+            <BookOpen className="mr-3 text-blue-400" />
             ¿Por qué necesitas un plan de trading?
           </h2>
           <div className="grid md:grid-cols-2 gap-6 text-gray-300">
@@ -48,7 +48,7 @@ export default function PlanTradingPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-lg rounded-xl p-6 border border-blue-500/30">
             <div className="flex items-center mb-4">
-              <FaBrain className="text-blue-400 text-2xl mr-3" />
+              <Brain className="text-blue-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">Conócete a ti mismo</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -58,7 +58,7 @@ export default function PlanTradingPage() {
 
           <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-lg rounded-xl p-6 border border-green-500/30">
             <div className="flex items-center mb-4">
-              <FaChartLine className="text-green-400 text-2xl mr-3" />
+              <TrendingUp className="text-green-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">Estrategias y Set-ups</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -68,7 +68,7 @@ export default function PlanTradingPage() {
 
           <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 backdrop-blur-lg rounded-xl p-6 border border-red-500/30">
             <div className="flex items-center mb-4">
-              <FaShieldAlt className="text-red-400 text-2xl mr-3" />
+              <Shield className="text-red-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">Gestión de Riesgo</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -78,7 +78,7 @@ export default function PlanTradingPage() {
 
           <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-lg rounded-xl p-6 border border-purple-500/30">
             <div className="flex items-center mb-4">
-              <FaCheckCircle className="text-purple-400 text-2xl mr-3" />
+              <CheckCircle className="text-purple-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">Disciplina y Reglas</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -88,7 +88,7 @@ export default function PlanTradingPage() {
 
           <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-lg rounded-xl p-6 border border-yellow-500/30">
             <div className="flex items-center mb-4">
-              <FaClipboardList className="text-yellow-400 text-2xl mr-3" />
+              <ListChecks className="text-yellow-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">Rutinas Diarias</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -98,7 +98,7 @@ export default function PlanTradingPage() {
 
           <div className="bg-gradient-to-br from-indigo-500/20 to-blue-500/20 backdrop-blur-lg rounded-xl p-6 border border-indigo-500/30">
             <div className="flex items-center mb-4">
-              <FaBookOpen className="text-indigo-400 text-2xl mr-3" />
+              <BookOpen className="text-indigo-400 text-2xl mr-3" />
               <h3 className="text-lg font-semibold text-white">Registro y Análisis</h3>
             </div>
             <p className="text-gray-300 text-sm">
@@ -113,29 +113,29 @@ export default function PlanTradingPage() {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex items-start">
-                <FaCheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
+                <CheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
                 <p className="text-gray-300">Operar relajado, libre de estrés y con mayor simplicidad</p>
               </div>
               <div className="flex items-start">
-                <FaCheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
+                <CheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
                 <p className="text-gray-300">Capacidad para controlar tu evolución y diagnosticar fallos</p>
               </div>
               <div className="flex items-start">
-                <FaCheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
+                <CheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
                 <p className="text-gray-300">Prevenir problemas psicológicos desde la raíz</p>
               </div>
             </div>
             <div className="space-y-4">
               <div className="flex items-start">
-                <FaCheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
+                <CheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
                 <p className="text-gray-300">Reducir el número de operaciones malas</p>
               </div>
               <div className="flex items-start">
-                <FaCheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
+                <CheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
                 <p className="text-gray-300">Evitar decisiones irracionales en el calor del momento</p>
               </div>
               <div className="flex items-start">
-                <FaCheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
+                <CheckCircle className="text-green-400 mt-1 mr-3 flex-shrink-0" />
                 <p className="text-gray-300">Desarrollar un alto grado de disciplina profesional</p>
               </div>
             </div>
@@ -148,7 +148,7 @@ export default function PlanTradingPage() {
             href="/dashboard/iniciado/Practico/10-plan-trading/contenido"
             className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
-            <FaClipboardList className="mr-3" />
+            <ListChecks className="mr-3" />
             Comenzar Plan de Trading
           </Link>
         </div>

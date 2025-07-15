@@ -6,7 +6,7 @@ import { sidebarItems, sidebarItemsAcolito } from "./sidebarItems";
 import SidebarToggle from "./SidebarToggle";
 import { useSidebar } from "./SidebarContext";
 import { usePathname } from "next/navigation";
-import { FiUser, FiLogOut } from "react-icons/fi";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Sidebar() {
   const { isExpanded, toggleSidebar } = useSidebar();
@@ -244,7 +244,7 @@ export default function Sidebar() {
                 isExpanded ? 'mr-3' : 'mr-0'
               }`}
             >
-                {React.createElement(FiLogOut)}
+                {React.createElement(ChevronRight)}
             </span>
             <span 
               className={`font-medium whitespace-nowrap transition-all duration-500 ease-in-out text-[#fafafa] group-hover:text-[#ec4d58] ${

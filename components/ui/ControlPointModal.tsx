@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FaClock, FaExclamationTriangle, FaCheckCircle, FaLock, FaUnlock } from 'react-icons/fa';
+import { CheckCircle, XCircle, Hourglass, Lock } from 'lucide-react';
 
 interface ControlPointModalProps {
   isOpen: boolean;
@@ -31,7 +31,7 @@ export default function ControlPointModal({
       <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-8 max-w-2xl w-full shadow-2xl">
         <div className="text-center mb-6">
           <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FaExclamationTriangle className="text-2xl text-black" />
+            <XCircle className="text-2xl text-black" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">{checkpointTitle}</h2>
           <p className="text-gray-300">Evaluación de Conocimientos</p>
@@ -40,7 +40,7 @@ export default function ControlPointModal({
         {/* Información sobre los módulos a evaluar */}
         <div className="bg-[#232323] rounded-xl p-6 mb-6">
           <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
-            <FaCheckCircle className="mr-2 text-green-500" />
+            <CheckCircle className="mr-2 text-green-500" />
             Módulos a Evaluar:
           </h3>
           <ul className="space-y-2">
@@ -57,7 +57,7 @@ export default function ControlPointModal({
         <div className="space-y-4 mb-6">
           <div className="bg-[#232323] rounded-xl p-4">
             <h4 className="text-white font-semibold mb-2 flex items-center">
-              <FaClock className="mr-2 text-blue-500" />
+              <Hourglass className="mr-2 text-blue-500" />
               Metodología de Evaluación
             </h4>
             <ul className="text-sm text-gray-300 space-y-1">
@@ -70,7 +70,7 @@ export default function ControlPointModal({
 
           <div className="bg-[#232323] rounded-xl p-4">
             <h4 className="text-white font-semibold mb-2 flex items-center">
-              <FaLock className="mr-2 text-red-500" />
+              <Lock className="mr-2 text-red-500" />
               Restricciones de Tiempo
             </h4>
             <ul className="text-sm text-gray-300 space-y-1">
@@ -85,7 +85,7 @@ export default function ControlPointModal({
         {timeUntilNextAttempt > 0 && (
           <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">
             <div className="text-center">
-              <FaClock className="text-2xl text-red-500 mx-auto mb-2" />
+              <Hourglass className="text-2xl text-red-500 mx-auto mb-2" />
               <p className="text-red-400 font-semibold mb-1">Debes esperar antes del próximo intento</p>
               <p className="text-red-300 text-lg font-mono">
                 {formatTime(timeUntilNextAttempt)}
@@ -127,12 +127,12 @@ export default function ControlPointModal({
           >
             {canStart ? (
               <>
-                <FaUnlock className="mr-2" />
+                <Lock className="mr-2" />
                 Comenzar Evaluación
               </>
             ) : (
               <>
-                <FaLock className="mr-2" />
+                <Lock className="mr-2" />
                 Bloqueado
               </>
             )}

@@ -1,24 +1,8 @@
 'use client';
 import React, { useState } from 'react';
 import BackButton from '@/components/ui/BackButton';
-import { Oil, Gold, Copper, TrendingUp, ChevronDown, ChevronUp, CheckCircle, BarChart3 } from 'lucide-react';
+import { Droplet, Gem, Hammer, TrendingUp, ChevronDown, ChevronUp, CheckCircle, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-import { createChart } from 'lightweight-charts';
-
-type Candle = {
-  time: number;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-};
-
-interface TradingChartProps {
-  candles: Candle[];
-}
-
-const TradingChart = dynamic(() => import('../../../components/TradingChart'), { ssr: false });
 
 export default function CorrelacionesMercadosContenido() {
   const [expandedSections, setExpandedSections] = useState<number[]>([0]);
@@ -38,7 +22,7 @@ export default function CorrelacionesMercadosContenido() {
         <div className="space-y-6">
           <div className="bg-[#232323] p-4 rounded-lg">
             <h4 className="font-semibold text-[#ec4d58] mb-3 flex items-center gap-2">
-              <Oil className="w-5 h-5" />
+              <Droplet className="w-5 h-5" />
               Impacto General del Petróleo
             </h4>
             <p className="text-gray-300 mb-3">
@@ -115,7 +99,7 @@ export default function CorrelacionesMercadosContenido() {
         <div className="space-y-6">
           <div className="bg-[#232323] p-4 rounded-lg">
             <h4 className="font-semibold text-[#ec4d58] mb-3 flex items-center gap-2">
-              <Gold className="w-5 h-5" />
+              <Gem className="w-5 h-5" />
               Oro como Refugio Seguro
             </h4>
             <p className="text-gray-300 mb-3">
@@ -181,7 +165,7 @@ export default function CorrelacionesMercadosContenido() {
         <div className="space-y-6">
           <div className="bg-[#232323] p-4 rounded-lg">
             <h4 className="font-semibold text-[#ec4d58] mb-3 flex items-center gap-2">
-              <Copper className="w-5 h-5" />
+              <Hammer className="w-5 h-5" />
               Cobre y Australia
             </h4>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
