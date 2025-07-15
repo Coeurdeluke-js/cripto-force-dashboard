@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRef, useState, useEffect } from 'react';
-import BackButton from '@/components/ui/BackButton';
+import ControlPointBadge from '@/components/ui/ControlPointBadge';
 
 interface Module {
   title: string;
@@ -88,13 +88,7 @@ export default function ModuloCarrousel({ modules }: ModuloCarrouselProps) {
 
   return (
     <div className="card">
-      {/* Contenedor visual para el botón Volver */}
-      <div className="mb-4">
-        <div className="bg-[#18181b] border border-[#232323] rounded-xl px-4 py-2 flex items-center w-fit">
-          <BackButton />
-        </div>
-      </div>
-      <h2 className="text-xl font-bold mb-6 text-center">📘 Módulos de Exploración Económica y Crypto</h2>
+      <h2 className="text-xl font-bold mb-6 text-center">Módulos Teórico de Trading</h2>
       <div
         ref={carouselRef}
         className="overflow-x-auto px-1 cursor-grab active:cursor-grabbing select-none"
@@ -106,11 +100,18 @@ export default function ModuloCarrousel({ modules }: ModuloCarrouselProps) {
         <div className="flex gap-4 p-2">
           {modules.map((mod, idx) => {
             const isLocked = idx > 3;
+            const isControlPoint = (idx + 1) % 2 === 0;
             return (
               <div
                 key={idx}
-                className={`flex-none w-full sm:w-[calc(50%-8px)] md:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)] xl:w-[calc(20%-13px)] p-0`}
+                className={`flex-none w-full sm:w-[calc(50%-8px)] md:w-[calc(33.333%-11px)] lg:w-[calc(25%-12px)] xl:w-[calc(25%-12px)] p-0 relative`}
               >
+                {/* Control Point Badge */}
+                {isControlPoint && idx > 0 && (
+                  <div className="absolute -top-4 -right-4 z-10">
+                    <ControlPointBadge className="w-40" />
+                  </div>
+                )}
                 <div
                   className={`p-6 rounded-2xl shadow-md h-[260px] bg-[#18181b] flex flex-col text-center group border border-[#232323] transition-all duration-300 relative ${
                     isLocked ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-xl hover:scale-[1.02] cursor-default'

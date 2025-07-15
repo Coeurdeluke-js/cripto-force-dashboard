@@ -324,3 +324,234 @@ body {
     aspect-ratio: 4 / 3;
   }
 }
+
+/* Estilos para el bloqueo de navegación */
+.navigation-blocked {
+  cursor: not-allowed !important;
+  user-select: none;
+}
+
+.navigation-blocked * {
+  cursor: not-allowed !important;
+}
+
+/* Tooltip personalizado para elementos bloqueados */
+.blocked-tooltip {
+  position: relative;
+}
+
+.blocked-tooltip::after {
+  content: "🔒 Finaliza la evaluación antes de continuar";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a1a;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid #ec4d58;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.blocked-tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+  bottom: calc(100% + 5px);
+}
+
+/* Scrollbar personalizado */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Carousel styles */
+  .carousel-container {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    transition: transform 0.3s ease;
+  }
+
+  .carousel-card {
+    flex: 0 0 calc(33.333% - 1rem);
+    min-width: 320px;
+    max-width: 400px;
+  }
+
+  @media (max-width: 1024px) {
+    .carousel-card {
+      flex: 0 0 calc(50% - 0.75rem);
+      min-width: 280px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .carousel-card {
+      flex: 0 0 100%;
+      min-width: 100%;
+    }
+  }
+
+  /* Scrollbar personalizada para el carousel */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(236, 77, 88, 0.6) rgba(26, 26, 26, 0.3);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(26, 26, 26, 0.3);
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(236, 77, 88, 0.6);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(236, 77, 88, 0.8);
+  }
+
+/* Efectos de blur mejorados */
+.blur-navigation {
+  filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.blur-navigation:hover {
+  filter: blur(2px);
+}
+
+/* Animaciones para el timer */
+.timer-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Estilos para las cards de módulos */
+.module-card {
+  transition: all 0.3s ease;
+}
+
+.module-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(236, 77, 88, 0.15);
+}
+
+/* Efectos para puntos de control */
+.control-point-card {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(249, 115, 22, 0.1) 100%);
+  border: 2px solid rgba(251, 191, 36, 0.3);
+}
+
+.control-point-card:hover {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(249, 115, 22, 0.2) 100%);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+/* Estilos para el modal de puntos de control */
+.modal-backdrop {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.75);
+}
+
+/* Efectos de transición suaves */
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Estilos para el perfil de usuario */
+.profile-image {
+  transition: all 0.3s ease;
+}
+
+.profile-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(236, 77, 88, 0.3);
+}
+
+/* Estilos para botones de navegación */
+.nav-button {
+  transition: all 0.2s ease;
+}
+
+.nav-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(236, 77, 88, 0.2);
+}
+
+.nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Estilos para el progreso */
+.progress-bar {
+  background: linear-gradient(90deg, #ec4d58 0%, #d63d47 100%);
+  transition: width 0.5s ease;
+}
+
+/* Estilos para el timer de cooldown */
+.cooldown-timer {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Estilos para el estado de bloqueo */
+.locked-state {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+
+/* Estilos para el estado completado */
+.completed-state {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.1) 100%);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .module-card {
+    min-height: 200px;
+  }
+  
+  .profile-image {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .blocked-tooltip::after {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+}

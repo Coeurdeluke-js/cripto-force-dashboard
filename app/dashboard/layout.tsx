@@ -2,64 +2,68 @@
 
 import { ReactNode } from 'react';
 import { SidebarProvider, useSidebar } from '@/components/sidebar/SidebarContext';
+import { ControlPointProvider, useControlPoint } from '@/context/ControlPointContext';
 import Sidebar from '@/components/sidebar/Sidebar';
 import MobileSidebar from '@/components/sidebar/MobileSidebar';
-import RoleSelector from '@/components/layout/RoleSelector';
 
 function DashboardContent({ children }: { children: ReactNode }) {
   const { isExpanded, toggleSidebar } = useSidebar();
+  const { state } = useControlPoint();
 
   return (
-    <div className="min-h-screen bg-[rgb(var(--background))] text-[rgb(var(--foreground))] flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0f0f0f] text-white">
       {/* Sidebar Desktop */}
-      <div className="hidden md:block">
+      <div className={`hidden md:block transition-all duration-300 relative ${
+        state.isNavigationBlocked 
+          ? 'blur-navigation opacity-50 pointer-events-none navigation-blocked blocked-tooltip' 
+          : ''
+      }`}>
         <Sidebar />
+        {state.isNavigationBlocked && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
+            <div className="bg-[#1a1a1a] border border-[#ec4d58] rounded-lg p-3 shadow-lg">
+              <p className="text-sm text-white text-center">
+                🔒 Finaliza la evaluación antes de continuar
+              </p>
+            </div>
+          </div>
+        )}
       </div>
+      
       {/* Sidebar Mobile */}
-      <div className="md:hidden">
+      <div className={`md:hidden fixed bottom-0 left-0 w-full z-50 transition-all duration-300 relative ${
+        state.isNavigationBlocked 
+          ? 'blur-navigation opacity-50 pointer-events-none navigation-blocked blocked-tooltip' 
+          : ''
+      }`}>
         <MobileSidebar collapsed={!isExpanded} onToggle={toggleSidebar} />
+        {state.isNavigationBlocked && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg">
+            <div className="bg-[#1a1a1a] border border-[#ec4d58] rounded-lg p-3 shadow-lg">
+              <p className="text-sm text-white text-center">
+                🔒 Finaliza la evaluación antes de continuar
+              </p>
+            </div>
+          </div>
+        )}
       </div>
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col min-h-screen">
-          <header className="bg-white dark:bg-[#121212] shadow-sm border-b border-gray-200 dark:border-gray-700 px-4 py-4 sticky top-0 z-30">
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-              <RoleSelector />
-            </div>
-          </header>
-          <main className="flex-1 p-4 pb-20 md:pb-4 overflow-auto">
-            <div className="max-w-7xl mx-auto w-full">
-              {children}
-            </div>
-          </main>
-          <footer className="bg-white dark:bg-[#121212] border-t border-gray-200 dark:border-gray-700 px-6 py-4">
-            <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-              <div className="flex items-center space-x-4">
-                <span>© 2024 Crypto Force Academy</span>
-                <span className="hidden sm:inline">•</span>
-                <span className="hidden sm:inline">Versión 1.0</span>
-              </div>
-              <div className="flex items-center space-x-4">
-                <button className="hover:text-gray-900 dark:hover:text-white transition-colors">
-                  <i className="fas fa-question-circle mr-1"></i>
-                  <span className="hidden sm:inline">Ayuda</span>
-                </button>
-                <button className="hover:text-gray-900 dark:hover:text-white transition-colors">
-                  <i className="fas fa-bug mr-1"></i>
-                  <span className="hidden sm:inline">Reportar</span>
-                </button>
-              </div>
-            </div>
-          </footer>
-        </div>
+      
+      {/* Main Content */}
+      <div className={`transition-all duration-300 flex flex-col min-h-screen ${isExpanded ? 'md:ml-64' : 'md:ml-16'}`}>
+        <main className="flex-1 overflow-auto">
+            {children}
+        </main>
       </div>
-    );
+    </div>
+  );
 }
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
+    <ControlPointProvider>
     <SidebarProvider>
       <DashboardContent>{children}</DashboardContent>
     </SidebarProvider>
+    </ControlPointProvider>
   );
 }

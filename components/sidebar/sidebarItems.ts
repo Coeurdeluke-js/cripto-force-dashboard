@@ -4,7 +4,7 @@ export const sidebarItems = [
   { label: "Panel General", href: "/dashboard", icon: FiHome },
   { label: "Mensaje de bienvenida", href: "/dashboard/mensaje", icon: FiMessageCircle },
   { label: "Explora la Academia", href: "/dashboard/iniciado/cursos", icon: FiBookOpen },
-  { label: "Ajustes básicos", href: "/dashboard/iniciado/ajustes", icon: "⚙" }
+  { label: "Ajustes básicos", href: "/dashboard/iniciado/ajustes-basicos", icon: "⚙" }
 ];
 
 export const sidebarItemsAcolito = [

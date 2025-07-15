@@ -10,15 +10,15 @@ export default function SidebarToggle({ collapsed, onToggle }: SidebarToggleProp
     <button
       onClick={onToggle}
       aria-label={collapsed ? "Expandir sidebar" : "Colapsar sidebar"}
-      className="absolute right-[-20px] top-1/2 -translate-y-1/2 z-50 bg-[#ec4d58] hover:bg-[#d63f4a] text-[#fafafa] border border-[#ec4d58] hover:border-[#d63f4a] rounded-full w-8 h-8 flex items-center justify-center transition-all duration-300 ease-in-out shadow-xl hover:shadow-2xl hover:scale-110"
+      className="bg-[#232323] border border-[#232323] text-[#ec4d58] rounded-full w-6 h-6 flex items-center justify-center mt-1 transition-all duration-300 ease-in-out"
       style={{outline: 'none'}}
     >
       <svg
-        className={`w-4 h-4 transition-all duration-500 ease-in-out ${collapsed ? 'rotate-0' : 'rotate-180'}`}
+        className={`w-3.5 h-3.5 transition-all duration-500 ease-in-out ${collapsed ? 'rotate-0' : 'rotate-180'}`}
         fill="none"
-        stroke="#fafafa"
+        stroke="#ec4d58"
         viewBox="0 0 24 24"
-        strokeWidth={3}
+        strokeWidth={2.5}
       >
         <path
           strokeLinecap="round"
