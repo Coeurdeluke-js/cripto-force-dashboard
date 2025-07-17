@@ -1,25 +1,25 @@
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+﻿import Link from 'next/link';
+import { ArrowLeft } from &apos;lucide-react&apos;;
 
 export default function Modulo6ContenidoPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-8">
-      <div className="w-full max-w-3xl border border-gray-200 dark:border-gray-700 rounded-lg p-6 bg-transparent relative" style={{paddingTop: '3.5rem'}}>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-8&quot;>
+      <div className=&quot;w-full max-w-3xl border border-gray-200 dark:border-gray-700 rounded-lg p-6 bg-transparent relative&quot; style={{paddingTop: &apos;3.5rem&apos;}}>
         {/* Botón Volver arriba */}
         <Link
-          href="/dashboard/iniciado/6-tecnologia-blockchain"
-          className="absolute left-4 top-4 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 flex items-center"
+          href=&quot;/dashboard/iniciado/6-tecnologia-blockchain&quot;
+          className=&quot;absolute left-4 top-4 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 flex items-center&quot;
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className=&quot;w-4 h-4 mr-2&quot; />
           Volver
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 text-center">
+        <h1 className=&quot;text-2xl font-bold text-gray-900 dark:text-white mb-2 text-center&quot;>
           Módulo 6: La Tecnología Blockchain
         </h1>
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center">
+        <h2 className=&quot;text-lg font-semibold text-gray-800 dark:text-gray-200 mb-6 text-center&quot;>
           Herramientas Económicas e Introducción al Mundo de las Criptomonedas
         </h2>
-        <div className="prose prose-gray dark:prose-invert max-w-none">
+        <div className=&quot;prose prose-gray dark:prose-invert max-w-none&quot;>
           <h3>Funcionamiento de la tecnología criptográfica</h3>
           <p>Básicamente, la criptografía es la técnica que protege documentos y datos. Funciona a través de la utilización de cifras o códigos para escribir algo secreto en documentos y datos confidenciales que circulan en redes locales o en internet. Su utilización es tan antigua como la escritura. Los romanos usaban códigos para ocultar sus proyectos de guerra de aquellos que no debían conocerlos, con el fin de que sólo las personas que conocían el significado de estos códigos descifren el mensaje oculto.</p>
           <p>A partir de la evolución de las computadoras, la criptografía fue ampliamente divulgada, empleada y modificada, y se constituyó luego con algoritmos matemáticos. Además de mantener la seguridad del usuario, la criptografía preserva la integridad de la web, la autenticación del usuario así como también la del remitente, el destinatario y de la actualidad del mensaje o del acceso.</p>
@@ -59,7 +59,7 @@ export default function Modulo6ContenidoPage() {
           <h3>Smart Contracts</h3>
           <p>Para entender un smart contract, primero hemos de recordar qué significa un contrato. Un contrato no es más que un acuerdo entre dos o más partes, un entorno donde se define lo que se puede hacer, cómo se puede hacer, qué pasa si algo no se hace. Es decir, unas reglas de juego que permiten a todas las partes que lo aceptan entender en qué va a consistir la interacción que van a realizar.</p>
           <p>Hasta ahora los contratos han sido documentos verbales o caros documentos escritos. Estos documentos están sujetos a las leyes y jurisdicciones territoriales, y en ocasiones requieren de notarios. Es decir, más costes, tiempo y terceros que intervienen en el proceso. Debido a ello, no son accesibles para cualquier persona. Y esto no es lo peor: los contenidos de los contratos pueden estar sujetos a la interpretación.</p>
-          <p>En cambio un contrato inteligente es capaz de ejecutarse y hacerse cumplir por sí mismo, de manera autónoma y automática, sin intermediarios ni mediadores. Evitan el lastre de la interpretación al no ser verbal o escrito en los lenguajes que hablamos. Los smart contracts se tratan de "scripts" (códigos informáticos) escritos con lenguajes de programación. Esto quiere decir que los términos del contrato son puras sentencias y comandos en el código que lo forma.</p>
+          <p>En cambio un contrato inteligente es capaz de ejecutarse y hacerse cumplir por sí mismo, de manera autónoma y automática, sin intermediarios ni mediadores. Evitan el lastre de la interpretación al no ser verbal o escrito en los lenguajes que hablamos. Los smart contracts se tratan de &quot;scripts&quot; (códigos informáticos) escritos con lenguajes de programación. Esto quiere decir que los términos del contrato son puras sentencias y comandos en el código que lo forma.</p>
           <p>Por otro lado, un smart contract puede ser creado y llamado por personas físicas y/o jurídicas. Pero también por máquinas u otros programas que funcionan de manera autónoma. Un smart contract tiene validez sin depender de autoridades. Esto se debe a su naturaleza: es un código visible por todos y que no se puede cambiar al existir sobre la tecnología blockchain. Esto le confiere un carácter descentralizado, inmutable y transparente.</p>
           <p>Con lo anterior, seguramente has podido ver el enorme potencial que encierran estos smarts contracts. Es importante destacar que, al estar distribuido por miles de ordenadores, se evita que una gran compañía los custodie, lo que elimina burocracia, censuras y los grandes costes / tiempos implícitos de este proceso que, dicho sea de paso, hasta ahora es el custodio.</p>
           <p>Si juntamos los principios de un smart contract con la creatividad de muchos desarrolladores del planeta, el resultado son posibilidades jamás vistas, accesibles para todos y a costes que rozan la gratuidad. Ecosistemas sin figuras autoritarias que someten a su voluntad a sus integrantes. Hablamos de un mundo más justo.</p>
@@ -77,11 +77,11 @@ export default function Modulo6ContenidoPage() {
             <li>Automatización de herencias estableciendo la asignación de los activos tras el fallecimiento. En cuanto llegase el fallecimiento, el contrato entraría en vigor y se ejecutaría repartiendo en este caso los fondos a la dirección establecida en el contrato.</li>
             <li>Seguros: partes de accidente, pagos de la compañía para reparaciones, reducción del fraude en accidentes…</li>
           </ul>
-          <p>Y es que los smart contracts se sirven de la tecnología de Bitcoin para existir, algo que le viene genial a Bitcoin, pues está haciendo que reciba mucha más atención trayendo cientos de miles de nuevos usuarios a su ecosistema. De hecho no es difícil encontrar afirmaciones del tipo: "Los smart contracts son la killer APP de Bitcoin".</p>
+          <p>Y es que los smart contracts se sirven de la tecnología de Bitcoin para existir, algo que le viene genial a Bitcoin, pues está haciendo que reciba mucha más atención trayendo cientos de miles de nuevos usuarios a su ecosistema. De hecho no es difícil encontrar afirmaciones del tipo: &quot;Los smart contracts son la killer APP de Bitcoin&quot;.</p>
           <p>Esta lógica que puede aplicarse a las transacciones Bitcoin se realiza a través del uso de todo un lenguaje propio, permitiendo que sea la misma blockchain quien determine qué hacer basándose en las indicaciones programadas. Esto quiere decir que tenemos una transacción con unas instrucciones de forma distribuida e inmutable, dando una seguridad completa y sin interpretaciones.</p>
           <h4>Un Smart Contract no es lo que piensas</h4>
-          <p>Hoy en día todo está controlado por sistemas informáticos. Todo interactúa con ellos. En el desarrollo de aplicaciones es normal que los programadores creen una serie de "puertas" a su aplicación (llamadas APIs). Estas puertas permiten que otros programadores puedan entrar a tu aplicación para crear u obtener información. Casi todas las webs o programas tienen las suyas. Es decir, se define un protocolo, un contrato, una forma conocida en la que se llama a la aplicación con una estructura de datos. Es por medio de esta puerta por la que vamos a obtener una respuesta, pero con la estructura de datos predecible. En este caso, para que no falle la comunicación y, consigo, los programas.</p>
-          <p>Pero este contrato no está garantizado. El servidor de la aplicación está controlado por alguien que tiene la capacidad de hacer que mañana el programa funcione diferente. Está centralizado y puede mutar a la decisión de ese tercero. No es "smart".</p>
+          <p>Hoy en día todo está controlado por sistemas informáticos. Todo interactúa con ellos. En el desarrollo de aplicaciones es normal que los programadores creen una serie de &quot;puertas&quot; a su aplicación (llamadas APIs). Estas puertas permiten que otros programadores puedan entrar a tu aplicación para crear u obtener información. Casi todas las webs o programas tienen las suyas. Es decir, se define un protocolo, un contrato, una forma conocida en la que se llama a la aplicación con una estructura de datos. Es por medio de esta puerta por la que vamos a obtener una respuesta, pero con la estructura de datos predecible. En este caso, para que no falle la comunicación y, consigo, los programas.</p>
+          <p>Pero este contrato no está garantizado. El servidor de la aplicación está controlado por alguien que tiene la capacidad de hacer que mañana el programa funcione diferente. Está centralizado y puede mutar a la decisión de ese tercero. No es &quot;smart&quot;.</p>
           <p>La gente necesita entornos predecibles, transparentes e incorruptibles. Los smart contracts son pedazos de códigos similares, es decir tienen formas de llamarlos y obtener unas respuestas, tienen un contrato, pero además son inmutables pues están distribuidos en miles de nodos que no pueden alterar su contenido. De esa forma obtienes un programa que siempre va a actuar de la misma forma sin requerir de la buena voluntad de ese tercero. Algo que para casi cualquier caso de uso es necesario. Los Smart Contracts son programas en la nube que siempre actúan igual, y permiten almacenar información que no puede ser modificada a traición. Son los programas más seguros jamás creados en la humanidad y solo fallan cuando están mal programados.</p>
           <h4>¿Cómo se realiza un contrato inteligente en Bitcoin?</h4>
           <p>Para que todo esto sea posible, tiene que haber un proceso completamente seguro que garantice que, al menos dos partes, puedan ejecutar el contrato sin necesidad de confiar el uno del otro, ni tan siquiera conocerse. Los contratos utilizan el sistema descentralizado de Bitcoin para hacer cumplir acuerdos financieros sin dependencia de agentes externos, como sistemas judiciales, disminuyendo el riesgo de tratar con entidades desconocidas en transacciones financieras.</p>
@@ -126,12 +126,12 @@ export default function Modulo6ContenidoPage() {
           </ul>
         </div>
         {/* Botón Volver abajo */}
-        <div className="mt-8">
+        <div className=&quot;mt-8&quot;>
           <Link
-            href="/dashboard/iniciado/6-tecnologia-blockchain"
-            className="inline-flex items-center text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+            href=&quot;/dashboard/iniciado/6-tecnologia-blockchain&quot;
+            className=&quot;inline-flex items-center text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200&quot;
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className=&quot;w-4 h-4 mr-2" />
             Volver
           </Link>
         </div>
@@ -139,3 +139,4 @@ export default function Modulo6ContenidoPage() {
     </div>
   );
 } 
+

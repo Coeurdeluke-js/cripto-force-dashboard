@@ -110,7 +110,7 @@ export default function Modulo6Page() {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
-              href="/dashboard/iniciado/6-tecnologia-blockchain/contenido"
+              href="/dashboard/iniciado/Teorico/6-tecnologia-blockchain/contenido"
               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center"
             >
               <BookOpen className="w-5 h-5 mr-2" />

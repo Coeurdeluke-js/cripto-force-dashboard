@@ -37,10 +37,10 @@ import {
 } from 'lucide-react';
 
 import { useEffect, useRef, useLayoutEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
 import { useBinanceKlines, INTERVALS } from '@/hooks/useBinanceKlines';
 
-const TradingChart = dynamic(() => import('@/components/TradingChart'), { ssr: false });
+// Simple import without dynamic loading to avoid chunk issues
+import TradingChart from '@/components/TradingChart';
 
 export default function MaestroDashboard() {
   const [activeTab, setActiveTab] = useState('metrics');
@@ -430,7 +430,6 @@ export default function MaestroDashboard() {
               <span className="text-white">Backup Automático</span>
               <div className="w-12 h-6 bg-green-500 rounded-full relative">
                 <div className="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5"></div>
-                </div>
                 </div>
             <div className="flex items-center justify-between">
               <span className="text-white">Notificaciones</span>

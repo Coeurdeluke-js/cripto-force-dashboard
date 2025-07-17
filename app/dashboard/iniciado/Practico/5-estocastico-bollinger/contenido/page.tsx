@@ -5,207 +5,207 @@ export default function ModuloPractico5Contenido() {
   return (
     <div className="min-h-screen bg-[#121212] text-white px-2 sm:px-8 py-8 max-w-3xl mx-auto">
       <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 pt-12 relative">
-        {/* Bot√≥n Volver en la esquina superior izquierda */}
+        {/* BotÛn Volver en la esquina superior izquierda */}
         <div className="absolute top-4 left-4">
           <BackButton />
         </div>
         
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#ec4d58] mb-2 text-center">Curso Pr√°ctico de Trading</h1>
-        <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-center">M√≥dulo 5: Estoc√°stico y Bandas de Bollinger</h2>
+        <h1 className="text-3xl sm:text-4xl font-bold text-[#ec4d58] mb-2 text-center">Curso Pr·ctico de Trading</h1>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-center">MÛdulo 5: Estoc·stico y Bandas de Bollinger</h2>
 
         <section className="mb-8">
           <div className="space-y-8">
-            {/* Secci√≥n A: ¬øC√≥mo operar con estoc√°stico? */}
+            {/* SecciÛn A: øCÛmo operar con estoc·stico? */}
             <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">A) ¬øC√≥mo operar con estoc√°stico?</h3>
+              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">A) øCÛmo operar con estoc·stico?</h3>
               
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-[#ec4d58] mb-2">¬øQu√© significa estoc√°stico?</h4>
+                  <h4 className="font-semibold text-[#ec4d58] mb-2">øQuÈ significa estoc·stico?</h4>
                   <ul className="text-sm space-y-1 mb-3">
-                    <li>‚Ä¢ Estoc√°stico es un oscilador que funciona bien en los mercados basados en l√≠mites de par√°metros.</li>
+                    <li>ï Estoc·stico es un oscilador que funciona bien en los mercados basados en lÌmites de par·metros.</li>
                   </ul>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-[#ec4d58] mb-2">¬øQu√© hace?</h4>
-                  <p className="text-sm mb-3">El estoc√°stico es un oscilador, es decir, ofrece una medici√≥n de la desviaci√≥n de la tasa (precio) de un par de divisas de sus niveles normales. El estoc√°stico, al igual que todos los osciladores, brinda indicios respecto de cu√°ndo un par de divisas se encuentra en sobrecompra/sobreventa. Por lo tanto, funciona bien en los mercados que no tienen una tendencia determinada sino que fluct√∫an entre un nivel superior (resistencia) y un nivel inferior (soporte).</p>
+                  <h4 className="font-semibold text-[#ec4d58] mb-2">øQuÈ hace?</h4>
+                  <p className="text-sm mb-3">El estoc·stico es un oscilador, es decir, ofrece una mediciÛn de la desviaciÛn de la tasa (precio) de un par de divisas de sus niveles normales. El estoc·stico, al igual que todos los osciladores, brinda indicios respecto de cu·ndo un par de divisas se encuentra en sobrecompra/sobreventa. Por lo tanto, funciona bien en los mercados que no tienen una tendencia determinada sino que fluct˙an entre un nivel superior (resistencia) y un nivel inferior (soporte).</p>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-[#ec4d58] mb-2">Par√°metros</h4>
-                  <p className="text-sm mb-3">El estoc√°stico generalmente tiene tres par√°metros que deben especificar los usuarios: %K, %D, y el n√∫mero de per√≠odos. A continuaci√≥n presentamos la configuraci√≥n que se usa normalmente para estos par√°metros:</p>
+                  <h4 className="font-semibold text-[#ec4d58] mb-2">Par·metros</h4>
+                  <p className="text-sm mb-3">El estoc·stico generalmente tiene tres par·metros que deben especificar los usuarios: %K, %D, y el n˙mero de perÌodos. A continuaciÛn presentamos la configuraciÛn que se usa normalmente para estos par·metros:</p>
                   <ul className="text-sm space-y-1 mb-3">
-                    <li>‚Ä¢ 5 para %K</li>
-                    <li>‚Ä¢ 5 para %D</li>
-                    <li>‚Ä¢ 3 para el n√∫mero de per√≠odos</li>
+                    <li>ï 5 para %K</li>
+                    <li>ï 5 para %D</li>
+                    <li>ï 3 para el n˙mero de perÌodos</li>
                   </ul>
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Diferentes Entradas</h4>
-                  <p className="text-sm mb-3">El estoc√°stico r√°pido s√≥lo requiere dos entradas, que generalmente son 5 y 5. El estoc√°stico lento requiere una tercer entrada, que consiste en el n√∫mero de per√≠odos utilizados al tomar una media m√≥vil de la l√≠nea %D r√°pida. A diferencia del MACD (que generalmente utiliza 12, 26 y 9) o el RSI (que utiliza 14), el estoc√°stico lento tiene un n√∫mero de configuraciones populares que pueden utilizarse.</p>
-                  <p className="text-sm mb-3">La configuraci√≥n utilizada normalmente es 5, 3 y 8. La configuraci√≥n 15, 3, 3 la utilizan los operadores conservadores que est√°n interesados en recibir menor cantidad de se√±ales, mientras que 8, 5, 5 y 5, 5, 3 son configuraciones m√°s agresivas para aquellos operadores que buscan se√±ales m√°s r√°pidas. Las ventajas y desventajas entre la exactitud y la velocidad es algo que debe evaluar cada operador al elegir las entradas que utilizar√°n en el estoc√°stico.</p>
-                  <p className="text-sm mb-3">%K es la l√≠nea de movimiento r√°pido; mide la fuerza relativa del activo, como el RSI. %D es una media m√≥vil de %K, y por lo tanto, es una l√≠nea mucho m√°s lenta.</p>
+                  <p className="text-sm mb-3">El estoc·stico r·pido sÛlo requiere dos entradas, que generalmente son 5 y 5. El estoc·stico lento requiere una tercer entrada, que consiste en el n˙mero de perÌodos utilizados al tomar una media mÛvil de la lÌnea %D r·pida. A diferencia del MACD (que generalmente utiliza 12, 26 y 9) o el RSI (que utiliza 14), el estoc·stico lento tiene un n˙mero de configuraciones populares que pueden utilizarse.</p>
+                  <p className="text-sm mb-3">La configuraciÛn utilizada normalmente es 5, 3 y 8. La configuraciÛn 15, 3, 3 la utilizan los operadores conservadores que est·n interesados en recibir menor cantidad de seÒales, mientras que 8, 5, 5 y 5, 5, 3 son configuraciones m·s agresivas para aquellos operadores que buscan seÒales m·s r·pidas. Las ventajas y desventajas entre la exactitud y la velocidad es algo que debe evaluar cada operador al elegir las entradas que utilizar·n en el estoc·stico.</p>
+                  <p className="text-sm mb-3">%K es la lÌnea de movimiento r·pido; mide la fuerza relativa del activo, como el RSI. %D es una media mÛvil de %K, y por lo tanto, es una lÌnea mucho m·s lenta.</p>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-[#ec4d58] mb-2">¬øC√≥mo utilizar el estoc√°stico en la compraventa de divisas?</h4>
+                  <h4 className="font-semibold text-[#ec4d58] mb-2">øCÛmo utilizar el estoc·stico en la compraventa de divisas?</h4>
                   <ul className="text-sm space-y-2 mb-3">
-                    <li>‚Ä¢ Puede utilizarse para determinar niveles de sobrecompra/venta, como el RSI</li>
-                    <li>‚Ä¢ Puede utilizarse como un cruce similar a las medias m√≥viles</li>
-                    <li>‚Ä¢ Puede utilizarse para descubrir las divergencias, que indican posible debilidad en las tendencias</li>
+                    <li>ï Puede utilizarse para determinar niveles de sobrecompra/venta, como el RSI</li>
+                    <li>ï Puede utilizarse como un cruce similar a las medias mÛviles</li>
+                    <li>ï Puede utilizarse para descubrir las divergencias, que indican posible debilidad en las tendencias</li>
                   </ul>
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Cruce</h4>
-                  <p className="text-sm mb-3">Cuando %K corta a %D (Cuando la l√≠nea r√°pida cruza a la lenta), puede interpretarse como una oportunidad de entrar a una operaci√≥n. Los operadores pueden ingresar posiciones siguiendo la direcci√≥n de %K.</p>
-                  <p className="text-sm mb-3">Alternativamente, si est√° por debajo de 20, el activo est√° sobrevendido, y por lo tanto puede ser una gran oportunidad de compra, ya que el mercado basado en l√≠mites de par√°metros implicar√≠a que el par de divisas se dirigir√° a un precio m√°s "normal".</p>
+                  <p className="text-sm mb-3">Cuando %K corta a %D (Cuando la lÌnea r·pida cruza a la lenta), puede interpretarse como una oportunidad de entrar a una operaciÛn. Los operadores pueden ingresar posiciones siguiendo la direcciÛn de %K.</p>
+                  <p className="text-sm mb-3">Alternativamente, si est· por debajo de 20, el activo est· sobrevendido, y por lo tanto puede ser una gran oportunidad de compra, ya que el mercado basado en lÌmites de par·metros implicarÌa que el par de divisas se dirigir· a un precio m·s "normal".</p>
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Sobrecompra/Sobreventa</h4>
-                  <p className="text-sm mb-3">Est√© atento a que tanto %K y %D est√©n por encima/debajo de los niveles de 20/80. Si ambos est√°n por encima de 80, puede ser una buena oportunidad para vender, ya que el activo est√° sobrecomprado y se espera que vuelva a su nivel normal.</p>
+                  <p className="text-sm mb-3">EstÈ atento a que tanto %K y %D estÈn por encima/debajo de los niveles de 20/80. Si ambos est·n por encima de 80, puede ser una buena oportunidad para vender, ya que el activo est· sobrecomprado y se espera que vuelva a su nivel normal.</p>
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Divergencia</h4>
-                  <p className="text-sm mb-3">El estoc√°stico no puede utilizarse para determinar cuando NO debe entrar a una posici√≥n. Por ejemplo, si la tendencia parece fuerte, los operadores pueden observar el estoc√°stico para ver si hay divergencia entre el movimiento del activo y las l√≠neas estoc√°sticas. Si, por ejemplo, un par de divisas se encuentra en una tendencia alcista abrupta y est√° alcanzando nuevos m√°ximos, pero el estoc√°stico no est√° alcanzando nuevos m√°ximos o incluso est√° bajando, entonces esto implica que la tendencia es d√©bil, y los precios pueden volver a bajar.</p>
-                  <p className="text-sm mb-3">Los operadores conservadores pueden observar la divergencia como una forma de precauci√≥n para no entrar a una operaci√≥n bas√°ndose en el momento, mientras que los operadores m√°s agresivos pueden utilizar la divergencia como una se√±al para entrar a una posici√≥n antes de que la tendencia comience a retraerse.</p>
+                  <p className="text-sm mb-3">El estoc·stico no puede utilizarse para determinar cuando NO debe entrar a una posiciÛn. Por ejemplo, si la tendencia parece fuerte, los operadores pueden observar el estoc·stico para ver si hay divergencia entre el movimiento del activo y las lÌneas estoc·sticas. Si, por ejemplo, un par de divisas se encuentra en una tendencia alcista abrupta y est· alcanzando nuevos m·ximos, pero el estoc·stico no est· alcanzando nuevos m·ximos o incluso est· bajando, entonces esto implica que la tendencia es dÈbil, y los precios pueden volver a bajar.</p>
+                  <p className="text-sm mb-3">Los operadores conservadores pueden observar la divergencia como una forma de precauciÛn para no entrar a una operaciÛn bas·ndose en el momento, mientras que los operadores m·s agresivos pueden utilizar la divergencia como una seÒal para entrar a una posiciÛn antes de que la tendencia comience a retraerse.</p>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-[#ec4d58] mb-2">Estoc√°stico Lento Vs. R√°pido</h4>
-                  <p className="text-sm mb-3">Hay dos tipos de estoc√°stico: el lento y el r√°pido. Ambos muestran las mismas dos l√≠neas, y √©stos pueden interpretarse de igual forma para los cruces, las condiciones de sobrecompra/sobreventa y la divergencia. La diferencia es la siguiente: la l√≠nea %D del estoc√°stico lento se suaviza al sacar la media m√≥vil de la l√≠nea %D del estoc√°stico r√°pido. Esto hace que la se√±al que brinda el estoc√°stico lento sea m√°s precisa pero m√°s lenta para reaccionar al cambio del precio del mercado.</p>
+                  <h4 className="font-semibold text-[#ec4d58] mb-2">Estoc·stico Lento Vs. R·pido</h4>
+                  <p className="text-sm mb-3">Hay dos tipos de estoc·stico: el lento y el r·pido. Ambos muestran las mismas dos lÌneas, y Èstos pueden interpretarse de igual forma para los cruces, las condiciones de sobrecompra/sobreventa y la divergencia. La diferencia es la siguiente: la lÌnea %D del estoc·stico lento se suaviza al sacar la media mÛvil de la lÌnea %D del estoc·stico r·pido. Esto hace que la seÒal que brinda el estoc·stico lento sea m·s precisa pero m·s lenta para reaccionar al cambio del precio del mercado.</p>
                 </div>
               </div>
             </div>
 
-            {/* Secci√≥n B: Estoc√°stico: Operaciones Hist√≥ricas */}
+            {/* SecciÛn B: Estoc·stico: Operaciones HistÛricas */}
             <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">B) Estoc√°stico: Operaciones Hist√≥ricas</h3>
+              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">B) Estoc·stico: Operaciones HistÛricas</h3>
               
               <div className="space-y-4">
-                <p className="text-sm mb-3">A continuaci√≥n presentamos dos ejemplos de c√≥mo pudo haberse utilizado el estoc√°stico para colocar operaciones redituables. Observe que el primer gr√°fico utiliza cruces para las se√±ales, mientras que el segundo gr√°fico utiliza divergencia. Como la divergencia no es un indicador preciso en t√©rminos de tiempo, puede utilizarse el doble techo como un punto de entrada.</p>
+                <p className="text-sm mb-3">A continuaciÛn presentamos dos ejemplos de cÛmo pudo haberse utilizado el estoc·stico para colocar operaciones redituables. Observe que el primer gr·fico utiliza cruces para las seÒales, mientras que el segundo gr·fico utiliza divergencia. Como la divergencia no es un indicador preciso en tÈrminos de tiempo, puede utilizarse el doble techo como un punto de entrada.</p>
               </div>
             </div>
 
-            {/* Secci√≥n C: Estoc√°stico: La Pregunta del D√≠a */}
+            {/* SecciÛn C: Estoc·stico: La Pregunta del DÌa */}
             <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">C) Estoc√°stico: La Pregunta del D√≠a</h3>
+              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">C) Estoc·stico: La Pregunta del DÌa</h3>
               
               <div className="space-y-4">
-                <p className="text-sm">El estoc√°stico indica cu√°ndo comprar o vender cuando las dos l√≠neas cruzan por arriba de 80 o por debajo de 20.</p>
-                <p className="text-sm mb-3">¬øC√≥mo considerar√≠a a un cruce que tiene lugar dentro de este canal? ¬øConsidera que es lo suficientemente importante como para basar una operaci√≥n en el mismo? Recuerde lo que muestra el indicador aqu√≠, cuando la l√≠nea r√°pida corta a la lenta, y no dude en observar el estoc√°stico en la cantidad de gr√°ficos que sean necesarios antes de tomar una decisi√≥n.</p>
+                <p className="text-sm">El estoc·stico indica cu·ndo comprar o vender cuando las dos lÌneas cruzan por arriba de 80 o por debajo de 20.</p>
+                <p className="text-sm mb-3">øCÛmo considerarÌa a un cruce que tiene lugar dentro de este canal? øConsidera que es lo suficientemente importante como para basar una operaciÛn en el mismo? Recuerde lo que muestra el indicador aquÌ, cuando la lÌnea r·pida corta a la lenta, y no dude en observar el estoc·stico en la cantidad de gr·ficos que sean necesarios antes de tomar una decisiÛn.</p>
                 <div className="bg-[#1a1a1a] rounded-lg p-4">
-                  <p className="text-sm text-gray-300"><strong>NOTA:</strong> La pregunta del d√≠a es una pregunta ret√≥rica, cuyo objetivo es ayudarle a revisar lo que acaba de aprender. NO es necesario enviarnos una respuesta, ya que estas preguntas no son evaluadas. Sin embargo, si tiene dudas, o si desea compartir sus ideas con nosotros, no dude en contactarnos.</p>
+                  <p className="text-sm text-gray-300"><strong>NOTA:</strong> La pregunta del dÌa es una pregunta retÛrica, cuyo objetivo es ayudarle a revisar lo que acaba de aprender. NO es necesario enviarnos una respuesta, ya que estas preguntas no son evaluadas. Sin embargo, si tiene dudas, o si desea compartir sus ideas con nosotros, no dude en contactarnos.</p>
                 </div>
               </div>
             </div>
 
-            {/* Secci√≥n D: Prueba Estoc√°stico */}
+            {/* SecciÛn D: Prueba Estoc·stico */}
             <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">D) Prueba Estoc√°stico</h3>
+              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">D) Prueba Estoc·stico</h3>
               
               <div className="space-y-4">
-                <p className="text-sm">Por favor eval√∫e su conocimiento sobre lo aprendido en esta lecci√≥n.</p>
+                <p className="text-sm">Por favor eval˙e su conocimiento sobre lo aprendido en esta lecciÛn.</p>
                 <div className="bg-[#1a1a1a] rounded-lg p-4">
-                  <p className="text-sm text-gray-300">La prueba estar√° disponible pr√≥ximamente para evaluar su comprensi√≥n del estoc√°stico.</p>
+                  <p className="text-sm text-gray-300">La prueba estar· disponible prÛximamente para evaluar su comprensiÛn del estoc·stico.</p>
                 </div>
               </div>
             </div>
 
-            {/* Secci√≥n E: Las Bandas de Bollinger */}
+            {/* SecciÛn E: Las Bandas de Bollinger */}
             <div className="bg-[#181818] rounded-lg p-6">
               <h3 className="text-lg font-bold text-[#ec4d58] mb-4">E) Las Bandas de Bollinger</h3>
               
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-[#ec4d58] mb-2">¬øEn qu√© consisten las bandas de Bollinger?</h4>
-                  <p className="text-sm mb-3">Excelente indicador del mercado en rango que mide la desviaci√≥n est√°ndar de una media m√≥vil.</p>
-                  <p className="text-sm mb-3">Desarrollado por John Bollinger, las bandas de Bollinger consisten en tres l√≠neas:</p>
+                  <h4 className="font-semibold text-[#ec4d58] mb-2">øEn quÈ consisten las bandas de Bollinger?</h4>
+                  <p className="text-sm mb-3">Excelente indicador del mercado en rango que mide la desviaciÛn est·ndar de una media mÛvil.</p>
+                  <p className="text-sm mb-3">Desarrollado por John Bollinger, las bandas de Bollinger consisten en tres lÌneas:</p>
                   <ul className="text-sm space-y-1 mb-3">
-                    <li>‚Ä¢ Una media m√≥vil, que generalmente no est√° incluida en la mayor√≠a de los paquetes de gr√°ficos</li>
-                    <li>‚Ä¢ Banda superior con dos desviaciones est√°ndar por encima de la media m√≥vil</li>
-                    <li>‚Ä¢ Banda inferior con dos desviaciones est√°ndar por debajo de la media m√≥vil</li>
+                    <li>ï Una media mÛvil, que generalmente no est· incluida en la mayorÌa de los paquetes de gr·ficos</li>
+                    <li>ï Banda superior con dos desviaciones est·ndar por encima de la media mÛvil</li>
+                    <li>ï Banda inferior con dos desviaciones est·ndar por debajo de la media mÛvil</li>
                   </ul>
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Funcionamiento</h4>
-                  <p className="text-sm mb-3">Las bandas de Bollinger es un indicador excelente de mercados en rango. Es decir que funcionan mejor cuando el mercado no tiene una tendencia fuerte, pero mas bien fluct√∫an entre una barrera superior (resistencia) y una barrera inferior (soporte). Las bandas de Bollinger funcionan conforme a la l√≥gica de que el precio del par de una divisa seguramente gravitar√° alrededor del promedio, y por lo tanto cuando se aparta demasiado lejos ‚Äì como por ejemplo dos desviaciones est√°ndar ‚Äì el precio retroceder√° hacia su media m√≥vil.</p>
+                  <p className="text-sm mb-3">Las bandas de Bollinger es un indicador excelente de mercados en rango. Es decir que funcionan mejor cuando el mercado no tiene una tendencia fuerte, pero mas bien fluct˙an entre una barrera superior (resistencia) y una barrera inferior (soporte). Las bandas de Bollinger funcionan conforme a la lÛgica de que el precio del par de una divisa seguramente gravitar· alrededor del promedio, y por lo tanto cuando se aparta demasiado lejos ñ como por ejemplo dos desviaciones est·ndar ñ el precio retroceder· hacia su media mÛvil.</p>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-[#ec4d58] mb-2">Par√°metros</h4>
-                  <p className="text-sm mb-3">Desviaci√≥n est√°ndar de 2; media m√≥vil de 20 (generalmente se omite).</p>
+                  <h4 className="font-semibold text-[#ec4d58] mb-2">Par·metros</h4>
+                  <p className="text-sm mb-3">DesviaciÛn est·ndar de 2; media mÛvil de 20 (generalmente se omite).</p>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-[#ec4d58] mb-2">¬øC√≥mo pueden utilizarse?</h4>
+                  <h4 className="font-semibold text-[#ec4d58] mb-2">øCÛmo pueden utilizarse?</h4>
                   
                   <div className="space-y-3">
                     <div>
                       <h5 className="font-semibold text-[#ec4d58] mb-2">Mercado en Rango</h5>
-                      <p className="text-sm mb-3">La compraventa de divisas en los mercados en rango es bastante sencilla, fundamentalmente implica la venta en la banda superior y la compra en la banda inferior. Observe c√≥mo las bandas se encuentran casi en posici√≥n horizontal cuando el mercado se encuentra en un rango determinado. Aqu√≠ es cuando los cambios de tendencia son m√°s efectivos.</p>
+                      <p className="text-sm mb-3">La compraventa de divisas en los mercados en rango es bastante sencilla, fundamentalmente implica la venta en la banda superior y la compra en la banda inferior. Observe cÛmo las bandas se encuentran casi en posiciÛn horizontal cuando el mercado se encuentra en un rango determinado. AquÌ es cuando los cambios de tendencia son m·s efectivos.</p>
                     </div>
 
                     <div>
                       <h5 className="font-semibold text-[#ec4d58] mb-2">Ruptura de la Volatilidad</h5>
-                      <p className="text-sm mb-3">Cuando las bandas de Bollinger se estrechan (es decir, se tornan m√°s angostas), significa que la volatilidad est√° disminuyendo, y que el par est√° operando en un rango m√°s angosto. Generalmente, la volatilidad se estrecha justo antes de que se produzca una gran ruptura en el mercado.</p>
-                      <p className="text-sm mb-3">Por lo tanto, al estrecharse la volatilidad (simbolizado mediante las Bandas angostas de Bollinger) es una se√±al para los operadores de que el mercado puede estar listo para que se produzca una gran ruptura.</p>
-                      <p className="text-sm mb-3">El gr√°fico que aparece arriba muestra que las bandas se han estrechado hasta un rango muy angosto, precediendo una ruptura. Cuando las bandas comienzan a ensancharse, es se√±al para entrar en la direcci√≥n en la que se est√° moviendo el precio.</p>
-                      <p className="text-sm mb-3">Por lo tanto, tal como lo muestra el gr√°fico, si el precio se encuentra en las bandas superiores y las bandas comienzan a ensancharse, es se√±al de entrar a una posici√≥n larga.</p>
+                      <p className="text-sm mb-3">Cuando las bandas de Bollinger se estrechan (es decir, se tornan m·s angostas), significa que la volatilidad est· disminuyendo, y que el par est· operando en un rango m·s angosto. Generalmente, la volatilidad se estrecha justo antes de que se produzca una gran ruptura en el mercado.</p>
+                      <p className="text-sm mb-3">Por lo tanto, al estrecharse la volatilidad (simbolizado mediante las Bandas angostas de Bollinger) es una seÒal para los operadores de que el mercado puede estar listo para que se produzca una gran ruptura.</p>
+                      <p className="text-sm mb-3">El gr·fico que aparece arriba muestra que las bandas se han estrechado hasta un rango muy angosto, precediendo una ruptura. Cuando las bandas comienzan a ensancharse, es seÒal para entrar en la direcciÛn en la que se est· moviendo el precio.</p>
+                      <p className="text-sm mb-3">Por lo tanto, tal como lo muestra el gr·fico, si el precio se encuentra en las bandas superiores y las bandas comienzan a ensancharse, es seÒal de entrar a una posiciÛn larga.</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Secci√≥n F: Las Bandas de Bollinger: Operaciones Hist√≥ricas */}
+            {/* SecciÛn F: Las Bandas de Bollinger: Operaciones HistÛricas */}
             <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">F) Las Bandas de Bollinger: Operaciones Hist√≥ricas</h3>
+              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">F) Las Bandas de Bollinger: Operaciones HistÛricas</h3>
               
               <div className="space-y-4">
-                <p className="text-sm mb-3">A continuaci√≥n se presentan dos gr√°ficos que demuestran c√≥mo pueden utilizar los operadores las Bandas de Bollinger para participar en forma activa en los mercados basados en l√≠mites de par√°metros. Observe la importancia de las velas para validar el cambio de la tendencia.</p>
+                <p className="text-sm mb-3">A continuaciÛn se presentan dos gr·ficos que demuestran cÛmo pueden utilizar los operadores las Bandas de Bollinger para participar en forma activa en los mercados basados en lÌmites de par·metros. Observe la importancia de las velas para validar el cambio de la tendencia.</p>
                 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Ejemplo 1</h4>
-                  <p className="text-sm mb-3">Cuando la vela alcanza la Banda inferior de Bollinger en este gr√°fico de un d√≠a de GBP/USD, inmediatamente observamos un ascenso a la banda superior. Tambi√©n observamos una ca√≠da en la banda inferior cuando la formaci√≥n Estrella del Atardecer tiene lugar en la banda superior.</p>
+                  <p className="text-sm mb-3">Cuando la vela alcanza la Banda inferior de Bollinger en este gr·fico de un dÌa de GBP/USD, inmediatamente observamos un ascenso a la banda superior. TambiÈn observamos una caÌda en la banda inferior cuando la formaciÛn Estrella del Atardecer tiene lugar en la banda superior.</p>
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Ejemplo 2</h4>
-                  <p className="text-sm mb-3">La Estrella del Amanecer en la banda inferior de este gr√°fico de USD/CHF precede un cambio en el movimiento del precio a la banda superior. Luego, cuando el precio alcanza la banda superior, la Estrella del Atardecer y el Martillo Invertido preceden el retorno a la banda inferior.</p>
+                  <p className="text-sm mb-3">La Estrella del Amanecer en la banda inferior de este gr·fico de USD/CHF precede un cambio en el movimiento del precio a la banda superior. Luego, cuando el precio alcanza la banda superior, la Estrella del Atardecer y el Martillo Invertido preceden el retorno a la banda inferior.</p>
                 </div>
               </div>
             </div>
 
-            {/* Secci√≥n G: Trabajo Pr√°ctico sobre las Bandas de Bollinger */}
+            {/* SecciÛn G: Trabajo Pr·ctico sobre las Bandas de Bollinger */}
             <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">G) Trabajo Pr√°ctico sobre las Bandas de Bollinger: Colocaci√≥n de una Operaci√≥n</h3>
+              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">G) Trabajo Pr·ctico sobre las Bandas de Bollinger: ColocaciÛn de una OperaciÛn</h3>
               
               <div className="space-y-4">
-                <p className="text-sm">TRABAJO PR√ÅCTICO: coloque una operaci√≥n basada en el indicador de las Bandas de Bollinger. Com√©ntenos por correo electr√≥nico su operaci√≥n y por qu√© la realiz√≥. Si lo desea, no dude en enviarnos una imagen del gr√°fico que usted est√° viendo como ayuda para transmitirnos por qu√© realiz√≥ esa operaci√≥n.</p>
+                <p className="text-sm">TRABAJO PR¡CTICO: coloque una operaciÛn basada en el indicador de las Bandas de Bollinger. ComÈntenos por correo electrÛnico su operaciÛn y por quÈ la realizÛ. Si lo desea, no dude en enviarnos una imagen del gr·fico que usted est· viendo como ayuda para transmitirnos por quÈ realizÛ esa operaciÛn.</p>
               </div>
             </div>
 
-            {/* Secci√≥n H: Prueba Las Bandas de Bollinger */}
+            {/* SecciÛn H: Prueba Las Bandas de Bollinger */}
             <div className="bg-[#181818] rounded-lg p-6">
               <h3 className="text-lg font-bold text-[#ec4d58] mb-4">H) Prueba Las Bandas de Bollinger</h3>
               
               <div className="space-y-4">
-                <p className="text-sm">Por favor, eval√∫e el conocimiento que aprendi√≥ en esta lecci√≥n.</p>
+                <p className="text-sm">Por favor, eval˙e el conocimiento que aprendiÛ en esta lecciÛn.</p>
                 <div className="bg-[#1a1a1a] rounded-lg p-4">
-                  <p className="text-sm text-gray-300">La prueba estar√° disponible pr√≥ximamente para evaluar su comprensi√≥n de las bandas de Bollinger.</p>
+                  <p className="text-sm text-gray-300">La prueba estar· disponible prÛximamente para evaluar su comprensiÛn de las bandas de Bollinger.</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Bot√≥n Volver al final del texto, del lado izquierdo */}
+        {/* BotÛn Volver al final del texto, del lado izquierdo */}
         <div className="mt-8">
           <BackButton />
         </div>
@@ -213,3 +213,4 @@ export default function ModuloPractico5Contenido() {
     </div>
   );
 } 
+

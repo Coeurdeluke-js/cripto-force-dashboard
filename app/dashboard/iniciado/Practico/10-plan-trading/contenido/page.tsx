@@ -1,7 +1,7 @@
-'use client';
+&apos;use client&apos;;
 
-import { useState } from 'react';
-import { ListChecks, TrendingUp, Shield, Brain, CheckCircle, BookOpen, AlertTriangle, GraduationCap, List, ChevronUp, ChevronDown } from 'lucide-react';
+import { useState } from &apos;react&apos;;
+import { ListChecks, TrendingUp, Shield, Brain, CheckCircle, BookOpen, AlertTriangle, GraduationCap, List, ChevronUp, ChevronDown } from &apos;lucide-react&apos;;
 
 interface CollapsibleSectionProps {
   title: string;
@@ -56,18 +56,18 @@ export default function PlanTradingContenidoPage() {
         </div>
 
         <div className="max-w-5xl mx-auto space-y-6">
-          {/* Introducci√≥n */}
+          {/* IntroducciÛn */}
           <div className="bg-blue-500/10 backdrop-blur-lg rounded-2xl p-8 border border-blue-500/30">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
               <BookOpen className="mr-3 text-blue-400" />
-              Introducci√≥n
+              IntroducciÛn
             </h2>
             <div className="text-gray-300 space-y-4">
               <p>
-                Hacia el final de 2004, un hilo titulado "¬°Uno debe tener un plan de Trading!" se inici√≥ en el foro 
-                'Trading for a Living' de www.trade2win.com, en T2W. El objetivo del hilo era producir una plantilla 
+                Hacia el final de 2004, un hilo titulado "°Uno debe tener un plan de Trading!" se iniciÛ en el foro 
+                &apos;Trading for a Living&apos; de www.trade2win.com, en T2W. El objetivo del hilo era producir una plantilla 
                 en la que todos los operadores, independientemente de la experiencia, los instrumentos negociados, 
-                TF, br√≥kers, etc, pudieran crear un plan de trading profesional.
+                TF, brÛkers, etc, pudieran crear un plan de trading profesional.
               </p>
               <p>
                 Este documento es el resultado de ese hilo. Se compone de dos secciones principales con un tercer 
@@ -84,16 +84,16 @@ export default function PlanTradingContenidoPage() {
           >
             <div className="space-y-6">
               <div>
-                <h4 className="font-semibold text-white mb-3">1. ¬øQu√© es un Plan de Trading?</h4>
+                <h4 className="font-semibold text-white mb-3">1. øQuÈ es un Plan de Trading?</h4>
                 <div className="space-y-3">
                   <p>
                     Un plan de trading es un conjunto completo de normas que abarca todos los aspectos de su vida comercial. 
                     Muchos expertos se refieren a la necesidad de tener una "ventaja" para inclinar la balanza de probabilidades 
-                    de √©xito en su favor.
+                    de Èxito en su favor.
                   </p>
                   <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
                     <p className="text-sm">
-                      <strong>Importante:</strong> En s√≠ mismo, un plan no es una ventaja, pero, con el tiempo, al trader con 
+                      <strong>Importante:</strong> En sÌ mismo, un plan no es una ventaja, pero, con el tiempo, al trader con 
                       un plan le va mucho mejor que al trader que no tiene uno.
                     </p>
                   </div>
@@ -101,28 +101,28 @@ export default function PlanTradingContenidoPage() {
               </div>
 
               <div>
-                <h4 className="font-semibold text-white mb-3">2. ¬øQui√©n necesita un plan de Trading?</h4>
+                <h4 className="font-semibold text-white mb-3">2. øQuiÈn necesita un plan de Trading?</h4>
                 <p>
-                  A menos que haya sido un operador constantemente rentable durante un per√≠odo de tiempo suficiente para 
-                  abarcar una serie de condiciones diferentes del mercado, entonces ¬°USTED necesita un plan de trading!
+                  A menos que haya sido un operador constantemente rentable durante un perÌodo de tiempo suficiente para 
+                  abarcar una serie de condiciones diferentes del mercado, entonces °USTED necesita un plan de trading!
                 </p>
               </div>
 
               <div>
-                <h4 className="font-semibold text-white mb-3">3. ¬øQu√© har√° un Plan de Trading?</h4>
+                <h4 className="font-semibold text-white mb-3">3. øQuÈ har· un Plan de Trading?</h4>
                 <div className="space-y-3">
                   <p>
-                    Un plan de trading har√° el acto de operar m√°s simple de lo que ser√≠a si se opera sin un plan. 
-                    Limitar√° su probabilidad de hacer operaciones malas y le evitar√° muchos problemas psicol√≥gicos desde la ra√≠z.
+                    Un plan de trading har· el acto de operar m·s simple de lo que serÌa si se opera sin un plan. 
+                    Limitar· su probabilidad de hacer operaciones malas y le evitar· muchos problemas psicolÛgicos desde la raÌz.
                   </p>
                   <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
                     <h5 className="font-semibold text-white mb-2">Beneficios Principales:</h5>
                     <ul className="space-y-1 text-sm">
-                      <li>‚Ä¢ Operar relajado, libre de estr√©s</li>
-                      <li>‚Ä¢ Capacidad para controlar su evoluci√≥n</li>
-                      <li>‚Ä¢ Prevenir problemas psicol√≥gicos desde la ra√≠z</li>
-                      <li>‚Ä¢ Reducir el n√∫mero de operaciones malas</li>
-                      <li>‚Ä¢ Evitar decisiones irracionales en el calor del momento</li>
+                      <li>ï Operar relajado, libre de estrÈs</li>
+                      <li>ï Capacidad para controlar su evoluciÛn</li>
+                      <li>ï Prevenir problemas psicolÛgicos desde la raÌz</li>
+                      <li>ï Reducir el n˙mero de operaciones malas</li>
+                      <li>ï Evitar decisiones irracionales en el calor del momento</li>
                     </ul>
                   </div>
                 </div>
@@ -137,58 +137,58 @@ export default function PlanTradingContenidoPage() {
             color="text-green-400"
           >
             <div className="space-y-6">
-              {/* Secci√≥n 5 */}
+              {/* SecciÛn 5 */}
               <div>
-                <h4 className="font-semibold text-white mb-3">5. Con√≥zcase a usted mismo. Conozca sus Objetivos</h4>
+                <h4 className="font-semibold text-white mb-3">5. ConÛzcase a usted mismo. Conozca sus Objetivos</h4>
                 <div className="space-y-4">
                   <p>
-                    Casi cualquier operador profesional le dir√° que la clave del √©xito en los mercados radica en la 
-                    comprensi√≥n de su propia psique. Muchos operadores inexpertos no est√°n preparados para el asalto 
+                    Casi cualquier operador profesional le dir· que la clave del Èxito en los mercados radica en la 
+                    comprensiÛn de su propia psique. Muchos operadores inexpertos no est·n preparados para el asalto 
                     violento a sus pensamientos y emociones al comienzo de sus carreras.
                   </p>
                   
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">¬øPor qu√© quiere ser un Trader?</h5>
+                      <h5 className="font-semibold text-white mb-2">øPor quÈ quiere ser un Trader?</h5>
                       <p className="text-sm">
-                        Preg√∫ntese sus verdaderas motivaciones. Examine si sus talentos se adaptan mejor a otro negocio. 
-                        ¬øEst√° seguro de que el trading es el negocio correcto para usted?
+                        Preg˙ntese sus verdaderas motivaciones. Examine si sus talentos se adaptan mejor a otro negocio. 
+                        øEst· seguro de que el trading es el negocio correcto para usted?
                       </p>
                     </div>
                     
                     <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">¬øQu√© clase de Trader es Usted?</h5>
+                      <h5 className="font-semibold text-white mb-2">øQuÈ clase de Trader es Usted?</h5>
                       <p className="text-sm">
-                        ¬øEs usted un trader discrecional o mec√°nico? ¬øSe propone operar en el largo plazo, mediano plazo 
+                        øEs usted un trader discrecional o mec·nico? øSe propone operar en el largo plazo, mediano plazo 
                         o en el corto plazo?
                       </p>
                     </div>
                   </div>
 
                   <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
-                    <h5 className="font-semibold text-white mb-2">¬øCu√°les son sus Fortalezas y Debilidades?</h5>
+                    <h5 className="font-semibold text-white mb-2">øCu·les son sus Fortalezas y Debilidades?</h5>
                     <p className="text-sm">
-                      Haga una lista de cada uno de sus puntos fuertes y d√©biles con respecto al trading y especifique 
-                      c√≥mo va a maximizar el beneficio de los primeros y minimizar los da√±os causados por este √∫ltimo.
+                      Haga una lista de cada uno de sus puntos fuertes y dÈbiles con respecto al trading y especifique 
+                      cÛmo va a maximizar el beneficio de los primeros y minimizar los daÒos causados por este ˙ltimo.
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Secci√≥n 6 */}
+              {/* SecciÛn 6 */}
               <div>
                 <h4 className="font-semibold text-white mb-3">6. Objetivos de Trading</h4>
                 <div className="space-y-4">
                   <p>
                     Fijar metas es una parte esencial de su plan de trading, ya que proporcionan con un faro para trabajar 
-                    en pro de, la capacidad de seguimiento de su progreso y la motivaci√≥n, necesarias para realizar el trabajo.
+                    en pro de, la capacidad de seguimiento de su progreso y la motivaciÛn, necesarias para realizar el trabajo.
                   </p>
                   
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-4">
                       <h5 className="font-semibold text-white mb-2">Metas Anuales</h5>
                       <p className="text-sm">
-                        Piense en t√©rminos de las habilidades y conocimientos que desea adquirir de aqu√≠ hasta el pr√≥ximo a√±o.
+                        Piense en tÈrminos de las habilidades y conocimientos que desea adquirir de aquÌ hasta el prÛximo aÒo.
                       </p>
                     </div>
                     
@@ -202,53 +202,53 @@ export default function PlanTradingContenidoPage() {
                 </div>
               </div>
 
-              {/* Secci√≥n 7 */}
+              {/* SecciÛn 7 */}
               <div>
                 <h4 className="font-semibold text-white mb-3">7. Mercados, Instrumentos y Time Frame</h4>
                 <div className="space-y-4">
                   <div className="grid md:grid-cols-3 gap-4">
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">¬øQu√© mercados va a Operar?</h5>
+                      <h5 className="font-semibold text-white mb-2">øQuÈ mercados va a Operar?</h5>
                       <p className="text-sm">
-                        Decida qu√© mercado desea operar y las razones de su elecci√≥n. Los operadores profesionales 
+                        Decida quÈ mercado desea operar y las razones de su elecciÛn. Los operadores profesionales 
                         tienden a limitar su enfoque.
                       </p>
                     </div>
                     
                     <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">¬øQu√© instrumentos va a Operar?</h5>
+                      <h5 className="font-semibold text-white mb-2">øQuÈ instrumentos va a Operar?</h5>
                       <p className="text-sm">
-                        ¬øSe limitar√° usted a una cesta de acciones o negociar√° usted de todo? Defina claramente su universo de instrumentos.
+                        øSe limitar· usted a una cesta de acciones o negociar· usted de todo? Defina claramente su universo de instrumentos.
                       </p>
                     </div>
                     
                     <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">¬øEn qu√© Time Frame Operar√°?</h5>
+                      <h5 className="font-semibold text-white mb-2">øEn quÈ Time Frame Operar·?</h5>
                       <p className="text-sm">
-                        Tenga muy claro en su mente el n√∫mero de TF que utiliza y por qu√© utilizarlos.
+                        Tenga muy claro en su mente el n˙mero de TF que utiliza y por quÈ utilizarlos.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Secci√≥n 8 */}
+              {/* SecciÛn 8 */}
               <div>
                 <h4 className="font-semibold text-white mb-3">8. Las Herramientas del Trading</h4>
                 <div className="space-y-4">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">¬øQu√© Veh√≠culo Financiero utilizar√©?</h5>
+                      <h5 className="font-semibold text-white mb-2">øQuÈ VehÌculo Financiero utilizarÈ?</h5>
                       <p className="text-sm">
-                        Sea cual sea el veh√≠culo que utilizar√° para negociar; acciones, "spread betting", 
+                        Sea cual sea el vehÌculo que utilizar· para negociar; acciones, "spread betting", 
                         Contratos por Diferencias (CFDs.), etc debe comprender plenamente las ventajas y desventajas.
                       </p>
                     </div>
                     
                     <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">¬øQu√© Br√≥ker y Plataforma utilizar√©?</h5>
+                      <h5 className="font-semibold text-white mb-2">øQuÈ BrÛker y Plataforma utilizarÈ?</h5>
                       <p className="text-sm">
-                        El Br√≥ker y la Plataforma de Trading son esenciales para su desempe√±o, as√≠ como son fundamentales 
+                        El BrÛker y la Plataforma de Trading son esenciales para su desempeÒo, asÌ como son fundamentales 
                         las raquetas de tenis para Roger Federer.
                       </p>
                     </div>
@@ -256,7 +256,7 @@ export default function PlanTradingContenidoPage() {
                 </div>
               </div>
 
-              {/* Secci√≥n 9 */}
+              {/* SecciÛn 9 */}
               <div>
                 <h4 className="font-semibold text-white mb-3">9. Antes de que el mercado abra...</h4>
                 <div className="space-y-4">
@@ -268,85 +268,85 @@ export default function PlanTradingContenidoPage() {
                   <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
                     <h5 className="font-semibold text-white mb-2">Rutina Diaria Pre-mercado</h5>
                     <p className="text-sm">
-                      Es esencial someterse a una rutina pre-diario del mercado para asegurarse de que est√° plenamente 
-                      preparado para el d√≠a de negociaci√≥n que tiene por delante.
+                      Es esencial someterse a una rutina pre-diario del mercado para asegurarse de que est· plenamente 
+                      preparado para el dÌa de negociaciÛn que tiene por delante.
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Secci√≥n 10 - Gesti√≥n de Riesgo */}
+              {/* SecciÛn 10 - GestiÛn de Riesgo */}
               <div>
                 <h4 className="font-semibold text-white mb-3">10. Riesgo y Gerencia del Dinero</h4>
                 <div className="space-y-4">
                   <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
                     <p className="text-sm">
-                      <strong>IMPORTANTE:</strong> Este es el meollo de todo el documento. El fracaso en la aplicaci√≥n 
-                      rigurosa del control al riesgo y los principios de gesti√≥n del dinero, casi con seguridad, lo llevar√° 
+                      <strong>IMPORTANTE:</strong> Este es el meollo de todo el documento. El fracaso en la aplicaciÛn 
+                      rigurosa del control al riesgo y los principios de gestiÛn del dinero, casi con seguridad, lo llevar· 
                       a la ruina financiera.
                     </p>
                   </div>
                   
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">Gesti√≥n del Riesgo</h5>
+                      <h5 className="font-semibold text-white mb-2">GestiÛn del Riesgo</h5>
                       <p className="text-sm">
-                        Se centra en las medidas necesarias para minimizar las p√©rdidas mediante la evaluaci√≥n de las 
-                        condiciones del mercado, el ratio riesgo/recompensa, y el uso de √≥rdenes stop-loss.
+                        Se centra en las medidas necesarias para minimizar las pÈrdidas mediante la evaluaciÛn de las 
+                        condiciones del mercado, el ratio riesgo/recompensa, y el uso de Ûrdenes stop-loss.
                       </p>
                     </div>
                     
                     <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">Gesti√≥n del Dinero</h5>
+                      <h5 className="font-semibold text-white mb-2">GestiÛn del Dinero</h5>
                       <p className="text-sm">
                         Se centra en las medidas necesarias para maximizar los beneficios mediante el uso de "trailing stops" 
-                        y ajustes en el tama√±o de la posici√≥n.
+                        y ajustes en el tamaÒo de la posiciÛn.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Secci√≥n 11 */}
+              {/* SecciÛn 11 */}
               <div>
                 <h4 className="font-semibold text-white mb-3">11. Estrategia de Salida</h4>
                 <div className="space-y-4">
                   <p>
-                    En las estrategias de salida es m√°s dif√≠cil de acertar que en las estrategias de entrada. 
-                    Lamentablemente, ellas son mucho m√°s importantes porque, claramente, ellas controlan las p√©rdidas y las ganancias.
+                    En las estrategias de salida es m·s difÌcil de acertar que en las estrategias de entrada. 
+                    Lamentablemente, ellas son mucho m·s importantes porque, claramente, ellas controlan las pÈrdidas y las ganancias.
                   </p>
                   
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
                       <h5 className="font-semibold text-white mb-2">Trades Perdedores</h5>
                       <p className="text-sm">
-                        ¬øSaldr√° antes de que se active su Stop Loss? ¬øQu√© se√±ales usar√° para salir temprano?
+                        øSaldr· antes de que se active su Stop Loss? øQuÈ seÒales usar· para salir temprano?
                       </p>
                     </div>
                     
                     <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
                       <h5 className="font-semibold text-white mb-2">Trades Ganadores</h5>
                       <p className="text-sm">
-                        ¬øQu√© se√±ales usar√° para salir de todo? ¬øPara cerrar la mitad? ¬øPara cerrar el resto?
+                        øQuÈ seÒales usar· para salir de todo? øPara cerrar la mitad? øPara cerrar el resto?
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Secci√≥n 12 */}
+              {/* SecciÛn 12 */}
               <div>
                 <h4 className="font-semibold text-white mb-3">12. Estrategias de Trading, Configuraciones y Entradas</h4>
                 <div className="space-y-4">
                   <p>
-                    Las estrategias var√≠an seg√∫n las condiciones del mercado, la hora del d√≠a y el calendario en el que cotizan. 
-                    Pr√°cticamente todas las estrategias caen en uno de estos tres grupos gen√©ricos: rupturas (breakouts), 
+                    Las estrategias varÌan seg˙n las condiciones del mercado, la hora del dÌa y el calendario en el que cotizan. 
+                    Pr·cticamente todas las estrategias caen en uno de estos tres grupos genÈricos: rupturas (breakouts), 
                     retrocesos (retracements) y reversiones (reversals).
                   </p>
                   
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">¬øCu√°les Estrategias Negociar√°?</h5>
+                      <h5 className="font-semibold text-white mb-2">øCu·les Estrategias Negociar·?</h5>
                       <p className="text-sm">
                         Muchos traders profesionales recomiendan tener al menos dos estrategias comerciales diferentes, 
                         una para un mercado en tendencia y una para un mercado sin tendencia.
@@ -354,9 +354,9 @@ export default function PlanTradingContenidoPage() {
                     </div>
                     
                     <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">¬øCu√°les son sus Configuraciones (Set-up)?</h5>
+                      <h5 className="font-semibold text-white mb-2">øCu·les son sus Configuraciones (Set-up)?</h5>
                       <p className="text-sm">
-                        Una configuraci√≥n es el conjunto de caracter√≠sticas que le permite identificar una alta probabilidad 
+                        Una configuraciÛn es el conjunto de caracterÌsticas que le permite identificar una alta probabilidad 
                         de trading antes de entrar al mercado.
                       </p>
                     </div>
@@ -364,28 +364,28 @@ export default function PlanTradingContenidoPage() {
                 </div>
               </div>
 
-              {/* Secci√≥n 13 */}
+              {/* SecciÛn 13 */}
               <div>
-                <h4 className="font-semibold text-white mb-3">13. Despu√©s del cierre del mercado</h4>
+                <h4 className="font-semibold text-white mb-3">13. DespuÈs del cierre del mercado</h4>
                 <div className="space-y-4">
                   <p>
-                    Una vez que haya terminado el d√≠a de trading, es tentador para acabar, abrir una botella ya sea 
-                    ¬°para celebrar o para ahogar tus penas! Su plan de trading puede o no puede permitir estas actividades.
+                    Una vez que haya terminado el dÌa de trading, es tentador para acabar, abrir una botella ya sea 
+                    °para celebrar o para ahogar tus penas! Su plan de trading puede o no puede permitir estas actividades.
                   </p>
                   
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">¬øHa Registrado los trades de hoy?</h5>
+                      <h5 className="font-semibold text-white mb-2">øHa Registrado los trades de hoy?</h5>
                       <p className="text-sm">
-                        La grabaci√≥n de todas sus operaciones es una necesidad y es algo que todos los operadores 
+                        La grabaciÛn de todas sus operaciones es una necesidad y es algo que todos los operadores 
                         profesionales hacen de forma rutinaria y exhaustiva.
                       </p>
                     </div>
                     
                     <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
-                      <h5 className="font-semibold text-white mb-2">¬øEjecuta sus operaciones seg√∫n su Plan?</h5>
+                      <h5 className="font-semibold text-white mb-2">øEjecuta sus operaciones seg˙n su Plan?</h5>
                       <p className="text-sm">
-                        Si usted no est√° ejecutando sistem√°ticamente las operaciones de conformidad con el plan, 
+                        Si usted no est· ejecutando sistem·ticamente las operaciones de conformidad con el plan, 
                         significa que puede tener un problema serio con la auto-disciplina.
                       </p>
                     </div>
@@ -393,79 +393,79 @@ export default function PlanTradingContenidoPage() {
                 </div>
               </div>
 
-              {/* Secci√≥n 14 */}
+              {/* SecciÛn 14 */}
               <div>
-                <h4 className="font-semibold text-white mb-3">14. ¬°Disciplina!</h4>
+                <h4 className="font-semibold text-white mb-3">14. °Disciplina!</h4>
                 <div className="space-y-4">
                   <p>
                     Tener un plan de trading global con criterios de entrada y de salida, con un excelente control del riesgo, 
-                    y procedimientos de gesti√≥n del dinero, no cuentan para nada si falta la disciplina necesaria para ponerlos en pr√°ctica.
+                    y procedimientos de gestiÛn del dinero, no cuentan para nada si falta la disciplina necesaria para ponerlos en pr·ctica.
                   </p>
                   
                   <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
-                    <h5 className="font-semibold text-white mb-2">¬øQu√© promesas se hizo a s√≠ mismo?</h5>
+                    <h5 className="font-semibold text-white mb-2">øQuÈ promesas se hizo a sÌ mismo?</h5>
                     <p className="text-sm">
-                      Estas son promesas que se han dise√±ado para hacer cumplir la autodisciplina. ¬øQu√© sanciones se imponen 
-                      a s√≠ mismo si rompe una de sus reglas de trading?
+                      Estas son promesas que se han diseÒado para hacer cumplir la autodisciplina. øQuÈ sanciones se imponen 
+                      a sÌ mismo si rompe una de sus reglas de trading?
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Secci√≥n 15 - Reglas de Oro */}
+              {/* SecciÛn 15 - Reglas de Oro */}
               <div>
                 <h4 className="font-semibold text-white mb-3">15. Reglas de Oro del Trading</h4>
                 <div className="space-y-4">
                   <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
-                    <h5 className="font-semibold text-white mb-2">¬øCu√°les son sus Diez reglas de oro del Trading?</h5>
+                    <h5 className="font-semibold text-white mb-2">øCu·les son sus Diez reglas de oro del Trading?</h5>
                     <p className="text-sm">
-                      Sus reglas deben ser las que son pertinentes y significativos para usted. Aqu√≠ hay una lista para hacerle pensar.
+                      Sus reglas deben ser las que son pertinentes y significativos para usted. AquÌ hay una lista para hacerle pensar.
                     </p>
                   </div>
                   
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-3">
                       <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-                        <h6 className="font-semibold text-white text-sm">#1. ¬°PROTEGER Y CONSERVAR SU CAPITAL!</h6>
+                        <h6 className="font-semibold text-white text-sm">#1. °PROTEGER Y CONSERVAR SU CAPITAL!</h6>
                         <p className="text-xs">Los operadores inexpertos entran en los mercados centrados en el dinero que pueden hacer. Los profesionales se centran en la cantidad que pueden perder.</p>
                       </div>
                       <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-                        <h6 className="font-semibold text-white text-sm">#2. SIEMPRE PONGA UN STOP LOSS. ¬°SIEMPRE!</h6>
-                        <p className="text-xs">Nunca conf√≠e en un stop loss mental. Este es del dominio exclusivo de una rara raza de traders muy experimentados.</p>
+                        <h6 className="font-semibold text-white text-sm">#2. SIEMPRE PONGA UN STOP LOSS. °SIEMPRE!</h6>
+                        <p className="text-xs">Nunca confÌe en un stop loss mental. Este es del dominio exclusivo de una rara raza de traders muy experimentados.</p>
                       </div>
                       <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-                        <h6 className="font-semibold text-white text-sm">#3. REDUCIR LAS P√âRDIDAS RAPIDAMENTE</h6>
-                        <p className="text-xs">¬°Cortar las p√©rdidas r√°pido, se consigue siempre con un stop-loss! Dejar correr los beneficios se reduce a la gesti√≥n de dinero.</p>
+                        <h6 className="font-semibold text-white text-sm">#3. REDUCIR LAS P…RDIDAS RAPIDAMENTE</h6>
+                        <p className="text-xs">°Cortar las pÈrdidas r·pido, se consigue siempre con un stop-loss! Dejar correr los beneficios se reduce a la gestiÛn de dinero.</p>
                       </div>
                       <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
-                        <h6 className="font-semibold text-white text-sm">#4. OPERE LO QUE VEA - ¬°NO LO QUE USTED PIENSE!</h6>
-                        <p className="text-xs">Los egos y el trading no se mezclan. Conc√©ntrese en sus gr√°ficos, sus indicadores y la acci√≥n de los precios.</p>
+                        <h6 className="font-semibold text-white text-sm">#4. OPERE LO QUE VEA - °NO LO QUE USTED PIENSE!</h6>
+                        <p className="text-xs">Los egos y el trading no se mezclan. ConcÈntrese en sus gr·ficos, sus indicadores y la acciÛn de los precios.</p>
                       </div>
                       <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-                        <h6 className="font-semibold text-white text-sm">#5. NUNCA PERSIGA SUS P√âRDIDAS. ¬°JAM√ÅS!</h6>
-                        <p className="text-xs">Despu√©s de un trade perdedor, es imperativo que las emociones sean mantenidas a raya.</p>
+                        <h6 className="font-semibold text-white text-sm">#5. NUNCA PERSIGA SUS P…RDIDAS. °JAM¡S!</h6>
+                        <p className="text-xs">DespuÈs de un trade perdedor, es imperativo que las emociones sean mantenidas a raya.</p>
                       </div>
                     </div>
                     
                     <div className="space-y-3">
                       <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-                        <h6 className="font-semibold text-white text-sm">#6. NUNCA PROMEDIE A LA BAJA. ¬°JAM√ÅS!</h6>
-                        <p className="text-xs">Promediar a la baja es una t√°ctica a largo plazo para inversiones y nunca debe ser practicada por los traders.</p>
+                        <h6 className="font-semibold text-white text-sm">#6. NUNCA PROMEDIE A LA BAJA. °JAM¡S!</h6>
+                        <p className="text-xs">Promediar a la baja es una t·ctica a largo plazo para inversiones y nunca debe ser practicada por los traders.</p>
                       </div>
                       <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
-                        <h6 className="font-semibold text-white text-sm">#7. ¬°LLEVAR UN EXCELENTE REGISTRO!</h6>
-                        <p className="text-xs">Estrat√©gicamente, es esencial mantener registros de todas sus operaciones.</p>
+                        <h6 className="font-semibold text-white text-sm">#7. °LLEVAR UN EXCELENTE REGISTRO!</h6>
+                        <p className="text-xs">EstratÈgicamente, es esencial mantener registros de todas sus operaciones.</p>
                       </div>
                       <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
-                        <h6 className="font-semibold text-white text-sm">#8. ¬°MANTENER LA DISCIPLINA!</h6>
-                        <p className="text-xs">Si no se aborda las cuestiones de la auto-disciplina, casi seguramente, se reflejar√° en sus resultados.</p>
+                        <h6 className="font-semibold text-white text-sm">#8. °MANTENER LA DISCIPLINA!</h6>
+                        <p className="text-xs">Si no se aborda las cuestiones de la auto-disciplina, casi seguramente, se reflejar· en sus resultados.</p>
                       </div>
                       <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
                         <h6 className="font-semibold text-white text-sm">#9. MANTENGALO SIMPLE!</h6>
-                        <p className="text-xs">Muchos profesionales acertados hacen uso de estrategias encantadoramente sencillas que se ejecutan con el m√≠nimo de indicadores.</p>
+                        <p className="text-xs">Muchos profesionales acertados hacen uso de estrategias encantadoramente sencillas que se ejecutan con el mÌnimo de indicadores.</p>
                       </div>
                       <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
-                        <h6 className="font-semibold text-white text-sm">#10. PLANIFIQUE SU TRADING ‚Äì OPERE SU PLAN!</h6>
+                        <h6 className="font-semibold text-white text-sm">#10. PLANIFIQUE SU TRADING ñ OPERE SU PLAN!</h6>
                         <p className="text-xs">El trading no es juego, es un negocio. Sin un plan bien concebido, no es mejor que apostar con los ojos vendados.</p>
                       </div>
                     </div>
@@ -483,7 +483,7 @@ export default function PlanTradingContenidoPage() {
           >
             <div className="space-y-4">
               <p>
-                Actualmente, esta secci√≥n contiene ejemplos de operaciones del plan. Lo ideal ser√≠a que contuviera al menos 
+                Actualmente, esta secciÛn contiene ejemplos de operaciones del plan. Lo ideal serÌa que contuviera al menos 
                 tres planes de trading completos: uno para los operadores de futuros, uno para los operadores del Forex y 
                 uno para los operadores de acciones.
               </p>
@@ -491,22 +491,22 @@ export default function PlanTradingContenidoPage() {
               <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-4">
                 <h5 className="font-semibold text-white mb-2">La guinda del pastel</h5>
                 <p className="text-sm">
-                  Ser√≠a si tambi√©n abarcara los tres principales Time Frame: Operador Intrad√≠a, Swing Trader y Operador de Posici√≥n.
+                  SerÌa si tambiÈn abarcara los tres principales Time Frame: Operador IntradÌa, Swing Trader y Operador de PosiciÛn.
                 </p>
               </div>
             </div>
           </CollapsibleSection>
 
-          {/* Conclusi√≥n */}
+          {/* ConclusiÛn */}
           <div className="bg-green-500/10 backdrop-blur-lg rounded-2xl p-8 border border-green-500/30">
-            <h2 className="text-2xl font-bold text-white mb-6 text-center">Conclusi√≥n</h2>
+            <h2 className="text-2xl font-bold text-white mb-6 text-center">ConclusiÛn</h2>
             <div className="text-gray-300 text-center">
               <p className="mb-4">
-                Si usted ha llegado hasta este punto y respondi√≥ a todas las preguntas - ¬°Felicidades! 
-                Ahora est√° entre una minor√≠a de traders que tienen un plan detallado y probado.
+                Si usted ha llegado hasta este punto y respondiÛ a todas las preguntas - °Felicidades! 
+                Ahora est· entre una minorÌa de traders que tienen un plan detallado y probado.
               </p>
               <p>
-                Su futuro √©xito como operador no es garantizado, pero al completar esta plantilla y crear 
+                Su futuro Èxito como operador no es garantizado, pero al completar esta plantilla y crear 
                 su propio plan de trading, las posibilidades han cambiado de manera significativa a su favor.
               </p>
             </div>
@@ -517,7 +517,7 @@ export default function PlanTradingContenidoPage() {
         <div className="mt-12 text-center">
           <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-lg rounded-full px-6 py-3">
             <span className="text-gray-300 text-sm">Fuente:</span>
-            <span className="text-white font-semibold">Tim Wilcox 2005 - Traducci√≥n g8-FX</span>
+            <span className="text-white font-semibold">Tim Wilcox 2005 - TraducciÛn g8-FX</span>
           </div>
         </div>
       </div>

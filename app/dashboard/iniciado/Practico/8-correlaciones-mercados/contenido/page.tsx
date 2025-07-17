@@ -17,77 +17,77 @@ export default function CorrelacionesMercadosContenido() {
 
   const sections = [
     {
-      title: "A) Petr√≥leo Crudo",
+      title: "A) PetrÛleo Crudo",
       content: (
         <div className="space-y-6">
           <div className="bg-[#232323] p-4 rounded-lg">
             <h4 className="font-semibold text-[#ec4d58] mb-3 flex items-center gap-2">
               <Droplet className="w-5 h-5" />
-              Impacto General del Petr√≥leo
+              Impacto General del PetrÛleo
             </h4>
             <p className="text-gray-300 mb-3">
-              El precio del petr√≥leo crudo dulce ligero (Light Sweet Oil) puede tener un gran efecto sobre 
-              el mercado de divisas, y afecta especialmente a divisas tales como el d√≥lar canadiense (CAD), 
-              el d√≥lar estadounidense (USD) y el yen japon√©s (JPY) por diferentes razones.
+              El precio del petrÛleo crudo dulce ligero (Light Sweet Oil) puede tener un gran efecto sobre 
+              el mercado de divisas, y afecta especialmente a divisas tales como el dÛlar canadiense (CAD), 
+              el dÛlar estadounidense (USD) y el yen japonÈs (JPY) por diferentes razones.
             </p>
             <p className="text-gray-300">
-              Debido a que el precio del petr√≥leo ha variado de manera significativa (entre $130 - $50), 
-              el impacto de los altos/bajos precios del petr√≥leo contin√∫a teniendo un efecto severo sobre 
-              la econom√≠a global.
+              Debido a que el precio del petrÛleo ha variado de manera significativa (entre $130 - $50), 
+              el impacto de los altos/bajos precios del petrÛleo contin˙a teniendo un efecto severo sobre 
+              la economÌa global.
             </p>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">CAD - D√≥lar Canadiense</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">CAD - DÛlar Canadiense</h4>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
-              <li>El petr√≥leo representa alrededor del 8% de la econom√≠a de Canad√°</li>
-              <li>Por cada d√≥lar que sube el precio del petr√≥leo, la econom√≠a canadiense tiende a beneficiarse</li>
-              <li>Canad√° es el noveno productor de petr√≥leo crudo m√°s grande del mundo</li>
-              <li>Entre 2004 y 2005, la correlaci√≥n semanal estuvo cerca del 70%</li>
-              <li>Si repuntaban los precios del petr√≥leo, era altamente probable que el d√≥lar canadiense subiera tambi√©n</li>
+              <li>El petrÛleo representa alrededor del 8% de la economÌa de Canad·</li>
+              <li>Por cada dÛlar que sube el precio del petrÛleo, la economÌa canadiense tiende a beneficiarse</li>
+              <li>Canad· es el noveno productor de petrÛleo crudo m·s grande del mundo</li>
+              <li>Entre 2004 y 2005, la correlaciÛn semanal estuvo cerca del 70%</li>
+              <li>Si repuntaban los precios del petrÛleo, era altamente probable que el dÛlar canadiense subiera tambiÈn</li>
             </ul>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">USD - D√≥lar Estadounidense</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">USD - DÛlar Estadounidense</h4>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
-              <li>Canad√° es el principal proveedor de petr√≥leo de los Estados Unidos</li>
-              <li>Estados Unidos consume m√°s petr√≥leo proveniente de Canad√° que del Medio Oriente</li>
-              <li>Los altos precios del petr√≥leo tienden a reducir la capacidad de los Estados Unidos de continuar siendo productivo</li>
-              <li>Puede tener un efecto serio sobre industrias como el sector aerocomercial, qu√≠mico, automotor y producci√≥n industrial</li>
+              <li>Canad· es el principal proveedor de petrÛleo de los Estados Unidos</li>
+              <li>Estados Unidos consume m·s petrÛleo proveniente de Canad· que del Medio Oriente</li>
+              <li>Los altos precios del petrÛleo tienden a reducir la capacidad de los Estados Unidos de continuar siendo productivo</li>
+              <li>Puede tener un efecto serio sobre industrias como el sector aerocomercial, quÌmico, automotor y producciÛn industrial</li>
             </ul>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">USD/CAD - Doble Reacci√≥n</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">USD/CAD - Doble ReacciÛn</h4>
             <p className="text-gray-300 mb-3">
-              El par de divisas USD/CAD tiene una doble reacci√≥n ante el cambio en el precio del petr√≥leo:
+              El par de divisas USD/CAD tiene una doble reacciÛn ante el cambio en el precio del petrÛleo:
             </p>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
-              <li>Si el petr√≥leo sube, tiende a beneficiar al CAD a la vez que ejerce presi√≥n sobre el USD</li>
-              <li>El par USD/CAD tiende a moverse con reacciones bruscas a medida que el precio del petr√≥leo sube o baja</li>
-              <li>Entre 2004-2005, cuando el petr√≥leo se acerc√≥ a la barrera psicol√≥gica de los $50 d√≥lares/barril, el par USD/CAD se negoci√≥ cerca de 1,2500</li>
-              <li>Cuando el precio del petr√≥leo super√≥ los $50 d√≥lares, el par USD/CAD cay√≥ por debajo del nivel de 1,2500</li>
+              <li>Si el petrÛleo sube, tiende a beneficiar al CAD a la vez que ejerce presiÛn sobre el USD</li>
+              <li>El par USD/CAD tiende a moverse con reacciones bruscas a medida que el precio del petrÛleo sube o baja</li>
+              <li>Entre 2004-2005, cuando el petrÛleo se acercÛ a la barrera psicolÛgica de los $50 dÛlares/barril, el par USD/CAD se negociÛ cerca de 1,2500</li>
+              <li>Cuando el precio del petrÛleo superÛ los $50 dÛlares, el par USD/CAD cayÛ por debajo del nivel de 1,2500</li>
             </ul>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">JPY - Yen Japon√©s</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">JPY - Yen JaponÈs</h4>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
-              <li>Jap√≥n importa el 99% del petr√≥leo que consume</li>
-              <li>Su econom√≠a tiende a beneficiarse cuando los precios del petr√≥leo caen</li>
-              <li>La econom√≠a est√° generalmente bajo tensi√≥n durante per√≠odos de altos precios del petr√≥leo</li>
-              <li>La mayor√≠a de las principales industrias depende del petr√≥leo d√≠a a d√≠a</li>
-              <li>Las industrias japonesas no son capaces de mantener el mismo nivel de crecimiento a largo plazo debido al aumento en el costo de producci√≥n</li>
+              <li>JapÛn importa el 99% del petrÛleo que consume</li>
+              <li>Su economÌa tiende a beneficiarse cuando los precios del petrÛleo caen</li>
+              <li>La economÌa est· generalmente bajo tensiÛn durante perÌodos de altos precios del petrÛleo</li>
+              <li>La mayorÌa de las principales industrias depende del petrÛleo dÌa a dÌa</li>
+              <li>Las industrias japonesas no son capaces de mantener el mismo nivel de crecimiento a largo plazo debido al aumento en el costo de producciÛn</li>
             </ul>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">üí° Aplicaci√≥n Pr√°ctica</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">?? AplicaciÛn Pr·ctica</h4>
             <p className="text-gray-300">
-              Los operadores que se dan cuenta de esta correlaci√≥n entre mercados pueden operar en el mercado 
+              Los operadores que se dan cuenta de esta correlaciÛn entre mercados pueden operar en el mercado 
               de divisas con una tendencia, dependiendo de su mercado de commodities respectivo. Es importante 
-              destacar estas relaciones entre los mercados y c√≥mo influyen en las tendencias a largo plazo.
+              destacar estas relaciones entre los mercados y cÛmo influyen en las tendencias a largo plazo.
             </p>
           </div>
         </div>
@@ -103,12 +103,12 @@ export default function CorrelacionesMercadosContenido() {
               Oro como Refugio Seguro
             </h4>
             <p className="text-gray-300 mb-3">
-              El precio del oro tiende a tener una muy fuerte correlaci√≥n o relaci√≥n con divisas tales como 
-              el CHF, y una correlaci√≥n opuesta o inversa con el USD. Hasta hace poco tiempo, el CHF estaba 
-              respaldado por el oro, de la misma manera en que lo estaba el USD un par de d√©cadas atr√°s.
+              El precio del oro tiende a tener una muy fuerte correlaciÛn o relaciÛn con divisas tales como 
+              el CHF, y una correlaciÛn opuesta o inversa con el USD. Hasta hace poco tiempo, el CHF estaba 
+              respaldado por el oro, de la misma manera en que lo estaba el USD un par de dÈcadas atr·s.
             </p>
             <p className="text-gray-300">
-              El oro es considerado un "refugio seguro" para el capital durante √©pocas de malestar pol√≠tico y/o econ√≥mico.
+              El oro es considerado un "refugio seguro" para el capital durante Èpocas de malestar polÌtico y/o econÛmico.
             </p>
           </div>
 
@@ -116,43 +116,43 @@ export default function CorrelacionesMercadosContenido() {
             <h4 className="font-semibold text-[#ec4d58] mb-3">Flujo de Capital</h4>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
               <li>A medida que el capital se aleja del USD, el oro tiende a beneficiarse</li>
-              <li>El capital se ve atra√≠do por bienes tangibles, tales como los metales preciosos, principalmente el oro, en tiempos de incertidumbre</li>
-              <li>Durante √©pocas de prosperidad, el capital abandonar√° la seguridad del oro</li>
-              <li>El capital se trasladar√° a instrumentos financieros m√°s especulativos, como los mercados de acciones</li>
+              <li>El capital se ve atraÌdo por bienes tangibles, tales como los metales preciosos, principalmente el oro, en tiempos de incertidumbre</li>
+              <li>Durante Èpocas de prosperidad, el capital abandonar· la seguridad del oro</li>
+              <li>El capital se trasladar· a instrumentos financieros m·s especulativos, como los mercados de acciones</li>
             </ul>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">EUR como "Anti-D√≥lar"</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">EUR como "Anti-DÛlar"</h4>
             <p className="text-gray-300 mb-3">
-              El EUR (EUR/USD) ha sido considerado el "anti-d√≥lar" debido a que al alejarse el capital del USD, 
+              El EUR (EUR/USD) ha sido considerado el "anti-dÛlar" debido a que al alejarse el capital del USD, 
               los inversionistas constantemente buscan un instrumento financiero relativamente seguro, al menos en el corto plazo.
             </p>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
-              <li>El USD tiende a caer durante √©pocas de inestabilidad econ√≥mica y/o pol√≠tica dentro de los Estados Unidos</li>
-              <li>Cuando esto sucede, el capital es propenso a buscar instrumentos financieros que brindan beneficios como una "inversi√≥n alternativa" al USD</li>
-              <li>Si la econom√≠a de los Estados Unidos est√° bajo presi√≥n, es probable que la econom√≠a de la Zona Euro sea la receptora del capital</li>
+              <li>El USD tiende a caer durante Èpocas de inestabilidad econÛmica y/o polÌtica dentro de los Estados Unidos</li>
+              <li>Cuando esto sucede, el capital es propenso a buscar instrumentos financieros que brindan beneficios como una "inversiÛn alternativa" al USD</li>
+              <li>Si la economÌa de los Estados Unidos est· bajo presiÛn, es probable que la economÌa de la Zona Euro sea la receptora del capital</li>
             </ul>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
             <h4 className="font-semibold text-[#ec4d58] mb-3">USD/CHF & EUR/USD</h4>
             <p className="text-gray-300 mb-3">
-              El precio del oro tambi√©n tiende a tener un efecto doble sobre el par de divisas USD/CHF:
+              El precio del oro tambiÈn tiende a tener un efecto doble sobre el par de divisas USD/CHF:
             </p>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
               <li>A medida que aumenta el precio del oro, el USD tiende a disminuir en valor a la vez que el CHF tiende a beneficiarse</li>
               <li>Tanto el oro como el CHF son considerados instrumentos financieros seguros y conservadores</li>
               <li>Cualquier cambio en su valor tiende a tener un fuerte impacto sobre el otro</li>
               <li>A medida que aumenta el precio del oro, el capital tiende a salirse del USD, mientras que el CHF tiende a beneficiarse</li>
-              <li>El par EUR/USD tiende a tener una fuerte correlaci√≥n con el precio del oro</li>
+              <li>El par EUR/USD tiende a tener una fuerte correlaciÛn con el precio del oro</li>
             </ul>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">üìä Correlaci√≥n Visual</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">?? CorrelaciÛn Visual</h4>
             <p className="text-gray-300">
-              En los gr√°ficos diarios, el oro y el par de divisas USD/CHF son casi una imagen perfecta del otro, 
+              En los gr·ficos diarios, el oro y el par de divisas USD/CHF son casi una imagen perfecta del otro, 
               mostrando el flujo de capital fuera del USD e invertido en oro o fuera del oro e invertido en USD.
             </p>
           </div>
@@ -169,10 +169,10 @@ export default function CorrelacionesMercadosContenido() {
               Cobre y Australia
             </h4>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
-              <li>Australia es la segunda productora m√°s grande del mundo de cobre, con una producci√≥n de alrededor de 261 toneladas al a√±o</li>
-              <li>Sud√°frica es la primera con una producci√≥n de 345 toneladas</li>
-              <li>M√°s de la mitad de las exportaciones de Australia son metales</li>
-              <li>Esto resulta en una fuerte correlaci√≥n entre los metales y el d√≥lar australiano</li>
+              <li>Australia es la segunda productora m·s grande del mundo de cobre, con una producciÛn de alrededor de 261 toneladas al aÒo</li>
+              <li>Sud·frica es la primera con una producciÛn de 345 toneladas</li>
+              <li>M·s de la mitad de las exportaciones de Australia son metales</li>
+              <li>Esto resulta en una fuerte correlaciÛn entre los metales y el dÛlar australiano</li>
               <li>Principalmente el oro y el cobre tienen un gran efecto</li>
             </ul>
           </div>
@@ -180,27 +180,27 @@ export default function CorrelacionesMercadosContenido() {
           <div className="bg-[#232323] p-4 rounded-lg">
             <h4 className="font-semibold text-[#ec4d58] mb-3">Sector de Viviendas</h4>
             <p className="text-gray-300 mb-3">
-              El precio del cobre desempe√±a un papel importante no s√≥lo en la econom√≠a australiana sino tambi√©n en diferentes sectores:
+              El precio del cobre desempeÒa un papel importante no sÛlo en la economÌa australiana sino tambiÈn en diferentes sectores:
             </p>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
-              <li>El sector de viviendas (los constructores) utiliza una gran cantidad de cobre para ca√±er√≠as y otros artefactos</li>
-              <li>La econom√≠a australiana se ha beneficiado con un muy fuerte mercado de viviendas durante los √∫ltimos a√±os</li>
-              <li>Todos estos elementos est√°n relacionados en ciclos econ√≥micos a largo plazo</li>
+              <li>El sector de viviendas (los constructores) utiliza una gran cantidad de cobre para caÒerÌas y otros artefactos</li>
+              <li>La economÌa australiana se ha beneficiado con un muy fuerte mercado de viviendas durante los ˙ltimos aÒos</li>
+              <li>Todos estos elementos est·n relacionados en ciclos econÛmicos a largo plazo</li>
             </ul>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">Tasas de Inter√©s y Mercado de Viviendas</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">Tasas de InterÈs y Mercado de Viviendas</h4>
             <p className="text-gray-300 mb-3">
-              Debido a que la econom√≠a de los Estados Unidos y muchas otras econom√≠as en el mundo est√°n cayendo 
-              bajo presi√≥n, el FOMC (EE.UU.) y otros bancos centrales del mundo bajaron sus tasas de inter√©s 
-              a fin incentivar el crecimiento econ√≥mico alrededor del mundo.
+              Debido a que la economÌa de los Estados Unidos y muchas otras economÌas en el mundo est·n cayendo 
+              bajo presiÛn, el FOMC (EE.UU.) y otros bancos centrales del mundo bajaron sus tasas de interÈs 
+              a fin incentivar el crecimiento econÛmico alrededor del mundo.
             </p>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
-              <li>Las tasas de inter√©s m√°s bajas facilitaron al consumidor promedio la compra de hogares nuevos</li>
-              <li>Esto ha generado un gran beneficio sobre el d√≥lar australiano</li>
+              <li>Las tasas de interÈs m·s bajas facilitaron al consumidor promedio la compra de hogares nuevos</li>
+              <li>Esto ha generado un gran beneficio sobre el dÛlar australiano</li>
               <li>Los inversionistas buscaron otros instrumentos financieros y materias primas como el oro, la plata, y el cobre</li>
-              <li>Las tasas de inter√©s bajas reactivaron el mercado de viviendas</li>
+              <li>Las tasas de interÈs bajas reactivaron el mercado de viviendas</li>
             </ul>
           </div>
 
@@ -208,35 +208,35 @@ export default function CorrelacionesMercadosContenido() {
             <h4 className="font-semibold text-[#ec4d58] mb-3">Carry Trade y AUD</h4>
             <p className="text-gray-300 mb-3">
               Cuando subieron el cobre, el oro, y el mercado de viviendas de Australia, el Banco de Reserva 
-              de Australia (Reserve Bank of Australia) subi√≥ las tasas de inter√©s para combatir el riesgo de inflaci√≥n.
+              de Australia (Reserve Bank of Australia) subiÛ las tasas de interÈs para combatir el riesgo de inflaciÛn.
             </p>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
-              <li>Al subir r√°pidamente las tasas de inter√©s de AUD, el capital del mundo se volc√≥ al AUD</li>
+              <li>Al subir r·pidamente las tasas de interÈs de AUD, el capital del mundo se volcÛ al AUD</li>
               <li>El AUD daba un retorno significativamente superior al de otras divisas principales como USD, CHF, CAD, y JPY</li>
-              <li>Una de las √∫nicas divisas que actualmente tiene una tasa de inter√©s m√°s alta es el NZD</li>
+              <li>Una de las ˙nicas divisas que actualmente tiene una tasa de interÈs m·s alta es el NZD</li>
             </ul>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
             <h4 className="font-semibold text-[#ec4d58] mb-3">Estrategia de Carry Trade</h4>
             <p className="text-gray-300 mb-3">
-              La operaci√≥n de financiaci√≥n conocida como "carry trade" consiste en la compra de una divisa 
-              a una tasa de inter√©s m√°s alta y la venta de otra a una tasa de inter√©s m√°s baja.
+              La operaciÛn de financiaciÛn conocida como "carry trade" consiste en la compra de una divisa 
+              a una tasa de interÈs m·s alta y la venta de otra a una tasa de interÈs m·s baja.
             </p>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
-              <li>No s√≥lo deben estudiar las tasas de inter√©s actuales sino tambi√©n la anticipaci√≥n de las tasas de inter√©s futuras</li>
-              <li>El mercado forex se mueve en anticipaci√≥n a tasas de inter√©s m√°s altas o bajas</li>
+              <li>No sÛlo deben estudiar las tasas de interÈs actuales sino tambiÈn la anticipaciÛn de las tasas de interÈs futuras</li>
+              <li>El mercado forex se mueve en anticipaciÛn a tasas de interÈs m·s altas o bajas</li>
               <li>El mercado de divisas es un "mecanismo anticipatorio"</li>
-              <li>Si el Gobierno de Australia anuncia cifras que indican que el mercado de viviendas est√° m√°s lento, 
-                  los operadores pueden anticipar que la Reserva de Australia dejar√° de elevar las tasas de inter√©s</li>
+              <li>Si el Gobierno de Australia anuncia cifras que indican que el mercado de viviendas est· m·s lento, 
+                  los operadores pueden anticipar que la Reserva de Australia dejar· de elevar las tasas de interÈs</li>
             </ul>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">üí° Consejo para Operadores</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">?? Consejo para Operadores</h4>
             <p className="text-gray-300">
-              Los operadores que siguen el comportamiento del AUD deben adem√°s observar la acci√≥n del precio 
-              del cobre al igual que los informes fundamentales emitidos desde Australia que est√©n relacionados 
+              Los operadores que siguen el comportamiento del AUD deben adem·s observar la acciÛn del precio 
+              del cobre al igual que los informes fundamentales emitidos desde Australia que estÈn relacionados 
               con sus mercados de viviendas.
             </p>
           </div>
@@ -248,9 +248,9 @@ export default function CorrelacionesMercadosContenido() {
       content: (
         <div className="space-y-6">
           <div className="bg-[#232323] p-4 rounded-lg text-center">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">Evaluaci√≥n del Conocimiento</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">EvaluaciÛn del Conocimiento</h4>
             <p className="text-gray-300 mb-4">
-              Por favor eval√∫e su conocimiento sobre lo aprendido en esta lecci√≥n sobre correlaciones entre mercados.
+              Por favor eval˙e su conocimiento sobre lo aprendido en esta lecciÛn sobre correlaciones entre mercados.
             </p>
             <a 
               href="http://www.cursosforex.cl/viewtopic.php?f=5&t=8&sid=1aedce756ccba5161b2d838a22cd9d1b"
@@ -264,52 +264,52 @@ export default function CorrelacionesMercadosContenido() {
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">üìä Resumen de Correlaciones Clave</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">?? Resumen de Correlaciones Clave</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-3 bg-[#1a1a1a] rounded-lg">
-                <h5 className="font-semibold text-[#ec4d58] mb-2">üõ¢Ô∏è Petr√≥leo</h5>
+                <h5 className="font-semibold text-[#ec4d58] mb-2">??? PetrÛleo</h5>
                 <ul className="text-sm text-gray-300 space-y-1">
-                  <li>‚Ä¢ CAD: Correlaci√≥n positiva ~70%</li>
-                  <li>‚Ä¢ USD: Presi√≥n bajista</li>
-                  <li>‚Ä¢ JPY: Beneficiado por ca√≠das</li>
+                  <li>ï CAD: CorrelaciÛn positiva ~70%</li>
+                  <li>ï USD: PresiÛn bajista</li>
+                  <li>ï JPY: Beneficiado por caÌdas</li>
                 </ul>
               </div>
               <div className="p-3 bg-[#1a1a1a] rounded-lg">
-                <h5 className="font-semibold text-[#ec4d58] mb-2">ü•á Oro</h5>
+                <h5 className="font-semibold text-[#ec4d58] mb-2">?? Oro</h5>
                 <ul className="text-sm text-gray-300 space-y-1">
-                  <li>‚Ä¢ CHF: Correlaci√≥n positiva</li>
-                  <li>‚Ä¢ USD: Correlaci√≥n negativa</li>
-                  <li>‚Ä¢ EUR: "Anti-d√≥lar"</li>
+                  <li>ï CHF: CorrelaciÛn positiva</li>
+                  <li>ï USD: CorrelaciÛn negativa</li>
+                  <li>ï EUR: "Anti-dÛlar"</li>
                 </ul>
               </div>
               <div className="p-3 bg-[#1a1a1a] rounded-lg">
-                <h5 className="font-semibold text-[#ec4d58] mb-2">üîß Cobre</h5>
+                <h5 className="font-semibold text-[#ec4d58] mb-2">?? Cobre</h5>
                 <ul className="text-sm text-gray-300 space-y-1">
-                  <li>‚Ä¢ AUD: Correlaci√≥n fuerte</li>
-                  <li>‚Ä¢ Sector viviendas</li>
-                  <li>‚Ä¢ Carry trade</li>
+                  <li>ï AUD: CorrelaciÛn fuerte</li>
+                  <li>ï Sector viviendas</li>
+                  <li>ï Carry trade</li>
                 </ul>
               </div>
               <div className="p-3 bg-[#1a1a1a] rounded-lg">
-                <h5 className="font-semibold text-[#ec4d58] mb-2">üìà Aplicaci√≥n</h5>
+                <h5 className="font-semibold text-[#ec4d58] mb-2">?? AplicaciÛn</h5>
                 <ul className="text-sm text-gray-300 space-y-1">
-                  <li>‚Ä¢ Anticipar movimientos</li>
-                  <li>‚Ä¢ Confirmar se√±ales</li>
-                  <li>‚Ä¢ Gesti√≥n de riesgo</li>
+                  <li>ï Anticipar movimientos</li>
+                  <li>ï Confirmar seÒales</li>
+                  <li>ï GestiÛn de riesgo</li>
                 </ul>
               </div>
             </div>
           </div>
 
           <div className="bg-[#232323] p-4 rounded-lg">
-            <h4 className="font-semibold text-[#ec4d58] mb-3">üéØ Puntos Clave para Recordar</h4>
+            <h4 className="font-semibold text-[#ec4d58] mb-3">?? Puntos Clave para Recordar</h4>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
               <li>Las correlaciones pueden cambiar con el tiempo, mantente actualizado</li>
-              <li>No todas las correlaciones son perfectas, usa m√∫ltiples confirmaciones</li>
+              <li>No todas las correlaciones son perfectas, usa m˙ltiples confirmaciones</li>
               <li>Los commodities pueden anticipar movimientos en las divisas</li>
-              <li>Considera el contexto econ√≥mico al analizar correlaciones</li>
-              <li>El carry trade requiere an√°lisis de tasas de inter√©s futuras</li>
-              <li>Las correlaciones son herramientas complementarias, no sustitutas del an√°lisis t√©cnico</li>
+              <li>Considera el contexto econÛmico al analizar correlaciones</li>
+              <li>El carry trade requiere an·lisis de tasas de interÈs futuras</li>
+              <li>Las correlaciones son herramientas complementarias, no sustitutas del an·lisis tÈcnico</li>
             </ul>
           </div>
         </div>
@@ -325,17 +325,17 @@ export default function CorrelacionesMercadosContenido() {
           <BackButton />
           <div className="text-center mt-6">
             <h1 className="text-4xl md:text-5xl font-bold text-[#ec4d58] mb-4">
-              Lecci√≥n 7: Correlaciones entre Mercados
+              LecciÛn 7: Correlaciones entre Mercados
             </h1>
             <p className="text-xl text-gray-300 mb-2">
-              An√°lisis Fundamental
+              An·lisis Fundamental
             </p>
             <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
-              <span>üõ¢Ô∏è Petr√≥leo</span>
-              <span>‚Ä¢</span>
-              <span>ü•á Oro</span>
-              <span>‚Ä¢</span>
-              <span>üîß Cobre</span>
+              <span>??? PetrÛleo</span>
+              <span>ï</span>
+              <span>?? Oro</span>
+              <span>ï</span>
+              <span>?? Cobre</span>
             </div>
           </div>
         </div>
@@ -349,7 +349,7 @@ export default function CorrelacionesMercadosContenido() {
                 className="w-full p-6 text-left flex items-center justify-between hover:bg-[#232323] transition-colors"
               >
                 <h2 className="text-xl font-bold text-[#ec4d58] flex items-center gap-3">
-                  <span className="text-2xl font-bold text-gray-400">{(index + 1).toString().padStart(2, '0')}</span>
+                  <span className="text-2xl font-bold text-gray-400">{(index + 1).toString().padStart(2, &apos;0&apos;)}</span>
                   {section.title}
                 </h2>
                 {expandedSections.includes(index) ? (
@@ -371,18 +371,18 @@ export default function CorrelacionesMercadosContenido() {
         {/* Footer */}
         <div className="mt-8 text-center">
           <div className="bg-[#181818] rounded-2xl p-6 border border-[#232323]">
-            <h3 className="text-xl font-bold text-[#ec4d58] mb-4">üéØ Pr√≥ximos Pasos</h3>
+            <h3 className="text-xl font-bold text-[#ec4d58] mb-4">?? PrÛximos Pasos</h3>
             <p className="text-gray-300 mb-4">
-              Has completado el m√≥dulo de Correlaciones entre Mercados. Ahora entiendes c√≥mo los commodities 
-              influyen en las divisas. Contin√∫a con el siguiente m√≥dulo para desarrollar estrategias de 
-              gesti√≥n de riesgo avanzada.
+              Has completado el mÛdulo de Correlaciones entre Mercados. Ahora entiendes cÛmo los commodities 
+              influyen en las divisas. Contin˙a con el siguiente mÛdulo para desarrollar estrategias de 
+              gestiÛn de riesgo avanzada.
             </p>
             <div className="flex justify-center gap-4">
               <button className="px-6 py-3 bg-[#232323] hover:bg-[#2a2a2a] text-white font-semibold rounded-lg transition-colors">
-                M√≥dulo Anterior
+                MÛdulo Anterior
               </button>
               <button className="px-6 py-3 bg-[#ec4d58] hover:bg-[#d63d47] text-white font-semibold rounded-lg transition-colors">
-                Siguiente M√≥dulo
+                Siguiente MÛdulo
               </button>
             </div>
           </div>
@@ -391,3 +391,4 @@ export default function CorrelacionesMercadosContenido() {
     </div>
   );
 } 
+

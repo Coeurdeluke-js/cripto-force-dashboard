@@ -7,7 +7,7 @@ export default function Modulo5ContenidoPage() {
       <div className="w-full max-w-3xl border border-gray-200 dark:border-gray-700 rounded-lg p-6 bg-transparent relative" style={{paddingTop: '3.5rem'}}>
         {/* Botón Volver arriba */}
         <Link
-          href="/dashboard/iniciado/5-monopolio-oligopolio"
+          href="/dashboard/iniciado/Teorico/5-monopolio-oligopolio"
           className="absolute left-4 top-4 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 flex items-center"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -71,7 +71,7 @@ export default function Modulo5ContenidoPage() {
         {/* Botón Volver abajo */}
         <div className="mt-8">
           <Link
-            href="/dashboard/iniciado/5-monopolio-oligopolio"
+            href="/dashboard/iniciado/Teorico/5-monopolio-oligopolio"
             className="inline-flex items-center text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />

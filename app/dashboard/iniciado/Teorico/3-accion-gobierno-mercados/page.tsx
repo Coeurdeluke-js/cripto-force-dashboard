@@ -43,7 +43,7 @@ export default function Modulo3Index() {
 
           <div className="text-center">
             <Link 
-              href="/dashboard/iniciado/3-accion-gobierno-mercados/contenido"
+              href="/dashboard/iniciado/Teorico/3-accion-gobierno-mercados/contenido"
               className="inline-flex items-center px-6 py-3 bg-[#ec4d58] hover:bg-[#d63d47] text-white font-semibold rounded-lg transition-colors duration-200"
             >
               <span>Ver Contenido Completo</span>
