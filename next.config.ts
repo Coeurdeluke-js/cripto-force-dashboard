@@ -1,43 +1,23 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  // Disable experimental features that might cause issues
-  experimental: {
-    // Remove optimizePackageImports as it might cause chunk issues
+  images: {
+    domains: ['localhost'],
   },
-  
-  // Simple webpack configuration
-  webpack: (config, { isServer }) => {
-    // Only add fallbacks for client-side
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-      };
-    }
-    
-    return config;
-  },
-  
-  // Ensure proper chunk loading
-  output: 'standalone',
-  
-  // Add proper headers for static assets
+  // Disable static optimization for pages that might use Supabase
   async headers() {
     return [
       {
-        source: '/_next/static/:path*',
+        source: '/dashboard/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: 'no-store, must-revalidate',
           },
         ],
       },
-    ];
+    ]
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

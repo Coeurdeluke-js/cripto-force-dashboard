@@ -1,6 +1,9 @@
 ﻿import React from 'react';
 import BackButton from '@/components/ui/BackButton';
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 export default function ModuloPractico8CorrelacionesContenido() {
   return (
     <div className="min-h-screen bg-[#121212] text-white px-2 sm:px-8 py-8 max-w-3xl mx-auto">

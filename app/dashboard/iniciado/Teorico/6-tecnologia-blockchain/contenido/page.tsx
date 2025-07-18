@@ -1,6 +1,9 @@
 ﻿import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 export default function Modulo6ContenidoPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-8">

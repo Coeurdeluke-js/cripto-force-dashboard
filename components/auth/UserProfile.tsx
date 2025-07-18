@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import Button from '@/components/ui/Button';
 
 export default function UserProfile() {
-  const { user, logout } = useAuth();
+  const { user, signOut } = useAuth();
   const [displayName, setDisplayName] = useState('');
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function UserProfile() {
         <Button 
           variant="outline" 
           size="sm" 
-          onClick={logout}
+          onClick={signOut}
         >
           Cerrar Sesión
         </Button>
