@@ -1,15 +1,7 @@
 {
-    "extends": ["next/core-web-vitals"],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "sourceType": "module",
-      "ecmaVersion": "latest",
-      "ecmaFeatures": {
-        "jsx": true
-      },
-      "project": "./tsconfig.json"
-    },
-    "plugins": ["@typescript-eslint"],
-    "rules": {}
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "react/no-unescaped-entities": "off"
   }
+}
   

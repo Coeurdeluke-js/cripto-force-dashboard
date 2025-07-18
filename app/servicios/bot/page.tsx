@@ -59,7 +59,7 @@ export default function BotTradingPage() {
                 <li>
                   <strong>Renovación:</strong> Cada mes se comparte el 30% de las ganancias obtenidas en ese período
                 </li>
-                <li>El capital a operar debe estar en el apartado "Trading" del exchange</li>
+                <li>El capital a operar debe estar en el apartado &quot;Trading&quot; del exchange</li>
               </ul>
             </div>
 
