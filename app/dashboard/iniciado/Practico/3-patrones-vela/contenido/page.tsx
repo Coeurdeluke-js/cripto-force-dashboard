@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import BackButton from '@/components/ui/BackButton';
 
 export default function ModuloPractico3Contenido() {
@@ -261,3 +261,4 @@ export default function ModuloPractico3Contenido() {
     </div>
   );
 } 
+

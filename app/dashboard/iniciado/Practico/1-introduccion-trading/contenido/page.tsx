@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import BackButton from '@/components/ui/BackButton';
 
 export default function ModuloPractico1Contenido() {
@@ -51,7 +51,7 @@ export default function ModuloPractico1Contenido() {
 
             <div className="bg-[#181818] rounded-lg p-6">
               <h3 className="text-lg font-bold text-[#ec4d58] mb-4">El Precio</h3>
-              <p className="text-sm mb-3">• La importancia de esta clase radica en la relevancia del Trading: "No se trata de adivinar lo que hará el precio, sino de adaptarnos a su movimiento"</p>
+              <p className="text-sm mb-3">• La importancia de esta clase radica en la relevancia del Trading: &quot;No se trata de adivinar lo que hará el precio, sino de adaptarnos a su movimiento&quot;</p>
               <div className="space-y-2 text-sm">
                 <p>• Entender correctamente el movimiento del precio</p>
                 <p>• De este modo podremos analizar el gráfico de forma correcta, y preparar nuestra operativa</p>
@@ -132,3 +132,4 @@ export default function ModuloPractico1Contenido() {
     </div>
   );
 } 
+
