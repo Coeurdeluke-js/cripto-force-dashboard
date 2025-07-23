@@ -1,206 +1,252 @@
-// HomePage.tsx
 'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import clsx from 'clsx';
 
-export default function HomePage() {
-  const [showZoomexDetails, setShowZoomexDetails] = useState(false);
+interface Role {
+  id: string;
+  name: string;
+  title: string;
+  description: string;
+  features: string[];
+  color: string;
+  gradient: string;
+  image: string;
+  path: string;
+}
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+const roles: Role[] = [
+  {
+    id: 'iniciado',
+    name: 'Iniciado',
+    title: 'Nivel Básico',
+    description: 'Perfecto para principiantes que quieren aprender los fundamentos del trading y análisis técnico.',
+    features: [
+      'Cursos teóricos y prácticos',
+      'Puntos de control evaluativos',
+      'Análisis técnico básico',
+      'Gestión de riesgo inicial',
+      'Plan de trading personalizado'
+    ],
+    color: 'bg-blue-500',
+    gradient: 'from-blue-500 to-blue-600',
+    image: '/images/default-avatar.png',
+    path: '/dashboard/iniciado'
+  },
+  {
+    id: 'warrior',
+    name: 'Warrior',
+    title: 'Nivel Intermedio',
+    description: 'Para traders con experiencia básica que quieren profundizar en estrategias avanzadas.',
+    features: [
+      'Estrategias avanzadas',
+      'Análisis fundamental',
+      'Gestión de portafolio',
+      'Señales de trading',
+      'Comunidad exclusiva'
+    ],
+    color: 'bg-green-500',
+    gradient: 'from-green-500 to-green-600',
+    image: '/images/default-avatar.png',
+    path: '/dashboard/warrior'
+  },
+  {
+    id: 'acolito',
+    name: 'Acólito',
+    title: 'Nivel Avanzado',
+    description: 'Traders experimentados que buscan técnicas especializadas y mentoría personalizada.',
+    features: [
+      'Mentoría personalizada',
+      'Estrategias especializadas',
+      'Análisis de mercado profundo',
+      'Acceso a herramientas premium',
+      'Soporte prioritario'
+    ],
+    color: 'bg-purple-500',
+    gradient: 'from-purple-500 to-purple-600',
+    image: '/images/default-avatar.png',
+    path: '/dashboard/acolito'
+  },
+  {
+    id: 'lord',
+    name: 'Lord',
+    title: 'Nivel Experto',
+    description: 'Para traders expertos que dominan el mercado y buscan optimizar sus estrategias.',
+    features: [
+      'Estrategias de alto rendimiento',
+      'Análisis institucional',
+      'Herramientas de trading avanzadas',
+      'Red de contactos exclusiva',
+      'Consultoría personalizada'
+    ],
+    color: 'bg-red-500',
+    gradient: 'from-red-500 to-red-600',
+    image: '/images/default-avatar.png',
+    path: '/dashboard/lord'
+  },
+  {
+    id: 'darth',
+    name: 'Darth',
+    title: 'Nivel Maestro',
+    description: 'El nivel más alto para traders que han dominado todos los aspectos del mercado.',
+    features: [
+      'Acceso completo a todas las herramientas',
+      'Mentoría de nivel maestro',
+      'Estrategias institucionales',
+      'Red de traders elite',
+      'Consultoría estratégica'
+    ],
+    color: 'bg-gray-800',
+    gradient: 'from-gray-800 to-gray-900',
+    image: '/images/default-avatar.png',
+    path: '/dashboard/darth'
+  },
+  {
+    id: 'maestro',
+    name: 'Maestro',
+    title: 'Nivel Legendario',
+    description: 'Para los verdaderos maestros del trading que buscan perfeccionar su arte.',
+    features: [
+      'Todas las funcionalidades premium',
+      'Mentoría de nivel legendario',
+      'Estrategias exclusivas',
+      'Red de maestros',
+      'Consultoría estratégica avanzada'
+    ],
+    color: 'bg-yellow-500',
+    gradient: 'from-yellow-500 to-yellow-600',
+    image: '/images/default-avatar.png',
+    path: '/dashboard/maestro'
+  }
+];
 
-    const elements = document.querySelectorAll(
-      '.zwtc-header, .zwtc-description, .zwtc-text, .zwtc-benefits, .zwtc-dates, .key-points, .video-guide, .opportunity-section'
-    );
-
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
+export default function RolesPage() {
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
 
   return (
-    <div className="h-screen bg-gradient-to-b from-[#212121] via-[#121212] to-[#121212] overflow-x-hidden relative z-0">
-      <div className="relative">
-        <main className="text-white flex flex-col md:flex-row justify-center items-start p-4 md:p-[60px_30px_30px] gap-6 md:gap-12 h-full relative overflow-y-auto scrollbar-thin scrollbar-thumb-[#ec4d58] scrollbar-track-[#121212]">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
+      {/* Header */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+            Crypto Force
+          </h1>
+          <p className="text-xl text-gray-300 mb-8">
+            Selecciona tu rango y accede a tu dashboard personalizado
+          </p>
+        </div>
 
-          {/* Izquierda: Logo + botones */}
-          <div className="w-full md:w-1/2 max-w-[800px] px-4 md:px-0 flex flex-col items-center mt-4 md:mt-8 gap-6">
-            <div className="flex justify-center items-center mx-auto max-w-[300px] md:max-w-[500px]">
-              <Image
-                src="/logo.png"
-                alt="Crypto Force Logo"
-                className="w-full h-auto filter drop-shadow-md hover:scale-101 transition-transform duration-300"
-                width={700}
-                height={400}
-                priority
-              />
-            </div>
+        {/* Roles Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {roles.map((role) => (
+            <div
+              key={role.id}
+              className={`relative group cursor-pointer transform transition-all duration-300 hover:scale-105`}
+              onClick={() => setSelectedRole(role)}
+            >
+              <div className={`bg-gradient-to-br ${role.gradient} rounded-2xl p-6 shadow-2xl border border-gray-700 hover:border-white/20 transition-all duration-300`}>
+                {/* Role Image */}
+                <div className="flex justify-center mb-4">
+                  <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center">
+                    <Image
+                      src={role.image}
+                      alt={role.name}
+                      width={80}
+                      height={80}
+                      className="rounded-full"
+                    />
+                  </div>
+                </div>
 
-            <div className="flex flex-col gap-3 md:gap-4 w-full max-w-[400px]">
-              <a
-                href="https://chat.whatsapp.com/JQJT3H0KE4u7WNiVc8QqxU"
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-[#ec4d58] text-white rounded-lg hover:bg-[#d43d47] transition-all duration-300 text-base font-semibold"
-              >
-                <i className="fas fa-rocket"></i> Comienza tu Viaje Galáctico
-              </a>
-              <a
-                href="/login"
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-[#2a2a2a] text-white rounded-lg hover:bg-[#3a3a3a] transition-all duration-300 text-base font-semibold"
-              >
-                <i className="fas fa-home"></i> Accede a tu Cuenta
-              </a>
-            </div>
-          </div>
+                {/* Role Info */}
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold text-white mb-2">{role.name}</h3>
+                  <p className="text-sm text-white/80 mb-2">{role.title}</p>
+                  <p className="text-sm text-white/70 mb-4">{role.description}</p>
 
-          {/* Derecha: Card premium estilo Sith */}
-          <div className="w-full md:w-1/2 max-w-[700px] px-4 md:px-0 mt-4 md:mt-8 flex flex-col gap-6">
-            <div className="relative w-full p-[2px] rounded-2xl overflow-hidden">
-              <div className="absolute inset-0 animate-light-wave-red z-0"></div>
-              <div className="relative z-10 bg-[#1a1a1a] rounded-2xl p-8 border border-[#ec4d58]/10 shadow-md">
-                <h2 className="text-3xl font-extrabold text-[#ec4d58] mb-4 text-center">
-                  ⚠️ CURSO PREMIUM -40% OFF ⚠️
-                </h2>
-                <ul className="text-gray-300 space-y-2 text-sm leading-snug">
-                  <li className="flex gap-2"><i className="fas fa-check text-green-400 mt-1"></i>Acceso inmediato a formación grabada.</li>
-                  <li className="flex gap-2"><i className="fas fa-check text-green-400 mt-1"></i>15 días de período de prueba.</li>
-                  <li className="flex gap-2"><i className="fas fa-check text-green-400 mt-1"></i>Videos exclusivos con las claves que marcan la diferencia.</li>
-                  <li className="flex gap-2"><i className="fas fa-check text-green-400 mt-1"></i>Resolución de dudas personalizada.</li>
-                  <li className="flex gap-2"><i className="fas fa-check text-green-400 mt-1"></i>Clases en vivo periódicas.</li>
-                  <li className="flex gap-2"><i className="fas fa-check text-green-400 mt-1"></i>100% del contenido se desbloquea el día 16.</li>
-                  <li className="flex gap-2"><i className="fas fa-check text-green-400 mt-1"></i>Acceso ilimitado a la plataforma.</li>
-                </ul>
-                <h3 className="text-[#ffd700] font-bold mt-4 mb-2">🎁 BONUS INCLUIDOS:</h3>
-                <ul className="space-y-1 text-sm">
-                  <li className="flex gap-2"><i className="fas fa-book text-yellow-400 mt-1"></i>Curso completo Introducción a las cripto</li>
-                  <li className="flex gap-2"><i className="fas fa-book text-yellow-400 mt-1"></i>Master class exclusivas</li>
-                  <li className="flex gap-2"><i className="fas fa-book text-yellow-400 mt-1"></i>Curso Psicología del trading</li>
-                  <li className="flex gap-2"><i className="fas fa-book text-yellow-400 mt-1"></i>Resúmenes de libros especializados</li>
-                </ul>
-                <div className="mt-4 text-center space-y-2">
-                  <span className="text-gray-400 line-through text-sm">450€</span>
-                  <div className="text-[#ec4d58] text-3xl font-bold">270€</div>
-                  <span className="text-gray-400 text-sm">Código: 40%OFF</span>
-                  <button className="w-full mt-3 py-2.5 bg-[#ec4d58] text-white font-bold rounded-lg hover:bg-[#d43d47] transition-colors text-base">
-                    🚀 INSCRÍBETE AHORA
-                  </button>
-                  <button className="w-full py-2.5 bg-[#2a2a2a] text-white font-bold rounded-lg hover:bg-[#3a3a3a] transition-colors text-base">
-                    📋 VER TEMARIO
-                  </button>
+                  {/* Features */}
+                  <div className="space-y-2 mb-6">
+                    {role.features.slice(0, 3).map((feature, index) => (
+                      <div key={index} className="flex items-center text-xs text-white/80">
+                        <div className="w-2 h-2 bg-white/60 rounded-full mr-2"></div>
+                        {feature}
+                      </div>
+                    ))}
+                    {role.features.length > 3 && (
+                      <div className="text-xs text-white/60">
+                        +{role.features.length - 3} características más
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Access Button */}
+                  <Link
+                    href={role.path}
+                    className={`inline-block px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg transition-all duration-300 border border-white/20 hover:border-white/40`}
+                  >
+                    Acceder al Dashboard
+                  </Link>
                 </div>
               </div>
             </div>
-          </div>
-        </main>
+          ))}
+        </div>
 
-        {/* ZOOMEX SECCIÓN ACTUALIZADA */}
-        <div className="w-full px-4 md:px-12 mt-10 mb-12">
-          <div className="relative w-full max-w-[850px] mx-auto p-[2px] rounded-2xl overflow-hidden">
-            <div className="absolute inset-0 animate-light-wave-cyan z-0"></div>
-            <div className="relative z-10 bg-[#121212] border border-[#10d7be]/10 rounded-2xl px-6 py-6 flex flex-col gap-4 shadow-xl transition-all duration-300">
-              <div className="flex flex-col text-left">
-              <p className="text-base text-gray-300">
-                Tenemos una <strong className="text-[#10d7be]">alianza explosiva</strong> con{' '}
-                <Image
-                  src="/images/zoomex-logo.png"
-                  alt="Zoomex Logo"
-                  width={100}
-                  height={28}
-                  className="inline-block align-middle -ml-2 w-auto h-auto"
-                  priority
-                />
-              </p>
+        {/* Footer */}
+        <div className="text-center text-gray-400 text-sm">
+          <p>© 2024 Crypto Force. Todos los derechos reservados.</p>
+        </div>
+      </div>
 
-                <p className="text-base text-gray-300">
-                  Haz click{' '}
-                  <button
-                    onClick={() => setShowZoomexDetails(!showZoomexDetails)}
-                    className="text-[#10d7be] font-semibold underline underline-offset-2 cursor-pointer"
-                    aria-expanded={showZoomexDetails}
-                    aria-controls="zoomex-details"
-                  >
-                    aquí
-                  </button>{' '}
-                  para conocer los regalos que te esperan 👇
-                </p>
+      {/* Role Detail Modal */}
+      {selectedRole && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+          <div className="bg-gray-800 rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h2 className="text-3xl font-bold text-white mb-2">{selectedRole.name}</h2>
+                <p className="text-lg text-gray-300">{selectedRole.title}</p>
               </div>
-
-              <div
-                id="zoomex-details"
-                className={clsx(
-                  'transition-all duration-700 ease-in-out overflow-hidden',
-                  showZoomexDetails ? 'opacity-100 max-h-[900px]' : 'opacity-0 max-h-0'
-                )}
+              <button
+                onClick={() => setSelectedRole(null)}
+                className="text-gray-400 hover:text-white text-2xl"
               >
-                <div className="text-sm md:text-base text-gray-300 text-left mt-2">
-                  <p className="mb-3">
-                    💸 <strong className="text-[#10d7be]">¡Recibe hasta el 50% de tu primer depósito!</strong> Si depositas <strong>100 USDT</strong>, te reembolsan <strong>50 USDT</strong>. Sin letra chica.
-                  </p>
-                  <p className="mb-3">
-                    🏆 Y si haces tu primer trade por 100 USDT, ganas <strong className="text-[#10d7be]">otros 50 USDT</strong>. ¡Doble recompensa!
-                  </p>
-                  <p className="mb-3">
-                    📱 Solo necesitas verificar tu número móvil. Es fácil y rápido.
-                  </p>
-                  <p className="mb-3 text-sm text-gray-400">
-                    🧠 Las recompensas se entregan cada jueves. Lee las reglas en el Centro de Recompensas.
-                  </p>
-                  <a
-                    href="https://partner.zoomex.com/CryptoForce50"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 flex items-center justify-center gap-2 px-6 py-3 bg-[#10d7be] text-white font-semibold rounded-lg hover:bg-[#3bb2f6] transition-colors duration-300 text-lg w-full"
-                  >
-                    🚀 Abre tu cuenta y reclama tus 100 USDT
-                  </a>
-                </div>
+                ×
+              </button>
+            </div>
+
+            <p className="text-gray-300 mb-6">{selectedRole.description}</p>
+
+            <div className="mb-6">
+              <h3 className="text-xl font-semibold text-white mb-4">Características incluidas:</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {selectedRole.features.map((feature, index) => (
+                  <div key={index} className="flex items-center text-gray-300">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                    {feature}
+                  </div>
+                ))}
               </div>
+            </div>
+
+            <div className="flex gap-4">
+              <Link
+                href={selectedRole.path}
+                className={`flex-1 px-6 py-3 bg-gradient-to-r ${selectedRole.gradient} text-white font-semibold rounded-lg text-center hover:opacity-90 transition-opacity`}
+              >
+                Acceder Ahora
+              </Link>
+              <button
+                onClick={() => setSelectedRole(null)}
+                className="px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                Cerrar
+              </button>
             </div>
           </div>
         </div>
-
-      </div>
-
-      <style jsx>{`
-        @keyframes lightWave {
-          0% {
-            transform: translateX(-100%);
-            opacity: 0.1;
-          }
-          50% {
-            transform: translateX(0%);
-            opacity: 0.2;
-          }
-          100% {
-            transform: translateX(100%);
-            opacity: 0.1;
-          }
-        }
-        .animate-light-wave-red {
-          background: radial-gradient(
-            circle at 30% 50%,
-            rgba(236, 77, 88, 0.1),
-            transparent 60%
-          );
-          animation: lightWave 6s ease-in-out infinite;
-        }
-        .animate-light-wave-cyan {
-          background: radial-gradient(
-            circle at 30% 50%,
-            rgba(16, 215, 190, 0.15),
-            transparent 60%
-          );
-          animation: lightWave 6s ease-in-out infinite;
-        }
-      `}</style>
+      )}
     </div>
   );
-}
+} 

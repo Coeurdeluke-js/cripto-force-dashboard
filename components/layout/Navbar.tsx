@@ -2,17 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-// import { useAuth } from '@/context/AuthContext';
 import clsx from 'clsx';
 import RoleSelector from './RoleSelector';
-
-const mainLinks = [
-  { href: '/', label: 'Home', icon: 'fas fa-home' },
-  { href: '/intro', label: 'Introducción', icon: 'fas fa-info-circle' },
-  { href: '/quienessomos', label: 'Quiénes Somos', icon: 'fas fa-users' },
-  { href: '/servicios', label: 'Servicios', icon: 'fas fa-cogs' },
-  { href: '/contacto', label: 'Contacto', icon: 'fas fa-envelope' },
-];
 
 const roles = [
   { id: 'iniciado', name: 'Iniciado', level: 'I', color: 'text-white', path: '/dashboard/iniciado' },
@@ -26,7 +17,6 @@ const roles = [
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isRoleMenuOpen, setIsRoleMenuOpen] = useState(false);
-  // const { user, logout } = useAuth();
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'auto';
@@ -48,78 +38,52 @@ export default function Navbar() {
 
         <nav className="relative w-full bg-[#121212]/90 backdrop-blur-md flex justify-between items-center px-4 sm:px-6 py-3 max-w-full z-50">
           <div className="flex justify-between items-center max-w-7xl w-full mx-auto">
-            {/* LOGO ELIMINADO */}
+            {/* LOGO */}
             <div className="flex items-center space-x-2 z-10">
-              {/* Logo removido según solicitud */}
+              <Link href="/" className="text-2xl font-bold text-white">
+                Crypto Force
+              </Link>
             </div>
 
             {/* NAV DESKTOP */}
             <div className="hidden md:flex space-x-8 items-center z-10">
-              {mainLinks.map(({ href, label, icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="text-white hover:text-[#ec4d58] transition-colors flex items-center gap-2 font-semibold"
-                >
-                  <i className={`${icon}`}></i> {label}
-                </Link>
-              ))}
+              <Link
+                href="/"
+                className="text-white hover:text-[#ec4d58] transition-colors flex items-center gap-2 font-semibold"
+              >
+                <i className="fas fa-home"></i> Inicio
+              </Link>
+              <RoleSelector />
             </div>
 
             <div className="hidden md:flex items-center space-x-4">
-              {/* {user ? ( */}
-                <>
-                  <RoleSelector />
-                  {/* <button
-                    onClick={logout}
-                    className="text-white hover:text-[#ec4d58] transition-colors"
-                  >
-                    Cerrar Sesión
-                  </button> */}
-                </>
-              {/* ) : ( */}
-                {/* <RoleSelector /> */}
-              {/* )} */}
-            </div>
-
-            {/* BOTONES EXTRA DESKTOP */}
-            <div className="hidden md:flex items-center space-x-6 z-10">
               <Link
-                href="/game"
+                href="/dashboard/iniciado"
                 className="relative inline-flex items-center gap-2 rounded-lg bg-gradient-to-tr from-[#ec4d58] via-[#c6373e] to-[#ec4d58] px-5 py-2 shadow-lg text-white font-semibold text-sm transition-all hover:brightness-110 border border-[#ec4d58]"
               >
-                <i className="fas fa-bolt"></i> The Siths Clash
+                <i className="fas fa-user"></i> Mi Dashboard
               </Link>
-              {/* {user && ( */}
-                <>
-                  {/* Eliminar esta duplicación del botón logout */}
-                </>
-              {/* )} */}
             </div>
 
-            {/* NAV COLAPSADA MÓVIL - Logo eliminado */}
+            {/* NAV COLAPSADA MÓVIL */}
             <div className={clsx("md:hidden flex items-center justify-between w-full z-10 transition-opacity duration-300", {
               'opacity-0 pointer-events-none': isMobileMenuOpen,
               'opacity-100': !isMobileMenuOpen,
             })}>
-              {/* Logo móvil eliminado */}
               <div className="flex gap-3 items-center flex-1 justify-center overflow-x-auto flex-nowrap scrollbar-hide">
-                {mainLinks.map(({ href, icon, label }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    className="text-white hover:text-[#ec4d58] text-lg relative group p-2 flex-shrink-0"
-                    title={label}
-                  >
-                    <i className={icon}></i>
-                  </Link>
-                ))}
-                <Link 
-                  href="/game" 
-                  className="text-[#ec4d58] hover:text-white text-lg p-2 flex-shrink-0" 
-                  title="The Siths Clash"
+                <Link
+                  href="/"
+                  className="text-white hover:text-[#ec4d58] text-lg relative group p-2 flex-shrink-0"
+                  title="Inicio"
                 >
-                  <i className="fas fa-bolt"></i>
+                  <i className="fas fa-home"></i>
+                </Link>
+                <Link 
+                  href="/dashboard/iniciado" 
+                  className="text-[#ec4d58] hover:text-white text-lg p-2 flex-shrink-0" 
+                  title="Mi Dashboard"
+                >
+                  <i className="fas fa-user"></i>
                 </Link>
               </div>
               <button
@@ -151,31 +115,32 @@ export default function Navbar() {
             >
               <i className="fas fa-times"></i>
             </button>
+            
             {/* Enlaces principales */}
-            {mainLinks.map(({ href, label, icon }) => (
-              <Link
-                key={href}
-                href={href}
-                className="text-white hover:text-[#ec4d58] transition-colors flex items-center gap-3 text-lg font-semibold py-3 px-4 rounded-lg hover:bg-[#ec4d58]/10"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <i className={`${icon} w-6`}></i> {label}
-              </Link>
-            ))}
-            {/* The Siths Clash */}
             <Link
-              href="/game"
-              className="bg-gradient-to-tr from-[#ec4d58] via-[#c6373e] to-[#ec4d58] text-white px-4 py-3 rounded-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 font-semibold"
+              href="/"
+              className="text-white hover:text-[#ec4d58] transition-colors flex items-center gap-3 text-lg font-semibold py-3 px-4 rounded-lg hover:bg-[#ec4d58]/10"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              <i className="fas fa-bolt"></i> The Siths Clash
+              <i className="fas fa-home w-6"></i> Inicio
             </Link>
-            {/* Opciones de usuario */}
-            {/* {user && ( */}
-              <>
-                {/* Eliminar esta duplicación del botón logout */}
-              </>
-            {/* )} */}
+            
+            {/* Roles */}
+            <div className="py-3 px-4">
+              <h3 className="text-white/80 text-sm font-semibold mb-3">Acceso a Dashboards:</h3>
+              <div className="space-y-2">
+                {roles.map((role) => (
+                  <Link
+                    key={role.id}
+                    href={role.path}
+                    className={`${role.color} hover:text-[#ec4d58] transition-colors flex items-center gap-3 text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#ec4d58]/10`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <i className="fas fa-user w-6"></i> {role.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
           {/* Overlay: 1/3 inferior */}
           <div
