@@ -1,170 +1,266 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { createClientComponentClient, User } from '@supabase/auth-helpers-nextjs';
-import ThemeToggle from '@/components/ui/ThemeToggle';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { useState } from 'react';
+import Link from 'next/link';
 
 export default function DarthDashboard() {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const supabase = createClientComponentClient();
-
-  // Temporalmente comentamos la verificación de autenticación mientras se configura
-  /*
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError) throw sessionError;
-        if (!session) {
-          router.push('/login');
-          return;
-        }
-        const { data: { user }, error } = await supabase.auth.getUser();
-        if (error) throw error;
-        if (!user?.user_metadata?.role?.includes('darth')) {
-          router.push('/dashboard');
-          return;
-        }
-        setUser(user);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getUser();
-  }, []);
-  */
-
-  if (loading) return <div className="p-8">Cargando...</div>;
-  if (error) return <div className="p-8 text-red-500">Error: {error}</div>;
+  const [activeTab, setActiveTab] = useState('overview');
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-[#121212] text-white">
       {/* Header */}
-      <div className="p-6 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="relative w-10 h-10">
-              <Image 
-                src={user?.user_metadata?.avatar_url || '/images/default-avatar.png'}
-                alt="Avatar" 
-                fill
-                className="rounded-full object-cover"
-              />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                Darth {user?.user_metadata?.full_name || user?.email}
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Nivel 5 - Darth</p>
-            </div>
-          </div>
-          <ThemeToggle />
+      <div className="bg-gradient-to-r from-red-600 to-red-800 p-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl font-bold mb-4">DARTH DASHBOARD</h1>
+          <p className="text-red-200 text-lg">
+            Nivel V - Destrucción canalizada y poder absoluto
+          </p>
         </div>
       </div>
 
-      <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Visión Global de Progreso */}
-        <div className="col-span-full p-6 border border-red-200 dark:border-red-800 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-          <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-4">🔮 Visión Global de Progreso</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <h4 className="font-semibold mb-2">Mapa de Actividad</h4>
-              {/* Aquí iría el componente de mapa de calor */}
-            </div>
-            <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <h4 className="font-semibold mb-2">Engagement</h4>
-              {/* Aquí irían las métricas de engagement */}
-            </div>
-            <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <h4 className="font-semibold mb-2">Errores Comunes</h4>
-              {/* Aquí iría el análisis de errores */}
-            </div>
-          </div>
+      {/* Navigation */}
+      <div className="bg-gray-900 border-b border-gray-700">
+        <div className="max-w-7xl mx-auto px-8">
+          <nav className="flex space-x-8">
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm ${
+                activeTab === 'overview'
+                  ? 'border-red-500 text-red-400'
+                  : 'border-transparent text-gray-300 hover:text-white'
+              }`}
+            >
+              Resumen
+            </button>
+            <button
+              onClick={() => setActiveTab('power')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm ${
+                activeTab === 'power'
+                  ? 'border-red-500 text-red-400'
+                  : 'border-transparent text-gray-300 hover:text-white'
+              }`}
+            >
+              Poder
+            </button>
+            <button
+              onClick={() => setActiveTab('execution')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm ${
+                activeTab === 'execution'
+                  ? 'border-red-500 text-red-400'
+                  : 'border-transparent text-gray-300 hover:text-white'
+              }`}
+            >
+              Ejecución
+            </button>
+            <button
+              onClick={() => setActiveTab('legacy')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm ${
+                activeTab === 'legacy'
+                  ? 'border-red-500 text-red-400'
+                  : 'border-transparent text-gray-300 hover:text-white'
+              }`}
+            >
+              Legado
+            </button>
+          </nav>
         </div>
+      </div>
 
-        {/* Editor de Cursos */}
-        <div className="p-6 border border-red-200 dark:border-red-800 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-          <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-4">🛠️ Editor de Cursos</h3>
-          <div className="space-y-4">
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors duration-200">
-              Crear Nuevo Módulo
-            </button>
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors duration-200">
-              Editar Módulos Existentes
-            </button>
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors duration-200">
-              Lanzar Módulo
-            </button>
-          </div>
-        </div>
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-8 py-8">
+        {activeTab === 'overview' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4 text-red-400">Métricas de Poder</h3>
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Influencia Total</span>
+                  <span className="text-red-400 font-semibold">99.9%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">ROI Promedio</span>
+                  <span className="text-red-400 font-semibold">+156.7%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Dominio</span>
+                  <span className="text-red-400 font-semibold">Absoluto</span>
+                </div>
+              </div>
+            </div>
 
-        {/* Repositorio de Herramientas */}
-        <div className="p-6 border border-red-200 dark:border-red-800 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-          <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-4">📚 Repositorio de Herramientas</h3>
-          <div className="space-y-4">
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors duration-200">
-              Subir Recurso
-            </button>
-            <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <h4 className="font-semibold mb-2">Recursos Compartidos</h4>
-              {/* Lista de recursos */}
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4 text-red-400">Herramientas de Poder</h3>
+              <div className="space-y-3">
+                <div className="flex items-center text-gray-300">
+                  <i className="fas fa-fire mr-3 text-red-400"></i>
+                  Destrucción Canalizada
+                </div>
+                <div className="flex items-center text-gray-300">
+                  <i className="fas fa-eye mr-3 text-red-400"></i>
+                  Visión del Lado Oscuro
+                </div>
+                <div className="flex items-center text-gray-300">
+                  <i className="fas fa-sword mr-3 text-red-400"></i>
+                  Ejecución Perfecta
+                </div>
+                <div className="flex items-center text-gray-300">
+                  <i className="fas fa-crown mr-3 text-red-400"></i>
+                  Dominio Absoluto
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4 text-red-400">Agenda de Poder</h3>
+              <div className="space-y-3">
+                <div className="border-l-4 border-red-500 pl-4">
+                  <div className="text-sm text-gray-400">Hoy, 20:00</div>
+                  <div className="text-white font-medium">Ritual de Poder</div>
+                </div>
+                <div className="border-l-4 border-red-500 pl-4">
+                  <div className="text-sm text-gray-400">Mañana, 00:00</div>
+                  <div className="text-white font-medium">Ejecución Masiva</div>
+                </div>
+                <div className="border-l-4 border-red-500 pl-4">
+                  <div className="text-sm text-gray-400">Viernes, 18:00</div>
+                  <div className="text-white font-medium">Consejo de Darth</div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Gestor de Eventos */}
-        <div className="p-6 border border-red-200 dark:border-red-800 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-          <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-4">🧱 Gestor de Eventos</h3>
-          <div className="space-y-4">
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors duration-200">
-              Crear Evento
-            </button>
-            <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <h4 className="font-semibold mb-2">Eventos Activos</h4>
-              {/* Lista de eventos */}
+        {activeTab === 'power' && (
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h3 className="text-2xl font-semibold mb-6 text-red-400">Panel de Poder</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Operaciones de Poder</h4>
+                <div className="space-y-3">
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">Operación Alpha</span>
+                      <span className="text-red-400 font-semibold">+$2.5M</span>
+                    </div>
+                    <div className="text-sm text-gray-300">
+                      Destrucción de competencia | Estado: Completado
+                    </div>
+                  </div>
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">Operación Beta</span>
+                      <span className="text-red-400 font-semibold">+$1.8M</span>
+                    </div>
+                    <div className="text-sm text-gray-300">
+                      Dominio de mercado | Estado: En progreso
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Métricas de Dominio</h4>
+                <div className="space-y-3">
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-white">Control de Mercado</span>
+                      <span className="text-red-400 font-semibold">85%</span>
+                    </div>
+                  </div>
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-white">Influencia</span>
+                      <span className="text-red-400 font-semibold">Absoluta</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Broadcast Panel */}
-        <div className="p-6 border border-red-200 dark:border-red-800 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-          <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-4">📣 Broadcast Panel</h3>
-          <div className="space-y-4">
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors duration-200">
-              Enviar Alerta
-            </button>
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors duration-200">
-              Gestionar Banners
-            </button>
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors duration-200">
-              Mensajes Grupales
-            </button>
-          </div>
-        </div>
-
-        {/* Mentoría Formal */}
-        <div className="p-6 border border-red-200 dark:border-red-800 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-          <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-4">🧑‍🏫 Mentoría Formal</h3>
-          <div className="space-y-4">
-            <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <h4 className="font-semibold mb-2">Estudiantes Asignados</h4>
-              {/* Lista de estudiantes */}
+        {activeTab === 'execution' && (
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h3 className="text-2xl font-semibold mb-6 text-red-400">Ejecución Perfecta</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Misiones Activas</h4>
+                <div className="space-y-4">
+                  <div className="border-l-4 border-red-500 pl-4">
+                    <div className="text-white font-medium">Misión Omega</div>
+                    <div className="text-sm text-gray-300">Dominio total del mercado | 95% completado</div>
+                  </div>
+                  <div className="border-l-4 border-red-500 pl-4">
+                    <div className="text-white font-medium">Misión Delta</div>
+                    <div className="text-sm text-gray-300">Eliminación de competencia | 78% completado</div>
+                  </div>
+                  <div className="border-l-4 border-red-500 pl-4">
+                    <div className="text-white font-medium">Misión Gamma</div>
+                    <div className="text-sm text-gray-300">Control de liquidez | 100% completado</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Estadísticas de Ejecución</h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Tasa de Éxito</span>
+                    <span className="text-red-400">99.9%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Precisión</span>
+                    <span className="text-red-400">Perfecta</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Eficiencia</span>
+                    <span className="text-red-400">Máxima</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors duration-200">
-              Agendar Sesión
-            </button>
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors duration-200">
-              Registrar Feedback
-            </button>
           </div>
-        </div>
+        )}
+
+        {activeTab === 'legacy' && (
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h3 className="text-2xl font-semibold mb-6 text-red-400">Legado del Darth</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Logros Legendarios</h4>
+                <div className="space-y-3">
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="text-sm text-gray-400">2023</div>
+                    <div className="text-white">Dominio del 90% del mercado crypto</div>
+                  </div>
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="text-sm text-gray-400">2022</div>
+                    <div className="text-white">Eliminación de 50+ competidores</div>
+                  </div>
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="text-sm text-gray-400">2021</div>
+                    <div className="text-white">Creación del imperio Darth</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Legado</h4>
+                <div className="space-y-3">
+                  <Link href="#" className="block bg-gray-700 rounded p-4 hover:bg-gray-600 transition-colors">
+                    <div className="text-white font-medium">Doctrina del Lado Oscuro</div>
+                    <div className="text-sm text-gray-300">Manual completo</div>
+                  </Link>
+                  <Link href="#" className="block bg-gray-700 rounded p-4 hover:bg-gray-600 transition-colors">
+                    <div className="text-white font-medium">Estrategias de Dominio</div>
+                    <div className="text-sm text-gray-300">Técnicas avanzadas</div>
+                  </Link>
+                  <Link href="#" className="block bg-gray-700 rounded p-4 hover:bg-gray-600 transition-colors">
+                    <div className="text-white font-medium">Legado Eterno</div>
+                    <div className="text-sm text-gray-300">Transmisión de poder</div>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

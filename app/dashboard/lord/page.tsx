@@ -1,200 +1,266 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import ThemeToggle from '@/components/ui/ThemeToggle';
-import TimeZoneClock from '@/components/ui/TimeZoneClock';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useState } from 'react';
+import Link from 'next/link';
 
 export default function LordDashboard() {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient();
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getUser();
-  }, [supabase]);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-400"></div>
-      </div>
-    );
-  }
+  const [activeTab, setActiveTab] = useState('overview');
 
   return (
-    <div className="p-8 space-y-6">
-      {/* Header con información del usuario */}
-      <header className="card flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-  {/* Bloque de Avatar y usuario */}
-  <div className="flex items-center gap-4">
-    <div className="w-16 h-16 rounded-full overflow-hidden shadow-md">
-      <Image 
-        src={user?.user_metadata?.avatar_url || "/images/default-avatar.png"} 
-        alt="Avatar" 
-        width={64} 
-        height={64} 
-        className="rounded-full" 
-        priority 
-      />
-    </div>
-    <div>
-      <h1 className="text-2xl font-bold">{user?.email || 'Iniciado'}</h1>
-      <p className="text-gray-600 dark:text-gray-400">Rango: Iniciado</p>
-    </div>
-  </div>
+    <div className="min-h-screen bg-[#121212] text-white">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl font-bold mb-4">LORD DASHBOARD</h1>
+          <p className="text-blue-200 text-lg">
+            Nivel IV - Visión, mando y estrategia
+          </p>
+        </div>
+      </div>
 
-  {/* Bloque de reloj + toggle */}
-  <div className="flex items-center gap-4 mt-4 md:mt-0 self-end md:self-auto">
-    <TimeZoneClock />
-    <ThemeToggle />
-  </div>
-</header>
+      {/* Navigation */}
+      <div className="bg-gray-900 border-b border-gray-700">
+        <div className="max-w-7xl mx-auto px-8">
+          <nav className="flex space-x-8">
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm ${
+                activeTab === 'overview'
+                  ? 'border-blue-500 text-blue-400'
+                  : 'border-transparent text-gray-300 hover:text-white'
+              }`}
+            >
+              Resumen
+            </button>
+            <button
+              onClick={() => setActiveTab('strategy')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm ${
+                activeTab === 'strategy'
+                  ? 'border-blue-500 text-blue-400'
+                  : 'border-transparent text-gray-300 hover:text-white'
+              }`}
+            >
+              Estrategia
+            </button>
+            <button
+              onClick={() => setActiveTab('leadership')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm ${
+                activeTab === 'leadership'
+                  ? 'border-blue-500 text-blue-400'
+                  : 'border-transparent text-gray-300 hover:text-white'
+              }`}
+            >
+              Liderazgo
+            </button>
+            <button
+              onClick={() => setActiveTab('network')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm ${
+                activeTab === 'network'
+                  ? 'border-blue-500 text-blue-400'
+                  : 'border-transparent text-gray-300 hover:text-white'
+              }`}
+            >
+              Red
+            </button>
+          </nav>
+        </div>
+      </div>
 
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-8 py-8">
+        {activeTab === 'overview' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4 text-blue-400">Métricas de Liderazgo</h3>
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Equipos Dirigidos</span>
+                  <span className="text-blue-400 font-semibold">12</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">ROI Promedio</span>
+                  <span className="text-blue-400 font-semibold">+28.5%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Influencia</span>
+                  <span className="text-blue-400 font-semibold">Alta</span>
+                </div>
+              </div>
+            </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Gestor de Estudiantes Asignados */}
-        <section className="bg-blue-900/10 p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-bold mb-4 text-blue-400">👨‍🏫 Gestor de Estudiantes</h2>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              {[1, 2, 3, 4].map((estudiante) => (
-                <div key={estudiante} className="p-3 bg-blue-900/20 rounded flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-800"></div>
-                  <div>
-                    <p className="font-semibold">Acólito {estudiante}</p>
-                    <p className="text-sm text-blue-300">Progreso: 75%</p>
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4 text-blue-400">Herramientas Exclusivas</h3>
+              <div className="space-y-3">
+                <div className="flex items-center text-gray-300">
+                  <i className="fas fa-chess mr-3 text-blue-400"></i>
+                  Estrategias Institucionales
+                </div>
+                <div className="flex items-center text-gray-300">
+                  <i className="fas fa-network-wired mr-3 text-blue-400"></i>
+                  Red de Contactos
+                </div>
+                <div className="flex items-center text-gray-300">
+                  <i className="fas fa-chart-bar mr-3 text-blue-400"></i>
+                  Análisis de Mercado Profundo
+                </div>
+                <div className="flex items-center text-gray-300">
+                  <i className="fas fa-crown mr-3 text-blue-400"></i>
+                  Mentoría de Alto Nivel
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4 text-blue-400">Agenda Estratégica</h3>
+              <div className="space-y-3">
+                <div className="border-l-4 border-blue-500 pl-4">
+                  <div className="text-sm text-gray-400">Hoy, 16:00</div>
+                  <div className="text-white font-medium">Reunión de Estrategia</div>
+                </div>
+                <div className="border-l-4 border-blue-500 pl-4">
+                  <div className="text-sm text-gray-400">Mañana, 11:00</div>
+                  <div className="text-white font-medium">Análisis de Mercado</div>
+                </div>
+                <div className="border-l-4 border-blue-500 pl-4">
+                  <div className="text-sm text-gray-400">Viernes, 19:00</div>
+                  <div className="text-white font-medium">Cena de Networking</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'strategy' && (
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h3 className="text-2xl font-semibold mb-6 text-blue-400">Panel Estratégico</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Posiciones Institucionales</h4>
+                <div className="space-y-3">
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">Portfolio A</span>
+                      <span className="text-green-400 font-semibold">+$45,200</span>
+                    </div>
+                    <div className="text-sm text-gray-300">
+                      BTC, ETH, ADA | Riesgo: Bajo
+                    </div>
+                  </div>
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">Portfolio B</span>
+                      <span className="text-blue-400 font-semibold">+$23,500</span>
+                    </div>
+                    <div className="text-sm text-gray-300">
+                      Altcoins, DeFi | Riesgo: Medio
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Simulador de Estrategias */}
-        <section className="bg-blue-900/10 p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-bold mb-4 text-blue-400">🧪 Simulador de Estrategias</h2>
-          <div className="space-y-4">
-            <select className="w-full p-2 bg-blue-900/20 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none">
-              <option>Seleccionar estrategia</option>
-              <option>Scalping</option>
-              <option>Day Trading</option>
-              <option>Swing Trading</option>
-            </select>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-3 bg-blue-900/20 rounded">
-                <p className="font-semibold">Win Rate Simulado</p>
-                <p className="text-2xl text-blue-400">68%</p>
               </div>
-              <div className="p-3 bg-blue-900/20 rounded">
-                <p className="font-semibold">Drawdown Máx</p>
-                <p className="text-2xl text-blue-400">15%</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Módulo Emocional */}
-        <section className="bg-blue-900/10 p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-bold mb-4 text-blue-400">📊 Módulo Emocional</h2>
-          <div className="space-y-4">
-            <div className="flex gap-2 flex-wrap">
-              <button className="px-4 py-2 bg-green-500/20 rounded-full">😊 Confiado</button>
-              <button className="px-4 py-2 bg-yellow-500/20 rounded-full">😐 Neutral</button>
-              <button className="px-4 py-2 bg-red-500/20 rounded-full">😟 Ansioso</button>
-              <button className="px-4 py-2 bg-purple-500/20 rounded-full">😤 Frustrado</button>
-            </div>
-            <textarea
-              className="w-full h-32 bg-blue-900/20 rounded p-3 resize-none focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              placeholder="Notas sobre tu estado emocional post-trading..."
-            ></textarea>
-          </div>
-        </section>
-
-        {/* Editor de Contenido Interno */}
-        <section className="bg-blue-900/10 p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-bold mb-4 text-blue-400">📜 Editor de Contenido</h2>
-          <div className="space-y-4">
-            <input
-              type="text"
-              className="w-full p-2 bg-blue-900/20 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              placeholder="Título del recurso"
-            />
-            <textarea
-              className="w-full h-32 bg-blue-900/20 rounded p-3 resize-none focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              placeholder="Describe el recurso que quieres compartir..."
-            ></textarea>
-            <button className="w-full py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors">
-              Subir Recurso
-            </button>
-          </div>
-        </section>
-
-        {/* Misiones de Liderazgo */}
-        <section className="bg-blue-900/10 p-6 rounded-lg shadow-lg col-span-full">
-          <h2 className="text-xl font-bold mb-4 text-blue-400">🧬 Misiones de Liderazgo</h2>
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 bg-blue-900/20 rounded">
-                <h3 className="font-bold mb-2">Mentoría Grupal</h3>
-                <p className="text-sm">Organiza una sesión de estudio con tu equipo</p>
-                <div className="mt-4 h-2 bg-blue-200 rounded-full">
-                  <div className="h-2 bg-blue-400 rounded-full" style={{ width: '60%' }}></div>
-                </div>
-              </div>
-              <div className="p-4 bg-blue-900/20 rounded">
-                <h3 className="font-bold mb-2">Análisis de Mercado</h3>
-                <p className="text-sm">Comparte tu visión semanal del mercado</p>
-                <div className="mt-4 h-2 bg-blue-200 rounded-full">
-                  <div className="h-2 bg-blue-400 rounded-full" style={{ width: '30%' }}></div>
-                </div>
-              </div>
-              <div className="p-4 bg-blue-900/20 rounded">
-                <h3 className="font-bold mb-2">Feedback 360</h3>
-                <p className="text-sm">Evalúa y recibe feedback de tu equipo</p>
-                <div className="mt-4 h-2 bg-blue-200 rounded-full">
-                  <div className="h-2 bg-blue-400 rounded-full" style={{ width: '85%' }}></div>
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Análisis de Mercado</h4>
+                <div className="space-y-3">
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-white">Sentimiento</span>
+                      <span className="text-green-400 font-semibold">Alcista</span>
+                    </div>
+                  </div>
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-white">Volatilidad</span>
+                      <span className="text-yellow-400 font-semibold">Media</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        )}
 
-        {/* Bitácora Comparativa */}
-        <section className="bg-blue-900/10 p-6 rounded-lg shadow-lg col-span-full">
-          <h2 className="text-xl font-bold mb-4 text-blue-400">🧩 Bitácora Comparativa</h2>
-          <div className="space-y-4">
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="p-4 bg-blue-900/20 rounded">
-                <p className="font-semibold">Tu Win Rate</p>
-                <p className="text-2xl text-blue-400">65%</p>
-                <p className="text-sm text-blue-300">vs. 62% promedio</p>
+        {activeTab === 'leadership' && (
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h3 className="text-2xl font-semibold mb-6 text-blue-400">Gestión de Equipos</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Equipos Activos</h4>
+                <div className="space-y-4">
+                  <div className="border-l-4 border-blue-500 pl-4">
+                    <div className="text-white font-medium">Equipo Alpha</div>
+                    <div className="text-sm text-gray-300">5 miembros | ROI: +18%</div>
+                  </div>
+                  <div className="border-l-4 border-blue-500 pl-4">
+                    <div className="text-white font-medium">Equipo Beta</div>
+                    <div className="text-sm text-gray-300">8 miembros | ROI: +22%</div>
+                  </div>
+                  <div className="border-l-4 border-blue-500 pl-4">
+                    <div className="text-white font-medium">Equipo Gamma</div>
+                    <div className="text-sm text-gray-300">3 miembros | ROI: +15%</div>
+                  </div>
+                </div>
               </div>
-              <div className="p-4 bg-blue-900/20 rounded">
-                <p className="font-semibold">Operaciones/Día</p>
-                <p className="text-2xl text-blue-400">8</p>
-                <p className="text-sm text-blue-300">vs. 12 promedio</p>
-              </div>
-              <div className="p-4 bg-blue-900/20 rounded">
-                <p className="font-semibold">R:R Ratio</p>
-                <p className="text-2xl text-blue-400">1:2.5</p>
-                <p className="text-sm text-blue-300">vs. 1:2.1 promedio</p>
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Métricas de Liderazgo</h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Satisfacción</span>
+                    <span className="text-blue-400">92%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Retención</span>
+                    <span className="text-blue-400">95%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Productividad</span>
+                    <span className="text-blue-400">+25%</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </section>
+        )}
+
+        {activeTab === 'network' && (
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h3 className="text-2xl font-semibold mb-6 text-blue-400">Red de Contactos</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Conexiones Recientes</h4>
+                <div className="space-y-3">
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="text-sm text-gray-400">Hace 1 día</div>
+                    <div className="text-white">CEO de Crypto Exchange</div>
+                  </div>
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="text-sm text-gray-400">Hace 3 días</div>
+                    <div className="text-white">Analista Senior de Mercado</div>
+                  </div>
+                  <div className="bg-gray-700 rounded p-4">
+                    <div className="text-sm text-gray-400">Hace 1 semana</div>
+                    <div className="text-white">Inversor Institucional</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold mb-4 text-white">Eventos</h4>
+                <div className="space-y-3">
+                  <Link href="#" className="block bg-gray-700 rounded p-4 hover:bg-gray-600 transition-colors">
+                    <div className="text-white font-medium">Crypto Summit 2024</div>
+                    <div className="text-sm text-gray-300">15-17 Marzo</div>
+                  </Link>
+                  <Link href="#" className="block bg-gray-700 rounded p-4 hover:bg-gray-600 transition-colors">
+                    <div className="text-white font-medium">Networking Dinner</div>
+                    <div className="text-sm text-gray-300">22 Marzo</div>
+                  </Link>
+                  <Link href="#" className="block bg-gray-700 rounded p-4 hover:bg-gray-600 transition-colors">
+                    <div className="text-white font-medium">Trading Conference</div>
+                    <div className="text-sm text-gray-300">5 Abril</div>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -12,12 +12,12 @@ export default async function Dashboard() {
       redirect('/dashboard/iniciado');
     }
 
-    const supabase = createServerComponentClient({ cookies });
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    // Aquí implementarás la lógica para determinar el nivel del usuario
-    // Por ahora, redirigimos a todos los usuarios al dashboard de iniciado
-    redirect('/dashboard/iniciado');
+  const supabase = createServerComponentClient({ cookies });
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  // Aquí implementarás la lógica para determinar el nivel del usuario
+  // Por ahora, redirigimos a todos los usuarios al dashboard de iniciado
+  redirect('/dashboard/iniciado');
   } catch (error) {
     console.error('Error in dashboard page:', error);
     // En caso de error, redirigir al dashboard de iniciado

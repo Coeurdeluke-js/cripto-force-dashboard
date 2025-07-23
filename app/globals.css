@@ -143,6 +143,181 @@
   .dark .module-card {
     border-color: #374151;
   }
+
+  .role-button {
+    @apply inline-flex items-center justify-center w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 relative overflow-hidden;
+    position: relative;
+    color: #000000;
+    cursor: not-allowed !important;
+    z-index: 10;
+  }
+  
+  .role-button:not(.hovered) {
+    color: #000000;
+  }
+  
+  .role-button.hovered {
+    color: #d1d5db !important;
+    background: linear-gradient(to right, #374151, #1f2937) !important;
+    box-shadow: inset 0 0 0 2px rgba(156, 163, 175, 0.3);
+    transform: scale(1.02) !important;
+  }
+  
+  .role-button:hover {
+    transform: scale(1.02) !important;
+  }
+  
+  .click-effect {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .click-effect:hover {
+    transform: scale(1.02) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .click-effect:active {
+    transform: scale(0.95) !important;
+  }
+  
+  .click-effect:active::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: ripple 0.6s ease-out;
+    pointer-events: none;
+  }
+  
+  .click-effect:focus {
+    outline: none;
+  }
+  
+  .accessible-button {
+    @apply inline-flex items-center justify-center w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 hover:brightness-110 transform hover:scale-105 hover:shadow-lg active:scale-95 cursor-pointer;
+    position: relative;
+    color: #000000;
+    cursor: pointer !important;
+    z-index: 10;
+  }
+  
+  @keyframes ripple {
+    0% {
+      width: 0;
+      height: 0;
+      opacity: 1;
+    }
+    100% {
+      width: 300px;
+      height: 300px;
+      opacity: 0;
+    }
+  }
+  
+  .role-button.hovered::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    animation: shimmer 1.5s infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  .role-button .eye-icon {
+    @apply mr-2 transition-all duration-300;
+    display: block;
+    opacity: 1;
+  }
+  
+  .role-button .tools-icon {
+    @apply mr-2 transition-all duration-300;
+    display: none;
+    opacity: 0;
+  }
+  
+  .role-button:not(.hovered) .eye-icon {
+    display: block !important;
+    opacity: 1 !important;
+  }
+  
+  .role-button:not(.hovered) .tools-icon {
+    display: none !important;
+    opacity: 0 !important;
+  }
+  
+  .role-button.hovered .eye-icon {
+    display: none !important;
+    opacity: 0 !important;
+  }
+  
+  .role-button.hovered .tools-icon {
+    display: block !important;
+    opacity: 1 !important;
+    animation: spin 1s ease-in-out;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .role-button:not(.hovered) .default-text {
+    display: block !important;
+    opacity: 1 !important;
+  }
+  
+  .role-button:not(.hovered) .hover-text {
+    display: none !important;
+    opacity: 0 !important;
+  }
+  
+  .role-button.hovered .default-text {
+    display: none !important;
+    opacity: 0 !important;
+  }
+  
+  .role-button.hovered .hover-text {
+    display: block !important;
+    opacity: 1 !important;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 } /* ← cierre correcto de @layer components */
 
 @layer utilities {

@@ -8,8 +8,8 @@ export default function ModuloPractico7Contenido() {
         {/* Boton Volver en la esquina superior izquierda */}
         <div className="absolute top-4 left-4">
           <BackButton />
-        </div>
-        
+          </div>
+          
         <h1 className="text-3xl sm:text-4xl font-bold text-[#ec4d58] mb-2 text-center">Curso Practico de Trading</h1>
         <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-center">Modulo 7: Analisis Fundamental</h2>
 
@@ -25,7 +25,7 @@ export default function ModuloPractico7Contenido() {
                   <p className="text-sm mb-3">El analisis fundamental es el estudio de los factores economicos, politicos y sociales que afectan el valor de una moneda.</p>
                   <p className="text-sm mb-3">A diferencia del analisis tecnico, que se enfoca en patrones de precio, el analisis fundamental examina las causas subyacentes de los movimientos del mercado.</p>
                   <p className="text-sm">El objetivo es determinar si una moneda esta sobrevalorada o infravalorada en relacion a su valor real.</p>
-                </div>
+          </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Factores principales</h4>
@@ -35,10 +35,10 @@ export default function ModuloPractico7Contenido() {
                     <li>• Eventos politicos y geopoliticos</li>
                     <li>• Balanza comercial y flujos de capital</li>
                     <li>• Sentimiento del mercado y noticias</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+            </ul>
+          </div>
+        </div>
+          </div>
 
             {/* Seccion B: Indicadores Economicos Clave */}
             <div className="bg-[#181818] rounded-lg p-6">
@@ -50,23 +50,23 @@ export default function ModuloPractico7Contenido() {
                   <p className="text-sm mb-3">El PIB mide el valor total de todos los bienes y servicios producidos en una economia.</p>
                   <p className="text-sm mb-3">Un PIB fuerte generalmente fortalece la moneda, mientras que un PIB debil la debilita.</p>
                   <p className="text-sm">Los traders monitorean las revisiones del PIB y las expectativas del mercado.</p>
-                </div>
+          </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Inflacion</h4>
                   <p className="text-sm mb-3">La inflacion mide el aumento general de precios en una economia.</p>
                   <p className="text-sm mb-3">Inflacion moderada puede ser positiva, pero inflacion alta puede debilitar una moneda.</p>
                   <p className="text-sm">Los bancos centrales ajustan las tasas de interes en respuesta a la inflacion.</p>
-                </div>
+          </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Tasa de Desempleo</h4>
                   <p className="text-sm mb-3">Indica la salud del mercado laboral y la economia en general.</p>
                   <p className="text-sm mb-3">Tasas de desempleo bajas generalmente fortalecen la moneda.</p>
                   <p className="text-sm">Los traders prestan atencion a las revisiones de datos de empleo.</p>
-                </div>
-              </div>
-            </div>
+          </div>
+        </div>
+          </div>
 
             {/* Seccion C: Bancos Centrales */}
             <div className="bg-[#181818] rounded-lg p-6">
@@ -78,7 +78,7 @@ export default function ModuloPractico7Contenido() {
                   <p className="text-sm mb-3">Las tasas de interes son uno de los factores mas importantes que afectan el valor de una moneda.</p>
                   <p className="text-sm mb-3">Tasas mas altas atraen inversion extranjera y fortalecen la moneda.</p>
                   <p className="text-sm">Los traders monitorean las decisiones de tasas de interes y las declaraciones de los bancos centrales.</p>
-                </div>
+          </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Bancos Centrales Principales</h4>
@@ -88,10 +88,10 @@ export default function ModuloPractico7Contenido() {
                     <li>• Bank of England (BoE) - Reino Unido</li>
                     <li>• Bank of Japan (BoJ) - Japon</li>
                     <li>• Reserve Bank of Australia (RBA) - Australia</li>
-                  </ul>
-                </div>
-              </div>
+            </ul>
             </div>
+          </div>
+        </div>
 
             {/* Seccion D: La pregunta del dia */}
             <div className="bg-[#181818] rounded-lg p-6">
@@ -103,7 +103,7 @@ export default function ModuloPractico7Contenido() {
                 <div className="bg-[#1a1a1a] rounded-lg p-4">
                   <p className="text-sm text-gray-300"><strong>NOTA:</strong> La pregunta del dia es una pregunta retorica, cuyo objetivo es ayudarle a revisar lo que acaba de aprender. NO es necesario enviarnos una respuesta, ya que estas preguntas no son evaluadas.</p>
                 </div>
-              </div>
+        </div>
             </div>
           </div>
         </section>
