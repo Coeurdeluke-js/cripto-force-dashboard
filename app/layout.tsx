@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Exo_2 } from 'next/font/google'
 import './globals.css'
-import Navbar from '@/components/layout/Navbar'
 import { ThemeProvider } from '@/components/layout/ThemeProvider'
 import ClientAuthProvider from '@/components/auth/ClientAuthProvider'
 
@@ -44,13 +43,12 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ClientAuthProvider>
             <div className="triangle-background">
-            <div className="triangle-dots"></div>
-          </div>
-          <div className="relative z-10"> {/* Add this wrapper */}
-            <Navbar />
-            {children}
-          </div>
-        </ClientAuthProvider>
+              <div className="triangle-dots"></div>
+            </div>
+            <div className="relative z-10">
+              {children}
+            </div>
+          </ClientAuthProvider>
         </ThemeProvider>
       </body>
     </html>
