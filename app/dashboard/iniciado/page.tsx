@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { 
   BookOpen, 
   TrendingUp, 
@@ -31,6 +32,7 @@ import {
 } from 'lucide-react';
 import { useControlPoint } from '@/context/ControlPointContext';
 import ControlPointBadge from '@/components/ui/ControlPointBadge';
+import Carousel from '@/components/Carousel';
 
 interface Module {
   id: string;
@@ -389,6 +391,40 @@ export default function IniciadoDashboard() {
   const [progressAnimation, setProgressAnimation] = useState(false);
   const { canTakeCheckpoint, getTimeUntilNextAttempt, formatTime } = useControlPoint();
 
+  // Carousel content
+  const carouselContent = [
+    {
+      type: 'image' as const,
+      content: '/images/insignias/1-iniciados.png',
+      duration: 2500
+    },
+    {
+      type: 'title' as const,
+      content: 'INICIADO',
+      duration: 2500
+    },
+    {
+      type: 'subtitle' as const,
+      content: 'Has dado el primer paso hacia el dominio.',
+      duration: 2500
+    },
+    {
+      type: 'description' as const,
+      content: 'Este espacio es tu punto de partida. Aquí accederás a las enseñanzas fundamentales, tu bitácora de evolución, misiones introductorias, mentorías y recursos esenciales para templar tu mente. Todo está dispuesto para quien observa con atención y actúa con propósito.',
+      duration: 11000 // Aumentado de 8s a 11s
+    },
+    {
+      type: 'quote' as const,
+      content: 'En cada sombra hay un principio. En cada decisión, una transformación.',
+      duration: 3000
+    },
+    {
+      type: 'philosophy' as const,
+      content: 'Iniciado no es un título, sino una oportunidad. Una etapa donde se forja la voluntad, se entrena la percepción y se aprende a dominar el caos interior. Aquí no buscamos obediencia ciega, sino claridad interior. El poder no se recibe: se construye. Y si estás dispuesto, este será solo el primero de muchos umbrales que cruzarás.',
+      duration: 13000 // Aumentado de 10s a 13s
+    }
+  ];
+
   // Obtener todos los módulos según el tab activo
   const getAllModules = () => {
     if (activeTab === 'theoretical') {
@@ -501,40 +537,32 @@ export default function IniciadoDashboard() {
     }
   };
 
-
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0f0f0f] text-white pt-20">
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.8s ease-in-out;
+        }
+      `}</style>
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          {/* Profile Image */}
-          <div className="flex justify-center mb-6">
-            {userData.profileImage ? (
-              <img 
-                src={userData.profileImage} 
-                alt="Profile" 
-                className="w-20 h-20 rounded-full border-4 border-[#ec4d58] object-cover profile-image"
-              />
-            ) : (
-              <div className="w-20 h-20 rounded-full border-4 border-[#ec4d58] bg-[#1a1a1a] flex items-center justify-center profile-image">
-                <User className="text-[#ec4d58] text-3xl" />
-              </div>
-            )}
-          </div>
-          
-          <h1 className="text-4xl font-bold mb-4">
-            Dashboard {userData.name !== 'Usuario' ? userData.name : 'Iniciado'}
-          </h1>
-          <p className="text-xl text-gray-300">
-            Bienvenido a tu formación en educación financiera y trading
-          </p>
+        {/* Welcome Message */}
+        <div className="w-full max-w-4xl mx-auto mb-8 text-center">
+          <h2 className="text-2xl font-light text-gray-300 tracking-wide">
+            Te damos la bienvenida
+          </h2>
         </div>
+
+        {/* Carousel Component */}
+        <Carousel content={carouselContent} />
 
         {/* Video introductorio */}
         <div className="w-full flex justify-center mb-8">
           <div className="w-full max-w-4xl">
-            <video className="rounded-xl shadow-lg w-full h-64 md:h-80 object-cover" controls poster="/images/intro-poster.png">
+            <video className="rounded-xl shadow-lg w-full h-64 md:h-80 object-cover" controls>
               <source src="/images/intro.mp4" type="video/mp4" />
               Tu navegador no soporta el video.
             </video>
@@ -614,11 +642,11 @@ export default function IniciadoDashboard() {
                   <div className="text-xs text-gray-400">
                     {progress.nivel2Completed}/{progress.nivel2Total} módulos
                   </div>
-                                    <div className={`text-lg font-bold transition-all duration-500 ${progressAnimation ? 'text-[#ec4d58] scale-110' : progress.canAccessNivel2 ? 'text-yellow-500' : 'text-gray-500'}`}>
+                  <div className={`text-lg font-bold transition-all duration-500 ${progressAnimation ? 'text-[#ec4d58] scale-110' : progress.canAccessNivel2 ? 'text-yellow-500' : 'text-gray-500'}`}>
                     {progress.canAccessNivel2 ? `${progress.nivel2Percentage}%` : 'Bloqueado'}
                   </div>
-            </div>
-          </div>
+                </div>
+              </div>
 
               {/* Mini checkmarks para checkpoints */}
               <div className="flex items-center justify-between text-xs text-gray-400">
@@ -641,7 +669,7 @@ export default function IniciadoDashboard() {
               </div>
             </div>
           </div>
-          </div>
+        </div>
 
         {/* Mini-lista de objetivos */}
         <div className="w-full flex justify-center mb-8">
@@ -847,7 +875,7 @@ export default function IniciadoDashboard() {
                           )}
                         </div>
                       </div>
-              </div>
+                    </div>
                   );
                 })}
               </div>

@@ -6,7 +6,7 @@ import { sidebarItems, sidebarItemsAcolito } from "./sidebarItems";
 import SidebarToggle from "./SidebarToggle";
 import { useSidebar } from "./SidebarContext";
 import { usePathname } from "next/navigation";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Menu, LogOut } from 'lucide-react';
 
 export default function Sidebar() {
   const { isExpanded, toggleSidebar } = useSidebar();
@@ -31,170 +31,95 @@ export default function Sidebar() {
   
   return (
     <aside
-      className={`fixed top-0 left-0 h-full bg-[#121212] shadow-2xl z-40 flex flex-col border-r border-gray-800/50 transition-all duration-500 ease-in-out pt-12 ${
-        isExpanded ? "w-64" : "w-16"
+      className={`fixed top-0 left-0 h-full bg-gradient-to-b from-[#121212] to-[#0a0a0a] shadow-2xl z-40 flex flex-col border-r border-gray-800/50 transition-all duration-300 ease-in-out rounded-r-xl ${
+        isExpanded ? "w-72" : "w-20"
       }`}
     >
-      {/* Header con logo */}
-      <div style={{ height: '140px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="flex-shrink-0 relative overflow-hidden border-b border-gray-800/30 bg-[#121212]">
-        {isExpanded && (
-          <Image 
-            src="/logo-dark-theme.png" 
-            alt="Logo" 
-            width={112}
-            height={112}
-            className="h-28 w-auto transition-all duration-300"
-            style={{ display: 'block', margin: '0 auto' }}
+      {/* Header con imagen circular */}
+      <div className="flex-shrink-0 h-16 flex items-center justify-center border-b border-gray-800/30 bg-transparent px-4 rounded-t-xl">
+        <div className="w-12 h-12 rounded-full overflow-hidden">
+          <Image
+            src="/images/insignias/1-iniciados.png"
+            alt="Iniciado"
+            width={48}
+            height={48}
+            className="w-full h-full object-cover"
+            priority
           />
-        )}
+        </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 pt-6 pb-6 px-3">
-        <ul className="space-y-2 items-center">
+      {/* Toggle button separado arriba */}
+      <div className="flex-shrink-0 p-3 border-b border-gray-800/30">
+        <button
+          onClick={toggleSidebar}
+          className="group relative flex items-center py-3 px-3 text-gray-400 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full justify-center"
+          title={isExpanded ? "Contraer" : "Expandir"}
+        >
+          <span className="flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-gray-400 group-hover:text-[#ec4d58]">
+            <Menu size={20} />
+          </span>
+        </button>
+      </div>
+
+      {/* Navigation - estilo WhatsApp */}
+      <nav className="flex-1 py-4 px-3">
+        <ul className="space-y-1">
+          {/* Resto de elementos de navegación */}
           {items.map((item, index) => {
-            const isAfterAjustes = index === 3;
+            const isActive = pathname === item.href;
             return (
-              <React.Fragment key={item.label}>
-                <li className={`flex ${isExpanded ? 'justify-start' : 'justify-center'}`}>
-                  {item.label === "Mensaje de bienvenida" ? (
-                    <Link
-                      href="/dashboard/mensaje"
-                      className={`group relative flex items-center py-3 px-3 text-[#fafafa] hover:bg-[#232323] rounded-lg transition-all duration-300 ease-in-out hover:scale-105 w-full ${isExpanded ? 'justify-start text-left gap-x-3' : 'justify-center'} `}
-                      title={!isExpanded ? item.label : undefined}
-                    >
-                      <span
-                        className={`flex items-center justify-center text-xl w-6 h-6 transition-all duration-300 group-hover:text-[#ec4d58] ${isExpanded ? 'mr-3' : ''}`}
-                      >
-                        {typeof item.icon === 'string' ? item.icon : React.createElement(item.icon)}
-                      </span>
-                      <span 
-                        className={`font-medium text-[#fafafa] group-hover:text-[#ec4d58] transition-all duration-500 ease-in-out whitespace-nowrap ${isExpanded ? 'opacity-100 max-w-xs w-auto' : 'opacity-0 max-w-0 w-0'}`}
-                        style={{
-                          transitionProperty: 'opacity',
-                          transitionDuration: '300ms',
-                          transitionTimingFunction: 'ease-in-out',
-                          transitionDelay: isExpanded ? '200ms' : '0ms',
-                          display: 'inline-block',
-                          verticalAlign: 'middle',
-                          overflow: isExpanded ? 'visible' : 'hidden',
-                          textOverflow: isExpanded ? 'clip' : 'ellipsis',
-                          wordBreak: 'normal',
-                          maxWidth: isExpanded ? '160px' : undefined
-                        }}
-                      >
-                        {item.label}
-                      </span>
-                      <span
-                        className={`font-medium whitespace-nowrap text-[#fafafa] group-hover:text-[#ec4d58] transition-all duration-500 ease-in-out overflow-hidden text-ellipsis ${isExpanded ? 'opacity-0 max-w-0 w-0' : 'opacity-100 max-w-xs w-auto'}`}
-                        style={{
-                          transitionProperty: 'max-width, width',
-                          transitionDuration: '300ms',
-                          transitionTimingFunction: 'ease-in-out',
-                          transitionDelay: isExpanded ? '0ms' : '200ms',
-                          display: 'inline-block',
-                          verticalAlign: 'middle',
-                          position: 'absolute',
-                          pointerEvents: 'none',
-                          visibility: 'hidden',
-                        }}
-                      >
-                        {item.label}
-                      </span>
-                      {!isExpanded && (
-                        <div 
-                          className="absolute left-full ml-2 px-2 py-1 bg-[#232323] text-[#fafafa] text-sm rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 whitespace-nowrap"
-                          style={{
-                            transform: 'translateY(-50%)',
-                            top: '50%'
-                          }}
-                        >
-                          {item.label}
-                        </div>
-                      )}
-                    </Link>
-                  ) : (
-              <Link
-                href={item.href}
-                      className={`group relative flex items-center py-3 px-3 text-[#fafafa] hover:bg-[#232323] rounded-lg transition-all duration-300 ease-in-out hover:scale-105 ${isExpanded ? 'justify-start text-left gap-x-3' : 'justify-center'} w-full`}
-                title={!isExpanded ? item.label : undefined}
-              >
-                      <span 
-                        className={`flex items-center justify-center text-xl w-6 h-6 transition-all duration-300 group-hover:text-[#ec4d58] ${isExpanded ? 'mr-3' : ''}`}
-                      >
-                        {typeof item.icon === 'string' ? item.icon : React.createElement(item.icon)}
-                      </span>
-                <span 
-                        className={`font-medium whitespace-nowrap text-[#fafafa] group-hover:text-[#ec4d58] transition-all duration-500 ease-in-out overflow-hidden text-ellipsis ${isExpanded ? 'opacity-100 max-w-xs w-auto' : 'opacity-0 max-w-0 w-0'}`}
-                        style={{
-                          transitionProperty: 'opacity',
-                          transitionDuration: '300ms',
-                          transitionTimingFunction: 'ease-in-out',
-                          transitionDelay: isExpanded ? '200ms' : '0ms',
-                          display: 'inline-block',
-                          verticalAlign: 'middle',
-                        }}
+              <li key={item.label}>
+                <Link
+                  href={item.href}
+                  className={`group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full ${
+                    isExpanded ? 'justify-start text-left gap-x-3' : 'justify-center'
+                  } ${isActive ? 'bg-[#ec4d58] text-white' : ''}`}
+                  title={!isExpanded ? item.label : undefined}
                 >
-                        {item.label}
-                </span>
-                <span 
-                        className={`font-medium whitespace-nowrap text-[#fafafa] group-hover:text-[#ec4d58] transition-all duration-500 ease-in-out overflow-hidden text-ellipsis ${isExpanded ? 'opacity-0 max-w-0 w-0' : 'opacity-100 max-w-xs w-auto'}`}
-                        style={{
-                          transitionProperty: 'max-width, width',
-                          transitionDuration: '300ms',
-                          transitionTimingFunction: 'ease-in-out',
-                          transitionDelay: isExpanded ? '0ms' : '200ms',
-                          display: 'inline-block',
-                          verticalAlign: 'middle',
-                          position: 'absolute',
-                          pointerEvents: 'none',
-                          visibility: 'hidden',
-                        }}
-                >
-                  {item.label}
-                </span>
-                {!isExpanded && (
-                  <div 
-                    className="absolute left-full ml-2 px-2 py-1 bg-[#232323] text-[#fafafa] text-sm rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 whitespace-nowrap"
-                    style={{
-                      transform: 'translateY(-50%)',
-                      top: '50%'
-                    }}
-                  >
-                    {item.label}
-                  </div>
-                )}
-              </Link>
+                  {/* Active indicator - línea roja como antes */}
+                  {isActive && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#ec4d58] rounded-r-full"></div>
                   )}
-                </li>
-                {isAfterAjustes && !isExpanded && (
-                  <li className="w-full flex justify-center mt-2">
-                    <SidebarToggle collapsed={true} onToggle={toggleSidebar} />
-            </li>
-                )}
-              </React.Fragment>
+                  
+                  <span
+                    className={`flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 ${
+                      isActive 
+                        ? 'text-white' 
+                        : 'text-gray-400 group-hover:text-[#ec4d58]'
+                    } ${isExpanded ? 'mr-3' : ''}`}
+                  >
+                    {typeof item.icon === 'string' ? item.icon : React.createElement(item.icon)}
+                  </span>
+                  
+                  {isExpanded && (
+                    <span 
+                      className={`font-medium transition-all duration-200 whitespace-nowrap ${
+                        isActive 
+                          ? 'text-white' 
+                          : 'text-gray-300 group-hover:text-[#ec4d58]'
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  )}
+                </Link>
+              </li>
             );
           })}
         </ul>
       </nav>
 
-      {/* Footer con acciones del usuario, solo si no están en la lista principal */}
+      {/* Footer - estilo WhatsApp */}
       {showFooter && (
-        <div className="flex-shrink-0 p-3">
-          {isAcolito && <hr className="border-t border-gray-700/50 mb-3" />}
-          <hr className="border-t border-gray-700/30 mb-3" />
-        <div className="space-y-2">
-          <Link 
-            href="/dashboard/perfil" 
-            className="group relative flex items-center py-3 px-3 text-[#fafafa] hover:bg-[#232323] rounded-lg transition-all duration-300 ease-in-out hover:scale-105"
-            title={!isExpanded ? "Perfil" : undefined}
-          >
-            <span 
-              className={`text-xl w-6 text-center flex-shrink-0 transition-all duration-300 ease-in-out text-[#fafafa] group-hover:text-[#ec4d58] group-hover:scale-110 ${
-                isExpanded ? 'mr-3' : 'mr-0'
-              }`}
+        <div className="flex-shrink-0 p-3 border-t border-gray-800/30 rounded-b-xl">
+          <div className="space-y-1">
+            <Link 
+              href="/dashboard/perfil" 
+              className="group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
+              title={!isExpanded ? "Perfil" : undefined}
             >
-              {isExpanded ? (
+              <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-gray-400 group-hover:text-[#ec4d58] ${isExpanded ? 'mr-3' : ''}`}>
                 <Image
                   src={userData.avatar}
                   alt="Perfil"
@@ -202,78 +127,29 @@ export default function Sidebar() {
                   height={24}
                   className="w-6 h-6 rounded-full object-cover"
                 />
-              ) : (
-                <Image
-                  src={userData.avatar}
-                  alt="Perfil"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 rounded-full object-cover"
-                />
+              </span>
+              {isExpanded && (
+                <span className="font-medium text-gray-300 group-hover:text-[#ec4d58] transition-all duration-200">
+                  Perfil
+                </span>
               )}
-            </span>
-            <span 
-              className={`font-medium whitespace-nowrap transition-all duration-500 ease-in-out text-[#fafafa] group-hover:text-[#ec4d58] ${
-                isExpanded 
-                  ? 'opacity-100 translate-x-0 delay-100' 
-                  : 'opacity-0 translate-x-2 w-0 overflow-hidden'
-              }`}
-            >
-              Perfil
-            </span>
+            </Link>
             
-            {!isExpanded && (
-              <div 
-                className="absolute left-full ml-2 px-2 py-1 bg-[#232323] text-[#fafafa] text-sm rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 whitespace-nowrap"
-                style={{
-                  transform: 'translateY(-50%)',
-                  top: '50%'
-                }}
-              >
-                Perfil
-              </div>
-            )}
-          </Link>
-          <Link 
-            href="/logout" 
-            className="group relative flex items-center py-3 px-3 text-[#fafafa] hover:bg-[#232323] rounded-lg transition-all duration-300 ease-in-out hover:scale-105"
-            title={!isExpanded ? "Salir" : undefined}
-          >
-            <span 
-              className={`text-xl w-6 text-center flex-shrink-0 transition-all duration-300 ease-in-out text-[#fafafa] group-hover:text-[#ec4d58] group-hover:scale-110 ${
-                isExpanded ? 'mr-3' : 'mr-0'
-              }`}
+            <Link 
+              href="/logout" 
+              className="group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
+              title={!isExpanded ? "Salir" : undefined}
             >
-                {React.createElement(ChevronRight)}
-            </span>
-            <span 
-              className={`font-medium whitespace-nowrap transition-all duration-500 ease-in-out text-[#fafafa] group-hover:text-[#ec4d58] ${
-                isExpanded 
-                  ? 'opacity-100 translate-x-0 delay-100' 
-                  : 'opacity-0 translate-x-2 w-0 overflow-hidden'
-              }`}
-            >
-              Salir
-            </span>
-            
-            {!isExpanded && (
-              <div 
-                className="absolute left-full ml-2 px-2 py-1 bg-[#232323] text-[#fafafa] text-sm rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50 whitespace-nowrap"
-                style={{
-                  transform: 'translateY(-50%)',
-                  top: '50%'
-                }}
-              >
-                Salir
-              </div>
-            )}
-          </Link>
-        </div>
-      </div>
-      )}
-      {isExpanded && (
-        <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 z-50">
-          <SidebarToggle collapsed={false} onToggle={toggleSidebar} />
+              <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-gray-400 group-hover:text-[#ec4d58] ${isExpanded ? 'mr-3' : ''}`}>
+                <LogOut size={20} />
+              </span>
+              {isExpanded && (
+                <span className="font-medium text-gray-300 group-hover:text-[#ec4d58] transition-all duration-200">
+                  Salir
+                </span>
+              )}
+            </Link>
+          </div>
         </div>
       )}
     </aside>

@@ -238,7 +238,6 @@ export default function HomePage() {
                         outline: 'none'
                       }}
                       onClick={() => {
-                        alert(`Navegando a ${role.path}`);
                         window.location.href = role.path;
                       }}
                     >
