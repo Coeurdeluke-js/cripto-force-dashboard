@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+
+
 const roles = [
   {
     id: 'iniciado',
@@ -143,6 +145,8 @@ export default function HomePage() {
           </p>
         </div>
       </div>
+
+
 
       {/* Roles Grid */}
       <div className="px-6 py-0">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { Play, Pause } from 'lucide-react';
 
@@ -26,11 +26,11 @@ export default function Carousel({ content }: CarouselProps) {
   }, [content]);
 
   // Function to go to specific slide
-  const goToSlide = (slideIndex: number) => {
+  const goToSlide = useCallback((slideIndex: number) => {
     setCurrentSlide(slideIndex);
-  };
+  }, []);
 
-  // Auto-advance effect - removed content from dependencies
+  // Auto-advance effect
   useEffect(() => {
     if (isPaused) {
       if (intervalRef.current) {

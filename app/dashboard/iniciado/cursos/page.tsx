@@ -1,161 +1,415 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
-import BackButton from '@/components/ui/BackButton';
+import { BookOpen, TrendingUp, ArrowLeft, Play, CheckCircle, Lock, ExternalLink, BarChart3, DollarSign, Target, Users, Shield } from 'lucide-react';
+import Sidebar from '@/components/sidebar/Sidebar';
 
-const icons = [
-  // ... mismos SVGs que en el carrousel ...
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-1"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>,
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-2"><path d="M3 17l6-6 4 4 8-8" /><path d="M21 7l-5 5-4-4-6 6" /></svg>,
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-3"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>,
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-4"><path d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10l1.68 9.39a2 2 0 01-1.98 2.61H8.3a2 2 0 01-1.98-2.61L7 4z" /><path d="M9 9v6m6-6v6" /></svg>,
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>,
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-6"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>,
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-7"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-8"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>,
+interface Module {
+  id: string;
+  title: string;
+  path: string;
+  icon: React.JSX.Element;
+  description: string;
+  isCompleted?: boolean;
+  isLocked?: boolean;
+  level: 'nivel1' | 'nivel2';
+}
+
+// Módulos teóricos de trading
+const theoreticalModules: Module[] = [
+  {
+    id: 'T1',
+    title: 'Fundamentos del Mercado Financiero',
+    path: '/dashboard/iniciado/modulos/teorico/t1',
+    icon: <BarChart3 />,
+    description: 'Introducción a los mercados financieros, tipos de activos y funcionamiento básico',
+    level: 'nivel1'
+  },
+  {
+    id: 'T2',
+    title: 'Análisis Técnico Básico',
+    path: '/dashboard/iniciado/modulos/teorico/t2',
+    icon: <TrendingUp />,
+    description: 'Patrones de velas, soportes, resistencias y tendencias fundamentales',
+    level: 'nivel1'
+  },
+  {
+    id: 'PC1',
+    title: 'Evaluación: Mercados y Análisis Técnico',
+    path: '/dashboard/iniciado/puntos-de-control/teorico/pc1',
+    icon: <CheckCircle />,
+    description: 'Punto de control: Evalúa los módulos "Fundamentos del Mercado" y "Análisis Técnico Básico"',
+    level: 'nivel1'
+  },
+  {
+    id: 'T3',
+    title: 'Gestión de Riesgo',
+    path: '/dashboard/iniciado/modulos/teorico/t3',
+    icon: <Shield />,
+    description: 'Principios de gestión de capital, stop loss y position sizing',
+    level: 'nivel1'
+  },
+  {
+    id: 'T4',
+    title: 'Psicología del Trading',
+    path: '/dashboard/iniciado/modulos/teorico/t4',
+    icon: <Users />,
+    description: 'Control emocional, disciplina y mentalidad del trader exitoso',
+    level: 'nivel1'
+  },
+  {
+    id: 'PC2',
+    title: 'Evaluación: Gestión de Riesgo y Psicología',
+    path: '/dashboard/iniciado/puntos-de-control/teorico/pc2',
+    icon: <CheckCircle />,
+    description: 'Punto de control: Evalúa los módulos "Gestión de Riesgo" y "Psicología del Trading"',
+    level: 'nivel1'
+  },
+  {
+    id: 'T5',
+    title: 'Análisis Fundamental',
+    path: '/dashboard/iniciado/modulos/teorico/t5',
+    icon: <DollarSign />,
+    description: 'Análisis de estados financieros, indicadores económicos y valoración',
+    level: 'nivel2'
+  },
+  {
+    id: 'T6',
+    title: 'Estrategias Avanzadas',
+    path: '/dashboard/iniciado/modulos/teorico/t6',
+    icon: <Target />,
+    description: 'Estrategias de swing trading, scalping y trading algorítmico',
+    level: 'nivel2'
+  },
+  {
+    id: 'PC3',
+    title: 'Evaluación: Análisis Fundamental y Estrategias',
+    path: '/dashboard/iniciado/puntos-de-control/teorico/pc3',
+    icon: <CheckCircle />,
+    description: 'Punto de control: Evalúa los módulos "Análisis Fundamental" y "Estrategias Avanzadas"',
+    level: 'nivel2'
+  },
+  {
+    id: 'T7',
+    title: 'Mercados Específicos',
+    path: '/dashboard/iniciado/modulos/teorico/t7',
+    icon: <BarChart3 />,
+    description: 'Especialización en forex, criptomonedas, commodities y acciones',
+    level: 'nivel2'
+  },
+  {
+    id: 'T8',
+    title: 'Tendencias y Futuro del Trading',
+    path: '/dashboard/iniciado/modulos/teorico/t8',
+    icon: <TrendingUp />,
+    description: 'Nuevas tecnologías, IA en trading y evolución de los mercados',
+    level: 'nivel2'
+  },
+  {
+    id: 'PC4',
+    title: 'Evaluación: Mercados Específicos y Tendencias',
+    path: '/dashboard/iniciado/puntos-de-control/teorico/pc4',
+    icon: <CheckCircle />,
+    description: 'Punto de control: Evalúa los módulos "Mercados Específicos" y "Tendencias del Trading"',
+    level: 'nivel2'
+  }
 ];
 
-const modulosTeoricos = [
-  { title: 'Introducción y lógica económica', path: 'Teorico/1-introduccion-logica-economica' },
-  { title: 'Fuerzas del mercado', path: 'Teorico/2-fuerzas-del-mercado' },
-  { title: 'Acción del gobierno en los mercados', path: 'Teorico/3-accion-gobierno-mercados' },
-  { title: 'Competencia perfecta', path: 'Teorico/4-competencia-perfecta' },
-  { title: 'Monopolio y oligopolio', path: 'Teorico/5-monopolio-oligopolio' },
-  { title: 'Tecnología Blockchain', path: 'Teorico/6-tecnologia-blockchain' },
-  { title: 'Criptomonedas', path: 'Teorico/7-criptomonedas' },
-  { title: 'Operaciones con criptomonedas', path: 'Teorico/8-operaciones-criptomonedas' },
-];
-
-const modulosPracticos = [
-  { title: 'Introducción al Trading', path: 'Practico/1-introduccion-trading' },
-  { title: 'Introducción al Análisis Técnico', path: 'Practico/2-introduccion-analisis-tecnico' },
-  { title: 'Patrones de vela', path: 'Practico/3-patrones-vela' },
-  { title: 'Fibonacci y medias móviles', path: 'Practico/4-fibonacci-medias' },
-  { title: 'Estocástico y Bollinger', path: 'Practico/5-estocastico-bollinger' },
-  { title: 'Indicadores RSI y MACD', path: 'Practico/6-indicadores-rsi-macd' },
-  { title: 'Análisis fundamental I', path: 'Practico/7-analisis-fundamental' },
-  { title: 'Análisis fundamental II', path: 'Practico/8-analisis-fundamental-2' },
-  { title: 'Gestión de riesgo', path: 'Practico/9-gestion-riesgo' },
-  { title: 'Plan general trading', path: 'Practico/10-plan-general-trading' },
-];
-
-const iconsPractico = [
-  // 1. Introducción al Trading
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-p1"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>,
-  // 2. Introducción al Análisis Técnico
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-p2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>,
-  // 3. Patrones de vela
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-p3"><path d="M12 2v20m0-20l-4 4m4-4l4 4m-4 16l-4-4m4 4l4-4" /></svg>,
-  // 4. Fibonacci y medias móviles
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-p4"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><path d="M8 12h8m-4-4v8" /></svg>,
-  // 5. Estocástico y Bollinger
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-p5"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /><path d="M9 12l2 2 4-4" /></svg>,
-  // 6. Indicadores RSI y MACD
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-p6"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /><path d="M12 8v8m-4-4h8" /></svg>,
-  // 7. Análisis fundamental I
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-p7"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>,
-  // 8. Análisis fundamental II (nuevo icono: gráfico de barras)
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-p8"><path d="M3 17v-2a2 2 0 012-2h2a2 2 0 012 2v2m4 0v-6a2 2 0 012-2h2a2 2 0 012 2v6" /></svg>,
-  // 9. Gestión de riesgo
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-p9"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>,
-  // 10. Plan general trading (nuevo icono: lista de verificación)
-  <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" key="icon-p10"><path d="M9 11l3 3L22 4M2 20h20M2 16h20M2 12h7" /></svg>,
+// Módulos prácticos de trading
+const practicalModules: Module[] = [
+  {
+    id: 'P1',
+    title: 'Configuración de Plataforma',
+    path: '/dashboard/iniciado/modulos/practico/p1',
+    icon: <BarChart3 />,
+    description: 'Configuración de MetaTrader, TradingView y otras plataformas',
+    level: 'nivel1'
+  },
+  {
+    id: 'P2',
+    title: 'Primeras Operaciones',
+    path: '/dashboard/iniciado/modulos/practico/p2',
+    icon: <TrendingUp />,
+    description: 'Ejecución de órdenes, tipos de órdenes y gestión básica',
+    level: 'nivel1'
+  },
+  {
+    id: 'PC1',
+    title: 'Evaluación: Plataforma y Primeras Operaciones',
+    path: '/dashboard/iniciado/puntos-de-control/practico/pc1',
+    icon: <CheckCircle />,
+    description: 'Punto de control: Evalúa los módulos "Configuración de Plataforma" y "Primeras Operaciones"',
+    level: 'nivel1'
+  },
+  {
+    id: 'P3',
+    title: 'Análisis Técnico Práctico',
+    path: '/dashboard/iniciado/modulos/practico/p3',
+    icon: <Target />,
+    description: 'Identificación de patrones, dibujo de líneas y análisis en tiempo real',
+    level: 'nivel1'
+  },
+  {
+    id: 'P4',
+    title: 'Gestión de Posiciones',
+    path: '/dashboard/iniciado/modulos/practico/p4',
+    icon: <Shield />,
+    description: 'Aplicación práctica de gestión de riesgo y money management',
+    level: 'nivel1'
+  },
+  {
+    id: 'PC2',
+    title: 'Evaluación: Análisis Técnico y Gestión',
+    path: '/dashboard/iniciado/puntos-de-control/practico/pc2',
+    icon: <CheckCircle />,
+    description: 'Punto de control: Evalúa los módulos "Análisis Técnico Práctico" y "Gestión de Posiciones"',
+    level: 'nivel1'
+  },
+  {
+    id: 'P5',
+    title: 'Estrategias de Trading',
+    path: '/dashboard/iniciado/modulos/practico/p5',
+    icon: <TrendingUp />,
+    description: 'Implementación de estrategias en diferentes timeframes',
+    level: 'nivel2'
+  },
+  {
+    id: 'P6',
+    title: 'Análisis de Mercados',
+    path: '/dashboard/iniciado/modulos/practico/p6',
+    icon: <DollarSign />,
+    description: 'Análisis fundamental práctico y correlaciones entre mercados',
+    level: 'nivel2'
+  },
+  {
+    id: 'PC3',
+    title: 'Evaluación: Estrategias y Análisis',
+    path: '/dashboard/iniciado/puntos-de-control/practico/pc3',
+    icon: <CheckCircle />,
+    description: 'Punto de control: Evalúa los módulos "Estrategias de Trading" y "Análisis de Mercados"',
+    level: 'nivel2'
+  },
+  {
+    id: 'P7',
+    title: 'Trading Automatizado',
+    path: '/dashboard/iniciado/modulos/practico/p7',
+    icon: <BarChart3 />,
+    description: 'Desarrollo de sistemas de trading automatizado y backtesting',
+    level: 'nivel2'
+  },
+  {
+    id: 'P8',
+    title: 'Proyecto Final',
+    path: '/dashboard/iniciado/modulos/practico/p8',
+    icon: <Target />,
+    description: 'Desarrollo de un sistema de trading completo y rentable',
+    level: 'nivel2'
+  },
+  {
+    id: 'PC4',
+    title: 'Evaluación: Trading Automatizado y Proyecto Final',
+    path: '/dashboard/iniciado/puntos-de-control/practico/pc4',
+    icon: <CheckCircle />,
+    description: 'Punto de control: Evalúa los módulos "Trading Automatizado" y "Proyecto Final"',
+    level: 'nivel2'
+  }
 ];
 
 export default function CursosPage() {
+  const [activeTab, setActiveTab] = useState<'theoretical' | 'practical'>('theoretical');
+
+  const renderModuleCard = (module: Module) => {
+    const isControlPoint = module.id.startsWith('PC');
+    const isLocked = module.isLocked || false;
+    const isCompleted = module.isCompleted || false;
+
+    return (
+      <div key={module.id} className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 hover:bg-[#2a2a2a] hover:border-[#ec4d58]/30 transition-all duration-300 group">
+        <div className="flex items-start justify-between mb-4">
+          <div className={`w-12 h-12 rounded-lg flex items-center justify-center transition-colors ${
+            isCompleted ? 'bg-green-500 text-white' : 
+            isLocked ? 'bg-[#2a2a2a] text-gray-400' : 
+            'bg-[#ec4d58] text-white group-hover:bg-[#d63d47]'
+          }`}>
+            {isLocked ? <Lock className="w-5 h-5" /> : isCompleted ? <CheckCircle className="w-5 h-5" /> : module.icon}
+          </div>
+          <span className={`text-xs font-bold px-2 py-1 rounded-full transition-colors ${
+            isCompleted ? 'bg-green-500 text-white' : 
+            isLocked ? 'bg-[#2a2a2a] text-gray-300' : 
+            'bg-[#ec4d58] text-white'
+          }`}>
+            {module.id}
+          </span>
+        </div>
+        
+        <h3 className="text-lg font-bold mb-2 text-white group-hover:text-[#ec4d58] transition-colors">{module.title}</h3>
+        <p className="text-sm text-gray-400 mb-4 line-clamp-2">{module.description}</p>
+        
+        <div className="flex items-center justify-between">
+          <span className={`text-xs px-2 py-1 rounded-full ${
+            module.level === 'nivel1' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-purple-500/20 text-purple-400'
+          }`}>
+            {module.level === 'nivel1' ? 'Nivel 1' : 'Nivel 2'}
+          </span>
+          
+          <Link
+            href={isLocked ? '#' : module.path}
+            className={`inline-flex items-center px-4 py-2 rounded-lg transition-all duration-300 ${
+              isLocked ? 'bg-[#2a2a2a] text-gray-400 cursor-not-allowed' : 
+              isControlPoint ? 'bg-[#FFD447] hover:bg-[#e6c040] text-black shadow-lg hover:shadow-xl' :
+              isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl' : 
+              'bg-[#ec4d58] hover:bg-[#d63d47] text-white shadow-lg hover:shadow-xl'
+            }`}
+            onClick={e => isLocked && e.preventDefault()}
+          >
+            {isLocked ? (
+              <>
+                <Lock className="mr-2 w-4 h-4" />
+                Bloqueado
+              </>
+            ) : isControlPoint ? (
+              <>
+                <CheckCircle className="mr-2 w-4 h-4" />
+                Tomar autoevaluación
+              </>
+            ) : isCompleted ? (
+              <>
+                <CheckCircle className="mr-2 w-4 h-4" />
+                Completado
+              </>
+            ) : (
+              <>
+                <Play className="mr-2 w-4 h-4" />
+                Comenzar
+              </>
+            )}
+            {!isLocked && <ExternalLink className="ml-2 w-3 h-3" />}
+          </Link>
+        </div>
+      </div>
+    );
+  };
+
+  const currentModules = activeTab === 'theoretical' ? theoreticalModules : practicalModules;
+  const nivel1Modules = currentModules.filter(m => m.level === 'nivel1');
+  const nivel2Modules = currentModules.filter(m => m.level === 'nivel2');
+  const controlPoints = currentModules.filter(m => m.id.startsWith('PC'));
+
   return (
-    <div className="min-h-screen bg-[#121212] text-[rgb(var(--foreground))] flex flex-col items-center py-10 px-2">
-      <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 pt-12 relative w-full max-w-6xl bg-[#121212]">
-        {/* Botón Volver en la esquina superior izquierda */}
-        <div className="absolute top-4 left-4">
-          <BackButton />
-        </div>
-        <h1 className="text-3xl font-bold mb-8 text-center">Cursos</h1>
-        <div className="flex flex-col md:flex-row gap-8 w-full">
-          {/* Card Teórico */}
-          <div className="flex-1 bg-[#121212] rounded-2xl shadow-lg p-4 sm:p-8 border border-[#232323]">
-            <h2 className="flex items-center text-2xl font-bold text-[#ec4d58] mb-4 gap-2">
-              <svg className="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-              Curso Teórico
-            </h2>
-            <ul className="space-y-3">
-              {modulosTeoricos.map((mod, idx) => {
-                const isLocked = idx > 3;
-                return (
-                  <li key={mod.path} className="w-full">
-                    {!isLocked ? (
-                      <Link
-                        href={`/dashboard/iniciado/${mod.path}`}
-                        className="flex items-center gap-3 sm:gap-4 px-3 sm:px-6 py-3 rounded-lg bg-[#181818] hover:bg-[#232323] transition-all duration-200 text-base font-medium text-white border border-[#232323] hover:border-[#ec4d58] w-full max-w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ec4d58] focus:ring-offset-2 active:scale-[0.98] hover:scale-[1.03]"
-                        style={{minWidth: 0}}
-                      >
-                        <span className="text-[#ec4d58] font-bold" style={{minWidth: 22, textAlign: 'right'}}>{idx + 1}</span>
-                        <span className="text-[#ec4d58]">{icons[idx]}</span>
-                        <span className="break-words whitespace-normal text-left flex-1">{mod.title}</span>
-                      </Link>
-                    ) : (
-                      <div
-                        className="flex items-center gap-3 sm:gap-4 px-3 sm:px-6 py-3 rounded-lg bg-[#181818] border border-[#232323] opacity-60 cursor-not-allowed w-full max-w-full select-none relative"
-                        style={{minWidth: 0}}
-                        title="Completa los módulos anteriores para desbloquear"
-                      >
-                        <span className="text-[#ec4d58] font-bold" style={{minWidth: 22, textAlign: 'right'}}>{idx + 1}</span>
-                        <span className="text-[#ec4d58]">{icons[idx]}</span>
-                        <span className="break-words whitespace-normal text-left flex-1">{mod.title}</span>
-                        <span className="absolute right-4 text-gray-400 hidden sm:inline">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                        </span>
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+    <div className="flex h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0f0f0f]">
+      {/* Sidebar */}
+      <Sidebar />
+      
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="container mx-auto px-4 py-8">
+          {/* Header */}
+          <div className="mb-8">
+            <Link 
+              href="/dashboard/iniciado" 
+              className="inline-flex items-center text-gray-400 hover:text-white transition-colors mb-4 group"
+            >
+              <ArrowLeft className="mr-2 w-4 h-4 group-hover:translate-x-[-2px] transition-transform" />
+              Volver al Dashboard
+            </Link>
+            
+            <h1 className="text-4xl font-light text-white tracking-wider mb-4">
+              Catálogo de Cursos
+            </h1>
+            
+            <p className="text-gray-400 max-w-4xl leading-relaxed text-lg">
+              Explora todos los módulos disponibles en nuestro programa de formación en trading y economía. 
+              Aquí encontrarás tanto el curso teórico, que te proporcionará los fundamentos conceptuales del mercado, 
+              como el curso práctico, donde aplicarás tus conocimientos en operaciones reales. 
+              Cada módulo está diseñado para construir progresivamente tu comprensión y habilidades como trader.
+            </p>
           </div>
-          {/* Card Práctico */}
-          <div className="flex-1 bg-[#121212] rounded-2xl shadow-lg p-4 sm:p-8 border border-[#232323]">
-            <h2 className="flex items-center text-2xl font-bold text-[#ec4d58] mb-4 gap-2">
-              <svg className="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-              Curso Práctico
-            </h2>
-            <ul className="space-y-3">
-              {modulosPracticos.map((mod, idx) => {
-                const isLocked = idx > 4;
-                return (
-                  <li key={mod.title} className="w-full">
-                    {!isLocked ? (
-                      <Link
-                        href={`/dashboard/iniciado/${mod.path}`}
-                        className="flex items-center gap-3 sm:gap-4 px-3 sm:px-6 py-3 rounded-lg bg-[#181818] hover:bg-[#232323] transition-all duration-200 text-base font-medium text-white border border-[#232323] hover:border-[#ec4d58] w-full max-w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ec4d58] focus:ring-offset-2 active:scale-[0.98] hover:scale-[1.03]"
-                        style={{minWidth: 0}}
-                      >
-                        <span className="text-[#ec4d58] font-bold" style={{minWidth: 22, textAlign: 'right'}}>{idx + 1}</span>
-                        <span className="text-[#ec4d58]">{iconsPractico[idx]}</span>
-                        <span className="break-words whitespace-normal text-left flex-1">{mod.title}</span>
-                      </Link>
-                    ) : (
-                      <div
-                        className="flex items-center gap-3 sm:gap-4 px-3 sm:px-6 py-3 rounded-lg bg-[#181818] border border-[#232323] opacity-60 cursor-not-allowed w-full max-w-full select-none relative"
-                        style={{minWidth: 0}}
-                        title="Completa los módulos anteriores para desbloquear"
-                      >
-                        <span className="text-[#ec4d58] font-bold" style={{minWidth: 22, textAlign: 'right'}}>{idx + 1}</span>
-                        <span className="text-[#ec4d58]">{iconsPractico[idx]}</span>
-                        <span className="break-words whitespace-normal text-left flex-1">{mod.title}</span>
-                        <span className="absolute right-4 text-gray-400 hidden sm:inline">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                        </span>
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+
+          {/* Tab Navigation */}
+          <div className="flex gap-4 mb-8">
+            <button
+              onClick={() => setActiveTab('theoretical')}
+              className={`px-8 py-4 rounded-xl transition-all duration-300 flex items-center ${
+                activeTab === 'theoretical'
+                  ? 'bg-[#ec4d58] text-white shadow-lg shadow-[#ec4d58]/25'
+                  : 'bg-[#2a2a2a] text-gray-400 hover:text-white hover:bg-[#3a3a3a]'
+              }`}
+            >
+              <BookOpen className="mr-3 w-5 h-5" />
+              <span className="font-medium">Curso Teórico</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('practical')}
+              className={`px-8 py-4 rounded-xl transition-all duration-300 flex items-center ${
+                activeTab === 'practical'
+                  ? 'bg-[#ec4d58] text-white shadow-lg shadow-[#ec4d58]/25'
+                  : 'bg-[#2a2a2a] text-gray-400 hover:text-white hover:bg-[#3a3a3a]'
+              }`}
+            >
+              <TrendingUp className="mr-3 w-5 h-5" />
+              <span className="font-medium">Curso Práctico</span>
+            </button>
+          </div>
+
+          {/* Course Content */}
+          <div className="space-y-8">
+            {/* Nivel 1 Section */}
+            <div>
+              <h2 className="text-2xl font-semibold text-white mb-6 flex items-center">
+                <span className="w-8 h-8 bg-yellow-500/20 text-yellow-400 rounded-full flex items-center justify-center text-sm font-bold mr-3">1</span>
+                Nivel 1 - Fundamentos
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {nivel1Modules.map(renderModuleCard)}
+              </div>
+            </div>
+
+            {/* Nivel 2 Section */}
+            <div>
+              <h2 className="text-2xl font-semibold text-white mb-6 flex items-center">
+                <span className="w-8 h-8 bg-purple-500/20 text-purple-400 rounded-full flex items-center justify-center text-sm font-bold mr-3">2</span>
+                Nivel 2 - Avanzado
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {nivel2Modules.map(renderModuleCard)}
+              </div>
+            </div>
+          </div>
+
+          {/* Course Summary */}
+          <div className="mt-12 p-8 bg-[#1a1a1a] border border-[#232323] rounded-2xl">
+            <h3 className="text-2xl font-semibold text-white mb-6">
+              Resumen del {activeTab === 'theoretical' ? 'Curso Teórico' : 'Curso Práctico'}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-sm">
+              <div className="text-center p-4 bg-[#2a2a2a] rounded-xl">
+                <div className="text-2xl font-bold text-[#ec4d58] mb-2">
+                  {nivel1Modules.length + nivel2Modules.length}
+                </div>
+                <span className="text-gray-300 font-medium">Módulos Totales</span>
+              </div>
+              <div className="text-center p-4 bg-[#2a2a2a] rounded-xl">
+                <div className="text-2xl font-bold text-yellow-400 mb-2">
+                  {nivel1Modules.length}
+                </div>
+                <span className="text-gray-300 font-medium">Nivel 1</span>
+              </div>
+              <div className="text-center p-4 bg-[#2a2a2a] rounded-xl">
+                <div className="text-2xl font-bold text-purple-400 mb-2">
+                  {nivel2Modules.length}
+                </div>
+                <span className="text-gray-300 font-medium">Nivel 2</span>
+              </div>
+              <div className="text-center p-4 bg-[#2a2a2a] rounded-xl">
+                <div className="text-2xl font-bold text-[#FFD447] mb-2">
+                  {controlPoints.length}
+                </div>
+                <span className="text-gray-300 font-medium">Puntos de Control</span>
+              </div>
+            </div>
           </div>
         </div>
-        {/* Carrousels debajo de las cards */}
-        <div className="mt-12 flex flex-col gap-8">
-          {/* Eliminar renderizado de <ModuloCarrousel ... /> y <ModuloCarrouselPractico ... /> */}
-        </div>
-        <div className="w-full flex justify-center mt-8"><BackButton /></div>
       </div>
     </div>
   );

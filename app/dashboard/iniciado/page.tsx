@@ -30,9 +30,8 @@ import {
   LogOut, 
   Star
 } from 'lucide-react';
-import { useControlPoint } from '@/context/ControlPointContext';
-import ControlPointBadge from '@/components/ui/ControlPointBadge';
 import Carousel from '@/components/Carousel';
+import ProgressRuler from '@/components/ProgressRuler';
 
 interface Module {
   id: string;
@@ -274,7 +273,7 @@ function buildPracticalModulesWithCheckpoints() {
         path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
         icon: <CheckCircle />,
         description: `Punto de control: Evalúa los módulos "${mod1}" y "${mod2}"`,
-        isLocked: true,
+        isLocked: pcCount > 2,
         level: 'nivel1'
       });
       pcCount++;
@@ -388,8 +387,6 @@ export default function IniciadoDashboard() {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [userData, setUserData] = useState({ name: 'Usuario', profileImage: null });
   const [currentObjectives, setCurrentObjectives] = useState(objectives);
-  const [progressAnimation, setProgressAnimation] = useState(false);
-  const { canTakeCheckpoint, getTimeUntilNextAttempt, formatTime } = useControlPoint();
 
   // Carousel content
   const carouselContent = [
@@ -494,7 +491,7 @@ export default function IniciadoDashboard() {
     });
     
     setCurrentObjectives(updatedObjectives);
-  }, [progress, activeTab]);
+  }, [progress.percentage, progress.nivel1Percentage, progress.nivel2Percentage, progress.completedCheckpoints, progress.totalCheckpoints, activeTab]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -514,28 +511,7 @@ export default function IniciadoDashboard() {
 
   const handleMouseUpOrLeave = () => setIsDragging(false);
 
-  // Función para simular avance de progreso (para demostración)
-  const simulateProgress = (moduleId: string) => {
-    const currentProgress = localStorage.getItem(`module_${moduleId}_progress`);
-    const progress = currentProgress ? JSON.parse(currentProgress) : { isCompleted: false, progress: 0 };
-    
-    if (!progress.isCompleted) {
-      const newProgress = Math.min(progress.progress + 25, 100);
-      const isCompleted = newProgress >= 100;
-      
-      localStorage.setItem(`module_${moduleId}_progress`, JSON.stringify({
-        isCompleted,
-        progress: newProgress
-      }));
-      
-      // Activar animación
-      setProgressAnimation(true);
-      setTimeout(() => setProgressAnimation(false), 2000);
-      
-      // Forzar re-render
-      window.location.reload();
-    }
-  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0f0f0f] text-white pt-20">
@@ -563,7 +539,7 @@ export default function IniciadoDashboard() {
         <div className="w-full flex justify-center mb-8">
           <div className="w-full max-w-4xl">
             <video className="rounded-xl shadow-lg w-full h-64 md:h-80 object-cover" controls>
-              <source src="/images/intro.mp4" type="video/mp4" />
+                              <source src="/videos/intro.mp4" type="video/mp4" />
               Tu navegador no soporta el video.
             </video>
           </div>
@@ -577,7 +553,7 @@ export default function IniciadoDashboard() {
               className={`px-6 py-3 rounded-xl transition-all duration-300 ${
                 activeTab === 'theoretical'
                   ? 'bg-[#ec4d58] text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white'
+                  : 'bg-[#2a2a2a] text-gray-400 hover:text-white'
               }`}
             >
               <BookOpen className="inline mr-2" />
@@ -588,7 +564,7 @@ export default function IniciadoDashboard() {
               className={`px-6 py-3 rounded-xl transition-all duration-300 ${
                 activeTab === 'practical'
                   ? 'bg-[#ec4d58] text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white'
+                  : 'bg-[#2a2a2a] text-gray-400 hover:text-white'
               }`}
             >
               <TrendingUp className="inline mr-2" />
@@ -597,77 +573,25 @@ export default function IniciadoDashboard() {
           </div>
         </div>
 
-        {/* Barra de progreso unificada */}
+        {/* Barra de Progreso Componentizada */}
         <div className="w-full flex justify-center mb-8">
           <div className="w-full max-w-4xl">
-            <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-[#ec4d58]">
-                  Progreso General {activeTab === 'theoretical' ? 'Teórico' : 'Práctico'}
-                </h3>
-                <span className={`text-sm transition-all duration-500 ${progressAnimation ? 'text-[#ec4d58] scale-110 font-bold' : 'text-gray-400'}`}>
-                  {progress.completedModules}/{progress.totalModules} módulos
-                </span>
-              </div>
-              
-              {/* Barra principal */}
-              <div className="progress-bar h-4 bg-gray-800 rounded-full overflow-hidden mb-3">
-                <div 
-                  className="progress-fill bg-[#ec4d58] h-4 rounded-full transition-all duration-500" 
-                  style={{ width: `${progress.percentage}%` }}
-                ></div>
-              </div>
-              
-              {/* Progreso por niveles */}
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="text-center">
-                  <div className="flex items-center justify-center mb-2">
-                    <Medal className="text-yellow-500 mr-2" />
-                    <span className="text-sm font-semibold">Nivel 1</span>
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    {progress.nivel1Completed}/{progress.nivel1Total} módulos
-                  </div>
-                  <div className={`text-lg font-bold transition-all duration-500 ${progressAnimation ? 'text-[#ec4d58] scale-110' : 'text-yellow-500'}`}>
-                    {progress.nivel1Percentage}%
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="flex items-center justify-center mb-2">
-                    <Crown className={`mr-2 ${progress.canAccessNivel2 ? 'text-yellow-500' : 'text-gray-500'}`} />
-                    <span className={`text-sm font-semibold ${progress.canAccessNivel2 ? 'text-white' : 'text-gray-500'}`}>
-                      Nivel 2
-                    </span>
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    {progress.nivel2Completed}/{progress.nivel2Total} módulos
-                  </div>
-                  <div className={`text-lg font-bold transition-all duration-500 ${progressAnimation ? 'text-[#ec4d58] scale-110' : progress.canAccessNivel2 ? 'text-yellow-500' : 'text-gray-500'}`}>
-                    {progress.canAccessNivel2 ? `${progress.nivel2Percentage}%` : 'Bloqueado'}
-                  </div>
-                </div>
-              </div>
-
-              {/* Mini checkmarks para checkpoints */}
-              <div className="flex items-center justify-between text-xs text-gray-400">
-                <span>{progress.percentage}% completado</span>
-                <div className="flex items-center gap-2">
-                  <span>Checkpoints:</span>
-                  <div className="flex gap-1">
-                    {Array.from({ length: progress.totalCheckpoints }, (_, i) => (
-                      <div
-                        key={i}
-                        className={`w-3 h-3 rounded-full border ${
-                          i < progress.completedCheckpoints
-                            ? 'bg-green-500 border-green-500'
-                            : 'bg-gray-600 border-gray-500'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ProgressRuler
+              courseType={activeTab as 'theoretical' | 'practical'}
+              progressData={{
+                completedModules: progress.completedModules,
+                totalModules: activeTab === 'theoretical' ? 8 : 10,
+                completedCheckpoints: progress.completedCheckpoints,
+                totalCheckpoints: activeTab === 'theoretical' ? 4 : 5,
+                percentage: progress.percentage,
+                level1Progress: progress.nivel1Percentage,
+                level2Progress: progress.nivel2Percentage
+              }}
+              onProgressUpdate={(newProgress) => {
+                // Aquí puedes manejar actualizaciones de progreso
+                console.log('Progreso actualizado:', newProgress);
+              }}
+            />
           </div>
         </div>
 
@@ -705,11 +629,11 @@ export default function IniciadoDashboard() {
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">
-              {activeTab === 'theoretical' ? 'Módulos Teóricos' : 'Módulos Prácticos'} - Nivel 1 & 2
+              {activeTab === 'theoretical' ? 'Módulos Teóricos' : 'Módulos Prácticos'}
             </h2>
           </div>
 
-          {/* Carrusel con scrollbar estilizada */}
+          {/* Carrusel simplificado */}
           <div className="relative carousel-container">
             <div
               ref={carouselRef}
@@ -736,143 +660,77 @@ export default function IniciadoDashboard() {
                 scrollSnapType: 'x mandatory'
               }}
             >
-              <div className="carousel-track p-2 flex gap-4" style={{ minWidth: '100%', width: 'max-content' }}>
+              <div className="carousel-track p-2 flex gap-4 select-none" style={{ minWidth: '100%', width: 'max-content' }}>
                 {allModules.map((module, index) => {
-                  // Obtener progreso real del módulo
-                  const getModuleProgress = (moduleId: string) => {
-                    const saved = localStorage.getItem(`module_${moduleId}_progress`);
-                    return saved ? JSON.parse(saved) : { isCompleted: false, progress: 0 };
-                  };
-                  
-                  const moduleProgress = getModuleProgress(module.id);
-                  const isLocked = module.isLocked || false;
-                  const isCompleted = moduleProgress.isCompleted || moduleProgress.progress >= 100;
                   const isControlPoint = module.id.startsWith('PC');
-                  const canTake = isControlPoint ? canTakeCheckpoint(module.id) : true;
-                  const timeUntilNext = isControlPoint ? getTimeUntilNextAttempt(module.id) : 0;
-                  
-                  // Verificar si el módulo del nivel 2 está bloqueado
-                  const isNivel2Locked = module.level === 'nivel2' && !progress.canAccessNivel2;
+                  const isLocked = module.isLocked || false;
+                  const isCompleted = false; // Simplificado
                   
                   return (
                     <div 
-                      key={module.id} 
+                      key={`${activeTab}-${module.id}-${index}`} 
                       className="carousel-card flex-shrink-0 w-[calc(25%-12px)] min-w-[280px] max-w-[320px]"
                       style={{ scrollSnapAlign: 'start' }}
                     >
-                      {/* Badge de nivel */}
-                      <div className="absolute top-2 left-2 z-10">
-                        <div className={`px-2 py-1 rounded-full text-xs font-bold ${
-                          module.level === 'nivel1' 
-                            ? 'bg-yellow-500 text-black' 
-                            : 'bg-purple-500 text-white'
-                        }`}>
-                          {module.level === 'nivel1' ? 'N1' : 'N2'}
-                        </div>
-                      </div>
-
-                      {/* Badge solo ícono para puntos de control */}
-                      {isControlPoint && (
-                        <div className="absolute top-2 right-2 z-10">
-                          <ControlPointBadge />
-                        </div>
-                      )}
-                      
                       {/* Card */}
-                      <div className={`relative p-6 rounded-xl border transition-all duration-300 group flex flex-col h-[320px] module-card bg-[#1a1a1a] border-[#232323] hover:bg-[#2a2a2a] hover:border-[#ec4d58]/30 ${
-                        isNivel2Locked ? 'opacity-50' : ''
-                      }`}>
+                      <div className="relative p-6 rounded-xl border transition-all duration-300 group flex flex-col h-[320px] module-card bg-[#1a1a1a] border-[#232323] hover:bg-[#2a2a2a] hover:border-[#ec4d58]/30 select-none">
                         <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 ${
                           isCompleted ? 'bg-green-500 text-white' : 
-                          isLocked || isNivel2Locked ? 'bg-[#2a2a2a] text-gray-400' : 
+                          isLocked ? 'bg-[#2a2a2a] text-gray-400' : 
                           'bg-[#ec4d58] text-white'
                         }`}>
-                          {isLocked || isNivel2Locked ? <Lock /> : isCompleted ? <CheckCircle /> : module.icon}
+                          {isLocked ? <Lock /> : isCompleted ? <CheckCircle /> : module.icon}
                         </div>
                         
                         <div className="absolute top-4 right-4">
-                          <span className={`text-xs font-bold px-2 py-1 rounded-full ${
-                            isCompleted ? 'bg-green-500 text-white' : 
-                            isLocked || isNivel2Locked ? 'bg-[#2a2a2a] text-gray-300' : 
-                            'bg-[#ec4d58] text-white'
-                          }`}>
+                          <span 
+                            className={`text-xs font-bold px-2 py-1 rounded-full ${
+                              isCompleted ? 'bg-green-500 text-white' : 
+                              isLocked ? 'bg-[#2a2a2a] text-gray-300' : 
+                              'bg-[#ec4d58] text-white'
+                            }`}
+                            title={isControlPoint ? "Punto de Control" : ""}
+                          >
                             {module.id}
                           </span>
                         </div>
                         
-                        <h3 className="text-lg font-bold mb-2 line-clamp-2">{module.title}</h3>
-                        <p className="text-sm text-gray-400 mb-4 line-clamp-3 flex-1">{module.description}</p>
-                        
-                        {isNivel2Locked && (
-                          <div className="mt-auto mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-                            <div className="flex items-center justify-center gap-2 text-yellow-400">
-                              <Lock className="text-sm" />
-                              <span className="text-xs">Completa 50% del Nivel 1</span>
-                            </div>
-                          </div>
-                        )}
-                        
-                        {isControlPoint && !canTake && timeUntilNext > 0 && !isNivel2Locked && (
-                          <div className="mt-auto cooldown-timer rounded-lg p-2 mb-4">
-                            <div className="flex items-center justify-center gap-2 text-red-400">
-                              <Clock className="text-sm" />
-                              <span className="text-xs font-mono">{formatTime(timeUntilNext)}</span>
-                            </div>
-                            <p className="text-xs text-red-300 text-center mt-1">Próximo intento disponible</p>
-                          </div>
-                        )}
+                        <h3 className="text-lg font-bold mb-2 line-clamp-2 select-none">{module.title}</h3>
+                        <p className="text-sm text-gray-400 mb-4 line-clamp-3 flex-1 select-none">{module.description}</p>
                         
                         <div className="mt-auto">
-                          {isControlPoint ? (
-                            <Link
-                              href={isNivel2Locked ? '#' : module.path}
-                              className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors w-full justify-center ${
-                                canTake && !isNivel2Locked ? 'bg-yellow-500 hover:bg-yellow-600 text-black' : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                              }`}
-                              onClick={e => isNivel2Locked && e.preventDefault()}
-                            >
-                              <CheckCircle className="mr-2" />
-                              {isNivel2Locked ? 'Bloqueado' : canTake ? 'Tomar Evaluación' : 'Bloqueado'}
-                            </Link>
-                          ) : (
-                            <div className="flex gap-2">
-                              <Link
-                                href={isNivel2Locked ? '#' : module.path}
-                                className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors flex-1 justify-center ${
-                                  isLocked || isNivel2Locked ? 'bg-[#2a2a2a] text-gray-400 cursor-not-allowed' : 
-                                  isCompleted ? 'bg-green-500 hover:bg-green-600 text-white' : 
-                                  'bg-[#ec4d58] hover:bg-[#d63d47] text-white'
-                                }`}
-                                onClick={e => isNivel2Locked && e.preventDefault()}
-                              >
-                                {isLocked || isNivel2Locked ? (
-                                  <>
-                                    <Lock className="mr-2" />
-                                    Bloqueado
-                                  </>
-                                ) : isCompleted ? (
-                                  <>
-                                    <CheckCircle className="mr-2" />
-                                    Completado
-                                  </>
-                                ) : (
-                                  <>
-                                    <Play className="mr-2" />
-                                    Comenzar
-                                  </>
-                                )}
-                              </Link>
-                              {!isCompleted && !isLocked && !isNivel2Locked && (
-                                <button
-                                  onClick={() => simulateProgress(module.id)}
-                                  className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm"
-                                  title="Simular avance (demo)"
-                                >
-                                  +25%
-                                </button>
-                              )}
-                            </div>
-                          )}
+                          <Link
+                            href={isLocked ? '#' : module.path}
+                            className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors w-full justify-center ${
+                              isLocked ? 'bg-[#2a2a2a] text-gray-400 cursor-not-allowed' : 
+                              isControlPoint ? 'bg-[#FFD447] hover:bg-[#e6c040] text-black' :
+                              isCompleted ? 'bg-green-500 hover:bg-green-600 text-white' : 
+                              'bg-[#ec4d58] hover:bg-[#d63d47] text-white'
+                            }`}
+                            onClick={e => isLocked && e.preventDefault()}
+                          >
+                            {isLocked ? (
+                              <>
+                                <Lock className="mr-2" />
+                                Bloqueado
+                              </>
+                            ) : isControlPoint ? (
+                              <>
+                                <CheckCircle className="mr-2" />
+                                Tomar autoevaluación
+                              </>
+                            ) : isCompleted ? (
+                              <>
+                                <CheckCircle className="mr-2" />
+                                Completado
+                              </>
+                            ) : (
+                              <>
+                                <Play className="mr-2" />
+                                Comenzar
+                              </>
+                            )}
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -882,10 +740,7 @@ export default function IniciadoDashboard() {
             </div>
           </div>
 
-          {/* Carousel Instructions */}
-          <div className="mt-4 text-center text-sm text-gray-500">
-            Desliza horizontalmente para navegar entre los módulos
-          </div>
+
         </div>
 
         {/* Quick Actions */}
@@ -899,7 +754,7 @@ export default function IniciadoDashboard() {
               Continúa tu aprendizaje con los módulos disponibles. Cada módulo te acerca más a convertirte en un trader profesional.
             </p>
             <Link
-              href={activeTab === 'theoretical' ? '/dashboard/iniciado/Teorico' : '/dashboard/iniciado/Practico'}
+              href="/dashboard/iniciado/cursos"
               className="inline-flex items-center px-4 py-2 bg-[#ec4d58] hover:bg-[#d63d47] text-white rounded-lg transition-colors"
             >
               Ver Todos los Módulos

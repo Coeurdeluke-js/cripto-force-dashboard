@@ -38,14 +38,15 @@ export default function Sidebar() {
       {/* Header con imagen circular */}
       <div className="flex-shrink-0 h-16 flex items-center justify-center border-b border-gray-800/30 bg-transparent px-4 rounded-t-xl">
         <div className="w-12 h-12 rounded-full overflow-hidden">
-          <Image
-            src="/images/insignias/1-iniciados.png"
-            alt="Iniciado"
-            width={48}
-            height={48}
-            className="w-full h-full object-cover"
-            priority
-          />
+                        <Image
+                src="/images/insignias/1-iniciados.png"
+                alt="Iniciado"
+                width={48}
+                height={48}
+                className="w-full h-full object-cover"
+                style={{ width: 'auto', height: 'auto' }}
+                priority
+              />
         </div>
       </div>
 
