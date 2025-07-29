@@ -11,139 +11,139 @@ import { shuffleQuestions } from '@/utils/questionShuffler';
 const questions = [
   {
     id: 1,
-    question: "¿Qué es el RSI (Relative Strength Index)?",
+    question: "¿Qué es la gestión de riesgo en trading?",
     options: [
-      "Un indicador de momentum que mide la velocidad y magnitud de los cambios de precio",
-      "Un tipo de media móvil",
-      "Un patrón de velas japonesas",
-      "Un indicador de volumen"
-    ],
-    correct: 0
-  },
-  {
-    id: 2,
-    question: "¿Qué valores del RSI indican sobreventa?",
-    options: [
-      "Por encima de 70",
-      "Por debajo de 30",
-      "Entre 40 y 60",
-      "Por encima de 80"
+      "Arriesgar todo el capital en una operación",
+      "Limitar las pérdidas potenciales por operación",
+      "Solo operar cuando hay ganancias seguras",
+      "Ignorar las pérdidas"
     ],
     correct: 1
   },
   {
-    id: 3,
-    question: "¿Qué valores del RSI indican sobrecompra?",
+    id: 2,
+    question: "¿Cuál es el porcentaje máximo recomendado de riesgo por operación?",
     options: [
-      "Por encima de 70",
-      "Por debajo de 30",
-      "Entre 40 y 60",
-      "Por debajo de 20"
+      "1-2% del capital",
+      "10-20% del capital",
+      "50% del capital",
+      "100% del capital"
+    ],
+    correct: 0
+  },
+  {
+    id: 3,
+    question: "¿Qué es el ratio riesgo/beneficio?",
+    options: [
+      "La relación entre pérdida potencial y ganancia potencial",
+      "El porcentaje de ganancia",
+      "El tiempo de la operación",
+      "El volumen de operaciones"
     ],
     correct: 0
   },
   {
     id: 4,
-    question: "¿Qué es el MACD?",
+    question: "¿Cuál es un ratio riesgo/beneficio mínimo recomendado?",
     options: [
-      "Un indicador de tendencia que combina dos medias móviles",
-      "Un patrón de velas",
-      "Un indicador de volumen",
-      "Un nivel de soporte"
+      "1:1",
+      "1:2",
+      "1:0.5",
+      "1:0.1"
     ],
-    correct: 0
+    correct: 1
   },
   {
     id: 5,
-    question: "¿Qué componentes tiene el MACD?",
+    question: "¿Qué es el stop loss?",
     options: [
-      "Línea MACD, línea de señal e histograma",
-      "Solo la línea MACD",
-      "Solo el histograma",
-      "Línea de tendencia y volumen"
+      "Un nivel de precio donde se cierra la operación para limitar pérdidas",
+      "Un nivel de precio donde se toma ganancia",
+      "El precio de entrada de la operación",
+      "El volumen de la operación"
     ],
     correct: 0
   },
   {
     id: 6,
-    question: "¿Qué indica cuando el MACD cruza por encima de su línea de señal?",
+    question: "¿Qué es el take profit?",
     options: [
-      "Señal de venta",
-      "Señal de compra",
-      "No indica nada",
-      "El mercado está en equilibrio"
+      "Un nivel de precio donde se cierra la operación para tomar ganancias",
+      "Un nivel de precio donde se limita la pérdida",
+      "El precio de entrada de la operación",
+      "El volumen de la operación"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 7,
-    question: "¿Qué es el análisis fundamental?",
+    question: "¿Qué es la diversificación?",
     options: [
-      "Analizar patrones de precios en gráficos",
-      "Evaluar factores económicos, políticos y sociales que afectan el precio",
-      "Solo estudiar indicadores técnicos",
-      "Analizar el volumen de operaciones"
+      "Concentrar todo el capital en un solo activo",
+      "Distribuir el capital entre diferentes activos o mercados",
+      "Operar solo en un mercado",
+      "Ignorar otros mercados"
     ],
     correct: 1
   },
   {
     id: 8,
-    question: "¿Qué tipo de noticias pueden afectar el precio de un activo?",
+    question: "¿Por qué es importante la diversificación?",
     options: [
-      "Solo noticias económicas",
-      "Noticias económicas, políticas, sociales y empresariales",
-      "Solo noticias políticas",
-      "Solo noticias empresariales"
+      "Para concentrar el riesgo",
+      "Para reducir el riesgo general del portafolio",
+      "Para operar solo en un mercado",
+      "Para ignorar la gestión de riesgo"
     ],
     correct: 1
   },
   {
     id: 9,
-    question: "¿Qué son las correlaciones entre mercados?",
+    question: "¿Qué es un plan de trading?",
     options: [
-      "Relaciones entre diferentes activos financieros",
-      "Solo relaciones entre acciones",
-      "Solo relaciones entre divisas",
-      "Relaciones entre empresas del mismo sector"
+      "Un documento que define estrategias y reglas de trading",
+      "Una lista de activos a comprar",
+      "Un horario de operaciones",
+      "Un presupuesto mensual"
     ],
     correct: 0
   },
   {
     id: 10,
-    question: "¿Qué es una correlación positiva?",
+    question: "¿Qué debe incluir un plan de trading?",
     options: [
-      "Cuando dos activos se mueven en direcciones opuestas",
-      "Cuando dos activos se mueven en la misma dirección",
-      "Cuando no hay relación entre los activos",
-      "Cuando un activo no se mueve"
+      "Solo las entradas",
+      "Entradas, salidas, gestión de riesgo y reglas",
+      "Solo las salidas",
+      "Solo el capital inicial"
     ],
     correct: 1
   },
   {
     id: 11,
-    question: "¿Qué es una correlación negativa?",
+    question: "¿Qué son las reglas de trading?",
     options: [
-      "Cuando dos activos se mueven en direcciones opuestas",
-      "Cuando dos activos se mueven en la misma dirección",
-      "Cuando no hay relación entre los activos",
-      "Cuando un activo no se mueve"
+      "Normas que definen cuándo y cómo operar",
+      "Solo horarios de operación",
+      "Solo niveles de entrada",
+      "Solo niveles de salida"
     ],
     correct: 0
   },
   {
     id: 12,
-    question: "¿Por qué es importante entender las correlaciones?",
+    question: "¿Por qué es importante seguir un plan de trading?",
     options: [
-      "Para diversificar el riesgo y mejorar las estrategias de trading",
-      "Solo para operar en un mercado",
-      "Para ignorar otros mercados",
-      "Para concentrar el riesgo"
+      "Para mantener disciplina y consistencia",
+      "Para operar sin pensar",
+      "Para ignorar el análisis",
+      "Para operar solo por intuición"
     ],
     correct: 0
   }
 ];
 
-export default function PuntoControlPractico2() {
+export default function PuntoControlPractico3() {
   const [shuffledQuestions, setShuffledQuestions] = useState(questions);
   const [answers, setAnswers] = useState<number[]>(new Array(questions.length).fill(-1));
   const [submitted, setSubmitted] = useState(false);
@@ -187,7 +187,7 @@ export default function PuntoControlPractico2() {
     const score = (correctAnswers / shuffledQuestions.length) * 100;
     
     // Guardar resultado
-    localStorage.setItem('pc2_practico_result', JSON.stringify({
+    localStorage.setItem('pc3_practico_result', JSON.stringify({
       score,
       completed: true,
       timestamp: Date.now()
@@ -248,10 +248,10 @@ export default function PuntoControlPractico2() {
         {/* Title */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#ec4d58] mb-2">
-            Punto de Control: Indicadores Técnicos y Análisis Fundamental
+            Punto de Control: Gestión de Riesgo y Plan de Trading
           </h1>
           <p className="text-gray-400">
-            Evalúa tu comprensión de los módulos 5, 6, 7 y 8. Necesitas 70% para aprobar.
+            Evalúa tu comprensión de los módulos 9 y 10. Necesitas 70% para aprobar.
           </p>
         </div>
 
@@ -280,7 +280,7 @@ export default function PuntoControlPractico2() {
           isApproved={score >= 70}
           totalQuestions={shuffledQuestions.length}
           correctAnswers={correctAnswers}
-          checkpointTitle="Punto de Control 2: Indicadores Técnicos y Análisis Fundamental"
+          checkpointTitle="Punto de Control 3: Gestión de Riesgo y Plan de Trading"
         />
       </div>
     </div>

@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, XCircle, ArrowLeft, Clock } from 'lucide-react';
 import Link from 'next/link';
-import CheckpointResultMessage from '@/components/ui/CheckpointResultMessage';
+import CheckpointResultModal from '@/components/ui/CheckpointResultModal';
+import SingleQuestionView from '@/components/ui/SingleQuestionView';
+import { shuffleQuestions } from '@/utils/questionShuffler';
 
 const questions = [
   {
@@ -108,47 +110,56 @@ const questions = [
   },
   {
     id: 10,
-    question: "¿Qué indica cuando el precio cruza por encima de una media móvil?",
+    question: "¿Qué indica una media móvil de 20 períodos?",
     options: [
-      "Señal de venta",
-      "Señal de compra",
-      "No indica nada",
-      "El mercado está en equilibrio"
+      "El precio promedio de los últimos 20 períodos",
+      "El volumen de las últimas 20 operaciones",
+      "El máximo de los últimos 20 días",
+      "El mínimo de los últimos 20 días"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 11,
-    question: "¿Qué es la gestión de riesgo en trading?",
+    question: "¿Qué es el estocástico?",
     options: [
-      "Arriesgar todo el capital en una operación",
-      "Limitar las pérdidas potenciales por operación",
-      "Solo operar cuando hay ganancias seguras",
-      "Ignorar las pérdidas"
+      "Un indicador de momentum que mide la posición del precio en relación a su rango",
+      "Un tipo de media móvil",
+      "Un patrón de velas",
+      "Un indicador de volumen"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 12,
-    question: "¿Cuál es el porcentaje máximo recomendado de riesgo por operación?",
+    question: "¿Qué son las Bandas de Bollinger?",
     options: [
-      "1-2% del capital",
-      "10-20% del capital",
-      "50% del capital",
-      "100% del capital"
+      "Indicadores de volatilidad que muestran niveles de soporte y resistencia dinámicos",
+      "Patrones de velas japonesas",
+      "Medias móviles simples",
+      "Indicadores de volumen"
     ],
     correct: 0
   }
 ];
 
 export default function PuntoControlPractico1() {
+  const [shuffledQuestions, setShuffledQuestions] = useState(questions);
   const [answers, setAnswers] = useState<number[]>(new Array(questions.length).fill(-1));
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(20 * 60); // 20 minutos
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [showReview, setShowReview] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
   const router = useRouter();
 
+  // Mezclar preguntas al cargar el componente
+  useEffect(() => {
+    setShuffledQuestions(shuffleQuestions(questions));
+  }, []);
+
   // Timer countdown
-  useState(() => {
+  useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -161,7 +172,7 @@ export default function PuntoControlPractico1() {
     }, 1000);
 
     return () => clearInterval(timer);
-  });
+  }, []);
 
   const handleAnswer = (questionIndex: number, optionIndex: number) => {
     if (submitted) return;
@@ -172,26 +183,36 @@ export default function PuntoControlPractico1() {
 
   const handleSubmit = () => {
     setSubmitted(true);
-    const correctAnswers = answers.filter((answer, index) => answer === questions[index].correct).length;
-    const score = (correctAnswers / questions.length) * 100;
+    const correctAnswers = answers.filter((answer, index) => answer === shuffledQuestions[index].correct).length;
+    const score = (correctAnswers / shuffledQuestions.length) * 100;
     
     // Guardar resultado
-    localStorage.setItem('pc_practico_1_result', JSON.stringify({
+    localStorage.setItem('pc1_practico_result', JSON.stringify({
       score,
       completed: true,
       timestamp: Date.now()
     }));
 
-    // Simular delay antes de mostrar resultado
-    setTimeout(() => {
-      if (score >= 70) {
-        alert(`¡Felicitaciones! Has aprobado con ${score.toFixed(1)}%`);
-        router.push('/dashboard/iniciado');
-      } else {
-        alert(`Has obtenido ${score.toFixed(1)}%. Necesitas 70% para aprobar.`);
-        router.push('/dashboard/iniciado');
-      }
-    }, 1000);
+    // Mostrar modal de resultados
+    setShowResultModal(true);
+  };
+
+  const handleRestart = () => {
+    setShuffledQuestions(shuffleQuestions(questions));
+    setAnswers(new Array(questions.length).fill(-1));
+    setSubmitted(false);
+    setCurrentQuestion(0);
+    setShowReview(false);
+    setShowResultModal(false);
+    setTimeLeft(20 * 60);
+  };
+
+  const handleNavigate = (direction: 'prev' | 'next') => {
+    // Función vacía ya que no usamos navegación por botones
+  };
+
+  const handleQuestionSelect = (questionIndex: number) => {
+    setCurrentQuestion(questionIndex);
   };
 
   const formatTime = (seconds: number) => {
@@ -200,8 +221,8 @@ export default function PuntoControlPractico1() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const correctAnswers = answers.filter((answer, index) => answer === questions[index].correct).length;
-  const score = (correctAnswers / questions.length) * 100;
+  const correctAnswers = answers.filter((answer, index) => answer === shuffledQuestions[index].correct).length;
+  const score = (correctAnswers / shuffledQuestions.length) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#212121] via-[#121212] to-[#121212] text-white p-4">
@@ -221,9 +242,6 @@ export default function PuntoControlPractico1() {
               <Clock />
               <span className="font-mono">{formatTime(timeLeft)}</span>
             </div>
-            <div className="text-sm text-gray-400">
-              {answers.filter(a => a !== -1).length}/{questions.length} respondidas
-            </div>
           </div>
         </div>
 
@@ -233,85 +251,37 @@ export default function PuntoControlPractico1() {
             Punto de Control: Introducción al Trading y Análisis Técnico
           </h1>
           <p className="text-gray-400">
-            Evalúa tu comprensión de los módulos 1, 2, 3 y 4 del área práctica. Necesitas 70% para aprobar.
+            Evalúa tu comprensión de los módulos 1 y 2. Necesitas 70% para aprobar.
           </p>
         </div>
 
-        {/* Questions */}
-        <div className="space-y-6">
-          {questions.map((q, qIndex) => (
-            <div key={q.id} className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6">
-              <h3 className="text-lg font-semibold mb-4">
-                {qIndex + 1}. {q.question}
-              </h3>
-              
-              <div className="space-y-3">
-                {q.options.map((option, oIndex) => (
-                  <label
-                    key={oIndex}
-                    className={`flex items-center p-3 rounded-lg border cursor-pointer transition-all ${
-                      answers[qIndex] === oIndex
-                        ? submitted
-                          ? oIndex === q.correct
-                            ? 'bg-green-500/20 border-green-500 text-green-400'
-                            : 'bg-red-500/20 border-red-500 text-red-400'
-                          : 'bg-[#ec4d58]/20 border-[#ec4d58] text-[#ec4d58]'
-                        : 'bg-[#2a2a2a] border-[#333] hover:bg-[#333]'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name={`question-${qIndex}`}
-                      checked={answers[qIndex] === oIndex}
-                      onChange={() => handleAnswer(qIndex, oIndex)}
-                      disabled={submitted}
-                      className="sr-only"
-                    />
-                    <span className="mr-3 w-5 h-5 rounded-full border-2 flex items-center justify-center">
-                      {answers[qIndex] === oIndex && (
-                        <div className="w-3 h-3 rounded-full bg-current" />
-                      )}
-                    </span>
-                    {option}
-                    {submitted && oIndex === q.correct && (
-                      <CheckCircle className="ml-auto text-green-400" />
-                    )}
-                    {submitted && answers[qIndex] === oIndex && oIndex !== q.correct && (
-                      <XCircle className="ml-auto text-red-400" />
-                    )}
-                  </label>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Submit Button */}
+        {/* Single Question View */}
         {!submitted && (
-          <div className="mt-8 text-center">
-            <button
-              onClick={handleSubmit}
-              disabled={answers.includes(-1)}
-              className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
-                answers.includes(-1)
-                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  : 'bg-[#ec4d58] hover:bg-[#d43d47] text-white'
-              }`}
-            >
-              Enviar Evaluación
-            </button>
-          </div>
+          <SingleQuestionView
+            questions={shuffledQuestions}
+            answers={answers}
+            onAnswer={handleAnswer}
+            onFinish={handleSubmit}
+            currentQuestion={currentQuestion}
+            onNavigate={handleNavigate}
+            showReview={showReview}
+            onToggleReview={() => setShowReview(!showReview)}
+            isFinished={submitted}
+            onQuestionSelect={handleQuestionSelect}
+          />
         )}
 
-        {/* Results */}
-        {submitted && (
-          <div className="mt-8">
-            <CheckpointResultMessage 
-              score={score} 
-              isApproved={score >= 70} 
-            />
-          </div>
-        )}
+        {/* Result Modal */}
+        <CheckpointResultModal
+          isOpen={showResultModal}
+          onClose={() => router.push('/dashboard/iniciado')}
+          onRestart={handleRestart}
+          score={score}
+          isApproved={score >= 70}
+          totalQuestions={shuffledQuestions.length}
+          correctAnswers={correctAnswers}
+          checkpointTitle="Punto de Control 1: Introducción al Trading y Análisis Técnico"
+        />
       </div>
     </div>
   );

@@ -512,7 +512,6 @@ export default function IniciadoDashboard() {
   const handleMouseUpOrLeave = () => setIsDragging(false);
 
 
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0f0f0f] text-white pt-20">
       <style jsx>{`
@@ -662,7 +661,7 @@ export default function IniciadoDashboard() {
         .carousel-card:nth-child(7) { animation-delay: 0.7s; }
         .carousel-card:nth-child(8) { animation-delay: 0.8s; }
       `}</style>
-      <div className="container mx-auto px-2 sm:px-4 py-4 md:py-8">
+      <div className="container mx-auto px-2 sm:px-4 py-4 md:py-8 pb-24 md:pb-8">
         {/* Welcome Message */}
         <div className="w-full max-w-4xl mx-auto mb-6 md:mb-8 text-center px-4">
           <h2 className="text-xl md:text-2xl font-light text-gray-300 tracking-wide">
@@ -787,14 +786,14 @@ export default function IniciadoDashboard() {
               onMouseUp={handleMouseUpOrLeave}
               onMouseLeave={handleMouseUpOrLeave}
               onTouchStart={e => {
-                e.preventDefault();
+                // Remover preventDefault para evitar el error
                 setIsDragging(true);
                 setStartX(e.touches[0].pageX - (carouselRef.current?.offsetLeft || 0));
                 setScrollLeft(carouselRef.current?.scrollLeft || 0);
               }}
               onTouchMove={e => {
                 if (!isDragging) return;
-                e.preventDefault();
+                // Remover preventDefault para evitar el error
                 const x = e.touches[0].pageX - (carouselRef.current?.offsetLeft || 0);
                 const walk = (x - startX) * 1.5;
                 if (carouselRef.current) {
@@ -805,7 +804,8 @@ export default function IniciadoDashboard() {
               style={{ 
                 scrollSnapType: 'x mandatory',
                 scrollPadding: '0 16px',
-                WebkitOverflowScrolling: 'touch'
+                WebkitOverflowScrolling: 'touch',
+                scrollBehavior: 'smooth'
               }}
             >
               <div className="carousel-track p-2 flex gap-3 md:gap-4 select-none" style={{ minWidth: '100%', width: 'max-content' }}>
@@ -887,12 +887,10 @@ export default function IniciadoDashboard() {
               </div>
             </div>
           </div>
-
-
         </div>
 
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 mb-8 md:mb-12">
           <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-6">
             <h3 className="text-xl font-bold text-[#ec4d58] mb-4 flex items-center">
               <TrendingUp className="mr-3" />
