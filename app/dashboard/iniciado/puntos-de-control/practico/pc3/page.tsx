@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, XCircle, ArrowLeft, Clock } from 'lucide-react';
 import Link from 'next/link';
@@ -153,6 +153,22 @@ export default function PuntoControlPractico3() {
   const [showResultModal, setShowResultModal] = useState(false);
   const router = useRouter();
 
+  const handleSubmit = useCallback(() => {
+    setSubmitted(true);
+    const correctAnswers = answers.filter((answer, index) => answer === shuffledQuestions[index].correct).length;
+    const score = (correctAnswers / shuffledQuestions.length) * 100;
+    
+    // Guardar resultado
+    localStorage.setItem('pc3_practico_result', JSON.stringify({
+      score,
+      completed: true,
+      timestamp: Date.now()
+    }));
+
+    // Mostrar modal de resultados
+    setShowResultModal(true);
+  }, [answers, shuffledQuestions]);
+
   // Mezclar preguntas al cargar el componente
   useEffect(() => {
     setShuffledQuestions(shuffleQuestions(questions));
@@ -172,29 +188,13 @@ export default function PuntoControlPractico3() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [handleSubmit]);
 
   const handleAnswer = (questionIndex: number, optionIndex: number) => {
     if (submitted) return;
     const newAnswers = [...answers];
     newAnswers[questionIndex] = optionIndex;
     setAnswers(newAnswers);
-  };
-
-  const handleSubmit = () => {
-    setSubmitted(true);
-    const correctAnswers = answers.filter((answer, index) => answer === shuffledQuestions[index].correct).length;
-    const score = (correctAnswers / shuffledQuestions.length) * 100;
-    
-    // Guardar resultado
-    localStorage.setItem('pc3_practico_result', JSON.stringify({
-      score,
-      completed: true,
-      timestamp: Date.now()
-    }));
-
-    // Mostrar modal de resultados
-    setShowResultModal(true);
   };
 
   const handleRestart = () => {

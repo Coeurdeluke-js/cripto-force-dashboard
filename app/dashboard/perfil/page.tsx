@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useRef } from 'react';
 import { Edit3, Save, Camera, Star, CheckCircle, Phone, Mail, User as UserIcon, Calendar, Globe, MessageCircle } from 'lucide-react';
+import Image from 'next/image';
 
 const countries = [
   '', 'Argentina', 'México', 'España', 'Colombia', 'Chile', 'Perú', 'Uruguay', 'Venezuela', 'Ecuador', 'Otro'
@@ -112,9 +113,11 @@ export default function PerfilPage() {
           </div>
           {/* Avatar y botón de cambio */}
           <div className="relative mb-4">
-            <img
+            <Image
               src={avatarPreview}
               alt="Tu foto de perfil"
+              width={128}
+              height={128}
               className="w-32 h-32 rounded-full object-cover border-4 border-[#ec4d58] shadow-lg"
             />
             <button

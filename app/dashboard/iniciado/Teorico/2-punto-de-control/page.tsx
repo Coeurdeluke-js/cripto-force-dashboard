@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Clock } from 'lucide-react';
 import Link from 'next/link';
 import CheckpointResultMessage from '@/components/ui/CheckpointResultMessage';
-import ControlPointModal from '@/components/ui/ControlPointModal';
 
 const preguntas = [
   {
@@ -99,34 +98,34 @@ const preguntas = [
     respuestaCorrecta: 1
   },
   {
-    pregunta: "¿Qué caracteriza a la competencia perfecta?",
+    pregunta: "¿Qué es un oligopolio?",
     opciones: [
-      "Pocos vendedores con productos diferenciados",
-      "Muchos vendedores con productos idénticos",
-      "Un solo vendedor dominante",
-      "Productos únicos y exclusivos"
+      "Un mercado con muchos vendedores",
+      "Un mercado con un solo vendedor",
+      "Un mercado con pocos vendedores",
+      "Un mercado sin regulación"
     ],
-    respuestaCorrecta: 1
+    respuestaCorrecta: 2
   },
   {
-    pregunta: "¿Qué es la externalidad?",
+    pregunta: "¿Qué es la competencia perfecta?",
     opciones: [
-      "Un costo o beneficio que afecta a terceros",
-      "El precio de un bien en el mercado",
-      "La ganancia de una empresa",
-      "El costo de producción"
+      "Un mercado con muchos compradores y vendedores",
+      "Un mercado con un solo vendedor",
+      "Un mercado con pocos vendedores",
+      "Un mercado sin regulación"
     ],
     respuestaCorrecta: 0
   },
   {
-    pregunta: "¿Qué es el bien público?",
+    pregunta: "¿Qué es el excedente del consumidor?",
     opciones: [
-      "Un bien que solo puede ser consumido por una persona",
-      "Un bien que no es rival ni excluyente",
-      "Un bien de lujo",
-      "Un bien básico"
+      "La diferencia entre lo que el consumidor está dispuesto a pagar y lo que realmente paga",
+      "El beneficio del productor",
+      "El impuesto sobre las ventas",
+      "El costo de producción"
     ],
-    respuestaCorrecta: 1
+    respuestaCorrecta: 0
   }
 ];
 
@@ -135,7 +134,6 @@ export default function PuntoDeControl2() {
   const [respuestas, setRespuestas] = useState<number[]>(new Array(12).fill(null));
   const [mostrarResultados, setMostrarResultados] = useState(false);
   const [respuestasCorrectas, setRespuestasCorrectas] = useState(0);
-  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
   const totalPreguntas = preguntas.length;
@@ -172,30 +170,8 @@ export default function PuntoDeControl2() {
     setRespuestasCorrectas(0);
   };
 
-  const handleStartCheckpoint = () => {
-    setShowModal(false);
-  };
-
   const porcentajeAprobacion = (respuestasCorrectas / totalPreguntas) * 100;
   const aprobado = porcentajeAprobacion >= 70;
-
-  // Si no puede tomar el checkpoint, mostrar modal con timer
-  if (!state.isActive && !canTakeCheckpoint(checkpointId)) {
-    return (
-      <ControlPointModal
-        isOpen={showModal}
-        onClose={() => router.push('/dashboard/iniciado')}
-        onStart={handleStartCheckpoint}
-        checkpointTitle="Punto de Control 1"
-        modulesToEvaluate={[
-          "Introducción a la Lógica Económica",
-          "Fuerzas del Mercado"
-        ]}
-        timeUntilNextAttempt={getTimeUntilNextAttempt(checkpointId)}
-        formatTime={formatTime}
-      />
-    );
-  }
 
   if (mostrarResultados) {
     return (
@@ -281,98 +257,75 @@ export default function PuntoDeControl2() {
             <p className="text-xl text-gray-300">
               Evaluación: Módulos 1 y 2 - Fundamentos Económicos
             </p>
+            <div className="mt-4 text-sm text-gray-400">
+              Pregunta {preguntaActual + 1} de {totalPreguntas} • Módulo {modulo}
+            </div>
           </div>
 
-          <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-8">
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm text-gray-400">
-                  Pregunta {preguntaActual + 1} de {totalPreguntas}
-                </span>
-                <span className="text-sm text-gray-400">
-                  Módulo {modulo}
-                </span>
-              </div>
+          <div className="bg-[#232323] rounded-xl p-8 mb-8">
+            <h2 className="text-2xl font-semibold mb-6">{pregunta.pregunta}</h2>
+            
+            <div className="space-y-4">
+              {pregunta.opciones.map((opcion, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleRespuesta(index)}
+                  className={`w-full p-4 text-left rounded-lg border transition-all ${
+                    respuestas[preguntaActual] === index
+                      ? 'bg-[#ec4d58] border-[#ec4d58] text-white'
+                      : 'bg-[#2a2a2a] border-[#333] hover:bg-[#333] text-gray-300'
+                  }`}
+                >
+                  {opcion}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <button
+              onClick={() => router.push('/dashboard/iniciado')}
+              className="flex items-center text-gray-400 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="mr-2" />
+              Volver al Dashboard
+            </button>
+
+            <div className="flex gap-4">
+              {preguntaActual > 0 && (
+                <button
+                  onClick={preguntaAnterior}
+                  className="px-6 py-3 bg-[#2a2a2a] hover:bg-[#333] text-white rounded-lg transition-colors"
+                >
+                  Anterior
+                </button>
+              )}
               
-              <h3 className="text-xl font-semibold text-white mb-6 leading-relaxed">
-                {pregunta.pregunta}
-              </h3>
+              {respuestas[preguntaActual] !== null && (
+                <button
+                  onClick={siguientePregunta}
+                  className="px-6 py-3 bg-[#ec4d58] hover:bg-[#d63d47] text-white rounded-lg transition-colors"
+                >
+                  {preguntaActual === totalPreguntas - 1 ? 'Finalizar' : 'Siguiente'}
+                </button>
+              )}
             </div>
+          </div>
 
-            <div className="space-y-3">
-              {pregunta.opciones.map((opcion, index) => {
-                const isSelected = respuestas[preguntaActual] === index;
-                
-                return (
-                  <label
-                    key={index}
-                    className={`block p-4 rounded-lg border transition-all duration-200 cursor-pointer ${
-                      isSelected 
-                        ? 'bg-[#ec4d58] border-[#ec4d58] text-white' 
-                        : 'bg-[#232323] border-[#2a2a2a] text-gray-300 hover:bg-[#2a2a2a] hover:border-[#ec4d58]/50'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name={`pregunta-${preguntaActual}`}
-                      value={index}
-                      checked={isSelected}
-                      onChange={() => handleRespuesta(index)}
-                      className="sr-only"
-                    />
-                    <div className="flex items-center">
-                      <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
-                        isSelected 
-                          ? 'border-white bg-white' 
-                          : 'border-gray-500'
-                      }`}>
-                        {isSelected && (
-                          <div className="w-2 h-2 bg-[#ec4d58] rounded-full"></div>
-                        )}
-                      </div>
-                      <span className="flex-1">{opcion}</span>
-                    </div>
-                  </label>
-                );
-              })}
-            </div>
-
-            <div className="flex items-center justify-between mt-8">
-              <button
-                onClick={preguntaAnterior}
-                disabled={preguntaActual === 0}
-                className="px-6 py-3 bg-[#232323] hover:bg-[#2a2a2a] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
-              >
-                Anterior
-              </button>
-
-              <div className="text-center">
-                <div className="text-sm text-gray-400 mb-2">
-                  Progreso: {preguntaActual + 1} de {totalPreguntas}
-                </div>
-                <div className="flex gap-1">
-                  {Array.from({ length: totalPreguntas }, (_, i) => (
-                    <div
-                      key={i}
-                      className={`w-3 h-3 rounded-full ${
-                        i === preguntaActual
-                          ? 'bg-[#ec4d58]'
-                          : respuestas[i] !== null
-                          ? 'bg-green-500'
-                          : 'bg-gray-600'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <button
-                onClick={siguientePregunta}
-                disabled={respuestas[preguntaActual] === null}
-                className="px-6 py-3 bg-[#ec4d58] hover:bg-[#d63d47] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
-              >
-                {preguntaActual === totalPreguntas - 1 ? 'Ver Resultados' : 'Siguiente'}
-              </button>
+          <div className="mt-8">
+            <div className="flex justify-center space-x-2">
+              {preguntas.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-3 h-3 rounded-full ${
+                    respuestas[index] !== null
+                      ? respuestas[index] === preguntas[index].respuestaCorrecta
+                        ? 'bg-green-500'
+                        : 'bg-red-500'
+                      : 'bg-[#333]'
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </div>
