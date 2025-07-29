@@ -5,128 +5,127 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Clock } from 'lucide-react';
 import Link from 'next/link';
 import CheckpointResultMessage from '@/components/ui/CheckpointResultMessage';
-import ControlPointModal from '@/components/ui/ControlPointModal';
 
 const preguntas = [
   {
-    pregunta: "¿Qué es la intervención gubernamental en los mercados?",
+    pregunta: "¿Qué es la intervención del gobierno en los mercados?",
     opciones: [
-      "La participación del gobierno en la economía para corregir fallas del mercado",
-      "La nacionalización de todas las empresas",
-      "La eliminación de la competencia",
-      "La privatización de servicios públicos"
+      "La participación del gobierno para regular y controlar los mercados",
+      "Solo la compra de bienes por parte del gobierno",
+      "La venta de productos gubernamentales",
+      "La privatización de empresas"
     ],
     respuestaCorrecta: 0
   },
   {
-    pregunta: "¿Qué son los controles de precios?",
+    pregunta: "¿Qué son los impuestos?",
     opciones: [
-      "Límites establecidos por el gobierno sobre los precios de bienes y servicios",
-      "La fijación de precios por las empresas",
-      "Los precios de mercado libre",
-      "Los precios internacionales"
+      "Pagos obligatorios al gobierno por parte de ciudadanos y empresas",
+      "Donaciones voluntarias al gobierno",
+      "Solo pagos por servicios públicos",
+      "Solo pagos de empresas"
+    ],
+    respuestaCorrecta: 0
+  },
+  {
+    pregunta: "¿Qué es un subsidio?",
+    opciones: [
+      "Un pago del gobierno para reducir el costo de un bien o servicio",
+      "Un impuesto adicional",
+      "Una multa gubernamental",
+      "Un préstamo bancario"
+    ],
+    respuestaCorrecta: 0
+  },
+  {
+    pregunta: "¿Qué es el control de precios?",
+    opciones: [
+      "La regulación gubernamental de los precios de bienes y servicios",
+      "El control de la inflación por parte de los bancos",
+      "La fijación de precios por parte de las empresas",
+      "El control de precios por parte de los consumidores"
     ],
     respuestaCorrecta: 0
   },
   {
     pregunta: "¿Qué es un precio máximo?",
     opciones: [
-      "El precio más alto que puede cobrar un vendedor",
-      "El precio más bajo que puede pagar un comprador",
-      "Un límite superior establecido por el gobierno",
-      "El precio de equilibrio del mercado"
+      "El precio más alto que se permite cobrar por un bien o servicio",
+      "El precio más bajo que se permite cobrar",
+      "El precio de equilibrio del mercado",
+      "El precio promedio del mercado"
     ],
-    respuestaCorrecta: 2
+    respuestaCorrecta: 0
   },
   {
     pregunta: "¿Qué es un precio mínimo?",
     opciones: [
-      "El precio más alto que puede cobrar un vendedor",
-      "Un límite inferior establecido por el gobierno",
-      "El precio más bajo del mercado",
-      "El precio de equilibrio"
+      "El precio más bajo que se permite cobrar por un bien o servicio",
+      "El precio más alto que se permite cobrar",
+      "El precio de equilibrio del mercado",
+      "El precio promedio del mercado"
     ],
-    respuestaCorrecta: 1
+    respuestaCorrecta: 0
   },
   {
-    pregunta: "¿Qué son los impuestos?",
+    pregunta: "¿Qué es la competencia perfecta?",
     opciones: [
-      "Transferencias del gobierno a los ciudadanos",
-      "Pagos obligatorios al gobierno para financiar servicios públicos",
-      "Subsidios a las empresas",
-      "Préstamos del gobierno"
-    ],
-    respuestaCorrecta: 1
-  },
-  {
-    pregunta: "¿Qué son los subsidios?",
-    opciones: [
-      "Pagos del gobierno a productores o consumidores",
-      "Impuestos adicionales",
-      "Multas por incumplimiento",
-      "Préstamos con intereses"
+      "Un mercado con muchos compradores y vendedores con productos idénticos",
+      "Un mercado con un solo vendedor",
+      "Un mercado con pocos vendedores",
+      "Un mercado sin regulación"
     ],
     respuestaCorrecta: 0
   },
   {
     pregunta: "¿Qué caracteriza a la competencia perfecta?",
     opciones: [
-      "Pocos vendedores con productos diferenciados",
-      "Muchos vendedores con productos idénticos",
-      "Un solo vendedor dominante",
-      "Productos únicos y exclusivos"
+      "Productos idénticos, muchos vendedores, información perfecta",
+      "Productos únicos, pocos vendedores, información limitada",
+      "Productos diferenciados, un solo vendedor, información perfecta",
+      "Productos variados, muchos vendedores, información limitada"
     ],
-    respuestaCorrecta: 1
+    respuestaCorrecta: 0
   },
   {
-    pregunta: "¿Qué es un precio tomador en competencia perfecta?",
+    pregunta: "¿Qué es un precio tomador?",
     opciones: [
-      "Una empresa que puede fijar sus propios precios",
-      "Una empresa que acepta el precio del mercado",
-      "Una empresa monopolística",
-      "Una empresa oligopólica"
+      "Un vendedor que no puede influir en el precio del mercado",
+      "Un vendedor que controla el precio del mercado",
+      "Un comprador que controla el precio",
+      "Un intermediario del mercado"
     ],
-    respuestaCorrecta: 1
+    respuestaCorrecta: 0
   },
   {
     pregunta: "¿Qué es la libertad de entrada y salida en competencia perfecta?",
     opciones: [
       "Las empresas pueden entrar y salir del mercado sin restricciones",
-      "Solo las grandes empresas pueden entrar",
-      "Las empresas están obligadas a permanecer",
-      "Solo el gobierno puede autorizar entradas"
+      "Solo las empresas grandes pueden entrar al mercado",
+      "Las empresas no pueden salir del mercado",
+      "Solo el gobierno puede controlar la entrada y salida"
     ],
     respuestaCorrecta: 0
   },
   {
     pregunta: "¿Qué es la información perfecta en competencia perfecta?",
     opciones: [
-      "Solo los vendedores conocen los precios",
       "Todos los participantes conocen todos los precios y productos",
+      "Solo los vendedores conocen los precios",
       "Solo los compradores conocen los precios",
-      "La información está oculta"
+      "Nadie conoce los precios"
     ],
-    respuestaCorrecta: 1
+    respuestaCorrecta: 0
   },
   {
-    pregunta: "¿Qué es la eficiencia en competencia perfecta?",
+    pregunta: "¿Por qué es importante la competencia perfecta?",
     opciones: [
-      "Las empresas maximizan sus ganancias a costa de la sociedad",
-      "Los recursos se asignan de manera óptima para maximizar el bienestar social",
-      "Solo las grandes empresas son eficientes",
-      "La eficiencia no importa en competencia perfecta"
+      "Porque maximiza la eficiencia y el bienestar social",
+      "Porque maximiza las ganancias de las empresas",
+      "Porque reduce la innovación",
+      "Porque aumenta los precios"
     ],
-    respuestaCorrecta: 1
-  },
-  {
-    pregunta: "¿Por qué la competencia perfecta es un modelo teórico?",
-    opciones: [
-      "Porque no existe en la realidad",
-      "Porque es un modelo ideal que sirve como referencia",
-      "Porque solo existe en mercados pequeños",
-      "Porque es un modelo obsoleto"
-    ],
-    respuestaCorrecta: 1
+    respuestaCorrecta: 0
   }
 ];
 
@@ -135,7 +134,6 @@ export default function PuntoDeControl4() {
   const [respuestas, setRespuestas] = useState<number[]>(new Array(12).fill(null));
   const [mostrarResultados, setMostrarResultados] = useState(false);
   const [respuestasCorrectas, setRespuestasCorrectas] = useState(0);
-  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
   const totalPreguntas = preguntas.length;
@@ -172,30 +170,8 @@ export default function PuntoDeControl4() {
     setRespuestasCorrectas(0);
   };
 
-  const handleStartCheckpoint = () => {
-    setShowModal(false);
-  };
-
   const porcentajeAprobacion = (respuestasCorrectas / totalPreguntas) * 100;
   const aprobado = porcentajeAprobacion >= 70;
-
-  // Si no puede tomar el checkpoint, mostrar modal con timer
-  if (!state.isActive && !canTakeCheckpoint(checkpointId)) {
-    return (
-      <ControlPointModal
-        isOpen={showModal}
-        onClose={() => router.push('/dashboard/iniciado')}
-        onStart={handleStartCheckpoint}
-        checkpointTitle="Punto de Control 2"
-        modulesToEvaluate={[
-          "Acción del Gobierno en los Mercados",
-          "Competencia Perfecta"
-        ]}
-        timeUntilNextAttempt={getTimeUntilNextAttempt(checkpointId)}
-        formatTime={formatTime}
-      />
-    );
-  }
 
   if (mostrarResultados) {
     return (
@@ -281,98 +257,75 @@ export default function PuntoDeControl4() {
             <p className="text-xl text-gray-300">
               Evaluación: Módulos 3 y 4 - Intervención y Competencia
             </p>
+            <div className="mt-4 text-sm text-gray-400">
+              Pregunta {preguntaActual + 1} de {totalPreguntas} • Módulo {modulo}
+            </div>
           </div>
 
-          <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-8">
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm text-gray-400">
-                  Pregunta {preguntaActual + 1} de {totalPreguntas}
-                </span>
-                <span className="text-sm text-gray-400">
-                  Módulo {modulo}
-                </span>
-              </div>
+          <div className="bg-[#232323] rounded-xl p-8 mb-8">
+            <h2 className="text-2xl font-semibold mb-6">{pregunta.pregunta}</h2>
+            
+            <div className="space-y-4">
+              {pregunta.opciones.map((opcion, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleRespuesta(index)}
+                  className={`w-full p-4 text-left rounded-lg border transition-all ${
+                    respuestas[preguntaActual] === index
+                      ? 'bg-[#ec4d58] border-[#ec4d58] text-white'
+                      : 'bg-[#2a2a2a] border-[#333] hover:bg-[#333] text-gray-300'
+                  }`}
+                >
+                  {opcion}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <button
+              onClick={() => router.push('/dashboard/iniciado')}
+              className="flex items-center text-gray-400 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="mr-2" />
+              Volver al Dashboard
+            </button>
+
+            <div className="flex gap-4">
+              {preguntaActual > 0 && (
+                <button
+                  onClick={preguntaAnterior}
+                  className="px-6 py-3 bg-[#2a2a2a] hover:bg-[#333] text-white rounded-lg transition-colors"
+                >
+                  Anterior
+                </button>
+              )}
               
-              <h3 className="text-xl font-semibold text-white mb-6 leading-relaxed">
-                {pregunta.pregunta}
-              </h3>
+              {respuestas[preguntaActual] !== null && (
+                <button
+                  onClick={siguientePregunta}
+                  className="px-6 py-3 bg-[#ec4d58] hover:bg-[#d63d47] text-white rounded-lg transition-colors"
+                >
+                  {preguntaActual === totalPreguntas - 1 ? 'Finalizar' : 'Siguiente'}
+                </button>
+              )}
             </div>
+          </div>
 
-            <div className="space-y-3">
-              {pregunta.opciones.map((opcion, index) => {
-                const isSelected = respuestas[preguntaActual] === index;
-                
-                return (
-                  <label
-                    key={index}
-                    className={`block p-4 rounded-lg border transition-all duration-200 cursor-pointer ${
-                      isSelected 
-                        ? 'bg-[#ec4d58] border-[#ec4d58] text-white' 
-                        : 'bg-[#232323] border-[#2a2a2a] text-gray-300 hover:bg-[#2a2a2a] hover:border-[#ec4d58]/50'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name={`pregunta-${preguntaActual}`}
-                      value={index}
-                      checked={isSelected}
-                      onChange={() => handleRespuesta(index)}
-                      className="sr-only"
-                    />
-                    <div className="flex items-center">
-                      <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
-                        isSelected 
-                          ? 'border-white bg-white' 
-                          : 'border-gray-500'
-                      }`}>
-                        {isSelected && (
-                          <div className="w-2 h-2 bg-[#ec4d58] rounded-full"></div>
-                        )}
-                      </div>
-                      <span className="flex-1">{opcion}</span>
-                    </div>
-                  </label>
-                );
-              })}
-            </div>
-
-            <div className="flex items-center justify-between mt-8">
-              <button
-                onClick={preguntaAnterior}
-                disabled={preguntaActual === 0}
-                className="px-6 py-3 bg-[#232323] hover:bg-[#2a2a2a] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
-              >
-                Anterior
-              </button>
-
-              <div className="text-center">
-                <div className="text-sm text-gray-400 mb-2">
-                  Progreso: {preguntaActual + 1} de {totalPreguntas}
-                </div>
-                <div className="flex gap-1">
-                  {Array.from({ length: totalPreguntas }, (_, i) => (
-                    <div
-                      key={i}
-                      className={`w-3 h-3 rounded-full ${
-                        i === preguntaActual
-                          ? 'bg-[#ec4d58]'
-                          : respuestas[i] !== null
-                          ? 'bg-green-500'
-                          : 'bg-gray-600'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <button
-                onClick={siguientePregunta}
-                disabled={respuestas[preguntaActual] === null}
-                className="px-6 py-3 bg-[#ec4d58] hover:bg-[#d63d47] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
-              >
-                {preguntaActual === totalPreguntas - 1 ? 'Ver Resultados' : 'Siguiente'}
-              </button>
+          <div className="mt-8">
+            <div className="flex justify-center space-x-2">
+              {preguntas.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-3 h-3 rounded-full ${
+                    respuestas[index] !== null
+                      ? respuestas[index] === preguntas[index].respuestaCorrecta
+                        ? 'bg-green-500'
+                        : 'bg-red-500'
+                      : 'bg-[#333]'
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </div>

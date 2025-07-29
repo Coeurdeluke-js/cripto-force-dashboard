@@ -167,7 +167,7 @@ export default function PuntoControlPractico1() {
 
     // Mostrar modal de resultados
     setShowResultModal(true);
-  }, [answers, shuffledQuestions.length, shuffledQuestions]);
+  }, [answers, shuffledQuestions]);
 
   // Mezclar preguntas al cargar el componente
   useEffect(() => {
