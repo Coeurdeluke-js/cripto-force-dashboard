@@ -313,55 +313,52 @@ export default function CursosPage() {
         </h3>
         
         {/* Descripción */}
-        <p className="text-gray-400 mb-4 leading-relaxed flex-grow text-sm">
+        <p className="text-gray-400 mb-3 leading-relaxed flex-grow text-sm">
           {module.description}
         </p>
 
-        {/* Mensaje de bloqueo */}
+        {/* Mensaje de bloqueo centrado */}
         {isLocked && lockMessage && (
-          <div className="mb-3 p-2 bg-[#2a2a2a] border border-gray-600 rounded-lg">
-            <p className="text-xs text-gray-400 text-center">
-              🔒 {lockMessage}
-            </p>
+          <div className="mt-auto pt-2">
+            <div className="p-3 bg-[#2a2a2a] border border-gray-600 rounded-lg">
+              <p className="text-xs text-gray-400 text-center">
+                🔒 {lockMessage}
+              </p>
+            </div>
           </div>
         )}
         
-        {/* Botón de acceso - siempre al final */}
-        <div className="mt-auto">
-          <Link
-            href={isLocked ? '#' : module.path}
-            className={`inline-flex items-center px-3 py-2 rounded-lg transition-all duration-300 font-medium w-full justify-center text-xs whitespace-nowrap ${
-              isLocked ? 'bg-[#2a2a2a] text-gray-400 cursor-not-allowed' : 
-              isControlPoint ? 'bg-[#FFD447] hover:bg-[#e6c040] text-black shadow-lg hover:shadow-xl' :
-              isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl' : 
-              'bg-[#ec4d58] hover:bg-[#d63d47] text-white shadow-lg hover:shadow-xl'
-            }`}
-            onClick={e => isLocked && e.preventDefault()}
-          >
-            {isLocked ? (
-              <>
-                <Lock className="mr-1 w-3 h-3" />
-                Bloqueado
-              </>
-            ) : isControlPoint ? (
-              <>
-                <CheckCircle className="mr-1 w-3 h-3" />
-                Tomar Evaluación
-              </>
-            ) : isCompleted ? (
-              <>
-                <CheckCircle className="mr-1 w-3 h-3" />
-                Completado
-              </>
-            ) : (
-              <>
-                <Play className="mr-1 w-3 h-3" />
-                Acceder al Módulo
-              </>
-            )}
-            <ArrowRight className="ml-1 w-3 h-3" />
-          </Link>
-        </div>
+        {/* Botón de acceso - solo para módulos no bloqueados */}
+        {!isLocked && (
+          <div className="mt-auto pt-2">
+            <Link
+              href={module.path}
+              className={`inline-flex items-center justify-center px-4 py-2 rounded-lg transition-all duration-300 font-medium text-sm whitespace-nowrap w-full ${
+                isControlPoint ? 'bg-[#FFD447] hover:bg-[#e6c040] text-black shadow-lg hover:shadow-xl' :
+                isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl' : 
+                'bg-[#ec4d58] hover:bg-[#d63d47] text-white shadow-lg hover:shadow-xl'
+              }`}
+            >
+              {isControlPoint ? (
+                <>
+                  <CheckCircle className="mr-1 w-3 h-3" />
+                  Tomar Evaluación
+                </>
+              ) : isCompleted ? (
+                <>
+                  <CheckCircle className="mr-1 w-3 h-3" />
+                  Completado
+                </>
+              ) : (
+                <>
+                  <Play className="mr-1 w-3 h-3" />
+                  Acceder al Módulo
+                </>
+              )}
+              <ArrowRight className="ml-1 w-3 h-3" />
+            </Link>
+          </div>
+        )}
       </div>
     );
   };
