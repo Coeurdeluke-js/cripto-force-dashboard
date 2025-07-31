@@ -2,10 +2,50 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { BookOpen, TrendingUp, ArrowLeft, Play, CheckCircle, Lock, ExternalLink, BarChart3, DollarSign, Target, Users, Shield, ArrowRight, Cog, Wrench, Brain, Network } from 'lucide-react';
+import { 
+  BookOpen, 
+  Target, 
+  Users, 
+  Building2, 
+  TrendingUp, 
+  CheckCircle, 
+  Play, 
+  ArrowRight, 
+  ArrowLeft,
+  Lock,
+  Brain,
+  Network,
+  Shield,
+  BarChart3
+} from 'lucide-react';
 import Sidebar from '@/components/sidebar/Sidebar';
 import { useSidebar } from '@/components/sidebar/SidebarContext';
 import { useProgress } from '@/context/ProgressContext';
+import ModuleCard from '../components/ModuleCard';
+
+// Estilos CSS personalizados para line-clamp
+const lineClampStyles = `
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+`;
 
 interface Module {
   id: string;
@@ -82,7 +122,7 @@ const theoreticalModules: Module[] = [
     id: 'T6',
     title: 'Tecnología Blockchain',
     path: '/dashboard/iniciado/Teorico/6-tecnologia-blockchain',
-    icon: <BarChart3 />,
+    icon: <Building2 />,
     description: 'Entiende qué es la blockchain, cómo funciona y por qué es una tecnología revolucionaria.',
     level: 'nivel2',
     requiredCheckpoint: 'PC2'
@@ -100,7 +140,7 @@ const theoreticalModules: Module[] = [
     id: 'T7',
     title: 'Criptomonedas',
     path: '/dashboard/iniciado/Teorico/7-criptomonedas',
-    icon: <DollarSign />,
+    icon: <BarChart3 />,
     description: 'Explora el mundo de las criptomonedas, su funcionamiento y su impacto en la economía moderna.',
     level: 'nivel2',
     requiredCheckpoint: 'PC2'
@@ -179,7 +219,7 @@ const practicalModules: Module[] = [
     id: 'P5',
     title: 'Estocástico y Bandas de Bollinger',
     path: '/dashboard/iniciado/Practico/5-estocastico-bollinger',
-    icon: <Cog />,
+    icon: <BarChart3 />,
     description: 'Indicadores de sobrecompra y sobreventa para identificar puntos de entrada y salida.',
     level: 'nivel1'
   },
@@ -187,7 +227,7 @@ const practicalModules: Module[] = [
     id: 'P6',
     title: 'Indicadores RSI y MACD',
     path: '/dashboard/iniciado/Practico/6-indicadores-rsi-macd',
-    icon: <Wrench />,
+    icon: <Brain />,
     description: 'Osciladores y confirmación de señales para mejorar la precisión del trading.',
     level: 'nivel2',
     requiredCheckpoint: 'PC2'
@@ -295,71 +335,14 @@ export default function CursosPage() {
     const lockMessage = getLockMessage(module);
 
     return (
-      <div key={module.id} className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-4 hover:bg-[#2a2a2a] hover:border-[#ec4d58]/30 transition-all duration-300 group mb-4 flex flex-col h-[220px]">
-        {/* Header con ícono */}
-        <div className="flex items-start justify-between mb-3">
-          <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-            isCompleted ? 'bg-green-500 text-white' : 
-            isLocked ? 'bg-[#2a2a2a] text-gray-400' : 
-            'bg-[#ec4d58] text-white group-hover:bg-[#d63d47]'
-          }`}>
-            {isLocked ? <Lock className="w-4 h-4" /> : isCompleted ? <CheckCircle className="w-4 h-4" /> : module.icon}
-          </div>
-        </div>
-        
-        {/* Título */}
-        <h3 className="text-lg font-bold mb-2 text-white group-hover:text-[#ec4d58] transition-colors">
-          {module.title}
-        </h3>
-        
-        {/* Descripción */}
-        <p className="text-gray-400 mb-3 leading-relaxed flex-grow text-sm">
-          {module.description}
-        </p>
-
-        {/* Mensaje de bloqueo centrado */}
-        {isLocked && lockMessage && (
-          <div className="mt-auto pt-2">
-            <div className="p-3 bg-[#2a2a2a] border border-gray-600 rounded-lg">
-              <p className="text-xs text-gray-400 text-center">
-                🔒 {lockMessage}
-              </p>
-            </div>
-          </div>
-        )}
-        
-        {/* Botón de acceso - solo para módulos no bloqueados */}
-        {!isLocked && (
-          <div className="mt-auto pt-2">
-            <Link
-              href={module.path}
-              className={`inline-flex items-center justify-center px-4 py-2 rounded-lg transition-all duration-300 font-medium text-sm whitespace-nowrap w-full ${
-                isControlPoint ? 'bg-[#FFD447] hover:bg-[#e6c040] text-black shadow-lg hover:shadow-xl' :
-                isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl' : 
-                'bg-[#ec4d58] hover:bg-[#d63d47] text-white shadow-lg hover:shadow-xl'
-              }`}
-            >
-              {isControlPoint ? (
-                <>
-                  <CheckCircle className="mr-1 w-3 h-3" />
-                  Tomar Evaluación
-                </>
-              ) : isCompleted ? (
-                <>
-                  <CheckCircle className="mr-1 w-3 h-3" />
-                  Completado
-                </>
-              ) : (
-                <>
-                  <Play className="mr-1 w-3 h-3" />
-                  Acceder al Módulo
-                </>
-              )}
-              <ArrowRight className="ml-1 w-3 h-3" />
-            </Link>
-          </div>
-        )}
-      </div>
+      <ModuleCard
+        key={module.id}
+        module={module}
+        isControlPoint={isControlPoint}
+        isLocked={isLocked}
+        isCompleted={isCompleted}
+        lockMessage={lockMessage}
+      />
     );
   };
 
@@ -369,6 +352,9 @@ export default function CursosPage() {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0f0f0f]">
+      {/* Estilos CSS personalizados */}
+      <style jsx>{lineClampStyles}</style>
+      
       {/* Sidebar - SOLO en desktop */}
       <div className="hidden md:block">
         <Sidebar />
