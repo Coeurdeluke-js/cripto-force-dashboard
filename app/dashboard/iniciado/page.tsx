@@ -661,9 +661,9 @@ export default function IniciadoDashboard() {
         .carousel-card:nth-child(7) { animation-delay: 0.7s; }
         .carousel-card:nth-child(8) { animation-delay: 0.8s; }
       `}</style>
-      <div className="container mx-auto px-2 sm:px-4 py-4 md:py-8 pb-24 md:pb-8">
+      <div className="container mx-auto px-2 sm:px-4 py-4 md:py-8 pb-24 md:pb-8 transition-all duration-300">
         {/* Welcome Message */}
-        <div className="w-full max-w-4xl mx-auto mb-6 md:mb-8 text-center px-4">
+        <div className="w-full max-w-4xl mx-auto mb-6 md:mb-8 text-center px-4 md:px-0">
           <h2 className="text-xl md:text-2xl font-light text-gray-300 tracking-wide">
             Te damos la bienvenida
           </h2>
@@ -673,7 +673,7 @@ export default function IniciadoDashboard() {
         <Carousel content={carouselContent} />
 
         {/* Video introductorio */}
-        <div className="w-full flex justify-center mb-8">
+        <div className="w-full flex justify-center mb-8 px-2 md:px-0">
           <div className="w-full max-w-4xl">
             <video className="rounded-xl shadow-lg w-full h-64 md:h-80 object-cover" controls>
                               <source src="/videos/intro.mp4" type="video/mp4" />
@@ -683,7 +683,7 @@ export default function IniciadoDashboard() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-8 px-2 md:px-0">
           <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-1 md:p-2 w-full max-w-md">
             <button
               onClick={() => setActiveTab('theoretical')}
@@ -713,7 +713,7 @@ export default function IniciadoDashboard() {
         </div>
 
         {/* Barra de Progreso Componentizada */}
-        <div className="w-full flex justify-center mb-8">
+        <div className="w-full flex justify-center mb-8 px-2 md:px-0">
           <div className="w-full max-w-4xl">
             <ProgressRuler
               courseType={activeTab as 'theoretical' | 'practical'}
@@ -735,7 +735,7 @@ export default function IniciadoDashboard() {
         </div>
 
         {/* Mini-lista de objetivos */}
-        <div className="w-full flex justify-center mb-8">
+        <div className="w-full flex justify-center mb-8 px-2 md:px-0">
           <div className="w-full max-w-4xl">
             <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-6">
               <h3 className="text-lg font-bold text-[#ec4d58] mb-4 flex items-center">
@@ -769,7 +769,7 @@ export default function IniciadoDashboard() {
         </div>
 
         {/* Course Carousel */}
-        <div className="mb-8 md:mb-12">
+        <div className="mb-8 md:mb-12 px-2 md:px-0">
           <div className="flex items-center justify-between mb-4 md:mb-6 px-4 md:px-0">
             <h2 className="text-xl md:text-2xl font-bold">
               {activeTab === 'theoretical' ? 'Módulos Teóricos' : 'Módulos Prácticos'}
@@ -777,7 +777,7 @@ export default function IniciadoDashboard() {
           </div>
 
           {/* Carrusel mejorado con transiciones suaves */}
-          <div className="relative carousel-container">
+          <div className="relative carousel-container px-2 md:px-0">
             <div
               ref={carouselRef}
               className="w-full overflow-x-auto cursor-grab active:cursor-grabbing scroll-smooth custom-scrollbar"
@@ -817,11 +817,25 @@ export default function IniciadoDashboard() {
                   return (
                     <div 
                       key={`${activeTab}-${module.id}-${index}`} 
-                      className="carousel-card flex-shrink-0 w-[calc(85vw-24px)] sm:w-[calc(50vw-24px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-16px)] xl:w-[280px]"
+                      className="carousel-card flex-shrink-0 w-[calc(85vw-32px)] sm:w-[calc(50vw-32px)] md:w-[calc(33.333%-24px)] lg:w-[calc(25%-24px)] xl:w-[280px]"
                       style={{ scrollSnapAlign: 'start' }}
                     >
                       {/* Card */}
                       <div className="relative p-4 md:p-6 rounded-xl border transition-all duration-300 group flex flex-col h-[280px] md:h-[320px] module-card bg-[#1a1a1a] border-[#232323] hover:bg-[#2a2a2a] hover:border-[#ec4d58]/30 select-none">
+                        {/* Tooltip para módulos bloqueados */}
+                        {isLocked && (
+                          <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                            <div className="bg-[#1a1a1a] border border-[#ec4d58] rounded-lg p-4 max-w-[200px] text-center">
+                              <div className="text-[#ec4d58] mb-2">
+                                <Lock className="w-6 h-6 mx-auto" />
+                              </div>
+                              <p className="text-sm text-gray-300">
+                                Completa el módulo anterior para desbloquear este contenido
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        
                         <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-all duration-300 ease-out transform hover:scale-110 ${
                           isCompleted ? 'bg-green-500 text-white shadow-lg' : 
                           isLocked ? 'bg-[#2a2a2a] text-gray-400' : 
@@ -849,35 +863,36 @@ export default function IniciadoDashboard() {
                         <div className="mt-auto">
                           <Link
                             href={isLocked ? '#' : module.path}
-                            className={`inline-flex items-center px-4 py-2 rounded-lg transition-all duration-300 ease-out transform hover:scale-[1.02] active:scale-[0.98] w-full justify-center ${
-                              isLocked ? 'bg-[#2a2a2a] text-gray-400 cursor-not-allowed' : 
+                            className={`inline-flex items-center px-3 py-2 rounded-lg transition-all duration-300 font-medium w-full justify-center text-xs whitespace-nowrap ${
+                              isLocked ? 'bg-[#2a2a2a] text-gray-400 cursor-not-allowed' :
                               isControlPoint ? 'bg-[#FFD447] hover:bg-[#e6c040] text-black shadow-lg hover:shadow-xl' :
-                              isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl' : 
+                              isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl' :
                               'bg-[#ec4d58] hover:bg-[#d63d47] text-white shadow-lg hover:shadow-xl'
                             }`}
                             onClick={e => isLocked && e.preventDefault()}
                           >
                             {isLocked ? (
                               <>
-                                <Lock className="mr-2" />
+                                <Lock className="mr-1 w-3 h-3" />
                                 Bloqueado
                               </>
                             ) : isControlPoint ? (
                               <>
-                                <CheckCircle className="mr-2" />
-                                Tomar autoevaluación
+                                <CheckCircle className="mr-1 w-3 h-3" />
+                                Tomar Evaluación
                               </>
                             ) : isCompleted ? (
                               <>
-                                <CheckCircle className="mr-2" />
+                                <CheckCircle className="mr-1 w-3 h-3" />
                                 Completado
                               </>
                             ) : (
                               <>
-                                <Play className="mr-2" />
-                                Comenzar
+                                <Play className="mr-1 w-3 h-3" />
+                                Acceder al Módulo
                               </>
                             )}
+                            <ArrowRight className="ml-1 w-3 h-3" />
                           </Link>
                         </div>
                       </div>

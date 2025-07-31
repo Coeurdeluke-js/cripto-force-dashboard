@@ -1,16 +1,32 @@
 'use client';
+
+import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-export default function BackButton() {
+interface BackButtonProps {
+  href?: string;
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export default function BackButton({ href = '/dashboard/iniciado', className = '', children }: BackButtonProps) {
   const router = useRouter();
+
+  const handleClick = () => {
+    if (href) {
+      router.push(href);
+    } else {
+      router.back();
+    }
+  };
 
   return (
     <button
-      onClick={() => router.back()}
-      className="text-gray-400 hover:text-[#ec4d58] flex items-center gap-1 text-sm transition-colors"
+      onClick={handleClick}
+      className={`flex items-center text-gray-400 hover:text-white transition-colors ${className}`}
     >
-      <i className="fas fa-arrow-left text-xs"></i>
-      Volver
+      <ArrowLeft className="mr-2" />
+      {children || 'Volver'}
     </button>
   );
 }

@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle, XCircle, ArrowLeft, Clock } from 'lucide-react';
+import { ArrowLeft, Clock } from 'lucide-react';
 import Link from 'next/link';
+import CheckpointResultMessage from '@/components/ui/CheckpointResultMessage';
 import CheckpointResultModal from '@/components/ui/CheckpointResultModal';
 import SingleQuestionView from '@/components/ui/SingleQuestionView';
+import BackButton from '@/components/ui/BackButton';
 import { shuffleQuestions } from '@/utils/questionShuffler';
 
 const questions = [
@@ -229,13 +231,7 @@ export default function PuntoControl1() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <Link 
-            href="/dashboard/iniciado"
-            className="flex items-center text-[#ec4d58] hover:text-[#d43d47] transition-colors"
-          >
-            <ArrowLeft className="mr-2" />
-            Volver al Dashboard
-          </Link>
+          <BackButton />
           
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-yellow-400">

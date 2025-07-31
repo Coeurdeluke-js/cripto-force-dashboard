@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Clock } from 'lucide-react';
 import Link from 'next/link';
 import CheckpointResultMessage from '@/components/ui/CheckpointResultMessage';
+import BackButton from '@/components/ui/BackButton';
 
 const preguntas = [
   {
@@ -283,13 +284,7 @@ export default function PuntoDeControl4() {
           </div>
 
           <div className="flex justify-between items-center">
-            <button
-              onClick={() => router.push('/dashboard/iniciado')}
-              className="flex items-center text-gray-400 hover:text-white transition-colors"
-            >
-              <ArrowLeft className="mr-2" />
-              Volver al Dashboard
-            </button>
+            <BackButton />
 
             <div className="flex gap-4">
               {preguntaActual > 0 && (

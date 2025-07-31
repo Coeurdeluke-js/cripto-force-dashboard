@@ -35,20 +35,65 @@ export default function Sidebar() {
         isExpanded ? "w-72" : "w-20"
       }`}
     >
-              {/* Header con imagen circular */}
-        <div className="flex-shrink-0 h-16 flex items-center justify-center border-b border-gray-800/30 bg-transparent px-4 rounded-t-xl">
-          <div className="w-12 h-12 rounded-full overflow-hidden">
-            <Image
-              src="/images/insignias/1-iniciados.png"
-              alt="Iniciado"
-              width={48}
-              height={48}
-              className="w-full h-full object-cover"
-              style={{ width: 'auto', height: 'auto' }}
-              priority
-            />
-          </div>
+      <style jsx>{`
+        .sidebar-text {
+          transition: all 0.3s ease-in-out;
+          opacity: 0;
+          transform: translateX(-10px);
+        }
+        
+        .sidebar-text.visible {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        
+        .sidebar-text.delayed-1 {
+          transition-delay: 0.05s;
+        }
+        
+        .sidebar-text.delayed-2 {
+          transition-delay: 0.1s;
+        }
+        
+        .sidebar-text.delayed-3 {
+          transition-delay: 0.15s;
+        }
+        
+        .sidebar-text.delayed-4 {
+          transition-delay: 0.2s;
+        }
+        
+        .sidebar-text.delayed-5 {
+          transition-delay: 0.25s;
+        }
+        
+        .sidebar-text.delayed-6 {
+          transition-delay: 0.3s;
+        }
+        
+        .sidebar-text.delayed-footer-1 {
+          transition-delay: 0.35s;
+        }
+        
+        .sidebar-text.delayed-footer-2 {
+          transition-delay: 0.4s;
+        }
+      `}</style>
+      
+      {/* Header con imagen circular */}
+      <div className="flex-shrink-0 h-16 flex items-center justify-center border-b border-gray-800/30 bg-transparent px-4 rounded-t-xl">
+        <div className="w-12 h-12 rounded-full overflow-hidden">
+          <Image
+            src="/images/insignias/1-iniciados.png"
+            alt="Iniciado"
+            width={48}
+            height={48}
+            className="w-full h-full object-cover"
+            style={{ width: 'auto', height: 'auto' }}
+            priority
+          />
         </div>
+      </div>
 
       {/* Toggle button separado arriba */}
       <div className="flex-shrink-0 p-3 border-b border-gray-800/30">
@@ -95,11 +140,11 @@ export default function Sidebar() {
                   
                   {isExpanded && (
                     <span 
-                      className={`font-medium transition-all duration-200 whitespace-nowrap ${
+                      className={`font-medium whitespace-nowrap sidebar-text ${
                         isActive 
                           ? 'text-white' 
                           : 'text-gray-300 group-hover:text-[#ec4d58]'
-                      }`}
+                      } ${isExpanded ? 'visible' : ''} delayed-${Math.min(index + 1, 6)}`}
                     >
                       {item.label}
                     </span>
@@ -130,7 +175,9 @@ export default function Sidebar() {
                 />
               </span>
               {isExpanded && (
-                <span className="font-medium text-gray-300 group-hover:text-[#ec4d58] transition-all duration-200">
+                <span 
+                  className={`font-medium text-gray-300 group-hover:text-[#ec4d58] sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-1`}
+                >
                   Perfil
                 </span>
               )}
@@ -145,7 +192,9 @@ export default function Sidebar() {
                 <LogOut size={20} />
               </span>
               {isExpanded && (
-                <span className="font-medium text-gray-300 group-hover:text-[#ec4d58] transition-all duration-200">
+                <span 
+                  className={`font-medium text-gray-300 group-hover:text-[#ec4d58] sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-2`}
+                >
                   Salir
                 </span>
               )}
