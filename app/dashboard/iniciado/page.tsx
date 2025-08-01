@@ -45,8 +45,8 @@ interface Module {
   level: 'nivel1' | 'nivel2';
 }
 
-// Módulos Teóricos Nivel 1 (50% del contenido)
-const theoreticalModulesNivel1: Module[] = [
+// Módulos Teóricos Base
+const theoreticalModulesBase: Module[] = [
   {
     id: '1',
     title: 'Introducción a la Lógica Económica',
@@ -380,6 +380,122 @@ const objectives = [
   { id: 'obj8', title: 'Superar todos los Puntos de Control', type: 'checkpoints', category: 'all', completed: false }
 ];
 
+// Función para calcular módulos desbloqueados basado en el progreso
+function calculateUnlockedModules(modules: Module[], progress: any, courseType: 'theoretical' | 'practical') {
+  // Función auxiliar para verificar si un checkpoint está completado
+  const isCheckpointCompleted = (checkpointId: string, level: 'nivel1' | 'nivel2') => {
+    return progress[courseType][level].checkpoints[checkpointId] || false;
+  };
+
+  // Separar módulos por nivel para facilitar el cálculo
+  const nivel1Modules = modules.filter(m => m.level === 'nivel1' && !m.id.startsWith('PC'));
+  const nivel1Checkpoints = modules.filter(m => m.level === 'nivel1' && m.id.startsWith('PC'));
+  const nivel2Modules = modules.filter(m => m.level === 'nivel2' && !m.id.startsWith('PC'));
+  const nivel2Checkpoints = modules.filter(m => m.level === 'nivel2' && m.id.startsWith('PC'));
+
+  return modules.map((module) => {
+    let isLocked = false;
+    
+    // Si es un módulo del nivel 1
+    if (module.level === 'nivel1' && !module.id.startsWith('PC')) {
+      const moduleIndex = parseInt(module.id);
+      
+      if (moduleIndex <= 2) {
+        // Los primeros dos módulos siempre están desbloqueados
+        isLocked = false;
+      } else if (moduleIndex === 3) {
+        // Módulo 3 se desbloquea cuando PC1 está completado
+        isLocked = !isCheckpointCompleted('PC1', 'nivel1');
+        console.log(`Módulo 3 - PC1 completado: ${isCheckpointCompleted('PC1', 'nivel1')}, isLocked: ${isLocked}`);
+      } else if (moduleIndex === 4) {
+        // Módulo 4 se desbloquea cuando PC1 está completado
+        isLocked = !isCheckpointCompleted('PC1', 'nivel1');
+        console.log(`Módulo 4 - PC1 completado: ${isCheckpointCompleted('PC1', 'nivel1')}, isLocked: ${isLocked}`);
+      }
+    }
+    
+    // Si es un punto de control del nivel 1
+    if (module.level === 'nivel1' && module.id.startsWith('PC')) {
+      const checkpointNumber = parseInt(module.id.replace('PC', ''));
+      
+      if (checkpointNumber === 1) {
+        // PC1 siempre está desbloqueado
+        isLocked = false;
+      } else if (checkpointNumber === 2) {
+        // PC2 se desbloquea cuando PC1 está completado
+        isLocked = !isCheckpointCompleted('PC1', 'nivel1');
+        console.log(`PC2 - PC1 completado: ${isCheckpointCompleted('PC1', 'nivel1')}, isLocked: ${isLocked}`);
+      }
+    }
+    
+    // Si es un módulo del nivel 2
+    if (module.level === 'nivel2' && !module.id.startsWith('PC')) {
+      const moduleIndex = parseInt(module.id);
+      
+      // Verificar si todos los checkpoints del nivel 1 están completados
+      const allNivel1Completed = nivel1Checkpoints.every(checkpoint => 
+        isCheckpointCompleted(checkpoint.id, 'nivel1')
+      );
+      
+      if (!allNivel1Completed) {
+        // Si no están todos los checkpoints del nivel 1 completados, bloquear
+        isLocked = true;
+        console.log(`Módulo ${moduleIndex} - Nivel 1 no completado, isLocked: ${isLocked}`);
+      } else {
+        // Si están todos completados, aplicar lógica secuencial
+        if (moduleIndex === 5) {
+          // Módulo 5 se desbloquea cuando PC2 está completado
+          isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+          console.log(`Módulo 5 - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
+        } else if (moduleIndex === 6) {
+          // Módulo 6 se desbloquea cuando PC2 está completado
+          isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+          console.log(`Módulo 6 - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
+        } else if (moduleIndex === 7) {
+          // Módulo 7 se desbloquea cuando PC3 está completado
+          isLocked = !isCheckpointCompleted('PC3', 'nivel2');
+          console.log(`Módulo 7 - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel2')}, isLocked: ${isLocked}`);
+        } else if (moduleIndex === 8) {
+          // Módulo 8 se desbloquea cuando PC3 está completado
+          isLocked = !isCheckpointCompleted('PC3', 'nivel2');
+          console.log(`Módulo 8 - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel2')}, isLocked: ${isLocked}`);
+        }
+      }
+    }
+    
+    // Si es un punto de control del nivel 2
+    if (module.level === 'nivel2' && module.id.startsWith('PC')) {
+      const checkpointNumber = parseInt(module.id.replace('PC', ''));
+      
+      // Verificar si todos los checkpoints del nivel 1 están completados
+      const allNivel1Completed = nivel1Checkpoints.every(checkpoint => 
+        isCheckpointCompleted(checkpoint.id, 'nivel1')
+      );
+      
+      if (!allNivel1Completed) {
+        // Si no están todos los checkpoints del nivel 1 completados, bloquear
+        isLocked = true;
+        console.log(`PC${checkpointNumber} - Nivel 1 no completado, isLocked: ${isLocked}`);
+      } else {
+        if (checkpointNumber === 3) {
+          // PC3 se desbloquea cuando PC2 está completado
+          isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+          console.log(`PC3 - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
+        } else if (checkpointNumber === 4) {
+          // PC4 se desbloquea cuando PC3 está completado
+          isLocked = !isCheckpointCompleted('PC3', 'nivel2');
+          console.log(`PC4 - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel2')}, isLocked: ${isLocked}`);
+        }
+      }
+    }
+    
+    return {
+      ...module,
+      isLocked
+    };
+  });
+}
+
 export default function IniciadoDashboard() {
   const [activeTab, setActiveTab] = useState<'theoretical' | 'practical'>('theoretical');
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -475,6 +591,40 @@ export default function IniciadoDashboard() {
     return objectivesWithStatus;
   };
 
+  // Función para marcar un módulo como completado
+  const markModuleAsCompleted = (moduleId: string) => {
+    const moduleProgress = {
+      isCompleted: true,
+      progress: 100,
+      timestamp: Date.now()
+    };
+    localStorage.setItem(`module_${moduleId}_progress`, JSON.stringify(moduleProgress));
+  };
+
+  // Función para verificar si un módulo está completado
+  const isModuleCompleted = (moduleId: string) => {
+    const saved = localStorage.getItem(`module_${moduleId}_progress`);
+    if (saved) {
+      const moduleProgress = JSON.parse(saved);
+      return moduleProgress.isCompleted || moduleProgress.progress >= 100;
+    }
+    return false;
+  };
+
+  // Marcar automáticamente los módulos como completados cuando se visitan
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    const moduleMatch = currentPath.match(/\/(\d+)-/);
+    
+    if (moduleMatch) {
+      const moduleId = moduleMatch[1];
+      if (!isModuleCompleted(moduleId)) {
+        markModuleAsCompleted(moduleId);
+        console.log(`Módulo ${moduleId} marcado como completado`);
+      }
+    }
+  }, []);
+
   // Carousel content
   const carouselContent = [
     {
@@ -512,9 +662,10 @@ export default function IniciadoDashboard() {
   // Obtener todos los módulos según el tab activo
   const getAllModules = () => {
     if (activeTab === 'theoretical') {
-      return [...theoreticalModulesNivel1, ...theoreticalModulesNivel2];
+      const allTheoreticalModules = [...theoreticalModulesBase, ...theoreticalModulesNivel2];
+      return calculateUnlockedModules(allTheoreticalModules, progress, 'theoretical');
     } else if (activeTab === 'practical') {
-      return practicalModules;
+      return calculateUnlockedModules(practicalModules, progress, 'practical');
     }
     return [];
   };
@@ -836,7 +987,7 @@ export default function IniciadoDashboard() {
                 {allModules.map((module, index) => {
                   const isControlPoint = module.id.startsWith('PC');
                   const isLocked = module.isLocked || false;
-                  const isCompleted = false; // Simplificado
+                  const isCompleted = isModuleCompleted(module.id);
                   
                   return (
                     <div 
