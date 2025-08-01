@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Clock } from 'lucide-react';
 import Link from 'next/link';
-import CheckpointResultMessage from '@/components/ui/CheckpointResultMessage';
-import CheckpointResultModal from '@/components/ui/CheckpointResultModal';
-import SingleQuestionView from '@/components/ui/SingleQuestionView';
+import CheckpointResultMessage from '@/app/dashboard/iniciado/components/CheckpointResultMessage';
+import CheckpointResultModal from '@/app/dashboard/iniciado/components/CheckpointResultModal';
+import SingleQuestionView from '@/app/dashboard/iniciado/components/SingleQuestionView';
 import BackButton from '@/components/ui/BackButton';
 import { shuffleQuestions } from '@/utils/questionShuffler';
 

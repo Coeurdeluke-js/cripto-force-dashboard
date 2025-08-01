@@ -30,8 +30,9 @@ import {
   LogOut, 
   Star
 } from 'lucide-react';
-import Carousel from '@/components/Carousel';
-import ProgressRuler from '@/components/ProgressRuler';
+import Carousel from './components/Carousel';
+import ProgressRuler from './components/ProgressRuler';
+import { useProgress } from '@/context/ProgressContext';
 
 interface Module {
   id: string;
@@ -380,13 +381,12 @@ const objectives = [
 ];
 
 export default function IniciadoDashboard() {
-  const [activeTab, setActiveTab] = useState('theoretical');
+  const [activeTab, setActiveTab] = useState<'theoretical' | 'practical'>('theoretical');
   const carouselRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-  const [userData, setUserData] = useState({ name: 'Usuario', profileImage: null });
-  const [currentObjectives, setCurrentObjectives] = useState(objectives);
+  const { progress } = useProgress();
 
   // Carousel content
   const carouselContent = [
@@ -433,65 +433,19 @@ export default function IniciadoDashboard() {
   };
 
   const allModules = getAllModules();
-  const progress = calculateUnifiedProgress(
-    activeTab === 'theoretical' ? [...theoreticalModulesNivel1, ...theoreticalModulesNivel2] : [],
-    activeTab === 'practical' ? practicalModules : []
-  );
+
 
   // Get user data from profile
   useEffect(() => {
     const saved = localStorage.getItem('userProfile');
       if (saved) {
       const profileData = JSON.parse(saved);
-      setUserData(profileData);
+      // setUserData(profileData); // This line was removed from the new_code, so it's removed here.
     }
   }, []);
 
   // Actualizar objetivos basado en el progreso
-  useEffect(() => {
-    const updatedObjectives = objectives.map(obj => {
-      let completed = false;
-      
-      switch (obj.type) {
-        case 'nivel1':
-          if (obj.category === 'theoretical') {
-            completed = progress.nivel1Percentage >= 100 && activeTab === 'theoretical';
-          } else if (obj.category === 'practical') {
-            const practicalNivel1 = practicalModules.filter(m => m.level === 'nivel1');
-            const completedNivel1 = practicalNivel1.filter(m => m.isCompleted).length;
-            completed = completedNivel1 >= practicalNivel1.length && activeTab === 'practical';
-          }
-          break;
-        case 'nivel2':
-          if (obj.category === 'theoretical') {
-            completed = progress.nivel2Percentage >= 100 && activeTab === 'theoretical';
-          } else if (obj.category === 'practical') {
-            const practicalNivel2 = practicalModules.filter(m => m.level === 'nivel2');
-            const completedNivel2 = practicalNivel2.filter(m => m.isCompleted).length;
-            completed = completedNivel2 >= practicalNivel2.length && activeTab === 'practical';
-          }
-          break;
-        case 'checkpoints':
-          if (obj.category === 'theoretical') {
-            completed = progress.completedCheckpoints >= 2 && activeTab === 'theoretical';
-          } else if (obj.category === 'practical') {
-            const practicalCheckpoints = practicalModules.filter(m => m.id.startsWith('PC'));
-            const completedPracticalCheckpoints = practicalCheckpoints.filter(m => m.isCompleted).length;
-            completed = completedPracticalCheckpoints >= 2 && activeTab === 'practical';
-          } else if (obj.category === 'all') {
-            completed = progress.completedCheckpoints >= progress.totalCheckpoints;
-          }
-          break;
-        case 'progress':
-          completed = progress.percentage >= 50;
-          break;
-      }
-      
-      return { ...obj, completed };
-    });
-    
-    setCurrentObjectives(updatedObjectives);
-  }, [progress.percentage, progress.nivel1Percentage, progress.nivel2Percentage, progress.completedCheckpoints, progress.totalCheckpoints, activeTab]);
+
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -513,7 +467,7 @@ export default function IniciadoDashboard() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0f0f0f] text-white pt-20">
+    <div className="min-h-screen bg-[#0f0f0f] text-white">
       <style jsx>{`
         @keyframes fadeIn {
           from { opacity: 0; }
@@ -712,26 +666,9 @@ export default function IniciadoDashboard() {
           </div>
         </div>
 
-        {/* Barra de Progreso Componentizada */}
-        <div className="w-full flex justify-center mb-8 px-2 md:px-0">
-          <div className="w-full max-w-4xl">
-            <ProgressRuler
-              courseType={activeTab as 'theoretical' | 'practical'}
-              progressData={{
-                completedModules: progress.completedModules,
-                totalModules: activeTab === 'theoretical' ? 8 : 10,
-                completedCheckpoints: progress.completedCheckpoints,
-                totalCheckpoints: activeTab === 'theoretical' ? 4 : 5,
-                percentage: progress.percentage,
-                level1Progress: progress.nivel1Percentage,
-                level2Progress: progress.nivel2Percentage
-              }}
-              onProgressUpdate={(newProgress) => {
-                // Aquí puedes manejar actualizaciones de progreso
-                console.log('Progreso actualizado:', newProgress);
-              }}
-            />
-          </div>
+        {/* Progress Ruler - Barra de Progreso General */}
+        <div className="w-full max-w-4xl mx-auto mb-8 px-2 md:px-0">
+          <ProgressRuler courseType={activeTab as 'theoretical' | 'practical'} />
         </div>
 
         {/* Mini-lista de objetivos */}
@@ -743,7 +680,7 @@ export default function IniciadoDashboard() {
                 Objetivos a Lograr
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 objectives-grid">
-                {currentObjectives.slice(0, 6).map((objective, index) => (
+                {objectives.slice(0, 6).map((objective, index) => (
                   <div 
                     key={objective.id} 
                     className="flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg bg-[#232323] transition-all duration-300 ease-out transform hover:scale-[1.02] hover:bg-[#2a2a2a]"

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import ControlPointBadge from '@/components/ui/ControlPointBadge';
+import ControlPointBadge from '@/app/dashboard/iniciado/components/ControlPointBadge';
 
 interface Module {
   title: string;

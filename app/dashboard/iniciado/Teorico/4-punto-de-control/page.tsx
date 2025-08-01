@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Clock } from 'lucide-react';
 import Link from 'next/link';
-import CheckpointResultMessage from '@/components/ui/CheckpointResultMessage';
+import CheckpointResultMessage from '@/app/dashboard/iniciado/components/CheckpointResultMessage';
 import BackButton from '@/components/ui/BackButton';
 
 const preguntas = [

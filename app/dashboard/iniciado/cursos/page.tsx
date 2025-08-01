@@ -2,21 +2,24 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { 
-  BookOpen, 
-  Target, 
-  Users, 
-  Building2, 
-  TrendingUp, 
-  CheckCircle, 
-  Play, 
-  ArrowRight, 
+import {
+  BookOpen,
+  TrendingUp,
+  CheckCircle,
+  Users,
+  Target,
+  Shield,
+  Building2,
+  Network,
+  BarChart3,
+  Crown,
+  Zap,
+  Link as LinkIcon,
+  Play,
+  ArrowRight,
   ArrowLeft,
   Lock,
-  Brain,
-  Network,
-  Shield,
-  BarChart3
+  Brain
 } from 'lucide-react';
 import Sidebar from '@/components/sidebar/Sidebar';
 import { useSidebar } from '@/components/sidebar/SidebarContext';
@@ -59,98 +62,99 @@ interface Module {
   requiredCheckpoint?: string; // ID del punto de control requerido
 }
 
-// Módulos teóricos de trading (basados en ModuloCarrousel.tsx)
+// Módulos teóricos
 const theoreticalModules: Module[] = [
   {
-    id: 'T1',
+    id: '1',
     title: 'Introducción a la Lógica Económica',
-    path: '/dashboard/iniciado/Teorico/1-introduccion-logica-economica',
-    icon: <BookOpen />,
-    description: 'Comprende los principios básicos de la economía y cómo pensamos los humanos en términos de recursos escasos.',
+    path: '/dashboard/iniciado/Teorico/1-introduccion-a-la-logica-economica',
+    icon: <BookOpen className="w-6 h-6" />,
+    description: 'Fundamentos de la economía y conceptos básicos de la lógica económica.',
     level: 'nivel1'
   },
   {
-    id: 'T2',
+    id: '2',
     title: 'Fuerzas del Mercado',
     path: '/dashboard/iniciado/Teorico/2-fuerzas-del-mercado',
-    icon: <TrendingUp />,
-    description: 'Explora la oferta, la demanda y cómo se forman los precios en los mercados libres.',
+    icon: <TrendingUp className="w-6 h-6" />,
+    description: 'Análisis de la oferta, demanda y equilibrio de mercado.',
     level: 'nivel1'
   },
   {
     id: 'PC1',
     title: 'Punto de Control 1',
-    path: '/dashboard/iniciado/Teorico/2-punto-de-control',
-    icon: <CheckCircle />,
-    description: 'Evaluación: Módulos 1 y 2 - Fundamentos Económicos',
+    path: '/dashboard/iniciado/puntos-de-control/teorico/pc1',
+    icon: <CheckCircle className="w-6 h-6" />,
+    description: 'Evaluación: Introducción a la Lógica Económica y Fuerzas del Mercado.',
     level: 'nivel1'
   },
   {
-    id: 'T3',
+    id: '3',
     title: 'Acción del Gobierno en los Mercados',
-    path: '/dashboard/iniciado/Teorico/3-accion-gobierno-mercados',
-    icon: <Users />,
-    description: 'Descubre cómo los gobiernos intervienen en los mercados y qué consecuencias generan estas acciones.',
+    path: '/dashboard/iniciado/Teorico/3-accion-del-gobierno-en-los-mercados',
+    icon: <Shield className="w-6 h-6" />,
+    description: 'Intervención estatal, políticas públicas y regulación económica.',
     level: 'nivel1'
   },
   {
-    id: 'T4',
+    id: '4',
     title: 'Competencia Perfecta',
     path: '/dashboard/iniciado/Teorico/4-competencia-perfecta',
-    icon: <Target />,
-    description: 'Estudia el modelo ideal de competencia perfecta y sus implicancias en la eficiencia económica.',
+    icon: <Target className="w-6 h-6" />,
+    description: 'Modelo de competencia perfecta y eficiencia de mercado.',
     level: 'nivel1'
   },
   {
     id: 'PC2',
     title: 'Punto de Control 2',
-    path: '/dashboard/iniciado/Teorico/4-punto-de-control',
-    icon: <CheckCircle />,
-    description: 'Evaluación: Módulos 3 y 4 - Intervención y Competencia',
+    path: '/dashboard/iniciado/puntos-de-control/teorico/pc2',
+    icon: <CheckCircle className="w-6 h-6" />,
+    description: 'Evaluación: Acción del Gobierno y Competencia Perfecta.',
     level: 'nivel1'
   },
+  // Nivel 2 - Requieren PC1 completado
   {
-    id: 'T5',
+    id: '5',
     title: 'Monopolio y Oligopolio',
-    path: '/dashboard/iniciado/Teorico/5-monopolio-oligopolio',
-    icon: <Shield />,
-    description: 'Conoce los mercados dominados por pocos actores y cómo impactan en la economía global.',
+    path: '/dashboard/iniciado/Teorico/5-monopolio-y-oligopolio',
+    icon: <Crown className="w-6 h-6" />,
+    description: 'Estructuras de mercado imperfectas y poder de mercado.',
     level: 'nivel2',
-    requiredCheckpoint: 'PC2'
+    requiredCheckpoint: 'PC1'
   },
   {
-    id: 'T6',
+    id: '6',
     title: 'Tecnología Blockchain',
     path: '/dashboard/iniciado/Teorico/6-tecnologia-blockchain',
-    icon: <Building2 />,
-    description: 'Entiende qué es la blockchain, cómo funciona y por qué es una tecnología revolucionaria.',
+    icon: <LinkIcon className="w-6 h-6" />,
+    description: 'Fundamentos de blockchain y su aplicación en economía.',
     level: 'nivel2',
-    requiredCheckpoint: 'PC2'
+    requiredCheckpoint: 'PC1'
   },
   {
     id: 'PC3',
     title: 'Punto de Control 3',
     path: '/dashboard/iniciado/puntos-de-control/teorico/pc3',
-    icon: <CheckCircle />,
-    description: 'Evaluación: Módulos 5 y 6 - Estructuras de Mercado y Blockchain',
+    icon: <CheckCircle className="w-6 h-6" />,
+    description: 'Evaluación: Monopolio, Oligopolio y Tecnología Blockchain.',
     level: 'nivel2',
     requiredCheckpoint: 'PC2'
   },
   {
-    id: 'T7',
-    title: 'Criptomonedas',
-    path: '/dashboard/iniciado/Teorico/7-criptomonedas',
-    icon: <BarChart3 />,
-    description: 'Explora el mundo de las criptomonedas, su funcionamiento y su impacto en la economía moderna.',
+    id: '7',
+    title: 'Módulo Avanzado 1',
+    path: '/dashboard/iniciado/Teorico/7-modulo-avanzado-1',
+    icon: <Zap className="w-6 h-6" />,
+    description: 'Contenido avanzado de economía y trading.',
     level: 'nivel2',
     requiredCheckpoint: 'PC2'
   },
   {
-    id: 'T8',
-    title: 'Operaciones con Criptomonedas',
-    path: '/dashboard/iniciado/Teorico/8-operaciones-criptomonedas',
-    icon: <TrendingUp />,
-    description: 'Aprende las técnicas y estrategias para operar eficazmente en el mercado de criptomonedas.',
+    id: '8',
+    title: 'Módulo Avanzado 2',
+    path: '/dashboard/iniciado/Teorico/8-modulo-avanzado-2',
+    icon: <Zap className="w-6 h-6" />,
+    description: 'Contenido avanzado de economía y trading.',
     level: 'nivel2',
     requiredCheckpoint: 'PC2'
   },
@@ -158,149 +162,149 @@ const theoreticalModules: Module[] = [
     id: 'PC4',
     title: 'Punto de Control 4',
     path: '/dashboard/iniciado/puntos-de-control/teorico/pc4',
-    icon: <CheckCircle />,
-    description: 'Evaluación: Módulos 7 y 8 - Criptomonedas y Operaciones',
+    icon: <CheckCircle className="w-6 h-6" />,
+    description: 'Evaluación final del nivel 2.',
     level: 'nivel2',
-    requiredCheckpoint: 'PC2'
+    requiredCheckpoint: 'PC3'
   }
 ];
 
-// Módulos prácticos de trading
+// Módulos prácticos
 const practicalModules: Module[] = [
   {
     id: 'P1',
-    title: 'Introducción al Trading',
-    path: '/dashboard/iniciado/Practico/1-introduccion-trading',
-    icon: <Play />,
-    description: 'Fundamentos del trading y mentalidad correcta para operar en mercados financieros.',
+    title: 'Módulo Práctico 1',
+    path: '/dashboard/iniciado/Practico/1-modulo-practico-1',
+    icon: <TrendingUp className="w-6 h-6" />,
+    description: 'Fundamentos prácticos de trading y análisis técnico.',
     level: 'nivel1'
   },
   {
     id: 'P2',
-    title: 'Introducción al Análisis Técnico',
-    path: '/dashboard/iniciado/Practico/2-introduccion-analisis-tecnico',
-    icon: <TrendingUp />,
-    description: 'Herramientas básicas del análisis técnico y su aplicación en el trading.',
+    title: 'Módulo Práctico 2',
+    path: '/dashboard/iniciado/Practico/2-modulo-practico-2',
+    icon: <Target className="w-6 h-6" />,
+    description: 'Estrategias de entrada y salida en mercados.',
     level: 'nivel1'
   },
   {
     id: 'PC1',
     title: 'Punto de Control 1',
     path: '/dashboard/iniciado/puntos-de-control/practico/pc1',
-    icon: <CheckCircle />,
-    description: 'Evaluación: Módulos 1 y 2 - Fundamentos del Trading',
+    icon: <CheckCircle className="w-6 h-6" />,
+    description: 'Evaluación: Módulos Prácticos 1 y 2.',
     level: 'nivel1'
   },
   {
     id: 'P3',
-    title: 'Patrones de Vela',
-    path: '/dashboard/iniciado/Practico/3-patrones-vela',
-    icon: <BookOpen />,
-    description: 'Patrones de velas japonesas y su interpretación para identificar oportunidades.',
+    title: 'Módulo Práctico 3',
+    path: '/dashboard/iniciado/Practico/3-modulo-practico-3',
+    icon: <Shield className="w-6 h-6" />,
+    description: 'Gestión de riesgo y psicología del trading.',
     level: 'nivel1'
   },
   {
     id: 'P4',
-    title: 'Fibonacci y Medias Móviles',
-    path: '/dashboard/iniciado/Practico/4-fibonacci-medias',
-    icon: <Target />,
-    description: 'Niveles de Fibonacci y medias móviles como herramientas de análisis técnico.',
+    title: 'Módulo Práctico 4',
+    path: '/dashboard/iniciado/Practico/4-modulo-practico-4',
+    icon: <Users className="w-6 h-6" />,
+    description: 'Análisis fundamental y noticias del mercado.',
     level: 'nivel1'
   },
   {
     id: 'PC2',
     title: 'Punto de Control 2',
     path: '/dashboard/iniciado/puntos-de-control/practico/pc2',
-    icon: <CheckCircle />,
-    description: 'Evaluación: Módulos 3 y 4 - Análisis Técnico Avanzado',
+    icon: <CheckCircle className="w-6 h-6" />,
+    description: 'Evaluación: Módulos Prácticos 3 y 4.',
     level: 'nivel1'
   },
   {
     id: 'P5',
-    title: 'Estocástico y Bandas de Bollinger',
-    path: '/dashboard/iniciado/Practico/5-estocastico-bollinger',
-    icon: <BarChart3 />,
-    description: 'Indicadores de sobrecompra y sobreventa para identificar puntos de entrada y salida.',
+    title: 'Módulo Práctico 5',
+    path: '/dashboard/iniciado/Practico/5-modulo-practico-5',
+    icon: <Building2 className="w-6 h-6" />,
+    description: 'Plataformas de trading y herramientas avanzadas.',
     level: 'nivel1'
-  },
-  {
-    id: 'P6',
-    title: 'Indicadores RSI y MACD',
-    path: '/dashboard/iniciado/Practico/6-indicadores-rsi-macd',
-    icon: <Brain />,
-    description: 'Osciladores y confirmación de señales para mejorar la precisión del trading.',
-    level: 'nivel2',
-    requiredCheckpoint: 'PC2'
   },
   {
     id: 'PC3',
     title: 'Punto de Control 3',
     path: '/dashboard/iniciado/puntos-de-control/practico/pc3',
-    icon: <CheckCircle />,
-    description: 'Evaluación: Módulos 5 y 6 - Indicadores Técnicos',
+    icon: <CheckCircle className="w-6 h-6" />,
+    description: 'Evaluación: Módulo Práctico 5.',
+    level: 'nivel1'
+  },
+  // Nivel 2 - Requieren PC1 completado
+  {
+    id: 'P6',
+    title: 'Módulo Práctico 6',
+    path: '/dashboard/iniciado/Practico/6-modulo-practico-6',
+    icon: <Network className="w-6 h-6" />,
+    description: 'Trading algorítmico y automatización.',
     level: 'nivel2',
-    requiredCheckpoint: 'PC2'
+    requiredCheckpoint: 'PC1'
   },
   {
     id: 'P7',
-    title: 'Análisis Fundamental',
-    path: '/dashboard/iniciado/Practico/7-analisis-fundamental',
-    icon: <Brain />,
-    description: 'Análisis fundamental y factores que mueven el mercado más allá de los gráficos.',
+    title: 'Módulo Práctico 7',
+    path: '/dashboard/iniciado/Practico/7-modulo-practico-7',
+    icon: <BarChart3 className="w-6 h-6" />,
+    description: 'Análisis técnico avanzado y patrones complejos.',
     level: 'nivel2',
-    requiredCheckpoint: 'PC2'
-  },
-  {
-    id: 'P8',
-    title: 'Correlaciones entre Mercados',
-    path: '/dashboard/iniciado/Practico/8-correlaciones-mercados',
-    icon: <Network />,
-    description: 'Relaciones entre diferentes mercados financieros y cómo aprovecharlas.',
-    level: 'nivel2',
-    requiredCheckpoint: 'PC2'
+    requiredCheckpoint: 'PC1'
   },
   {
     id: 'PC4',
     title: 'Punto de Control 4',
     path: '/dashboard/iniciado/puntos-de-control/practico/pc4',
-    icon: <CheckCircle />,
-    description: 'Evaluación: Módulos 7 y 8 - Análisis Fundamental y Correlaciones',
+    icon: <CheckCircle className="w-6 h-6" />,
+    description: 'Evaluación: Módulos Prácticos 6 y 7.',
     level: 'nivel2',
     requiredCheckpoint: 'PC2'
+  },
+  {
+    id: 'P8',
+    title: 'Módulo Práctico 8',
+    path: '/dashboard/iniciado/Practico/8-modulo-practico-8',
+    icon: <Crown className="w-6 h-6" />,
+    description: 'Estrategias de trading profesional.',
+    level: 'nivel2',
+    requiredCheckpoint: 'PC3'
   },
   {
     id: 'P9',
-    title: 'Gestión de Riesgo',
-    path: '/dashboard/iniciado/Practico/9-gestion-riesgo',
-    icon: <Shield />,
-    description: 'Estrategias de gestión de riesgo y protección de capital en operaciones.',
+    title: 'Módulo Práctico 9',
+    path: '/dashboard/iniciado/Practico/9-modulo-practico-9',
+    icon: <Zap className="w-6 h-6" />,
+    description: 'Técnicas avanzadas de gestión de portafolio.',
     level: 'nivel2',
-    requiredCheckpoint: 'PC2'
+    requiredCheckpoint: 'PC3'
   },
   {
     id: 'P10',
-    title: 'Plan de Trading',
-    path: '/dashboard/iniciado/Practico/10-plan-trading',
-    icon: <BarChart3 />,
-    description: 'Desarrollo de un plan de trading personalizado y sistemático.',
+    title: 'Módulo Práctico 10',
+    path: '/dashboard/iniciado/Practico/10-modulo-practico-10',
+    icon: <Zap className="w-6 h-6" />,
+    description: 'Trading institucional y mercados globales.',
     level: 'nivel2',
-    requiredCheckpoint: 'PC2'
+    requiredCheckpoint: 'PC3'
   },
   {
     id: 'PC5',
     title: 'Punto de Control 5',
     path: '/dashboard/iniciado/puntos-de-control/practico/pc5',
-    icon: <CheckCircle />,
-    description: 'Evaluación: Módulos 9 y 10 - Gestión de Riesgo y Plan de Trading',
+    icon: <CheckCircle className="w-6 h-6" />,
+    description: 'Evaluación final: Módulos Prácticos 8, 9 y 10.',
     level: 'nivel2',
-    requiredCheckpoint: 'PC2'
+    requiredCheckpoint: 'PC4'
   }
 ];
 
 export default function CursosPage() {
   const [activeTab, setActiveTab] = useState<'theoretical' | 'practical'>('theoretical');
   const { isExpanded } = useSidebar();
-  const { completedCheckpoints, isCheckpointCompleted } = useProgress();
+  const { isCheckpointCompleted } = useProgress();
 
   // Función para verificar si un módulo está bloqueado
   const isModuleLocked = (module: Module): boolean => {
@@ -311,7 +315,15 @@ export default function CursosPage() {
     if (!module.requiredCheckpoint) return false;
     
     // Verificar si el checkpoint requerido está completado
-    return !isCheckpointCompleted(module.requiredCheckpoint);
+    const isRequiredCheckpointCompleted = isCheckpointCompleted(activeTab, 'nivel1', module.requiredCheckpoint);
+    
+    // Si el módulo es un checkpoint del nivel 2, verificar el checkpoint anterior del nivel 1
+    if (module.id.startsWith('PC') && module.level === 'nivel2') {
+      const previousCheckpoint = module.id === 'PC3' ? 'PC2' : module.id === 'PC4' ? 'PC3' : 'PC2';
+      return !isCheckpointCompleted(activeTab, 'nivel1', previousCheckpoint);
+    }
+    
+    return !isRequiredCheckpointCompleted;
   };
 
   // Función para obtener el mensaje de bloqueo
@@ -331,7 +343,7 @@ export default function CursosPage() {
   const renderModuleCard = (module: Module) => {
     const isControlPoint = module.id.startsWith('PC');
     const isLocked = isModuleLocked(module);
-    const isCompleted = module.isCompleted || isCheckpointCompleted(module.id);
+    const isCompleted = module.isCompleted || (isControlPoint ? isCheckpointCompleted(activeTab, module.level, module.id) : false);
     const lockMessage = getLockMessage(module);
 
     return (

@@ -1,58 +1,274 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
+interface ProgressState {
+  theoretical: {
+    nivel1: {
+      checkpoints: {
+        [key: string]: boolean;
+      };
+      results: {
+        [key: string]: {
+          score: number;
+          completed: boolean;
+          timestamp: number;
+          timeSpent?: number;
+          correctAnswers?: number;
+          totalQuestions?: number;
+        };
+      };
+    };
+    nivel2: {
+      checkpoints: {
+        [key: string]: boolean;
+      };
+      results: {
+        [key: string]: {
+          score: number;
+          completed: boolean;
+          timestamp: number;
+          timeSpent?: number;
+          correctAnswers?: number;
+          totalQuestions?: number;
+        };
+      };
+    };
+  };
+  practical: {
+    nivel1: {
+      checkpoints: {
+        [key: string]: boolean;
+      };
+      results: {
+        [key: string]: {
+          score: number;
+          completed: boolean;
+          timestamp: number;
+          timeSpent?: number;
+          correctAnswers?: number;
+          totalQuestions?: number;
+        };
+      };
+    };
+    nivel2: {
+      checkpoints: {
+        [key: string]: boolean;
+      };
+      results: {
+        [key: string]: {
+          score: number;
+          completed: boolean;
+          timestamp: number;
+          timeSpent?: number;
+          correctAnswers?: number;
+          totalQuestions?: number;
+        };
+      };
+    };
+  };
+}
 
 interface ProgressContextType {
-  completedCheckpoints: Set<string>;
-  markCheckpointCompleted: (checkpointId: string) => void;
-  isCheckpointCompleted: (checkpointId: string) => boolean;
+  progress: ProgressState;
+  completeCheckpoint: (courseType: 'theoretical' | 'practical', level: 'nivel1' | 'nivel2', checkpointId: string, result?: any) => void;
+  isCheckpointCompleted: (courseType: 'theoretical' | 'practical', level: 'nivel1' | 'nivel2', checkpointId: string) => boolean;
+  getCheckpointResult: (courseType: 'theoretical' | 'practical', level: 'nivel1' | 'nivel2', checkpointId: string) => any;
   resetProgress: () => void;
 }
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
 
-export function ProgressProvider({ children }: { children: ReactNode }) {
-  const [completedCheckpoints, setCompletedCheckpoints] = useState<Set<string>>(new Set());
+const initialProgress: ProgressState = {
+  theoretical: {
+    nivel1: {
+      checkpoints: {
+        'PC1': false, // Evaluación: Introducción + Fuerzas del Mercado
+        'PC2': false, // Evaluación: Gobierno + Competencia Perfecta
+      },
+      results: {},
+    },
+    nivel2: {
+      checkpoints: {
+        'PC3': false, // Evaluación: Monopolio + Blockchain
+        'PC4': false, // Evaluación final nivel 2
+      },
+      results: {},
+    },
+  },
+  practical: {
+    nivel1: {
+      checkpoints: {
+        'PC1': false, // Checkpoint práctico 1 (módulos 1-2)
+        'PC2': false, // Checkpoint práctico 2 (módulos 3-4)
+        'PC3': false, // Checkpoint práctico 3 (módulo 5)
+      },
+      results: {},
+    },
+    nivel2: {
+      checkpoints: {
+        'PC4': false, // Checkpoint práctico 4 (módulos 6-7)
+        'PC5': false, // Checkpoint práctico 5 (módulos 8-10)
+      },
+      results: {},
+    },
+  },
+};
 
-  // Cargar progreso desde localStorage al inicializar
-  useEffect(() => {
+export function ProgressProvider({ children }: { children: React.ReactNode }) {
+  const [progress, setProgress] = useState<ProgressState>(() => {
+    // Cargar progreso desde localStorage si existe
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('completed_checkpoints');
+      const saved = localStorage.getItem('userProgress');
       if (saved) {
-        setCompletedCheckpoints(new Set(JSON.parse(saved)));
+        try {
+          const parsedProgress = JSON.parse(saved);
+          
+          // Sincronizar con resultados de localStorage
+          const syncWithLocalStorage = (courseType: 'theoretical' | 'practical', level: 'nivel1' | 'nivel2') => {
+            const checkpoints = parsedProgress[courseType]?.[level]?.checkpoints || {};
+            const results = parsedProgress[courseType]?.[level]?.results || {};
+            
+            // Verificar resultados en localStorage
+            Object.keys(checkpoints).forEach(checkpointId => {
+              // Para diferenciar entre teórico y práctico, usar prefijos
+              const prefix = courseType === 'theoretical' ? 'teorico_' : 'practico_';
+              const localStorageKey = prefix + checkpointId.toLowerCase() + '_result';
+              const localStorageResult = localStorage.getItem(localStorageKey);
+              
+              if (localStorageResult) {
+                try {
+                  const result = JSON.parse(localStorageResult);
+                  if (result.completed) {
+                    checkpoints[checkpointId] = true;
+                    results[checkpointId] = result;
+                  }
+                } catch (e) {
+                  console.error('Error parsing localStorage result:', e);
+                }
+              }
+            });
+            
+            return { checkpoints, results };
+          };
+          
+          // Sincronizar teórico
+          const theoreticalNivel1 = syncWithLocalStorage('theoretical', 'nivel1');
+          const theoreticalNivel2 = syncWithLocalStorage('theoretical', 'nivel2');
+          
+          // Sincronizar práctico
+          const practicalNivel1 = syncWithLocalStorage('practical', 'nivel1');
+          const practicalNivel2 = syncWithLocalStorage('practical', 'nivel2');
+          
+          return {
+            theoretical: {
+              nivel1: {
+                checkpoints: theoreticalNivel1.checkpoints,
+                results: theoreticalNivel1.results,
+              },
+              nivel2: {
+                checkpoints: theoreticalNivel2.checkpoints,
+                results: theoreticalNivel2.results,
+              },
+            },
+            practical: {
+              nivel1: {
+                checkpoints: practicalNivel1.checkpoints,
+                results: practicalNivel1.results,
+              },
+              nivel2: {
+                checkpoints: practicalNivel2.checkpoints,
+                results: practicalNivel2.results,
+              },
+            },
+          };
+        } catch {
+          return initialProgress;
+        }
       }
     }
-  }, []);
+    return initialProgress;
+  });
 
   // Guardar progreso en localStorage cuando cambie
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('completed_checkpoints', JSON.stringify([...completedCheckpoints]));
+      localStorage.setItem('userProgress', JSON.stringify(progress));
     }
-  }, [completedCheckpoints]);
+  }, [progress]);
 
-  const markCheckpointCompleted = (checkpointId: string) => {
-    setCompletedCheckpoints(prev => new Set([...prev, checkpointId]));
+  const completeCheckpoint = (courseType: 'theoretical' | 'practical', level: 'nivel1' | 'nivel2', checkpointId: string, result?: any) => {
+    setProgress(prev => {
+      const newProgress = { ...prev };
+      newProgress[courseType][level].checkpoints[checkpointId] = true;
+      if (result) {
+        newProgress[courseType][level].results[checkpointId] = result;
+      }
+      return newProgress;
+    });
   };
 
-  const isCheckpointCompleted = (checkpointId: string): boolean => {
-    return completedCheckpoints.has(checkpointId);
+  const isCheckpointCompleted = (courseType: 'theoretical' | 'practical', level: 'nivel1' | 'nivel2', checkpointId: string) => {
+    if (!progress[courseType] || !progress[courseType][level] || !progress[courseType][level].checkpoints) {
+      return false;
+    }
+    return progress[courseType][level].checkpoints[checkpointId] || false;
+  };
+
+  const getCheckpointResult = (courseType: 'theoretical' | 'practical', level: 'nivel1' | 'nivel2', checkpointId: string) => {
+    if (!progress[courseType] || !progress[courseType][level] || !progress[courseType][level].results) {
+      return null;
+    }
+    
+    // Buscar en los resultados del contexto
+    const contextResult = progress[courseType][level].results[checkpointId];
+    if (contextResult) {
+      return contextResult;
+    }
+    
+    // Si no está en el contexto, buscar en localStorage
+    const prefix = courseType === 'theoretical' ? 'teorico_' : 'practico_';
+    const localStorageKey = prefix + checkpointId.toLowerCase() + '_result';
+    const localStorageResult = localStorage.getItem(localStorageKey);
+    
+    if (localStorageResult) {
+      try {
+        const result = JSON.parse(localStorageResult);
+        if (result.completed) {
+          // Actualizar el contexto con el resultado encontrado
+          setProgress(prev => {
+            const newProgress = { ...prev };
+            newProgress[courseType][level].results[checkpointId] = result;
+            newProgress[courseType][level].checkpoints[checkpointId] = true;
+            return newProgress;
+          });
+          return result;
+        }
+      } catch (e) {
+        console.error('Error parsing localStorage result:', e);
+      }
+    }
+    
+    return null;
   };
 
   const resetProgress = () => {
-    setCompletedCheckpoints(new Set());
+    setProgress(initialProgress);
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('completed_checkpoints');
+      localStorage.removeItem('userProgress');
     }
   };
 
+  const value: ProgressContextType = {
+    progress,
+    completeCheckpoint,
+    isCheckpointCompleted,
+    getCheckpointResult,
+    resetProgress,
+  };
+
   return (
-    <ProgressContext.Provider value={{
-      completedCheckpoints,
-      markCheckpointCompleted,
-      isCheckpointCompleted,
-      resetProgress
-    }}>
+    <ProgressContext.Provider value={value}>
       {children}
     </ProgressContext.Provider>
   );
