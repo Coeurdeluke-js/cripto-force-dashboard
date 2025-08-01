@@ -101,12 +101,12 @@ const initialProgress: ProgressState = {
       checkpoints: {
         'PC1': false, // Checkpoint práctico 1 (módulos 1-2)
         'PC2': false, // Checkpoint práctico 2 (módulos 3-4)
-        'PC3': false, // Checkpoint práctico 3 (módulo 5)
       },
       results: {},
     },
     nivel2: {
       checkpoints: {
+        'PC3': false, // Checkpoint práctico 3 (módulo 5)
         'PC4': false, // Checkpoint práctico 4 (módulos 6-7)
         'PC5': false, // Checkpoint práctico 5 (módulos 8-10)
       },
@@ -256,8 +256,41 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     setProgress(initialProgress);
     if (typeof window !== 'undefined') {
       localStorage.removeItem('userProgress');
+      // Limpiar también los resultados individuales de checkpoints
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.includes('practico_pc') || key.includes('teorico_pc'))) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
     }
   };
+
+  const cleanCorruptedProgress = () => {
+    if (typeof window !== 'undefined') {
+      // Limpiar completamente localStorage para forzar reinicialización
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.includes('practico_pc') || key.includes('teorico_pc') || key === 'userProgress')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
+      
+      // Forzar reinicialización del estado
+      setProgress(initialProgress);
+      
+      console.log('LocalStorage limpiado completamente y progreso reinicializado');
+    }
+  };
+
+  // Limpiar datos corruptos al inicializar
+  useEffect(() => {
+    cleanCorruptedProgress();
+  }, []);
 
   const value: ProgressContextType = {
     progress,

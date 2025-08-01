@@ -380,6 +380,95 @@ const objectives = [
   { id: 'obj8', title: 'Superar todos los Puntos de Control', type: 'checkpoints', category: 'all', completed: false }
 ];
 
+// Función para calcular el estado de los objetivos basado en el progreso real
+function calculateObjectivesStatus() {
+  const { progress } = useProgress();
+  
+  const objectivesWithStatus = objectives.map(objective => {
+    let completed = false;
+    
+    switch (objective.type) {
+      case 'nivel1':
+        if (objective.category === 'theoretical') {
+          const nivel1Checkpoints = Object.values(progress.theoretical.nivel1.checkpoints).filter(Boolean).length;
+          const totalNivel1Checkpoints = Object.keys(progress.theoretical.nivel1.checkpoints).length;
+          completed = nivel1Checkpoints === totalNivel1Checkpoints && totalNivel1Checkpoints > 0;
+          console.log('Objetivo Nivel 1 Teórico:', { nivel1Checkpoints, totalNivel1Checkpoints, completed });
+        } else if (objective.category === 'practical') {
+          const nivel1Checkpoints = Object.values(progress.practical.nivel1.checkpoints).filter(Boolean).length;
+          const totalNivel1Checkpoints = Object.keys(progress.practical.nivel1.checkpoints).length;
+          completed = nivel1Checkpoints === totalNivel1Checkpoints && totalNivel1Checkpoints > 0;
+          console.log('Objetivo Nivel 1 Práctico:', { nivel1Checkpoints, totalNivel1Checkpoints, completed });
+        }
+        break;
+        
+      case 'nivel2':
+        if (objective.category === 'theoretical') {
+          const nivel2Checkpoints = Object.values(progress.theoretical.nivel2.checkpoints).filter(Boolean).length;
+          const totalNivel2Checkpoints = Object.keys(progress.theoretical.nivel2.checkpoints).length;
+          completed = nivel2Checkpoints === totalNivel2Checkpoints && totalNivel2Checkpoints > 0;
+          console.log('Objetivo Nivel 2 Teórico:', { nivel2Checkpoints, totalNivel2Checkpoints, completed });
+        } else if (objective.category === 'practical') {
+          const nivel2Checkpoints = Object.values(progress.practical.nivel2.checkpoints).filter(Boolean).length;
+          const totalNivel2Checkpoints = Object.keys(progress.practical.nivel2.checkpoints).length;
+          completed = nivel2Checkpoints === totalNivel2Checkpoints && totalNivel2Checkpoints > 0;
+          console.log('Objetivo Nivel 2 Práctico:', { nivel2Checkpoints, totalNivel2Checkpoints, completed });
+        }
+        break;
+        
+      case 'checkpoints':
+        if (objective.category === 'theoretical') {
+          const theoreticalCheckpoints = Object.values(progress.theoretical.nivel1.checkpoints).filter(Boolean).length + 
+                                       Object.values(progress.theoretical.nivel2.checkpoints).filter(Boolean).length;
+          completed = theoreticalCheckpoints >= 2;
+          console.log('Objetivo 2 Checkpoints Teóricos:', { theoreticalCheckpoints, completed });
+        } else if (objective.category === 'practical') {
+          const practicalCheckpoints = Object.values(progress.practical.nivel1.checkpoints).filter(Boolean).length + 
+                                     Object.values(progress.practical.nivel2.checkpoints).filter(Boolean).length;
+          completed = practicalCheckpoints >= 2;
+          console.log('Objetivo 2 Checkpoints Prácticos:', { practicalCheckpoints, completed });
+        } else if (objective.category === 'all') {
+          const allCheckpoints = Object.values(progress.theoretical.nivel1.checkpoints).filter(Boolean).length + 
+                               Object.values(progress.theoretical.nivel2.checkpoints).filter(Boolean).length +
+                               Object.values(progress.practical.nivel1.checkpoints).filter(Boolean).length + 
+                               Object.values(progress.practical.nivel2.checkpoints).filter(Boolean).length;
+          const totalCheckpoints = Object.keys(progress.theoretical.nivel1.checkpoints).length + 
+                                 Object.keys(progress.theoretical.nivel2.checkpoints).length +
+                                 Object.keys(progress.practical.nivel1.checkpoints).length + 
+                                 Object.keys(progress.practical.nivel2.checkpoints).length;
+          completed = allCheckpoints === totalCheckpoints && totalCheckpoints > 0;
+          console.log('Objetivo Todos los Checkpoints:', { allCheckpoints, totalCheckpoints, completed });
+        }
+        break;
+        
+      case 'progress':
+        if (objective.category === 'general') {
+          const theoreticalProgress = Object.values(progress.theoretical.nivel1.checkpoints).filter(Boolean).length + 
+                                    Object.values(progress.theoretical.nivel2.checkpoints).filter(Boolean).length;
+          const practicalProgress = Object.values(progress.practical.nivel1.checkpoints).filter(Boolean).length + 
+                                  Object.values(progress.practical.nivel2.checkpoints).filter(Boolean).length;
+          const totalCheckpoints = Object.keys(progress.theoretical.nivel1.checkpoints).length + 
+                                 Object.keys(progress.theoretical.nivel2.checkpoints).length +
+                                 Object.keys(progress.practical.nivel1.checkpoints).length + 
+                                 Object.keys(progress.practical.nivel2.checkpoints).length;
+          const totalProgress = theoreticalProgress + practicalProgress;
+          const percentage = (totalProgress / totalCheckpoints) * 100;
+          completed = percentage >= 50;
+          console.log('Objetivo 50% del curso:', { totalProgress, totalCheckpoints, percentage, completed });
+        }
+        break;
+    }
+    
+    return {
+      ...objective,
+      completed
+    };
+  });
+  
+  console.log('Estado final de objetivos:', objectivesWithStatus);
+  return objectivesWithStatus;
+}
+
 export default function IniciadoDashboard() {
   const [activeTab, setActiveTab] = useState<'theoretical' | 'practical'>('theoretical');
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -680,14 +769,14 @@ export default function IniciadoDashboard() {
                 Objetivos a Lograr
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 objectives-grid">
-                {objectives.slice(0, 6).map((objective, index) => (
+                {calculateObjectivesStatus().slice(0, 6).map((objective, index) => (
                   <div 
                     key={objective.id} 
                     className="flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg bg-[#232323] transition-all duration-300 ease-out transform hover:scale-[1.02] hover:bg-[#2a2a2a]"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 ${
-                      objective.completed ? 'bg-green-500 shadow-md' : 'bg-gray-600'
+                      objective.completed ? 'bg-[#ec4d58] shadow-md' : 'bg-gray-600'
                     }`}>
                       {objective.completed ? (
                         <CheckCircle className="text-white text-sm" />
@@ -695,7 +784,7 @@ export default function IniciadoDashboard() {
                         <Flag className="text-gray-400 text-sm" />
                       )}
                     </div>
-                    <span className={`text-sm transition-all duration-300 ${objective.completed ? 'text-green-400 line-through' : 'text-gray-300'}`}>
+                    <span className={`text-sm transition-all duration-300 ${objective.completed ? 'text-[#ec4d58] line-through' : 'text-gray-300'}`}>
                       {objective.title}
                     </span>
                   </div>

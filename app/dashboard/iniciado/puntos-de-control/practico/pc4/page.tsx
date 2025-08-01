@@ -9,6 +9,7 @@ import CheckpointResultModal from '@/app/dashboard/iniciado/components/Checkpoin
 import SingleQuestionView from '@/app/dashboard/iniciado/components/SingleQuestionView';
 import BackButton from '@/components/ui/BackButton';
 import { shuffleQuestions } from '@/utils/questionShuffler';
+import { useProgress } from '@/context/ProgressContext';
 
 const questions = [
   {
@@ -153,23 +154,37 @@ export default function PuntoControlPractico4() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [showReview, setShowReview] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
+  const [startTime] = useState(Date.now());
   const router = useRouter();
+  const { completeCheckpoint } = useProgress();
 
   const handleSubmit = useCallback(() => {
     setSubmitted(true);
     const correctAnswers = answers.filter((answer, index) => answer === shuffledQuestions[index].correct).length;
     const score = (correctAnswers / shuffledQuestions.length) * 100;
+    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
     
-    // Guardar resultado
-    localStorage.setItem('pc4_practico_result', JSON.stringify({
+    // Crear resultado detallado
+    const result = {
       score,
       completed: true,
-      timestamp: Date.now()
-    }));
+      timestamp: Date.now(),
+      timeSpent,
+      correctAnswers,
+      totalQuestions: shuffledQuestions.length
+    };
+    
+    // Guardar resultado en localStorage
+    localStorage.setItem('practico_pc4_result', JSON.stringify(result));
+    
+    // Completar checkpoint en el sistema de progreso
+    if (score >= 70) {
+      completeCheckpoint('practical', 'nivel2', 'PC4', result);
+    }
 
     // Mostrar modal de resultados
     setShowResultModal(true);
-  }, [answers, shuffledQuestions]);
+  }, [answers, shuffledQuestions, startTime, completeCheckpoint]);
 
   // Mezclar preguntas al cargar el componente
   useEffect(() => {

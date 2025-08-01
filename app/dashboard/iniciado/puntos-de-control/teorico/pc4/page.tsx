@@ -1,10 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, XCircle, ArrowLeft, Clock } from 'lucide-react';
 import Link from 'next/link';
 import CheckpointResultMessage from '@/app/dashboard/iniciado/components/CheckpointResultMessage';
+import CheckpointResultModal from '@/app/dashboard/iniciado/components/CheckpointResultModal';
+import SingleQuestionView from '@/app/dashboard/iniciado/components/SingleQuestionView';
+import BackButton from '@/components/ui/BackButton';
+import { shuffleQuestions } from '@/utils/questionShuffler';
+import { useProgress } from '@/context/ProgressContext';
 
 const questions = [
   {
@@ -142,13 +147,19 @@ const questions = [
 ];
 
 export default function PuntoControl4() {
+  const [shuffledQuestions, setShuffledQuestions] = useState(questions);
   const [answers, setAnswers] = useState<number[]>(new Array(questions.length).fill(-1));
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(20 * 60); // 20 minutos
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [showReview, setShowReview] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [startTime] = useState(Date.now());
   const router = useRouter();
+  const { completeCheckpoint } = useProgress();
 
   // Timer countdown
-  useState(() => {
+  useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -161,7 +172,7 @@ export default function PuntoControl4() {
     }, 1000);
 
     return () => clearInterval(timer);
-  });
+  }, [handleSubmit]);
 
   const handleAnswer = (questionIndex: number, optionIndex: number) => {
     if (submitted) return;
@@ -170,29 +181,33 @@ export default function PuntoControl4() {
     setAnswers(newAnswers);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     setSubmitted(true);
-    const correctAnswers = answers.filter((answer, index) => answer === questions[index].correct).length;
-    const score = (correctAnswers / questions.length) * 100;
+    const correctAnswers = answers.filter((answer, index) => answer === shuffledQuestions[index].correct).length;
+    const score = (correctAnswers / shuffledQuestions.length) * 100;
+    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
     
-    // Guardar resultado
-    localStorage.setItem('pc4_result', JSON.stringify({
+    // Crear resultado detallado
+    const result = {
       score,
       completed: true,
-      timestamp: Date.now()
-    }));
+      timestamp: Date.now(),
+      timeSpent,
+      correctAnswers,
+      totalQuestions: shuffledQuestions.length
+    };
+    
+    // Guardar resultado en localStorage
+    localStorage.setItem('teorico_pc4_result', JSON.stringify(result));
+    
+    // Completar checkpoint en el sistema de progreso
+    if (score >= 70) {
+      completeCheckpoint('theoretical', 'nivel2', 'PC4', result);
+    }
 
-    // Simular delay antes de mostrar resultado
-    setTimeout(() => {
-      if (score >= 70) {
-        alert(`¡Felicitaciones! Has aprobado con ${score.toFixed(1)}%`);
-        router.push('/dashboard/iniciado');
-      } else {
-        alert(`Has obtenido ${score.toFixed(1)}%. Necesitas 70% para aprobar.`);
-        router.push('/dashboard/iniciado');
-      }
-    }, 1000);
-  };
+    // Mostrar modal de resultados
+    setShowResultModal(true);
+  }, [answers, shuffledQuestions, startTime, completeCheckpoint]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

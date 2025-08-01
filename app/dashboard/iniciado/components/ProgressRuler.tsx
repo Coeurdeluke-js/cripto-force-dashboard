@@ -16,13 +16,34 @@ export default function ProgressRuler({ courseType }: ProgressRulerProps) {
   const getCompletedCheckpoints = () => {
     const nivel1Checkpoints = Object.values(progress[courseType].nivel1.checkpoints).filter(Boolean).length;
     const nivel2Checkpoints = Object.values(progress[courseType].nivel2.checkpoints).filter(Boolean).length;
-    return nivel1Checkpoints + nivel2Checkpoints;
+    const total = nivel1Checkpoints + nivel2Checkpoints;
+    
+    // Verificar que los checkpoints tengan el formato correcto
+    const nivel1Keys = Object.keys(progress[courseType].nivel1.checkpoints);
+    const nivel2Keys = Object.keys(progress[courseType].nivel2.checkpoints);
+    
+    console.log('Verificación de checkpoints:', {
+      courseType,
+      nivel1Keys,
+      nivel2Keys,
+      nivel1Completed: nivel1Checkpoints,
+      nivel2Completed: nivel2Checkpoints,
+      totalCompleted: total
+    });
+    
+    return total;
   };
 
   // Total de checkpoints disponibles
   const totalCheckpoints = courseType === 'theoretical' ? 4 : 5; // 4 teóricos, 5 prácticos
   const completedCheckpoints = getCompletedCheckpoints();
-  const progressPercentage = Math.round((completedCheckpoints / totalCheckpoints) * 100);
+  
+  // Calcular el porcentaje de progreso basado en el último checkpoint completado
+  // Si hay 1 checkpoint completado, debe pintar hasta el marcador 1
+  // Para 5 checkpoints: 0=0%, 1=20%, 2=40%, 3=60%, 4=80%, 5=100%
+  const progressPercentage = completedCheckpoints > 0 
+    ? Math.round((completedCheckpoints / totalCheckpoints) * 100)
+    : 0;
 
   // Función para formatear fecha
   const formatDate = (timestamp: number) => {
@@ -58,14 +79,19 @@ export default function ProgressRuler({ courseType }: ProgressRulerProps) {
             style={{ width: `${progressPercentage}%` }}
           />
           
-          {/* Marcadores de checkpoints (como centímetros en una regla) */}
-          <div className="absolute inset-0 flex justify-between items-center px-4">
+          {/* Marcadores de checkpoints distribuidos uniformemente */}
+          <div className="absolute inset-0 flex items-center">
             {Array.from({ length: totalCheckpoints + 1 }, (_, index) => {
               const checkpointNumber = index;
               const isCompleted = index <= completedCheckpoints;
+              const position = (index / totalCheckpoints) * 100;
               
               return (
-                <div key={index} className="flex flex-col items-center">
+                <div 
+                  key={index} 
+                  className="absolute flex flex-col items-center transform -translate-x-1/2"
+                  style={{ left: `${position}%` }}
+                >
                   {/* Marcador vertical */}
                   <div 
                     className={`w-1 h-4 rounded-full transition-all duration-300 ${
