@@ -147,11 +147,11 @@ const questions = [
 ];
 
 export default function PuntoControl3() {
-  const [shuffledQuestions, setShuffledQuestions] = useState(questions);
+  const [shuffledQuestions, setShuffledQuestions] = useState(() => shuffleQuestions(questions));
   const [answers, setAnswers] = useState<number[]>(new Array(questions.length).fill(-1));
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(20 * 60); // 20 minutos
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showReview, setShowReview] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
   const [startTime] = useState(Date.now());
@@ -209,14 +209,33 @@ export default function PuntoControl3() {
     setAnswers(newAnswers);
   };
 
+  const handleRestart = () => {
+    setAnswers(new Array(shuffledQuestions.length).fill(-1));
+    setSubmitted(false);
+    setCurrentQuestionIndex(0);
+    setTimeLeft(20 * 60);
+  };
+
+  const handleNavigate = (direction: 'prev' | 'next') => {
+    if (direction === 'prev' && currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    } else if (direction === 'next' && currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handleQuestionSelect = (questionIndex: number) => {
+    setCurrentQuestionIndex(questionIndex);
+  };
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const correctAnswers = answers.filter((answer, index) => answer === questions[index].correct).length;
-  const score = (correctAnswers / questions.length) * 100;
+  const correctAnswers = answers.filter((answer, index) => answer === shuffledQuestions[index].correct).length;
+  const score = (correctAnswers / shuffledQuestions.length) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#212121] via-[#121212] to-[#121212] text-white p-4">
@@ -237,7 +256,7 @@ export default function PuntoControl3() {
               <span className="font-mono">{formatTime(timeLeft)}</span>
             </div>
             <div className="text-sm text-gray-400">
-              {answers.filter(a => a !== -1).length}/{questions.length} respondidas
+              {answers.filter(a => a !== -1).length}/{shuffledQuestions.length} respondidas
             </div>
           </div>
         </div>
@@ -252,54 +271,19 @@ export default function PuntoControl3() {
           </p>
         </div>
 
-        {/* Questions */}
-        <div className="space-y-6">
-          {questions.map((q, qIndex) => (
-            <div key={q.id} className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6">
-              <h3 className="text-lg font-semibold mb-4">
-                {qIndex + 1}. {q.question}
-              </h3>
-              
-              <div className="space-y-3">
-                {q.options.map((option, oIndex) => (
-                  <label
-                    key={oIndex}
-                    className={`flex items-center p-3 rounded-lg border cursor-pointer transition-all ${
-                      answers[qIndex] === oIndex
-                        ? submitted
-                          ? oIndex === q.correct
-                            ? 'bg-green-500/20 border-green-500 text-green-400'
-                            : 'bg-red-500/20 border-red-500 text-red-400'
-                          : 'bg-[#ec4d58]/20 border-[#ec4d58] text-[#ec4d58]'
-                        : 'bg-[#2a2a2a] border-[#333] hover:bg-[#333]'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name={`question-${qIndex}`}
-                      checked={answers[qIndex] === oIndex}
-                      onChange={() => handleAnswer(qIndex, oIndex)}
-                      disabled={submitted}
-                      className="sr-only"
-                    />
-                    <span className="mr-3 w-5 h-5 rounded-full border-2 flex items-center justify-center">
-                      {answers[qIndex] === oIndex && (
-                        <div className="w-3 h-3 rounded-full bg-current" />
-                      )}
-                    </span>
-                    {option}
-                    {submitted && oIndex === q.correct && (
-                      <CheckCircle className="ml-auto text-green-400" />
-                    )}
-                    {submitted && answers[qIndex] === oIndex && oIndex !== q.correct && (
-                      <XCircle className="ml-auto text-red-400" />
-                    )}
-                  </label>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Question View */}
+        <SingleQuestionView
+          questions={shuffledQuestions}
+          currentQuestion={currentQuestionIndex}
+          answers={answers}
+          onAnswer={handleAnswer}
+          onFinish={handleSubmit}
+          onNavigate={handleNavigate}
+          showReview={showReview}
+          onToggleReview={() => setShowReview(!showReview)}
+          isFinished={submitted}
+          onQuestionSelect={handleQuestionSelect}
+        />
 
         {/* Submit Button */}
         {!submitted && (
@@ -326,6 +310,20 @@ export default function PuntoControl3() {
               isApproved={score >= 70} 
             />
           </div>
+        )}
+
+        {/* Result Modal */}
+        {showResultModal && (
+          <CheckpointResultModal
+            isOpen={showResultModal}
+            onClose={() => setShowResultModal(false)}
+            onRestart={handleRestart}
+            score={score}
+            correctAnswers={correctAnswers}
+            totalQuestions={shuffledQuestions.length}
+            isApproved={score >= 70}
+            checkpointTitle="Punto de Control: Monopolio y Oligopolio y Tecnología Blockchain"
+          />
         )}
       </div>
     </div>
