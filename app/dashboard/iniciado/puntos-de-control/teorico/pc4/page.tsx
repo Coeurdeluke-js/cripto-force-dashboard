@@ -158,29 +158,6 @@ export default function PuntoControl4() {
   const router = useRouter();
   const { completeCheckpoint } = useProgress();
 
-  // Timer countdown
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          handleSubmit();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [handleSubmit]);
-
-  const handleAnswer = (questionIndex: number, optionIndex: number) => {
-    if (submitted) return;
-    const newAnswers = [...answers];
-    newAnswers[questionIndex] = optionIndex;
-    setAnswers(newAnswers);
-  };
-
   const handleSubmit = useCallback(() => {
     setSubmitted(true);
     const correctAnswers = answers.filter((answer, index) => answer === shuffledQuestions[index].correct).length;
@@ -208,6 +185,29 @@ export default function PuntoControl4() {
     // Mostrar modal de resultados
     setShowResultModal(true);
   }, [answers, shuffledQuestions, startTime, completeCheckpoint]);
+
+  // Timer countdown
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          handleSubmit();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [handleSubmit]);
+
+  const handleAnswer = (questionIndex: number, optionIndex: number) => {
+    if (submitted) return;
+    const newAnswers = [...answers];
+    newAnswers[questionIndex] = optionIndex;
+    setAnswers(newAnswers);
+  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
