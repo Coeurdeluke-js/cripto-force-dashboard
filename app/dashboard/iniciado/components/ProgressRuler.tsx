@@ -72,7 +72,7 @@ export default function ProgressRuler({ courseType }: ProgressRulerProps) {
       {/* Regla de Progreso */}
       <div className="relative">
         {/* Barra principal */}
-        <div className="relative h-8 bg-[#2a2a2a] rounded-lg overflow-hidden border border-[#333]">
+        <div className="relative h-8 bg-[#2a2a2a] rounded-lg overflow-hidden border border-[#333] px-4">
           {/* Progreso visual */}
           <div 
             className="h-full bg-gradient-to-r from-[#ec4d58] to-[#d63d47] rounded-lg transition-all duration-500 ease-out"
@@ -80,11 +80,20 @@ export default function ProgressRuler({ courseType }: ProgressRulerProps) {
           />
           
           {/* Marcadores de checkpoints distribuidos uniformemente */}
-          <div className="absolute inset-0 flex items-center">
+          <div className="absolute inset-0 flex items-center px-4">
             {Array.from({ length: totalCheckpoints + 1 }, (_, index) => {
               const checkpointNumber = index;
               const isCompleted = index <= completedCheckpoints;
-              const position = (index / totalCheckpoints) * 100;
+              let position = (index / totalCheckpoints) * 100;
+              
+              // Ajustar posición del primer número (0) hacia la derecha
+              if (index === 0) {
+                position = 5; // Mover un poco hacia la derecha
+              }
+              // Ajustar posición del último número hacia la izquierda
+              else if (index === totalCheckpoints) {
+                position = 95; // Mover un poco hacia la izquierda
+              }
               
               return (
                 <div 

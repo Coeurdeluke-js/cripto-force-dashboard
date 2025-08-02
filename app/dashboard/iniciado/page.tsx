@@ -432,34 +432,30 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
     if (module.level === 'nivel2' && !module.id.startsWith('PC')) {
       const moduleIndex = parseInt(module.id);
       
-      // Verificar si todos los checkpoints del nivel 1 están completados
-      const allNivel1Completed = nivel1Checkpoints.every(checkpoint => 
-        isCheckpointCompleted(checkpoint.id, 'nivel1')
-      );
-      
-      if (!allNivel1Completed) {
-        // Si no están todos los checkpoints del nivel 1 completados, bloquear
-        isLocked = true;
-        console.log(`Módulo ${moduleIndex} - Nivel 1 no completado, isLocked: ${isLocked}`);
-      } else {
-        // Si están todos completados, aplicar lógica secuencial
-        if (moduleIndex === 5) {
-          // Módulo 5 se desbloquea cuando PC2 está completado
-          isLocked = !isCheckpointCompleted('PC2', 'nivel1');
-          console.log(`Módulo 5 - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
-        } else if (moduleIndex === 6) {
-          // Módulo 6 se desbloquea cuando PC2 está completado
-          isLocked = !isCheckpointCompleted('PC2', 'nivel1');
-          console.log(`Módulo 6 - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
-        } else if (moduleIndex === 7) {
-          // Módulo 7 se desbloquea cuando PC3 está completado
-          isLocked = !isCheckpointCompleted('PC3', 'nivel2');
-          console.log(`Módulo 7 - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel2')}, isLocked: ${isLocked}`);
-        } else if (moduleIndex === 8) {
-          // Módulo 8 se desbloquea cuando PC3 está completado
-          isLocked = !isCheckpointCompleted('PC3', 'nivel2');
-          console.log(`Módulo 8 - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel2')}, isLocked: ${isLocked}`);
-        }
+      if (moduleIndex === 5) {
+        // Módulo 5 se desbloquea cuando PC2 está completado
+        isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+        console.log(`Módulo 5 - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
+      } else if (moduleIndex === 6) {
+        // Módulo 6 se desbloquea cuando PC2 está completado
+        isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+        console.log(`Módulo 6 - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
+      } else if (moduleIndex === 7) {
+        // Módulo 7 se desbloquea cuando PC3 está completado
+        isLocked = !isCheckpointCompleted('PC3', 'nivel2');
+        console.log(`Módulo 7 - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel2')}, isLocked: ${isLocked}`);
+      } else if (moduleIndex === 8) {
+        // Módulo 8 se desbloquea cuando PC4 está completado
+        isLocked = !isCheckpointCompleted('PC4', 'nivel2');
+        console.log(`Módulo 8 - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
+      } else if (moduleIndex === 9) {
+        // Módulo 9 se desbloquea cuando PC4 está completado
+        isLocked = !isCheckpointCompleted('PC4', 'nivel2');
+        console.log(`Módulo 9 - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
+      } else if (moduleIndex === 10) {
+        // Módulo 10 se desbloquea cuando PC4 está completado
+        isLocked = !isCheckpointCompleted('PC4', 'nivel2');
+        console.log(`Módulo 10 - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
       }
     }
     
@@ -485,6 +481,10 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
           // PC4 se desbloquea cuando PC3 está completado
           isLocked = !isCheckpointCompleted('PC3', 'nivel2');
           console.log(`PC4 - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel2')}, isLocked: ${isLocked}`);
+        } else if (checkpointNumber === 5) {
+          // PC5 se desbloquea cuando PC4 está completado
+          isLocked = !isCheckpointCompleted('PC4', 'nivel2');
+          console.log(`PC5 - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
         }
       }
     }
