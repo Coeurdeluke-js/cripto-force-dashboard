@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import BackButton from '@/components/ui/BackButton';
+import Image from 'next/image';
 
 export default function ModuloPractico2Contenido() {
   return (
@@ -63,19 +64,52 @@ export default function ModuloPractico2Contenido() {
                   <h4 className="font-semibold text-[#ec4d58] mb-2">El Soporte y la Resistencia</h4>
                   <p className="text-sm mb-3">El soporte y la resistencia conforman la base de la mayoria de los patrones de grafico del analisis tecnico. Identificar los niveles de soporte y resistencia claves es un ingrediente esencial para alcanzar un analisis tecnico exitoso.</p>
                   <p className="text-sm mb-3">Si un par se acerca a un nivel de soporte importante, puede ser una alerta para estar muy atentos a los signos de mayor presion de compra y un posible cambio de tendencia.</p>
-                  <p className="text-sm">La ruptura del nivel de resistencia es senal de que la demanda (alza) lleva las de ganar y la ruptura del nivel de soporte es senal de que la oferta (baja) ha ganado la batalla.</p>
+                  <p className="text-sm mb-3">La ruptura del nivel de resistencia es senal de que la demanda (alza) lleva las de ganar y la ruptura del nivel de soporte es senal de que la oferta (baja) ha ganado la batalla.</p>
+                  
+                  {/* Imagen 1.1 después de la frase sobre ruptura de resistencia */}
+                  <div className="my-4 flex justify-center">
+                    <Image
+                      src="/images/modulo-practico-1/1.1.png"
+                      alt="Ilustración de ruptura de nivel de resistencia"
+                      width={600}
+                      height={400}
+                      className="rounded-lg shadow-lg"
+                    />
+                  </div>
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Soporte</h4>
                   <p className="text-sm mb-3">Los niveles de soporte y resistencia representan puntos de cambio clave en los que se encuentran la fuerza de los vendedores (oferta) y los compradores (demanda).</p>
                   <p className="text-sm mb-3">El nivel de soporte consiste en el nivel de precio en el que se considera que la demanda es lo suficientemente fuerte como para evitar que el precio continúe bajando.</p>
+                  
+                  {/* Imagen 1.2 después de la frase sobre soporte */}
+                  <div className="my-4 flex justify-center">
+                    <Image
+                      src="/images/modulo-practico-1/1.2.png"
+                      alt="Ilustración de nivel de soporte"
+                      width={600}
+                      height={400}
+                      className="rounded-lg shadow-lg"
+                    />
+                  </div>
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Resistencia</h4>
                   <p className="text-sm mb-3">El nivel de resistencia es el nivel de precio en el que se considera que la venta es lo suficientemente fuerte como para evitar que el precio aumente mas.</p>
                   <p className="text-sm mb-3">El mercado tiene memoria: cuando el precio alcanza un nuevo maximo y luego se produce un retroceso, los vendedores que perdieron el pico anterior estaran dispuestos a vender cuando el precio alcance ese nivel.</p>
+                  
+                  {/* Imagen 1.3 después de la frase sobre resistencia */}
+                  <div className="my-4 flex justify-center">
+                    <Image
+                      src="/images/modulo-practico-1/1.3.png"
+                      alt="Ilustración de nivel de resistencia"
+                      width={600}
+                      height={400}
+                      className="rounded-lg shadow-lg"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -87,6 +121,50 @@ export default function ModuloPractico2Contenido() {
               <div className="space-y-4">
                 <p className="text-sm mb-3">El soporte y resistencia no tienen que ser lineas horizontales, y generalmente en un mercado que se mueve mas alto o mas bajo, las lineas de tendencia efectivamente conectan los maximos o minimos para crear un canal de precios.</p>
                 <p className="text-sm mb-3">Sin embargo, la linea que sigue una tendencia (soporte en una tendencia alcista y resistencia en una tendencia bajista) debe ser considerada por lejos la mas fuerte de las dos.</p>
+                
+                {/* Imagen 1.4 después de la frase sobre canales de precios */}
+                <div className="my-4 flex justify-center">
+                  <Image
+                    src="/images/modulo-practico-1/1.4.png"
+                    alt="Ilustración de canales de precios"
+                    width={600}
+                    height={400}
+                    className="rounded-lg shadow-lg"
+                  />
+                </div>
+                
+                {/* Imagen 1.5 después de la frase sobre canales de precios */}
+                <div className="my-4 flex justify-center">
+                  <Image
+                    src="/images/modulo-practico-1/1.5.png"
+                    alt="Ilustración de compraventa por impulso"
+                    width={600}
+                    height={400}
+                    className="rounded-lg shadow-lg"
+                  />
+                </div>
+                
+                {/* Imagen 1.6 después de la frase sobre canales de precios */}
+                <div className="my-4 flex justify-center">
+                  <Image
+                    src="/images/modulo-practico-1/1.6.png"
+                    alt="Ilustración de operación con riesgo mínimo"
+                    width={600}
+                    height={400}
+                    className="rounded-lg shadow-lg"
+                  />
+                </div>
+                
+                {/* Imagen 1.7 después de la frase sobre canales de precios */}
+                <div className="my-4 flex justify-center">
+                  <Image
+                    src="/images/modulo-practico-1/1.7.png"
+                    alt="Ilustración de líneas de tendencia en mercado bajista"
+                    width={600}
+                    height={400}
+                    className="rounded-lg shadow-lg"
+                  />
+                </div>
               </div>
             </div>
 

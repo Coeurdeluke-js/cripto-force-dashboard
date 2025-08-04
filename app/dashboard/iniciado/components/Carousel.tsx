@@ -171,4 +171,4 @@ export default function Carousel({ content }: CarouselProps) {
       </div>
     </div>
   );
-} 
+}    

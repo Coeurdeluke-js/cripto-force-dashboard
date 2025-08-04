@@ -39,26 +39,9 @@ export default function ModuloPractico1Index() {
             </ul>
           </div>
 
-          {/* Información del Curso Gratuito - Versión resumida */}
-          <div className="bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a] rounded-lg p-6 mb-6 border border-[#ec4d58]/20">
-            <div className="flex items-center justify-between mb-4">
-              <h4 className="text-lg font-bold text-[#ec4d58]">🎯 CURSO GRATIS - INTRODUCCIÓN AL TRADING</h4>
-              <a 
-                href="https://www.instagram.com/cripto_educacion" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-sm text-[#ec4d58] hover:text-[#d63d47] transition-colors"
-              >
-                @cripto_educacion
-              </a>
-            </div>
-            <p className="text-sm text-gray-300 mb-4">Conceptos indispensables que debes retener para comenzar tu camino en el trading.</p>
-            <p className="text-xs text-gray-400">Incluye: Fundamentos del trading, análisis técnico, psicología, gestión de riesgo y plan de trading completo.</p>
-          </div>
-
           <div className="text-center">
             <Link 
-                              href="/dashboard/iniciado/Practico/1-introduccion-trading/contenido"
+              href="/dashboard/iniciado/Practico/1-introduccion-trading/contenido"
               className="inline-flex items-center px-6 py-3 bg-[#ec4d58] hover:bg-[#d63d47] text-white font-semibold rounded-lg transition-colors duration-200"
             >
               <span>Ver Contenido Completo</span>

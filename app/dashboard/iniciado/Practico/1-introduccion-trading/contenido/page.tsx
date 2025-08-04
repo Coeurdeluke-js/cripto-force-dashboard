@@ -14,21 +14,6 @@ export default function ModuloPractico1Contenido() {
         <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-center">Módulo 1: Introducción al Trading</h2>
 
         <section className="mb-8">
-          <div className="bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a] rounded-lg p-6 mb-6 border border-[#ec4d58]/20">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-[#ec4d58]">🎯 CURSO GRATIS - INTRODUCCIÓN AL TRADING</h3>
-              <a 
-                href="https://www.instagram.com/cripto_educacion" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-sm text-[#ec4d58] hover:text-[#d63d47] transition-colors"
-              >
-                @cripto_educacion
-              </a>
-            </div>
-            <p className="text-sm text-gray-300 mb-4 font-semibold">CONCEPTOS INDISPENSABLES QUE DEBES RETENER</p>
-          </div>
-
           <div className="space-y-6">
             <div className="bg-[#181818] rounded-lg p-6">
               <h3 className="text-lg font-bold text-[#ec4d58] mb-4">¿Qué es el trading?</h3>
