@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import BackButton from '@/components/ui/BackButton';
+import Image from 'next/image';
 
 export default function ModuloPractico3Contenido() {
   return (
@@ -46,6 +47,22 @@ export default function ModuloPractico3Contenido() {
                   <p className="text-sm mb-3">Entonces, ¿Por qué las velas son tan importantes en la compraventa? En pocas palabras, se debe a que son el mejor indicador de lo que está ocurriendo en el mercado al momento presente. Las velas nos brindan una mirada interior de las emociones de los participantes del mercado. A pesar de que los operadores cambian a lo largo del tiempo, las emociones humanas son constantes. Una determinada serie de eventos genera un patrón de velas y cuando vemos tal patrón sabemos exactamente qué ha ocurrido.</p>
                   <p className="text-sm">En última instancia, las velas pueden utilizarse fácilmente para identificar cambios potenciales en las tendencias del mercado, especialmente cuando se las utiliza junto con otros indicadores.</p>
                 </div>
+
+                <div>
+                  <h4 className="font-semibold text-[#ec4d58] mb-2">Análisis Visual de la Vela</h4>
+                  <p className="text-sm mb-3">A continuación, se presenta un análisis visual de la vela:</p>
+                  
+                  {/* Imagen 1 después de la frase sobre análisis visual de la vela */}
+                  <div className="my-4 flex justify-center">
+                    <Image
+                      src="/images/modulo-practico-2/1.png"
+                      alt="Análisis visual de la vela"
+                      width={600}
+                      height={400}
+                      className="rounded-lg shadow-lg"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -55,13 +72,47 @@ export default function ModuloPractico3Contenido() {
               
               <div className="space-y-4">
                 <p className="text-sm mb-3">Los siguientes son patrones de vela esenciales que se deben buscar:</p>
+                
+                {/* Imagen 2 después de la frase sobre patrones de vela esenciales */}
+                <div className="my-4 flex justify-center">
+                  <Image
+                    src="/images/modulo-practico-2/2.png"
+                    alt="Patrones de vela esenciales"
+                    width={600}
+                    height={400}
+                    className="rounded-lg shadow-lg"
+                  />
+                </div>
+                
                 <p className="text-sm mb-3">Cuando estos patrones aparecen en un gráfico y cuando aparecen en niveles que coinciden con otros indicadores, tales como los niveles de retroceso de Fibonacci o las medias móviles, se crea una potencial oportunidad de compraventa.</p>
+                
+                {/* Imagen 3 después de la frase sobre patrones que coinciden con otros indicadores */}
+                <div className="my-4 flex justify-center">
+                  <Image
+                    src="/images/modulo-practico-2/3.png"
+                    alt="Patrones que coinciden con otros indicadores"
+                    width={600}
+                    height={400}
+                    className="rounded-lg shadow-lg"
+                  />
+                </div>
               </div>
             </div>
 
             {/* Sección C: Significado de los Diferentes Patrones de Velas */}
             <div className="bg-[#181818] rounded-lg p-6">
               <h3 className="text-lg font-bold text-[#ec4d58] mb-4">C) Significado de los Diferentes Patrones de Velas</h3>
+              
+              {/* Imagen 4 después del título de la sección C */}
+              <div className="my-4 flex justify-center">
+                <Image
+                  src="/images/modulo-practico-2/4.png"
+                  alt="Significado de los diferentes patrones de velas"
+                  width={600}
+                  height={400}
+                  className="rounded-lg shadow-lg"
+                />
+              </div>
               
               <div className="space-y-6">
                 <div>
@@ -75,6 +126,17 @@ export default function ModuloPractico3Contenido() {
                     </ul>
                     <p className="text-sm font-semibold mt-3">¿Qué Significa?</p>
                     <p className="text-sm">En una tendencia bajista, el mercado fortalece a los vendedores con un largo periodo rojo. Sin embargo, el segundo periodo fluctúa en un rango muy cerrado, y cierra en o muy cerca de su precio de apertura. Este escenario generalmente muestra una posible reversión, ya que muchas posiciones han cambiado. Una confirmación del cambio de tendencia sería una vela verde en el siguiente periodo de operación.</p>
+                    
+                    {/* Imagen 5 después de la frase sobre confirmación del cambio de tendencia */}
+                    <div className="my-4 flex justify-center">
+                      <Image
+                        src="/images/modulo-practico-2/5.png"
+                        alt="Confirmación del cambio de tendencia"
+                        width={600}
+                        height={400}
+                        className="rounded-lg shadow-lg"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -88,6 +150,17 @@ export default function ModuloPractico3Contenido() {
                     </ul>
                     <p className="text-sm font-semibold mt-3">¿Qué Significa?</p>
                     <p className="text-sm">En una tendencia bajista, la vela envolvente abre en el precio de cierre de la vela anterior o en un nuevo bajo y cierra a un precio igual o más alto que el precio de apertura del periodo anterior. Esto significa que la tendencia bajista perdió su impulso y que los compradores están ganando fuerza.</p>
+                    
+                    {/* Imagen 6 después de la frase sobre tendencia bajista perdió impulso */}
+                    <div className="my-4 flex justify-center">
+                      <Image
+                        src="/images/modulo-practico-2/6.png"
+                        alt="Tendencia bajista perdió impulso"
+                        width={600}
+                        height={400}
+                        className="rounded-lg shadow-lg"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -102,6 +175,17 @@ export default function ModuloPractico3Contenido() {
                     </ul>
                     <p className="text-sm font-semibold mt-3">¿Qué Significa?</p>
                     <p className="text-sm">Después de que el mercado abre en una tendencia bajista, ocurre una severa sobreventa. Sin embargo, al final del periodo de operaciones el mercado cierra en o cerca del precio más alto del periodo. Esto significa que el sentimiento bajista se está debilitando, especialmente si el cuerpo de la vela es verde. El cambio de tendencia puede ser confirmado si la siguiente vela cierra a un precio más alto que el de apertura.</p>
+                    
+                    {/* Imagen 7 después de la frase sobre cambio de tendencia confirmado */}
+                    <div className="my-4 flex justify-center">
+                      <Image
+                        src="/images/modulo-practico-2/7.png"
+                        alt="Cambio de tendencia confirmado"
+                        width={600}
+                        height={400}
+                        className="rounded-lg shadow-lg"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -115,6 +199,17 @@ export default function ModuloPractico3Contenido() {
                     </ul>
                     <p className="text-sm font-semibold mt-3">¿Qué Significa?</p>
                     <p className="text-sm">Después de un largo periodo rojo al final de una tendencia bajista, una vela verde abre a un precio igual o más alto que el cierre del periodo anterior. La reversión de la tendencia será confirmada si la próxima vela es verde.</p>
+                    
+                    {/* Imagen 8 después de la frase sobre reversión de tendencia */}
+                    <div className="my-4 flex justify-center">
+                      <Image
+                        src="/images/modulo-practico-2/8.png"
+                        alt="Reversión de tendencia"
+                        width={600}
+                        height={400}
+                        className="rounded-lg shadow-lg"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -129,6 +224,17 @@ export default function ModuloPractico3Contenido() {
                     </ul>
                     <p className="text-sm font-semibold mt-3">¿Qué Significa?</p>
                     <p className="text-sm">En una tendencia alcista, el mercado se fortalece con un largo periodo verde. Sin embargo, las fluctuaciones del segundo periodo ocurren en un rango apretado y el precio cierra muy cerca de la apertura. Este escenario generalmente muestra la pérdida de confianza en la tendencia actual. La confirmación de esta tendencia sería una vela roja a continuación.</p>
+                    
+                    {/* Imagen 9 después de la frase sobre confirmación de tendencia */}
+                    <div className="my-4 flex justify-center">
+                      <Image
+                        src="/images/modulo-practico-2/9.png"
+                        alt="Confirmación de tendencia"
+                        width={600}
+                        height={400}
+                        className="rounded-lg shadow-lg"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -142,6 +248,17 @@ export default function ModuloPractico3Contenido() {
                     </ul>
                     <p className="text-sm font-semibold mt-3">¿Qué Significa?</p>
                     <p className="text-sm">En una tendencia alcista, la vela envolvente abre al precio de cierre del periodo anterior o en un nuevo alto, seguido por mucho volumen de venta, hasta cerrar a un precio igual o más bajo que el precio de apertura de la vela anterior. Esto significa que la tendencia alcista ha sido herida y que los vendedores podrían estar ganando fuerza.</p>
+                    
+                    {/* Imagen 10 después de la frase sobre tendencia alcista herida */}
+                    <div className="my-4 flex justify-center">
+                      <Image
+                        src="/images/modulo-practico-2/10.png"
+                        alt="Tendencia alcista herida"
+                        width={600}
+                        height={400}
+                        className="rounded-lg shadow-lg"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -156,6 +273,17 @@ export default function ModuloPractico3Contenido() {
                     </ul>
                     <p className="text-sm font-semibold mt-3">¿Qué Significa?</p>
                     <p className="text-sm">Después de que el mercado abre en una tendencia alcista, ocurre una severa sobreventa. Sin embargo, al final del periodo el mercado cierra en o cerca del precio más alto del periodo. Esto significa un posible cambio de tendencia. Una vela roja a continuación, confirmaría el cambio de tendencia.</p>
+                    
+                    {/* Imagen 11 después de la frase sobre posible cambio de tendencia */}
+                    <div className="my-4 flex justify-center">
+                      <Image
+                        src="/images/modulo-practico-2/11.png"
+                        alt="Posible cambio de tendencia"
+                        width={600}
+                        height={400}
+                        className="rounded-lg shadow-lg"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -170,6 +298,17 @@ export default function ModuloPractico3Contenido() {
                     </ul>
                     <p className="text-sm font-semibold mt-3">¿Qué Significa?</p>
                     <p className="text-sm">El mercado logra un nuevo alto pero no puede sostenerlo y la vela cierra cerca de su punto más bajo. Esto significa un posible cambio de tendencia. Una vela roja a continuación, confirmaría el cambio de tendencia.</p>
+                    
+                    {/* Imagen 12 después de la frase sobre posible cambio de tendencia */}
+                    <div className="my-4 flex justify-center">
+                      <Image
+                        src="/images/modulo-practico-2/12.png"
+                        alt="Posible cambio de tendencia"
+                        width={600}
+                        height={400}
+                        className="rounded-lg shadow-lg"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -184,6 +323,17 @@ export default function ModuloPractico3Contenido() {
                     </ul>
                     <p className="text-sm font-semibold mt-3">¿Qué Significa?</p>
                     <p className="text-sm">En una tendencia bajista, el mercado se fortalece con una larga vela roja, pero en el siguiente periodo los precios fluctúan en un rango apretado. Este escenario muestra un posible cambio de tendencia. La confirmación se dará con una vela verde.</p>
+                    
+                    {/* Imagen 13 después de la frase sobre confirmación con vela verde */}
+                    <div className="my-4 flex justify-center">
+                      <Image
+                        src="/images/modulo-practico-2/13.png"
+                        alt="Confirmación con vela verde"
+                        width={600}
+                        height={400}
+                        className="rounded-lg shadow-lg"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -197,6 +347,17 @@ export default function ModuloPractico3Contenido() {
                     </ul>
                     <p className="text-sm font-semibold mt-3">¿Qué Significa?</p>
                     <p className="text-sm">En una tendencia alcista, la vela abre con fuerza pero pierde su impulso para cerrar a la mitad del cuerpo de la vela anterior. La Cobertura de Nube Negra sugiere una oportunidad para los vendedores.</p>
+                    
+                    {/* Imagen 14 después de la frase sobre Cobertura de Nube Negra */}
+                    <div className="my-4 flex justify-center">
+                      <Image
+                        src="/images/modulo-practico-2/14.png"
+                        alt="Cobertura de Nube Negra"
+                        width={600}
+                        height={400}
+                        className="rounded-lg shadow-lg"
+                      />
+                    </div>
                   </div>
                 </div>
 
