@@ -64,17 +64,13 @@ export default function ModuloPractico9GestionRiesgoContenido() {
                       <p className="text-sm mb-3">A continuación, consta un ejemplo de un gráfico que utiliza el SAR.</p>
                       
                       <div className="flex justify-center my-4">
-                        <Image
-                          src="/imagenes%20modulo%20practico%20%239/1.jpg"
-                          alt="Ejemplo de gráfico con Parabolic SAR"
-                          width={600}
-                          height={400}
-                          className="rounded-lg shadow-lg"
-                          onError={(e) => {
-                            console.log('Error loading image:', e);
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
+                                                  <Image
+                            src="/imagenes%20modulo%20practico%20%239/1.jpg"
+                            alt="Ejemplo de gráfico con Parabolic SAR"
+                            width={600}
+                            height={400}
+                            className="rounded-lg shadow-lg"
+                          />
                       </div>
                     </div>
                   </div>
