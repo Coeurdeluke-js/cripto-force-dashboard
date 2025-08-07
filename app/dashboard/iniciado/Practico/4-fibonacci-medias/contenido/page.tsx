@@ -190,22 +190,12 @@ export default function ModuloPractico4Contenido() {
                 <p className="text-sm mb-3">Muchos operadores consideran que los niveles de Fibonacci sólo son importantes porque los niveles son altamente publicitados y otros operadores tienen conocimiento de los mismos. Esta profecía autocumplida tiene el efecto de hacer significativos a estos niveles porque muchos operadores los consideran niveles importantes.</p>
                 <p className="text-sm mb-3">Si esto fuera verdad, ¿cuál es el peligro de utilizar los niveles de retroceso de Fibonacci para un movimiento pequeño que tiene lugar en un gráfico de 1 hora o en un período de tiempo aún menor?</p>
                 <div className="bg-[#1a1a1a] rounded-lg p-4">
-                  <p className="text-sm text-gray-300"><strong>NOTA:</strong> La pregunta del día es una pregunta retórica, cuyo objetivo es ayudarle a revisar lo que acaba de aprender. NO es necesario enviarnos una respuesta, ya que estas preguntas no son evaluadas. Sin embargo, si tiene dudas, o si desea compartir sus ideas con nosotros, no dude en contactarnos por email a Cursos@fxcmchile.cl</p>
+                  <p className="text-sm text-gray-300"><strong>NOTA:</strong> La pregunta del día es una pregunta retórica, cuyo objetivo es ayudarle a revisar lo que acaba de aprender. NO es necesario enviarnos una respuesta, ya que estas preguntas no son evaluadas.</p>
                 </div>
               </div>
             </div>
 
-            {/* Sección F: Prueba Líneas de Fibonacci */}
-            <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">F) Prueba Líneas de Fibonacci</h3>
-              
-              <div className="space-y-4">
-                <p className="text-sm mb-3">Por favor, evalúe el conocimiento que aprendió en esta lección.</p>
-                <div className="bg-[#1a1a1a] rounded-lg p-4">
-                  <p className="text-sm text-gray-300">Haga clic en el siguiente enlace para acceder el quiz: <a href="http://www.cursosforex.cl/viewtopic.php?f=5&t=8&sid=1aedce756ccba5161b2d838a22cd9d1b" className="text-[#ec4d58] hover:underline">http://www.cursosforex.cl/viewtopic.php?f=5&t=8&sid=1aedce756ccba5161b2d838a22cd9d1b</a></p>
-                </div>
-              </div>
-            </div>
+
 
             {/* Sección G: Utilizando las Medias Móviles */}
             <div className="bg-[#181818] rounded-lg p-6">
@@ -324,17 +314,7 @@ export default function ModuloPractico4Contenido() {
               </div>
             </div>
 
-            {/* Sección K: Prueba Medias Móviles */}
-            <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">K) Prueba Medias Móviles</h3>
-              
-              <div className="space-y-4">
-                <p className="text-sm mb-3">Por favor, evalúe el conocimiento que aprendió en esta lección.</p>
-                <div className="bg-[#1a1a1a] rounded-lg p-4">
-                  <p className="text-sm text-gray-300">Haga clic en el siguiente enlace para acceder el quiz: <a href="http://www.cursosforex.cl/viewtopic.php?f=5&t=8&sid=1aedce756ccba5161b2d838a22cd9d1b" className="text-[#ec4d58] hover:underline">http://www.cursosforex.cl/viewtopic.php?f=5&t=8&sid=1aedce756ccba5161b2d838a22cd9d1b</a></p>
-                </div>
-              </div>
-            </div>
+
           </div>
         </section>
 

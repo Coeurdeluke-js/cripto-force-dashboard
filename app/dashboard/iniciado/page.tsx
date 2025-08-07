@@ -274,16 +274,16 @@ function buildPracticalModulesWithCheckpoints() {
   result.push(practicalModulesBase[1]);
   
   // 3. Punto de Control 1
-  result.push({
-    id: `PC${pcCount}`,
+      result.push({
+        id: `PC${pcCount}`,
     title: `Evaluación: ${practicalModulesBase[0].title} y ${practicalModulesBase[1].title}`,
-    path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
-    icon: <CheckCircle />,
+        path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
+        icon: <CheckCircle />,
     description: `Punto de control: Evalúa los módulos "${practicalModulesBase[0].title}" y "${practicalModulesBase[1].title}"`,
     isLocked: false,
-    level: 'nivel1'
-  });
-  pcCount++;
+        level: 'nivel1'
+      });
+      pcCount++;
   
   // 4. Lección 2 - Patrones de Vela
   result.push(practicalModulesBase[2]);
@@ -292,11 +292,11 @@ function buildPracticalModulesWithCheckpoints() {
   result.push(practicalModulesBase[3]);
   
   // 6. Punto de Control 2
-  result.push({
-    id: `PC${pcCount}`,
+      result.push({
+        id: `PC${pcCount}`,
     title: `Evaluación: ${practicalModulesBase[2].title} y ${practicalModulesBase[3].title}`,
-    path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
-    icon: <CheckCircle />,
+        path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
+        icon: <CheckCircle />,
     description: `Punto de control: Evalúa los módulos "${practicalModulesBase[2].title}" y "${practicalModulesBase[3].title}"`,
     isLocked: true,
     level: 'nivel1'
@@ -334,10 +334,10 @@ function buildPracticalModulesWithCheckpoints() {
     path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
     icon: <CheckCircle />,
     description: `Punto de control: Evalúa los módulos "${practicalModulesBase[6].title}" y "${practicalModulesBase[7].title}"`,
-    isLocked: true,
-    level: 'nivel2'
-  });
-  pcCount++;
+        isLocked: true,
+        level: 'nivel2'
+      });
+      pcCount++;
   
   // 13. Lección 8 - Gestión de Riesgo
   result.push(practicalModulesBase[8]);
@@ -560,17 +560,17 @@ export default function IniciadoDashboard() {
   const [scrollLeft, setScrollLeft] = useState(0);
   const { progress } = useProgress();
 
-  // Objetivos a lograr
+// Objetivos a lograr
   const objectives: Objective[] = [
-    { id: 'obj1', title: 'Completar Nivel 1 Teórico', type: 'nivel1', category: 'theoretical', completed: false },
-    { id: 'obj2', title: 'Completar Nivel 1 Práctico', type: 'nivel1', category: 'practical', completed: false },
-    { id: 'obj3', title: 'Superar 2 Puntos de Control Teóricos', type: 'checkpoints', category: 'theoretical', completed: false },
-    { id: 'obj4', title: 'Superar 2 Puntos de Control Prácticos', type: 'checkpoints', category: 'practical', completed: false },
-    { id: 'obj5', title: 'Alcanzar 50% del curso completo', type: 'progress', category: 'general', completed: false },
-    { id: 'obj6', title: 'Completar Nivel 2 Teórico', type: 'nivel2', category: 'theoretical', completed: false },
-    { id: 'obj7', title: 'Completar Nivel 2 Práctico', type: 'nivel2', category: 'practical', completed: false },
-    { id: 'obj8', title: 'Superar todos los Puntos de Control', type: 'checkpoints', category: 'all', completed: false }
-  ];
+  { id: 'obj1', title: 'Completar Nivel 1 Teórico', type: 'nivel1', category: 'theoretical', completed: false },
+  { id: 'obj2', title: 'Completar Nivel 1 Práctico', type: 'nivel1', category: 'practical', completed: false },
+  { id: 'obj3', title: 'Superar 2 Puntos de Control Teóricos', type: 'checkpoints', category: 'theoretical', completed: false },
+  { id: 'obj4', title: 'Superar 2 Puntos de Control Prácticos', type: 'checkpoints', category: 'practical', completed: false },
+  { id: 'obj5', title: 'Alcanzar 50% del curso completo', type: 'progress', category: 'general', completed: false },
+  { id: 'obj6', title: 'Completar Nivel 2 Teórico', type: 'nivel2', category: 'theoretical', completed: false },
+  { id: 'obj7', title: 'Completar Nivel 2 Práctico', type: 'nivel2', category: 'practical', completed: false },
+  { id: 'obj8', title: 'Superar todos los Puntos de Control', type: 'checkpoints', category: 'all', completed: false }
+];
 
   // Función para calcular el estado de los objetivos basado en el progreso real
   const calculateObjectivesStatus = () => {

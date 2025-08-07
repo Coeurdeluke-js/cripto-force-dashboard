@@ -11,8 +11,8 @@ export default function ModuloPractico8Contenido() {
           <BackButton />
         </div>
         
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#ec4d58] mb-2 text-center">Lección 7: Análisis Fundamental</h1>
-        <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-center">Correlaciones entre Mercados</h2>
+        <h1 className="text-3xl sm:text-4xl font-bold text-[#ec4d58] mb-2 text-center">Curso Practico de Trading</h1>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-center">Lección 7: Análisis Fundamental 2</h2>
 
         <section className="mb-8">
           <div className="space-y-8">
@@ -133,24 +133,18 @@ export default function ModuloPractico8Contenido() {
               </div>
             </div>
 
-            {/* Sección D: Prueba */}
+            {/* Sección D: La pregunta del día */}
             <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">D) Prueba: Correlaciones</h3>
+              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">D) La pregunta del día</h3>
               
               <div className="space-y-4">
                 <p className="text-sm mb-3">
-                  Por favor evalúe su conocimiento sobre lo aprendido en esta lección. Acceda la prueba haciendo clic sobre el siguiente enlace:
+                  ¿Cómo utilizaría las correlaciones entre mercados para mejorar sus decisiones de trading?
                 </p>
                 
                 <div className="bg-[#1a1a1a] rounded-lg p-4">
                   <p className="text-sm text-gray-300">
-                    <strong>ENLACE A LA PRUEBA:</strong> http://www.cursosforex.cl/viewtopic.php?f=5&t=8&sid=1aedce756ccba5161b2d838a22cd9d1b
-                  </p>
-                </div>
-                
-                <div className="bg-[#1a1a1a] rounded-lg p-4">
-                  <p className="text-sm text-gray-300">
-                    <strong>NOTA:</strong> La pregunta del día es una pregunta retórica, cuyo objetivo es ayudarle a revisar lo que acaba de aprender. NO es necesario enviarnos una respuesta, ya que estas preguntas no son evaluadas. Sin embargo, si tiene dudas, o si desea compartir sus ideas con nosotros, no dude en contactarnos por email a Cursos@fxcmchile.cl
+                    <strong>NOTA:</strong> La pregunta del día es una pregunta retórica, cuyo objetivo es ayudarle a revisar lo que acaba de aprender. NO es necesario enviarnos una respuesta, ya que estas preguntas no son evaluadas.
                   </p>
                 </div>
               </div>
@@ -166,6 +160,7 @@ export default function ModuloPractico8Contenido() {
     </div>
   );
 } 
+
 
 
 

@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   // Usamos modo oscuro basado en clase 'dark' que se aplica al <html> o <body>
   darkMode: 'class',
 
@@ -20,6 +20,12 @@ module.exports = {
         'highlight-5': 'rgba(0, 255, 179, 0.05)',
         'highlight-8': 'rgba(0, 255, 179, 0.08)',
         'highlight-10': 'rgba(0, 255, 179, 0.1)',
+        // Colores específicos del tema oscuro
+        'dark-bg': '#121212',
+        'dark-card': '#1a1a1a',
+        'dark-border': '#232323',
+        'dark-text': '#ffffff',
+        'dark-text-secondary': '#9ca3af',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

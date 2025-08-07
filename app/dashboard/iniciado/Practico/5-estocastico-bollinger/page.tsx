@@ -11,7 +11,7 @@ export default function ModuloPractico5() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <BackButton />
+          <BackButton />
               <div>
                 <h1 className="text-xl font-semibold">Módulo 5: Estocástico y Bandas de Bollinger</h1>
                 <p className="text-gray-400 text-sm">Indicadores de sobrecompra y sobreventa</p>
@@ -71,7 +71,7 @@ export default function ModuloPractico5() {
                   <li>Puede utilizarse para determinar niveles de sobrecompra/venta, como el RSI</li>
                   <li>Puede utilizarse como un cruce similar a las medias móviles</li>
                   <li>Puede utilizarse para descubrir las divergencias, que indican posible debilidad en las tendencias</li>
-                </ul>
+            </ul>
 
                 <h4 className="font-semibold mb-2">Cruce:</h4>
                 <p className="mb-4">
@@ -136,7 +136,7 @@ export default function ModuloPractico5() {
                   <CheckCircle className="w-4 h-4 mr-2" />
                   Acceder a la Prueba
                 </a>
-              </div>
+          </div>
 
               <div className="bg-gray-700 rounded-lg p-4">
                 <h3 className="text-lg font-semibold mb-3">E) Las Bandas de Bollinger</h3>
@@ -152,7 +152,7 @@ export default function ModuloPractico5() {
                   <li>Una media móvil, que generalmente no está incluida en la mayoría de los paquetes de gráficos</li>
                   <li>Banda superior con dos desviaciones estándar por encima de la media móvil</li>
                   <li>Banda inferior con dos desviaciones estándar por debajo de la media móvil</li>
-                </ul>
+            </ul>
 
                 <p className="mb-4">
                   Las bandas de Bollinger es un indicador excelente de mercados en rango. Es decir que funcionan mejor cuando el mercado no tiene una tendencia fuerte, pero mas bien fluctúan entre una barrera superior (resistencia) y una barrera inferior (soporte). Las bandas de Bollinger funcionan conforme a la lógica de que el precio del par de una divisa seguramente gravitará alrededor del promedio, y por lo tanto cuando se aparta demasiado lejos – como por ejemplo dos desviaciones estándar – el precio retrocederá hacia su media móvil.
@@ -204,7 +204,7 @@ export default function ModuloPractico5() {
                     Coloque una operación basada en el indicador de las Bandas de Bollinger. Coméntenos por correo electrónico su operación y por qué la realizó. Si lo desea, no dude en enviarnos una imagen del gráfico que usted está viendo como ayuda para transmitirnos por qué realizó esa operación.
                   </p>
                 </div>
-              </div>
+          </div>
 
               <div className="bg-gray-700 rounded-lg p-4">
                 <h3 className="text-lg font-semibold mb-3">H) Prueba Las Bandas de Bollinger</h3>

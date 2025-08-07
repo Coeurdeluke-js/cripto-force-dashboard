@@ -9,10 +9,10 @@ export default function ModuloPractico7Contenido() {
         {/* Botón Volver en la esquina superior izquierda */}
         <div className="absolute top-4 left-4">
           <BackButton />
-        </div>
-        
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#ec4d58] mb-2 text-center">Lección 6: Análisis Fundamental</h1>
-        <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-center">¿Quién y Qué Mueve el Mercado?</h2>
+          </div>
+          
+        <h1 className="text-3xl sm:text-4xl font-bold text-[#ec4d58] mb-2 text-center">Curso Practico de Trading</h1>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-center">Lección 6: Análisis Fundamental 1</h2>
 
         <section className="mb-8">
           <div className="space-y-8">
@@ -54,7 +54,7 @@ export default function ModuloPractico7Contenido() {
                   </p>
                 </div>
               </div>
-            </div>
+          </div>
 
             {/* Sección C: Participantes Claves del Mercado */}
             <div className="bg-[#181818] rounded-lg p-6">
@@ -64,21 +64,21 @@ export default function ModuloPractico7Contenido() {
                 <p className="text-sm mb-3">
                   Si bien el mercado de divisas era tradicional y totalmente excluyente para todos excepto para un grupo seleccionado de grandes bancos, los avances de la tecnología y la reducción de las barreras del flujo de capital han incorporado una gran variedad de nuevos participantes.
                 </p>
-                
+
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Bancos Comerciales y de Inversión</h4>
                   <ul className="text-sm space-y-2 mb-3">
                     <li>• Conforman el mercado "Interbancario" y operan mediante sistemas de correaje electrónico (EBS, por sus siglas en inglés).</li>
                     <li>• Estos bancos operan entre ellos mediante fuertes relaciones de crédito, y conforman la mayor parte de la compraventa de divisas.</li>
                     <li>• Estos bancos operan por cuenta propia (operan ellos mismos) y a través del flujo de clientes llenan las órdenes de los clientes que están fuera del mercado interbancario.</li>
-                  </ul>
-                </div>
+            </ul>
+          </div>
                 
                 <p className="text-sm mb-3">
                   El mercado interbancario está compuesto por los bancos comerciales y de inversión más grandes del mundo y en él tiene lugar el mayor volumen de operaciones comerciales así como una gran cantidad de compraventa intradía especulativa.
                 </p>
-              </div>
-            </div>
+        </div>
+          </div>
 
             {/* Sección D: Participantes Claves del Mercado (Cont.) */}
             <div className="bg-[#181818] rounded-lg p-6">
@@ -98,162 +98,29 @@ export default function ModuloPractico7Contenido() {
                   <ul className="text-sm space-y-2 mb-3">
                     <li>• Tienen acceso a grandes reservas de capitales.</li>
                     <li>• Tienen objetivos económicos específicos.</li>
-                    <li>• Regulan la oferta de dinero y las tasas de interés.</li>
+                    <li>• Pueden intervenir en el mercado para estabilizar su moneda.</li>
                   </ul>
                 </div>
                 
                 <div>
-                  <h4 className="font-semibold text-[#ec4d58] mb-2">Fondos Globales Administrados</h4>
+                  <h4 className="font-semibold text-[#ec4d58] mb-2">Operadores Minoristas</h4>
                   <ul className="text-sm space-y-2 mb-3">
-                    <li>• Muchos fondos gestionados que buscan obtener ganancias invierten en instrumentos financieros en divisas.</li>
-                    <li>• Cuando compran y venden estos instrumentos, siempre se necesita una conversión de divisas.</li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h4 className="font-semibold text-[#ec4d58] mb-2">Particulares</h4>
-                  <ul className="text-sm space-y-2 mb-3">
-                    <li>• Con la llegada de la compraventa de divisas en línea, los inversionistas minoristas ahora tienen acceso total al mercado cambiario de contado.</li>
-                    <li>• Los clientes minoristas operan con divisas tanto para fines especulativos como de cobertura.</li>
+                    <li>• Incluyen fondos de cobertura, fondos de pensiones y operadores individuales.</li>
+                    <li>• Representan una parte creciente del volumen total del mercado.</li>
+                    <li>• Operan principalmente con fines especulativos.</li>
                   </ul>
                 </div>
               </div>
             </div>
 
-            {/* Sección E: Intervención- El Banco de Japón */}
+            {/* Sección E: La pregunta del día */}
             <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">E) Intervención- El Banco de Japón</h3>
+              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">E) La pregunta del día</h3>
               
               <div className="space-y-4">
                 <p className="text-sm mb-3">
-                  El ejemplo más prolífico de intervenciones puede observarse en las acciones del Banco de Japón. La economía de Japón depende de sus exportaciones, esto significa que la economía se basa en la venta de productos a nivel internacional.
+                  ¿Cómo cree que la intervención de los bancos centrales afecta el comportamiento del mercado de divisas?
                 </p>
-                
-                <p className="text-sm mb-3">
-                  Como la economía japonesa se beneficia con un yen más débil, el banco central se ocupa de asegurarse de que el valor del yen permanezca bajo. Como resultado, el Banco de Japón intervino muchas ocasiones en el mercado de divisas, vendiendo, literalmente hablando, billones de yenes para bajar el tipo de cambio.
-                </p>
-                
-                <p className="text-sm mb-3">
-                  Por lo tanto, muchos operadores compraron USD/JPY alrededor de ese nivel de 115, y cosecharon ganancias al hacerlo.
-                </p>
-                
-                {/* Imagen 1 después de la frase sobre operadores comprando USD/JPY */}
-                <div className="my-4 flex justify-center">
-                  <Image
-                    src="/contenido%20modulo%20practico%20%237/1.png"
-                    alt="Operadores comprando USD/JPY en nivel 115"
-                    width={600}
-                    height={400}
-                    className="rounded-lg shadow-lg"
-                  />
-                </div>
-                
-                <p className="text-sm mb-3">
-                  El Banco de Japón dibujó una "línea en la arena" justo por encima de 105,00, e intervino en gran escala.
-                </p>
-                
-                {/* Imagen 2 después de la frase sobre línea en la arena */}
-                <div className="my-4 flex justify-center">
-                  <Image
-                    src="/contenido%20modulo%20practico%20%237/2.png"
-                    alt="Línea en la arena del Banco de Japón"
-                    width={600}
-                    height={400}
-                    className="rounded-lg shadow-lg"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Sección F: Intervención del Banco de Japón: ¿Cómo Reaccionaron los Operadores? */}
-            <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">F) Intervención del Banco de Japón: ¿Cómo Reaccionaron los Operadores?</h3>
-              
-              <div className="space-y-4">
-                <p className="text-sm mb-3">
-                  El 19 de mayo de 2004, el USD/JPY alcanzó un mínimo de 115,07. El Banco de Japón, sabiendo que había una formación de "cabeza y hombros" con una línea de clavícula (neckline) en 115, intervino para sostener el tipo de cambio.
-                </p>
-                
-                <p className="text-sm mb-3">
-                  Si los operadores hubiesen utilizado el conocimiento fundamental y los niveles técnicos, podrían haber logrado una operación muy rentable.
-                </p>
-                
-                {/* Imagen 3 después de la frase sobre combinación de análisis */}
-                <div className="my-4 flex justify-center">
-                  <Image
-                    src="/contenido%20modulo%20practico%20%237/3.png"
-                    alt="Combinación de análisis fundamental y técnico"
-                    width={600}
-                    height={400}
-                    className="rounded-lg shadow-lg"
-                  />
-                </div>
-                
-                <p className="text-sm mb-3">
-                  Una vez que el precio cae por debajo del neckline en el lado derecho del segundo hombro, es señal de que hay que vender.
-                </p>
-                
-                {/* Imagen 4 después de la frase sobre neckline */}
-                <div className="my-4 flex justify-center">
-                  <Image
-                    src="/contenido%20modulo%20practico%20%237/4.png"
-                    alt="Patrón de reversión con neckline"
-                    width={600}
-                    height={400}
-                    className="rounded-lg shadow-lg"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Sección G: Participantes del Mercado en Acción */}
-            <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">G) Participantes del Mercado en Acción: La Forma por Medio de la que los Especuladores Vencieron al Banco</h3>
-              
-              <div className="space-y-4">
-                <p className="text-sm mb-3">
-                  1992: El Banco de Inglaterra no logra apoyar el GBP. El objetivo de este artículo es mostrar uno de los más famosos ejemplos de intervención de un banco central con el fin de mantener el tipo de cambio a un nivel fijo, y el posterior fracaso en lograrlo.
-                </p>
-                
-                <p className="text-sm mb-3">
-                  El Mecanismo de Tipos de Cambio (ERM, por sus siglas en inglés) europeo lo introdujo la Comunidad Europea a principios del año 1979. Consistía en una parte importante del Sistema Monetario Europeo (EMS, por sus siglas en inglés), cuyo objetivo era reducir la variabilidad del tipo de cambio y alcanzar la estabilidad monetaria en Europa antes de introducir el Euro como una moneda común única.
-                </p>
-                
-                <p className="text-sm mb-3">
-                  Si un país quería permanecer en el ERM y seguir en rumbo de convertirse parte de la moneda común europea, su moneda local debía permanecer dentro de los umbrales inflexibles designados por el ERM.
-                </p>
-                
-                {/* Imagen 5 después de la frase sobre ERM */}
-                <div className="my-4 flex justify-center">
-                  <Image
-                    src="/contenido%20modulo%20practico%20%237/5.png"
-                    alt="Sistema Monetario Europeo ERM"
-                    width={600}
-                    height={400}
-                    className="rounded-lg shadow-lg"
-                  />
-                </div>
-                
-                <p className="text-sm mb-3">
-                  Dentro de los especuladores, el especulador más famoso contra al Banco de Inglaterra fue George Soros, quien pidió en préstamo grandes cantidades de libras británicas a fin de convertirlas en marcos alemán. Cuando el tipo de cambio colapsó, simplemente compró nuevamente libras y canceló el préstamo obteniendo una enorme ganancia.
-                </p>
-              </div>
-            </div>
-
-            {/* Sección H: Prueba */}
-            <div className="bg-[#181818] rounded-lg p-6">
-              <h3 className="text-lg font-bold text-[#ec4d58] mb-4">H) Prueba: ¿Quién y Qué Mueve el Mercado?</h3>
-              
-              <div className="space-y-4">
-                <p className="text-sm mb-3">
-                  Por favor evalúe su conocimiento sobre lo aprendido en esta lección. Acceda la prueba haciendo clic sobre el siguiente enlace:
-                </p>
-                
-                <div className="bg-[#1a1a1a] rounded-lg p-4">
-                  <p className="text-sm text-gray-300">
-                    <strong>ENLACE A LA PRUEBA:</strong> http://www.cursosforex.cl/viewtopic.php?f=5&t=8&sid=1aedce756ccba5161b2d838a22cd9d1b
-                  </p>
-                </div>
                 
                 <div className="bg-[#1a1a1a] rounded-lg p-4">
                   <p className="text-sm text-gray-300">
