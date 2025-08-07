@@ -44,6 +44,14 @@ interface Module {
   level: 'nivel1' | 'nivel2';
 }
 
+interface Objective {
+  id: string;
+  title: string;
+  type: 'nivel1' | 'nivel2' | 'checkpoints' | 'progress';
+  category: 'theoretical' | 'practical' | 'general' | 'all';
+  completed: boolean;
+}
+
 // Módulos Teóricos Base
 const theoreticalModulesBase: Module[] = [
   {
@@ -219,7 +227,7 @@ const practicalModulesBase: Module[] = [
   {
     id: '7',
     title: 'Análisis Fundamental 1',
-    path: '/dashboard/iniciado/Practico/7-analisis-fundamental-1',
+    path: '/dashboard/iniciado/Practico/7-analisis-fundamental',
     icon: <Brain />,
     description: 'Análisis fundamental y factores que mueven el mercado',
     isLocked: true,
@@ -414,17 +422,7 @@ function calculateUnifiedProgress(theoreticalModules: Module[], practicalModules
   };
 }
 
-// Objetivos a lograr
-const objectives = [
-  { id: 'obj1', title: 'Completar Nivel 1 Teórico', type: 'nivel1', category: 'theoretical', completed: false },
-  { id: 'obj2', title: 'Completar Nivel 1 Práctico', type: 'nivel1', category: 'practical', completed: false },
-  { id: 'obj3', title: 'Superar 2 Puntos de Control Teóricos', type: 'checkpoints', category: 'theoretical', completed: false },
-  { id: 'obj4', title: 'Superar 2 Puntos de Control Prácticos', type: 'checkpoints', category: 'practical', completed: false },
-  { id: 'obj5', title: 'Alcanzar 50% del curso completo', type: 'progress', category: 'general', completed: false },
-  { id: 'obj6', title: 'Completar Nivel 2 Teórico', type: 'nivel2', category: 'theoretical', completed: false },
-  { id: 'obj7', title: 'Completar Nivel 2 Práctico', type: 'nivel2', category: 'practical', completed: false },
-  { id: 'obj8', title: 'Superar todos los Puntos de Control', type: 'checkpoints', category: 'all', completed: false }
-];
+// Objetivos a lograr - se define dentro del componente
 
 // Función para calcular módulos desbloqueados basado en el progreso
 function calculateUnlockedModules(modules: Module[], progress: any, courseType: 'theoretical' | 'practical') {
@@ -518,33 +516,33 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
           isLocked = !isCheckpointCompleted('PC4', 'nivel2');
           console.log(`PC5 Práctico - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
         }
-      } else {
-        // Para contenido teórico, mantener lógica original
-        // Verificar si todos los checkpoints del nivel 1 están completados
-        const allNivel1Completed = nivel1Checkpoints.every(checkpoint => 
-          isCheckpointCompleted(checkpoint.id, 'nivel1')
-        );
-        
-        if (!allNivel1Completed) {
-          // Si no están todos los checkpoints del nivel 1 completados, bloquear
-          isLocked = true;
-          console.log(`PC${checkpointNumber} Teórico - Nivel 1 no completado, isLocked: ${isLocked}`);
-        } else {
-          if (checkpointNumber === 3) {
-            // PC3 se desbloquea cuando PC2 está completado
-            isLocked = !isCheckpointCompleted('PC2', 'nivel1');
-            console.log(`PC3 Teórico - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
-          } else if (checkpointNumber === 4) {
-            // PC4 se desbloquea cuando PC3 está completado
-            isLocked = !isCheckpointCompleted('PC3', 'nivel2');
-            console.log(`PC4 Teórico - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel2')}, isLocked: ${isLocked}`);
-          } else if (checkpointNumber === 5) {
-            // PC5 se desbloquea cuando PC4 está completado
-            isLocked = !isCheckpointCompleted('PC4', 'nivel2');
-            console.log(`PC5 Teórico - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
+              } else {
+          // Para contenido teórico, mantener lógica original
+          // Verificar si todos los checkpoints del nivel 1 están completados
+          const allNivel1Completed = nivel1Checkpoints.every(checkpoint => 
+            isCheckpointCompleted(checkpoint.id, 'nivel1')
+          );
+          
+          if (!allNivel1Completed) {
+            // Si no están todos los checkpoints del nivel 1 completados, bloquear
+            isLocked = true;
+            console.log(`PC${checkpointNumber} Teórico - Nivel 1 no completado, isLocked: ${isLocked}`);
+          } else {
+            if (checkpointNumber === 3) {
+              // PC3 se desbloquea cuando PC2 está completado
+              isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+              console.log(`PC3 Teórico - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
+            } else if (checkpointNumber === 4) {
+              // PC4 se desbloquea cuando PC3 está completado
+              isLocked = !isCheckpointCompleted('PC3', 'nivel1');
+              console.log(`PC4 Teórico - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel1')}, isLocked: ${isLocked}`);
+            } else if (checkpointNumber === 5) {
+              // PC5 se desbloquea cuando PC4 está completado
+              isLocked = !isCheckpointCompleted('PC4', 'nivel2');
+              console.log(`PC5 Teórico - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
+            }
           }
         }
-      }
     }
     
     return {
@@ -562,9 +560,21 @@ export default function IniciadoDashboard() {
   const [scrollLeft, setScrollLeft] = useState(0);
   const { progress } = useProgress();
 
+  // Objetivos a lograr
+  const objectives: Objective[] = [
+    { id: 'obj1', title: 'Completar Nivel 1 Teórico', type: 'nivel1', category: 'theoretical', completed: false },
+    { id: 'obj2', title: 'Completar Nivel 1 Práctico', type: 'nivel1', category: 'practical', completed: false },
+    { id: 'obj3', title: 'Superar 2 Puntos de Control Teóricos', type: 'checkpoints', category: 'theoretical', completed: false },
+    { id: 'obj4', title: 'Superar 2 Puntos de Control Prácticos', type: 'checkpoints', category: 'practical', completed: false },
+    { id: 'obj5', title: 'Alcanzar 50% del curso completo', type: 'progress', category: 'general', completed: false },
+    { id: 'obj6', title: 'Completar Nivel 2 Teórico', type: 'nivel2', category: 'theoretical', completed: false },
+    { id: 'obj7', title: 'Completar Nivel 2 Práctico', type: 'nivel2', category: 'practical', completed: false },
+    { id: 'obj8', title: 'Superar todos los Puntos de Control', type: 'checkpoints', category: 'all', completed: false }
+  ];
+
   // Función para calcular el estado de los objetivos basado en el progreso real
   const calculateObjectivesStatus = () => {
-    const objectivesWithStatus = objectives.map(objective => {
+    const objectivesWithStatus = objectives.map((objective: Objective) => {
       let completed = false;
       
       switch (objective.type) {
@@ -976,7 +986,7 @@ export default function IniciadoDashboard() {
                 Objetivos a Lograr
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 objectives-grid">
-                {calculateObjectivesStatus().slice(0, 6).map((objective, index) => (
+                {calculateObjectivesStatus().slice(0, 6).map((objective: Objective, index: number) => (
                   <div 
                     key={objective.id} 
                     className="flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg bg-[#232323] transition-all duration-300 ease-out transform hover:scale-[1.02] hover:bg-[#2a2a2a]"

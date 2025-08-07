@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 interface ProgressState {
   theoretical: {
@@ -235,13 +235,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       try {
         const result = JSON.parse(localStorageResult);
         if (result.completed) {
-          // Actualizar el contexto con el resultado encontrado
-          setProgress(prev => {
-            const newProgress = { ...prev };
-            newProgress[courseType][level].results[checkpointId] = result;
-            newProgress[courseType][level].checkpoints[checkpointId] = true;
-            return newProgress;
-          });
+          // Retornar el resultado sin actualizar el estado durante el renderizado
           return result;
         }
       } catch (e) {
@@ -251,6 +245,46 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     
     return null;
   };
+
+  // Función separada para sincronizar resultados desde localStorage
+  const syncCheckpointResults = useCallback(() => {
+    if (typeof window === 'undefined') return;
+
+    const courseTypes = ['theoretical', 'practical'] as const;
+    const levels = ['nivel1', 'nivel2'] as const;
+
+    courseTypes.forEach(courseType => {
+      levels.forEach(level => {
+        const checkpoints = progress[courseType][level].checkpoints;
+        Object.keys(checkpoints).forEach(checkpointId => {
+          const prefix = courseType === 'theoretical' ? 'teorico_' : 'practico_';
+          const localStorageKey = prefix + checkpointId.toLowerCase() + '_result';
+          const localStorageResult = localStorage.getItem(localStorageKey);
+          
+          if (localStorageResult && !progress[courseType][level].results[checkpointId]) {
+            try {
+              const result = JSON.parse(localStorageResult);
+              if (result.completed) {
+                setProgress(prev => {
+                  const newProgress = { ...prev };
+                  newProgress[courseType][level].results[checkpointId] = result;
+                  newProgress[courseType][level].checkpoints[checkpointId] = true;
+                  return newProgress;
+                });
+              }
+            } catch (e) {
+              console.error('Error parsing localStorage result:', e);
+            }
+          }
+        });
+      });
+    });
+  }, [progress]);
+
+  // Ejecutar sincronización al montar el componente
+  useEffect(() => {
+    syncCheckpointResults();
+  }, [syncCheckpointResults]);
 
   const resetProgress = () => {
     setProgress(initialProgress);
