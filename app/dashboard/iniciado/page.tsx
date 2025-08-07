@@ -25,7 +25,6 @@ import {
   Trophy, 
   ListChecks, 
   AlertTriangle, 
-  ArrowRight, 
   Calendar, 
   LogOut, 
   Star
@@ -201,26 +200,26 @@ const practicalModulesBase: Module[] = [
   },
   {
     id: '5',
-    title: 'Estocástico y Bandas de Bollinger',
-    path: '/dashboard/iniciado/Practico/5-estocastico-bollinger',
-    icon: <Cog />,
-    description: 'Indicadores de sobrecompra y sobreventa',
-    isLocked: false,
+    title: 'Indicadores RSI y MACD',
+    path: '/dashboard/iniciado/Practico/5-indicadores-rsi-macd',
+    icon: <Wrench />,
+    description: 'Osciladores y confirmación de señales',
+    isLocked: true,
     level: 'nivel1'
   },
   {
     id: '6',
-    title: 'Indicadores RSI y MACD',
-    path: '/dashboard/iniciado/Practico/6-indicadores-rsi-macd',
-    icon: <Wrench />,
-    description: 'Osciladores y confirmación de señales',
+    title: 'Estocástico y Bandas de Bollinger',
+    path: '/dashboard/iniciado/Practico/6-estocastico-bollinger',
+    icon: <Cog />,
+    description: 'Indicadores de sobrecompra y sobreventa',
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel1'
   },
   {
     id: '7',
-    title: 'Análisis Fundamental',
-    path: '/dashboard/iniciado/Practico/7-analisis-fundamental',
+    title: 'Análisis Fundamental 1',
+    path: '/dashboard/iniciado/Practico/7-analisis-fundamental-1',
     icon: <Brain />,
     description: 'Análisis fundamental y factores que mueven el mercado',
     isLocked: true,
@@ -228,10 +227,10 @@ const practicalModulesBase: Module[] = [
   },
   {
     id: '8',
-    title: 'Correlaciones entre Mercados',
-    path: '/dashboard/iniciado/Practico/8-correlaciones-mercados',
+    title: 'Análisis Fundamental 2',
+    path: '/dashboard/iniciado/Practico/8-analisis-fundamental-2',
     icon: <Network />,
-    description: 'Relaciones entre diferentes mercados financieros',
+    description: 'Análisis fundamental avanzado',
     isLocked: true,
     level: 'nivel2'
   },
@@ -255,52 +254,99 @@ const practicalModulesBase: Module[] = [
   }
 ];
 
-// Generar puntos de control prácticos cada 2 módulos
+// Generar puntos de control prácticos según el orden correcto
 function buildPracticalModulesWithCheckpoints() {
   const result: Module[] = [];
   let pcCount = 1;
   
-  // Nivel 1 (primeros 5 módulos)
-  for (let i = 0; i < 5; i += 2) {
-    result.push(practicalModulesBase[i]);
-    if (practicalModulesBase[i + 1]) result.push(practicalModulesBase[i + 1]);
-    // Insertar punto de control después de cada par
-    if (practicalModulesBase[i + 1]) {
-      const mod1 = practicalModulesBase[i].title;
-      const mod2 = practicalModulesBase[i + 1].title;
-      result.push({
-        id: `PC${pcCount}`,
-        title: `Evaluación: ${mod1} y ${mod2}`,
-        path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
-        icon: <CheckCircle />,
-        description: `Punto de control: Evalúa los módulos "${mod1}" y "${mod2}"`,
-        isLocked: pcCount > 2,
-        level: 'nivel1'
-      });
-      pcCount++;
-    }
-  }
+  // 1. Introducción al Trading
+  result.push(practicalModulesBase[0]);
   
-  // Nivel 2 (últimos 5 módulos)
-  for (let i = 5; i < practicalModulesBase.length; i += 2) {
-    result.push(practicalModulesBase[i]);
-    if (practicalModulesBase[i + 1]) result.push(practicalModulesBase[i + 1]);
-    // Insertar punto de control después de cada par
-    if (practicalModulesBase[i + 1]) {
-      const mod1 = practicalModulesBase[i].title;
-      const mod2 = practicalModulesBase[i + 1].title;
-      result.push({
-        id: `PC${pcCount}`,
-        title: `Evaluación: ${mod1} y ${mod2}`,
-        path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
-        icon: <CheckCircle />,
-        description: `Punto de control: Evalúa los módulos "${mod1}" y "${mod2}"`,
-        isLocked: true,
-        level: 'nivel2'
-      });
-      pcCount++;
-    }
-  }
+  // 2. Lección 1 - Introducción al Análisis Técnico
+  result.push(practicalModulesBase[1]);
+  
+  // 3. Punto de Control 1
+  result.push({
+    id: `PC${pcCount}`,
+    title: `Evaluación: ${practicalModulesBase[0].title} y ${practicalModulesBase[1].title}`,
+    path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
+    icon: <CheckCircle />,
+    description: `Punto de control: Evalúa los módulos "${practicalModulesBase[0].title}" y "${practicalModulesBase[1].title}"`,
+    isLocked: false,
+    level: 'nivel1'
+  });
+  pcCount++;
+  
+  // 4. Lección 2 - Patrones de Vela
+  result.push(practicalModulesBase[2]);
+  
+  // 5. Lección 3 - Fibonacci y medias móviles
+  result.push(practicalModulesBase[3]);
+  
+  // 6. Punto de Control 2
+  result.push({
+    id: `PC${pcCount}`,
+    title: `Evaluación: ${practicalModulesBase[2].title} y ${practicalModulesBase[3].title}`,
+    path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
+    icon: <CheckCircle />,
+    description: `Punto de control: Evalúa los módulos "${practicalModulesBase[2].title}" y "${practicalModulesBase[3].title}"`,
+    isLocked: true,
+    level: 'nivel1'
+  });
+  pcCount++;
+  
+  // 7. Lección 4 - Indicadores RSI y MACD
+  result.push(practicalModulesBase[4]);
+  
+  // 8. Lección 5 - Estocástico y Bandas de Bollinger
+  result.push(practicalModulesBase[5]);
+  
+  // 9. Punto de Control 3
+  result.push({
+    id: `PC${pcCount}`,
+    title: `Evaluación: ${practicalModulesBase[4].title} y ${practicalModulesBase[5].title}`,
+    path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
+    icon: <CheckCircle />,
+    description: `Punto de control: Evalúa los módulos "${practicalModulesBase[4].title}" y "${practicalModulesBase[5].title}"`,
+    isLocked: true,
+    level: 'nivel1'
+  });
+  pcCount++;
+  
+  // 10. Lección 6 - Análisis Fundamental 1
+  result.push(practicalModulesBase[6]);
+  
+  // 11. Lección 7 - Análisis Fundamental 2
+  result.push(practicalModulesBase[7]);
+  
+  // 12. Punto de Control 4
+  result.push({
+    id: `PC${pcCount}`,
+    title: `Evaluación: ${practicalModulesBase[6].title} y ${practicalModulesBase[7].title}`,
+    path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
+    icon: <CheckCircle />,
+    description: `Punto de control: Evalúa los módulos "${practicalModulesBase[6].title}" y "${practicalModulesBase[7].title}"`,
+    isLocked: true,
+    level: 'nivel2'
+  });
+  pcCount++;
+  
+  // 13. Lección 8 - Gestión de Riesgo
+  result.push(practicalModulesBase[8]);
+  
+  // 14. Lección 9 - Plan de Trading
+  result.push(practicalModulesBase[9]);
+  
+  // 15. Punto de Control 5
+  result.push({
+    id: `PC${pcCount}`,
+    title: `Evaluación: ${practicalModulesBase[8].title} y ${practicalModulesBase[9].title}`,
+    path: `/dashboard/iniciado/puntos-de-control/practico/pc${pcCount}`,
+    icon: <CheckCircle />,
+    description: `Punto de control: Evalúa los módulos "${practicalModulesBase[8].title}" y "${practicalModulesBase[9].title}"`,
+    isLocked: true,
+    level: 'nivel2'
+  });
   
   return result;
 }
@@ -384,7 +430,9 @@ const objectives = [
 function calculateUnlockedModules(modules: Module[], progress: any, courseType: 'theoretical' | 'practical') {
   // Función auxiliar para verificar si un checkpoint está completado
   const isCheckpointCompleted = (checkpointId: string, level: 'nivel1' | 'nivel2') => {
-    return progress[courseType][level].checkpoints[checkpointId] || false;
+    const result = progress[courseType][level].checkpoints[checkpointId] || false;
+    console.log(`DEBUG: isCheckpointCompleted(${courseType}, ${level}, ${checkpointId}) = ${result}`);
+    return result;
   };
 
   // Separar módulos por nivel para facilitar el cálculo
@@ -403,14 +451,14 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
       if (moduleIndex <= 2) {
         // Los primeros dos módulos siempre están desbloqueados
         isLocked = false;
-      } else if (moduleIndex === 3) {
-        // Módulo 3 se desbloquea cuando PC1 está completado
+      } else if (moduleIndex === 3 || moduleIndex === 4) {
+        // Módulos 3 y 4 se desbloquean cuando PC1 está completado
         isLocked = !isCheckpointCompleted('PC1', 'nivel1');
-        console.log(`Módulo 3 - PC1 completado: ${isCheckpointCompleted('PC1', 'nivel1')}, isLocked: ${isLocked}`);
-      } else if (moduleIndex === 4) {
-        // Módulo 4 se desbloquea cuando PC1 está completado
-        isLocked = !isCheckpointCompleted('PC1', 'nivel1');
-        console.log(`Módulo 4 - PC1 completado: ${isCheckpointCompleted('PC1', 'nivel1')}, isLocked: ${isLocked}`);
+        console.log(`Módulo ${moduleIndex} - PC1 completado: ${isCheckpointCompleted('PC1', 'nivel1')}, isLocked: ${isLocked}`);
+      } else if (moduleIndex === 5 || moduleIndex === 6) {
+        // Módulos 5 y 6 se desbloquean cuando PC2 está completado
+        isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+        console.log(`Módulo ${moduleIndex} - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
       }
     }
     
@@ -425,6 +473,18 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
         // PC2 se desbloquea cuando PC1 está completado
         isLocked = !isCheckpointCompleted('PC1', 'nivel1');
         console.log(`PC2 - PC1 completado: ${isCheckpointCompleted('PC1', 'nivel1')}, isLocked: ${isLocked}`);
+      } else if (checkpointNumber === 3) {
+        // PC3 se desbloquea cuando PC1 Y PC2 están completados
+        const pc1Completed = isCheckpointCompleted('PC1', 'nivel1');
+        const pc2Completed = isCheckpointCompleted('PC2', 'nivel1');
+        isLocked = !(pc1Completed && pc2Completed);
+        console.log(`=== PC3 NIVEL1 PRÁCTICO DEBUG ===`);
+        console.log(`PC1 completado: ${pc1Completed}`);
+        console.log(`PC2 completado: ${pc2Completed}`);
+        console.log(`PC1 && PC2: ${pc1Completed && pc2Completed}`);
+        console.log(`isLocked: ${isLocked}`);
+        console.log(`Progress state:`, progress.practical.nivel1.checkpoints);
+        console.log(`========================`);
       }
     }
     
@@ -432,30 +492,14 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
     if (module.level === 'nivel2' && !module.id.startsWith('PC')) {
       const moduleIndex = parseInt(module.id);
       
-      if (moduleIndex === 5) {
-        // Módulo 5 se desbloquea cuando PC2 está completado
-        isLocked = !isCheckpointCompleted('PC2', 'nivel1');
-        console.log(`Módulo 5 - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
-      } else if (moduleIndex === 6) {
-        // Módulo 6 se desbloquea cuando PC2 está completado
-        isLocked = !isCheckpointCompleted('PC2', 'nivel1');
-        console.log(`Módulo 6 - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
-      } else if (moduleIndex === 7) {
-        // Módulo 7 se desbloquea cuando PC3 está completado
-        isLocked = !isCheckpointCompleted('PC3', 'nivel2');
-        console.log(`Módulo 7 - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel2')}, isLocked: ${isLocked}`);
-      } else if (moduleIndex === 8) {
-        // Módulo 8 se desbloquea cuando PC4 está completado
+      if (moduleIndex === 7 || moduleIndex === 8) {
+        // Módulos 7 y 8 se desbloquean cuando PC3 está completado
+        isLocked = !isCheckpointCompleted('PC3', 'nivel1');
+        console.log(`Módulo ${moduleIndex} - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel1')}, isLocked: ${isLocked}`);
+      } else if (moduleIndex === 9 || moduleIndex === 10) {
+        // Módulos 9 y 10 se desbloquean cuando PC4 está completado
         isLocked = !isCheckpointCompleted('PC4', 'nivel2');
-        console.log(`Módulo 8 - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
-      } else if (moduleIndex === 9) {
-        // Módulo 9 se desbloquea cuando PC4 está completado
-        isLocked = !isCheckpointCompleted('PC4', 'nivel2');
-        console.log(`Módulo 9 - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
-      } else if (moduleIndex === 10) {
-        // Módulo 10 se desbloquea cuando PC4 está completado
-        isLocked = !isCheckpointCompleted('PC4', 'nivel2');
-        console.log(`Módulo 10 - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
+        console.log(`Módulo ${moduleIndex} - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
       }
     }
     
@@ -463,28 +507,42 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
     if (module.level === 'nivel2' && module.id.startsWith('PC')) {
       const checkpointNumber = parseInt(module.id.replace('PC', ''));
       
-      // Verificar si todos los checkpoints del nivel 1 están completados
-      const allNivel1Completed = nivel1Checkpoints.every(checkpoint => 
-        isCheckpointCompleted(checkpoint.id, 'nivel1')
-      );
-      
-      if (!allNivel1Completed) {
-        // Si no están todos los checkpoints del nivel 1 completados, bloquear
-        isLocked = true;
-        console.log(`PC${checkpointNumber} - Nivel 1 no completado, isLocked: ${isLocked}`);
-      } else {
-        if (checkpointNumber === 3) {
-          // PC3 se desbloquea cuando PC2 está completado
-          isLocked = !isCheckpointCompleted('PC2', 'nivel1');
-          console.log(`PC3 - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
-        } else if (checkpointNumber === 4) {
+      if (courseType === 'practical') {
+        // Para contenido práctico, lógica específica
+        if (checkpointNumber === 4) {
           // PC4 se desbloquea cuando PC3 está completado
-          isLocked = !isCheckpointCompleted('PC3', 'nivel2');
-          console.log(`PC4 - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel2')}, isLocked: ${isLocked}`);
+          isLocked = !isCheckpointCompleted('PC3', 'nivel1');
+          console.log(`PC4 Práctico - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel1')}, isLocked: ${isLocked}`);
         } else if (checkpointNumber === 5) {
           // PC5 se desbloquea cuando PC4 está completado
           isLocked = !isCheckpointCompleted('PC4', 'nivel2');
-          console.log(`PC5 - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
+          console.log(`PC5 Práctico - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
+        }
+      } else {
+        // Para contenido teórico, mantener lógica original
+        // Verificar si todos los checkpoints del nivel 1 están completados
+        const allNivel1Completed = nivel1Checkpoints.every(checkpoint => 
+          isCheckpointCompleted(checkpoint.id, 'nivel1')
+        );
+        
+        if (!allNivel1Completed) {
+          // Si no están todos los checkpoints del nivel 1 completados, bloquear
+          isLocked = true;
+          console.log(`PC${checkpointNumber} Teórico - Nivel 1 no completado, isLocked: ${isLocked}`);
+        } else {
+          if (checkpointNumber === 3) {
+            // PC3 se desbloquea cuando PC2 está completado
+            isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+            console.log(`PC3 Teórico - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
+          } else if (checkpointNumber === 4) {
+            // PC4 se desbloquea cuando PC3 está completado
+            isLocked = !isCheckpointCompleted('PC3', 'nivel2');
+            console.log(`PC4 Teórico - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel2')}, isLocked: ${isLocked}`);
+          } else if (checkpointNumber === 5) {
+            // PC5 se desbloquea cuando PC4 está completado
+            isLocked = !isCheckpointCompleted('PC4', 'nivel2');
+            console.log(`PC5 Teórico - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
+          }
         }
       }
     }
@@ -1067,7 +1125,7 @@ export default function IniciadoDashboard() {
                                 Acceder al Módulo
                               </>
                             )}
-                            <ArrowRight className="ml-1 w-3 h-3" />
+
                           </Link>
                         </div>
                       </div>
@@ -1094,7 +1152,7 @@ export default function IniciadoDashboard() {
               className="inline-flex items-center px-4 py-2 bg-[#ec4d58] hover:bg-[#d63d47] text-white rounded-lg transition-colors"
             >
               Ver Todos los Módulos
-              <ArrowRight className="ml-2" />
+
             </Link>
           </div>
 

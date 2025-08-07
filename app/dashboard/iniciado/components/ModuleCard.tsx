@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { CheckCircle, Play, ArrowRight, Lock } from 'lucide-react';
+import { CheckCircle, Play, Lock } from 'lucide-react';
 
 interface ModuleCardProps {
   module: {
@@ -85,7 +85,6 @@ export default function ModuleCard({
                   <span className="truncate text-xs">Acceder al Módulo</span>
                 </>
               )}
-              <ArrowRight className="ml-1.5 w-3.5 h-3.5 flex-shrink-0" />
             </span>
           </Link>
         )}

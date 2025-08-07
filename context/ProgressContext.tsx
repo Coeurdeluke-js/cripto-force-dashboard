@@ -101,12 +101,12 @@ const initialProgress: ProgressState = {
       checkpoints: {
         'PC1': false, // Checkpoint práctico 1 (módulos 1-2)
         'PC2': false, // Checkpoint práctico 2 (módulos 3-4)
+        'PC3': false, // Checkpoint práctico 3 (módulo 5)
       },
       results: {},
     },
     nivel2: {
       checkpoints: {
-        'PC3': false, // Checkpoint práctico 3 (módulo 5)
         'PC4': false, // Checkpoint práctico 4 (módulos 6-7)
         'PC5': false, // Checkpoint práctico 5 (módulos 8-10)
       },
@@ -287,9 +287,13 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Limpiar datos corruptos al inicializar
+  // Limpiar datos corruptos solo una vez al inicializar
   useEffect(() => {
-    cleanCorruptedProgress();
+    // Forzar limpieza para aplicar corrección de números de módulos
+    if (typeof window !== 'undefined') {
+      console.log('Limpiando localStorage para aplicar corrección de números de módulos...');
+      cleanCorruptedProgress();
+    }
   }, []);
 
   const value: ProgressContextType = {

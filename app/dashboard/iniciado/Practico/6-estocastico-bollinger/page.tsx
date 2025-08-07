@@ -3,7 +3,7 @@ import { ArrowLeft, BookOpen, CheckCircle, Clock, Target } from 'lucide-react';
 import Link from 'next/link';
 import BackButton from '@/components/ui/BackButton';
 
-export default function ModuloPractico5() {
+export default function ModuloPractico6() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Header */}
@@ -13,7 +13,7 @@ export default function ModuloPractico5() {
             <div className="flex items-center space-x-4">
               <BackButton />
               <div>
-                <h1 className="text-xl font-semibold">Módulo 5: Estocástico y Bandas de Bollinger</h1>
+                <h1 className="text-xl font-semibold">Módulo 6: Estocástico y Bandas de Bollinger</h1>
                 <p className="text-gray-400 text-sm">Indicadores de sobrecompra y sobreventa</p>
               </div>
             </div>
