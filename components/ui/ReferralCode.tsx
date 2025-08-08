@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Copy, Check, Users, Gift } from 'lucide-react';
 
 interface ReferralCodeProps {
@@ -22,7 +22,14 @@ export default function ReferralCode({ code, referrals, earnings }: ReferralCode
     }
   };
 
-  const referralLink = `${window.location.origin}/login?ref=${code}`;
+  const [referralLink, setReferralLink] = useState('');
+
+  // Establecer el enlace de referido después del montaje
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setReferralLink(`${window.location.origin}/login?ref=${code}`);
+    }
+  }, [code]);
 
   return (
     <div className="bg-[#1e2028]/80 backdrop-blur-sm rounded-xl p-6 border border-white/10">

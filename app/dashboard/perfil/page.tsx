@@ -13,24 +13,33 @@ export default function PerfilPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  const [userData, setUserData] = useState(() => {
+  const [userData, setUserData] = useState({
+    name: 'Tu Nombre',
+    email: 'tucorreo@email.com',
+    phone: '',
+    avatar: '/images/default-avatar.png',
+    joined: '2024-01-01',
+    modulesCompleted: 0,
+    achievements: 0,
+    birthdate: '',
+    country: '',
+    bio: ''
+  });
+
+  // Cargar datos del localStorage después del montaje
+  React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('simple_profile');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        try {
+          const parsedData = JSON.parse(saved);
+          setUserData(parsedData);
+        } catch (error) {
+          console.error('Error parsing saved profile data:', error);
+        }
+      }
     }
-    return {
-      name: 'Tu Nombre',
-      email: 'tucorreo@email.com',
-      phone: '',
-      avatar: '/images/default-avatar.png',
-      joined: '2024-01-01',
-      modulesCompleted: 0,
-      achievements: 0,
-      birthdate: '',
-      country: '',
-      bio: ''
-    };
-  });
+  }, []);
   const [avatarPreview, setAvatarPreview] = useState(userData.avatar);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
