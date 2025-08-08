@@ -14,133 +14,133 @@ import { useProgress } from '@/context/ProgressContext';
 const questions = [
   {
     id: 1,
-    question: "¿Qué es el RSI (Relative Strength Index)?",
+    question: "¿Qué información contiene una vela japonesa?",
     options: [
-      "Un indicador de momentum que mide la velocidad y magnitud de los cambios de precio",
-      "Un tipo de media móvil",
-      "Un patrón de velas japonesas",
-      "Un indicador de volumen"
+      "Precio de apertura, cierre, máximo y mínimo del período",
+      "Solo el precio de cierre",
+      "Solo el volumen",
+      "Solo la tendencia"
     ],
     correct: 0
   },
   {
     id: 2,
-    question: "¿Qué valores del RSI indican sobreventa?",
+    question: "¿Qué es el cuerpo de una vela?",
     options: [
-      "Por encima de 70",
-      "Por debajo de 30",
-      "Entre 40 y 60",
-      "Por encima de 80"
+      "La parte rectangular entre el precio de apertura y cierre",
+      "La línea que conecta el máximo y mínimo",
+      "Solo la sombra superior",
+      "El volumen de operaciones"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 3,
-    question: "¿Qué valores del RSI indican sobrecompra?",
+    question: "¿Qué es la mecha o sombra de una vela?",
     options: [
-      "Por encima de 70",
-      "Por debajo de 30",
-      "Entre 40 y 60",
-      "Por debajo de 20"
+      "La parte delgada que representa los puntos extremos máximo y mínimo",
+      "La parte rectangular de la vela",
+      "Solo el precio de cierre",
+      "El volumen de operaciones"
     ],
     correct: 0
   },
   {
     id: 4,
-    question: "¿Qué es el MACD?",
+    question: "¿Qué patrón de vela indica una posible reversión alcista?",
     options: [
-      "Un indicador de tendencia que combina dos medias móviles",
-      "Un patrón de velas",
-      "Un indicador de volumen",
-      "Un nivel de soporte"
+      "Martillo",
+      "Estrella fugaz",
+      "Doji",
+      "Vela larga roja"
     ],
     correct: 0
   },
   {
     id: 5,
-    question: "¿Qué componentes tiene el MACD?",
+    question: "¿Qué patrón de vela indica una posible reversión bajista?",
     options: [
-      "Línea MACD, línea de señal e histograma",
-      "Solo la línea MACD",
-      "Solo el histograma",
-      "Línea de tendencia y volumen"
+      "Estrella fugaz",
+      "Martillo",
+      "Doji",
+      "Vela larga verde"
     ],
     correct: 0
   },
   {
     id: 6,
-    question: "¿Qué indica cuando el MACD cruza por encima de su línea de señal?",
+    question: "¿Qué son los niveles de Fibonacci?",
     options: [
-      "Señal de venta",
-      "Señal de compra",
-      "No indica nada",
-      "El mercado está en equilibrio"
+      "Niveles de soporte y resistencia basados en la secuencia de Fibonacci",
+      "Indicadores de volumen",
+      "Patrones de velas",
+      "Medias móviles"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 7,
-    question: "¿Qué es el análisis fundamental?",
+    question: "¿Cuál es el nivel de Fibonacci más importante?",
     options: [
-      "Analizar patrones de precios en gráficos",
-      "Evaluar factores económicos, políticos y sociales que afectan el precio",
-      "Solo estudiar indicadores técnicos",
-      "Analizar el volumen de operaciones"
+      "61.8%",
+      "23.6%",
+      "38.2%",
+      "50%"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 8,
-    question: "¿Qué tipo de noticias pueden afectar el precio de un activo?",
+    question: "¿Qué son los retrocesos de Fibonacci?",
     options: [
-      "Solo noticias económicas",
-      "Noticias económicas, políticas, sociales y empresariales",
-      "Solo noticias políticas",
-      "Solo noticias empresariales"
+      "Niveles donde el precio puede encontrar soporte o resistencia durante una corrección",
+      "Indicadores de volumen",
+      "Patrones de velas",
+      "Medias móviles"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 9,
-    question: "¿Qué son las correlaciones entre mercados?",
+    question: "¿Qué indica cuando el precio toca un nivel de Fibonacci?",
     options: [
-      "Relaciones entre diferentes activos financieros",
-      "Solo relaciones entre acciones",
-      "Solo relaciones entre divisas",
-      "Relaciones entre empresas del mismo sector"
+      "Posible punto de reversión o continuación de la tendencia",
+      "Que el mercado está en equilibrio",
+      "Que el volumen es alto",
+      "Que la tendencia ha terminado"
     ],
     correct: 0
   },
   {
     id: 10,
-    question: "¿Qué es una correlación positiva?",
+    question: "¿Por qué son importantes los patrones de vela?",
     options: [
-      "Cuando dos activos se mueven en direcciones opuestas",
-      "Cuando dos activos se mueven en la misma dirección",
-      "Cuando no hay relación entre los activos",
-      "Cuando un activo no se mueve"
+      "Porque indican cambios potenciales en las tendencias del mercado",
+      "Porque son infalibles",
+      "Porque son más precisos que otros indicadores",
+      "Porque son más simples"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 11,
-    question: "¿Qué es una correlación negativa?",
+    question: "¿Qué son las medias móviles?",
     options: [
-      "Cuando dos activos se mueven en direcciones opuestas",
-      "Cuando dos activos se mueven en la misma dirección",
-      "Cuando no hay relación entre los activos",
-      "Cuando un activo no se mueve"
+      "Indicadores que muestran el precio promedio en un período",
+      "Líneas que conectan máximos y mínimos",
+      "Volúmenes de operaciones",
+      "Niveles de soporte y resistencia"
     ],
     correct: 0
   },
   {
     id: 12,
-    question: "¿Por qué es importante entender las correlaciones?",
+    question: "¿Qué indica una media móvil de 20 períodos?",
     options: [
-      "Para diversificar el riesgo y mejorar las estrategias de trading",
-      "Solo para operar en un mercado",
-      "Para ignorar otros mercados",
-      "Para concentrar el riesgo"
+      "El precio promedio de los últimos 20 períodos",
+      "El volumen de las últimas 20 operaciones",
+      "El máximo de los últimos 20 días",
+      "El mínimo de los últimos 20 días"
     ],
     correct: 0
   }

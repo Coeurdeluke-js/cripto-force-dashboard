@@ -32,6 +32,7 @@ import {
 import Carousel from './components/Carousel';
 import ProgressRuler from './components/ProgressRuler';
 import { useProgress } from '@/context/ProgressContext';
+import { useScrollPosition, useCarouselPosition } from '@/hooks/useScrollPosition';
 
 interface Module {
   id: string;
@@ -429,7 +430,6 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
   // Función auxiliar para verificar si un checkpoint está completado
   const isCheckpointCompleted = (checkpointId: string, level: 'nivel1' | 'nivel2') => {
     const result = progress[courseType][level].checkpoints[checkpointId] || false;
-    console.log(`DEBUG: isCheckpointCompleted(${courseType}, ${level}, ${checkpointId}) = ${result}`);
     return result;
   };
 
@@ -452,11 +452,9 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
       } else if (moduleIndex === 3 || moduleIndex === 4) {
         // Módulos 3 y 4 se desbloquean cuando PC1 está completado
         isLocked = !isCheckpointCompleted('PC1', 'nivel1');
-        console.log(`Módulo ${moduleIndex} - PC1 completado: ${isCheckpointCompleted('PC1', 'nivel1')}, isLocked: ${isLocked}`);
       } else if (moduleIndex === 5 || moduleIndex === 6) {
         // Módulos 5 y 6 se desbloquean cuando PC2 está completado
         isLocked = !isCheckpointCompleted('PC2', 'nivel1');
-        console.log(`Módulo ${moduleIndex} - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
       }
     }
     
@@ -470,19 +468,11 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
       } else if (checkpointNumber === 2) {
         // PC2 se desbloquea cuando PC1 está completado
         isLocked = !isCheckpointCompleted('PC1', 'nivel1');
-        console.log(`PC2 - PC1 completado: ${isCheckpointCompleted('PC1', 'nivel1')}, isLocked: ${isLocked}`);
       } else if (checkpointNumber === 3) {
         // PC3 se desbloquea cuando PC1 Y PC2 están completados
         const pc1Completed = isCheckpointCompleted('PC1', 'nivel1');
         const pc2Completed = isCheckpointCompleted('PC2', 'nivel1');
         isLocked = !(pc1Completed && pc2Completed);
-        console.log(`=== PC3 NIVEL1 PRÁCTICO DEBUG ===`);
-        console.log(`PC1 completado: ${pc1Completed}`);
-        console.log(`PC2 completado: ${pc2Completed}`);
-        console.log(`PC1 && PC2: ${pc1Completed && pc2Completed}`);
-        console.log(`isLocked: ${isLocked}`);
-        console.log(`Progress state:`, progress.practical.nivel1.checkpoints);
-        console.log(`========================`);
       }
     }
     
@@ -493,11 +483,9 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
       if (moduleIndex === 7 || moduleIndex === 8) {
         // Módulos 7 y 8 se desbloquean cuando PC3 está completado
         isLocked = !isCheckpointCompleted('PC3', 'nivel1');
-        console.log(`Módulo ${moduleIndex} - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel1')}, isLocked: ${isLocked}`);
       } else if (moduleIndex === 9 || moduleIndex === 10) {
         // Módulos 9 y 10 se desbloquean cuando PC4 está completado
         isLocked = !isCheckpointCompleted('PC4', 'nivel2');
-        console.log(`Módulo ${moduleIndex} - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
       }
     }
     
@@ -510,11 +498,9 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
         if (checkpointNumber === 4) {
           // PC4 se desbloquea cuando PC3 está completado
           isLocked = !isCheckpointCompleted('PC3', 'nivel1');
-          console.log(`PC4 Práctico - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel1')}, isLocked: ${isLocked}`);
         } else if (checkpointNumber === 5) {
           // PC5 se desbloquea cuando PC4 está completado
           isLocked = !isCheckpointCompleted('PC4', 'nivel2');
-          console.log(`PC5 Práctico - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
         }
               } else {
           // Para contenido teórico, mantener lógica original
@@ -526,20 +512,16 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
           if (!allNivel1Completed) {
             // Si no están todos los checkpoints del nivel 1 completados, bloquear
             isLocked = true;
-            console.log(`PC${checkpointNumber} Teórico - Nivel 1 no completado, isLocked: ${isLocked}`);
           } else {
             if (checkpointNumber === 3) {
               // PC3 se desbloquea cuando PC2 está completado
               isLocked = !isCheckpointCompleted('PC2', 'nivel1');
-              console.log(`PC3 Teórico - PC2 completado: ${isCheckpointCompleted('PC2', 'nivel1')}, isLocked: ${isLocked}`);
             } else if (checkpointNumber === 4) {
               // PC4 se desbloquea cuando PC3 está completado
               isLocked = !isCheckpointCompleted('PC3', 'nivel1');
-              console.log(`PC4 Teórico - PC3 completado: ${isCheckpointCompleted('PC3', 'nivel1')}, isLocked: ${isLocked}`);
             } else if (checkpointNumber === 5) {
               // PC5 se desbloquea cuando PC4 está completado
               isLocked = !isCheckpointCompleted('PC4', 'nivel2');
-              console.log(`PC5 Teórico - PC4 completado: ${isCheckpointCompleted('PC4', 'nivel2')}, isLocked: ${isLocked}`);
             }
           }
         }
@@ -553,14 +535,24 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
 }
 
 export default function IniciadoDashboard() {
-  const [activeTab, setActiveTab] = useState<'theoretical' | 'practical'>('theoretical');
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useScrollPosition();
+  const carouselRef = useCarouselPosition();
+  
+  // Estado persistente para el tab activo
+  const [activeTab, setActiveTab] = useState<'theoretical' | 'practical'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('dashboardActiveTab');
+      return saved === 'practical' ? 'practical' : 'theoretical';
+    }
+    return 'theoretical';
+  });
+  
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const { progress } = useProgress();
 
-// Objetivos a lograr
+  // Objetivos a lograr
   const objectives: Objective[] = [
   { id: 'obj1', title: 'Completar Nivel 1 Teórico', type: 'nivel1', category: 'theoretical', completed: false },
   { id: 'obj2', title: 'Completar Nivel 1 Práctico', type: 'nivel1', category: 'practical', completed: false },
@@ -583,12 +575,10 @@ export default function IniciadoDashboard() {
             const nivel1Checkpoints = Object.values(progress.theoretical.nivel1.checkpoints).filter(Boolean).length;
             const totalNivel1Checkpoints = Object.keys(progress.theoretical.nivel1.checkpoints).length;
             completed = nivel1Checkpoints === totalNivel1Checkpoints && totalNivel1Checkpoints > 0;
-            console.log('Objetivo Nivel 1 Teórico:', { nivel1Checkpoints, totalNivel1Checkpoints, completed });
           } else if (objective.category === 'practical') {
             const nivel1Checkpoints = Object.values(progress.practical.nivel1.checkpoints).filter(Boolean).length;
             const totalNivel1Checkpoints = Object.keys(progress.practical.nivel1.checkpoints).length;
             completed = nivel1Checkpoints === totalNivel1Checkpoints && totalNivel1Checkpoints > 0;
-            console.log('Objetivo Nivel 1 Práctico:', { nivel1Checkpoints, totalNivel1Checkpoints, completed });
           }
           break;
           
@@ -597,12 +587,10 @@ export default function IniciadoDashboard() {
             const nivel2Checkpoints = Object.values(progress.theoretical.nivel2.checkpoints).filter(Boolean).length;
             const totalNivel2Checkpoints = Object.keys(progress.theoretical.nivel2.checkpoints).length;
             completed = nivel2Checkpoints === totalNivel2Checkpoints && totalNivel2Checkpoints > 0;
-            console.log('Objetivo Nivel 2 Teórico:', { nivel2Checkpoints, totalNivel2Checkpoints, completed });
           } else if (objective.category === 'practical') {
             const nivel2Checkpoints = Object.values(progress.practical.nivel2.checkpoints).filter(Boolean).length;
             const totalNivel2Checkpoints = Object.keys(progress.practical.nivel2.checkpoints).length;
             completed = nivel2Checkpoints === totalNivel2Checkpoints && totalNivel2Checkpoints > 0;
-            console.log('Objetivo Nivel 2 Práctico:', { nivel2Checkpoints, totalNivel2Checkpoints, completed });
           }
           break;
           
@@ -611,12 +599,10 @@ export default function IniciadoDashboard() {
             const theoreticalCheckpoints = Object.values(progress.theoretical.nivel1.checkpoints).filter(Boolean).length + 
                                          Object.values(progress.theoretical.nivel2.checkpoints).filter(Boolean).length;
             completed = theoreticalCheckpoints >= 2;
-            console.log('Objetivo 2 Checkpoints Teóricos:', { theoreticalCheckpoints, completed });
           } else if (objective.category === 'practical') {
             const practicalCheckpoints = Object.values(progress.practical.nivel1.checkpoints).filter(Boolean).length + 
                                        Object.values(progress.practical.nivel2.checkpoints).filter(Boolean).length;
             completed = practicalCheckpoints >= 2;
-            console.log('Objetivo 2 Checkpoints Prácticos:', { practicalCheckpoints, completed });
           } else if (objective.category === 'all') {
             const allCheckpoints = Object.values(progress.theoretical.nivel1.checkpoints).filter(Boolean).length + 
                                  Object.values(progress.theoretical.nivel2.checkpoints).filter(Boolean).length +
@@ -627,7 +613,6 @@ export default function IniciadoDashboard() {
                                    Object.keys(progress.practical.nivel1.checkpoints).length + 
                                    Object.keys(progress.practical.nivel2.checkpoints).length;
             completed = allCheckpoints === totalCheckpoints && totalCheckpoints > 0;
-            console.log('Objetivo Todos los Checkpoints:', { allCheckpoints, totalCheckpoints, completed });
           }
           break;
           
@@ -644,7 +629,6 @@ export default function IniciadoDashboard() {
             const totalProgress = theoreticalProgress + practicalProgress;
             const percentage = (totalProgress / totalCheckpoints) * 100;
             completed = percentage >= 50;
-            console.log('Objetivo 50% del curso:', { totalProgress, totalCheckpoints, percentage, completed });
           }
           break;
       }
@@ -655,7 +639,6 @@ export default function IniciadoDashboard() {
       };
     });
     
-    console.log('Estado final de objetivos:', objectivesWithStatus);
     return objectivesWithStatus;
   };
 
@@ -688,7 +671,6 @@ export default function IniciadoDashboard() {
       const moduleId = moduleMatch[1];
       if (!isModuleCompleted(moduleId)) {
         markModuleAsCompleted(moduleId);
-        console.log(`Módulo ${moduleId} marcado como completado`);
       }
     }
   }, []);
@@ -740,6 +722,13 @@ export default function IniciadoDashboard() {
 
   const allModules = getAllModules();
 
+  // Función para cambiar tab y guardar en localStorage
+  const handleTabChange = (tab: 'theoretical' | 'practical') => {
+    setActiveTab(tab);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('dashboardActiveTab', tab);
+    }
+  };
 
   // Get user data from profile
   useEffect(() => {
@@ -773,7 +762,10 @@ export default function IniciadoDashboard() {
 
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white">
+    <div 
+      ref={scrollRef}
+      className="min-h-screen bg-[#0f0f0f] text-white overflow-y-auto"
+    >
       <style jsx>{`
         @keyframes fadeIn {
           from { opacity: 0; }
@@ -946,7 +938,7 @@ export default function IniciadoDashboard() {
         <div className="flex justify-center mb-8 px-2 md:px-0">
           <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-1 md:p-2 w-full max-w-md">
             <button
-              onClick={() => setActiveTab('theoretical')}
+              onClick={() => handleTabChange('theoretical')}
               className={`px-3 md:px-6 py-2 md:py-3 rounded-xl transition-all duration-300 ease-out transform hover:scale-105 active:scale-95 text-sm md:text-base w-1/2 ${
                 activeTab === 'theoretical'
                   ? 'bg-[#ec4d58] text-white shadow-lg'
@@ -958,7 +950,7 @@ export default function IniciadoDashboard() {
               <span className="sm:hidden">Teórico</span>
             </button>
             <button
-              onClick={() => setActiveTab('practical')}
+              onClick={() => handleTabChange('practical')}
               className={`px-3 md:px-6 py-2 md:py-3 rounded-xl transition-all duration-300 ease-out transform hover:scale-105 active:scale-95 text-sm md:text-base w-1/2 ${
                 activeTab === 'practical'
                   ? 'bg-[#ec4d58] text-white shadow-lg'

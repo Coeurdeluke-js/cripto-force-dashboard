@@ -80,67 +80,67 @@ const questions = [
   },
   {
     id: 7,
-    question: "¿Qué es la gestión de riesgo en trading?",
+    question: "¿Qué son los indicadores económicos?",
     options: [
-      "Arriesgar todo el capital en una operación",
-      "Limitar las pérdidas potenciales por operación",
-      "Solo operar cuando hay ganancias seguras",
-      "Ignorar las pérdidas"
+      "Datos que muestran el estado de la economía",
+      "Solo indicadores técnicos",
+      "Solo patrones de velas",
+      "Solo medias móviles"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 8,
-    question: "¿Cuál es el porcentaje máximo recomendado de riesgo por operación?",
+    question: "¿Qué es el PIB (Producto Interno Bruto)?",
     options: [
-      "1-2% del capital",
-      "10-20% del capital",
-      "50% del capital",
-      "100% del capital"
+      "El valor total de bienes y servicios producidos en un país",
+      "Un indicador técnico",
+      "Un patrón de velas",
+      "Un nivel de soporte"
     ],
     correct: 0
   },
   {
     id: 9,
-    question: "¿Qué es el ratio riesgo/beneficio?",
+    question: "¿Qué es la inflación?",
     options: [
-      "La relación entre pérdida potencial y ganancia potencial",
-      "El porcentaje de ganancia",
-      "El tiempo de la operación",
-      "El volumen de operaciones"
+      "El aumento general de precios en una economía",
+      "Un indicador técnico",
+      "Un patrón de velas",
+      "Un nivel de resistencia"
     ],
     correct: 0
   },
   {
     id: 10,
-    question: "¿Cuál es un ratio riesgo/beneficio mínimo recomendado?",
+    question: "¿Qué son las tasas de interés?",
     options: [
-      "1:1",
-      "1:2",
-      "1:0.5",
-      "1:0.1"
+      "El costo del dinero en una economía",
+      "Un indicador técnico",
+      "Un patrón de velas",
+      "Un nivel de soporte"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 11,
-    question: "¿Qué es el stop loss?",
+    question: "¿Cómo afectan las tasas de interés al mercado?",
     options: [
-      "Un nivel de precio donde se cierra la operación para limitar pérdidas",
-      "Un nivel de precio donde se toma ganancia",
-      "El precio de entrada de la operación",
-      "El volumen de la operación"
+      "Pueden influir en la valoración de activos y divisas",
+      "No tienen ningún efecto",
+      "Solo afectan a las acciones",
+      "Solo afectan a las divisas"
     ],
     correct: 0
   },
   {
     id: 12,
-    question: "¿Qué es el take profit?",
+    question: "¿Qué es el análisis fundamental vs técnico?",
     options: [
-      "Un nivel de precio donde se cierra la operación para tomar ganancias",
-      "Un nivel de precio donde se limita la pérdida",
-      "El precio de entrada de la operación",
-      "El volumen de la operación"
+      "Fundamental analiza factores económicos, técnico analiza patrones de precio",
+      "Ambos analizan solo gráficos",
+      "Ambos analizan solo noticias",
+      "No hay diferencia"
     ],
     correct: 0
   }

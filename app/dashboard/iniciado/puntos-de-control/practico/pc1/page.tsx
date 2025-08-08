@@ -80,20 +80,9 @@ const questions = [
   },
   {
     id: 7,
-    question: "¿Qué son las medias móviles?",
+    question: "¿Qué son los niveles de soporte y resistencia?",
     options: [
-      "Indicadores que muestran el precio promedio en un período",
-      "Líneas que conectan máximos y mínimos",
-      "Volúmenes de operaciones",
-      "Niveles de soporte y resistencia"
-    ],
-    correct: 0
-  },
-  {
-    id: 8,
-    question: "¿Qué son los niveles de Fibonacci?",
-    options: [
-      "Niveles de soporte y resistencia basados en la secuencia de Fibonacci",
+      "Niveles de precio donde la oferta y demanda se encuentran",
       "Indicadores de volumen",
       "Patrones de velas",
       "Medias móviles"
@@ -101,46 +90,57 @@ const questions = [
     correct: 0
   },
   {
-    id: 9,
-    question: "¿Cuál es el nivel de Fibonacci más importante?",
+    id: 8,
+    question: "¿Qué es el soporte?",
     options: [
-      "23.6%",
-      "38.2%",
-      "50%",
-      "61.8%"
+      "Nivel donde la demanda es fuerte y evita que el precio baje más",
+      "Nivel donde la oferta es fuerte y evita que el precio suba más",
+      "Un indicador de volumen",
+      "Un patrón de velas"
     ],
-    correct: 3
+    correct: 0
+  },
+  {
+    id: 9,
+    question: "¿Qué es la resistencia?",
+    options: [
+      "Nivel donde la oferta es fuerte y evita que el precio suba más",
+      "Nivel donde la demanda es fuerte y evita que el precio baje más",
+      "Un indicador de volumen",
+      "Un patrón de velas"
+    ],
+    correct: 0
   },
   {
     id: 10,
-    question: "¿Qué indica una media móvil de 20 períodos?",
+    question: "¿Qué es el análisis fundamental?",
     options: [
-      "El precio promedio de los últimos 20 períodos",
-      "El volumen de las últimas 20 operaciones",
-      "El máximo de los últimos 20 días",
-      "El mínimo de los últimos 20 días"
+      "Evaluar factores económicos, políticos y sociales que afectan el precio",
+      "Analizar solo patrones de precios en gráficos",
+      "Solo estudiar indicadores técnicos",
+      "Analizar el volumen de operaciones"
     ],
     correct: 0
   },
   {
     id: 11,
-    question: "¿Qué es el estocástico?",
+    question: "¿Por qué funciona el análisis técnico?",
     options: [
-      "Un indicador de momentum que mide la posición del precio en relación a su rango",
-      "Un tipo de media móvil",
-      "Un patrón de velas",
-      "Un indicador de volumen"
+      "Porque es popular y muchos operadores lo usan",
+      "Porque es infalible",
+      "Porque es más preciso que el fundamental",
+      "Porque es más simple"
     ],
     correct: 0
   },
   {
     id: 12,
-    question: "¿Qué son las Bandas de Bollinger?",
+    question: "¿Qué información proporciona una vela japonesa?",
     options: [
-      "Indicadores de volatilidad que muestran niveles de soporte y resistencia dinámicos",
-      "Patrones de velas japonesas",
-      "Medias móviles simples",
-      "Indicadores de volumen"
+      "Precio de apertura, cierre, máximo y mínimo del período",
+      "Solo el precio de cierre",
+      "Solo el volumen",
+      "Solo la tendencia"
     ],
     correct: 0
   }

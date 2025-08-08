@@ -14,133 +14,133 @@ import { useProgress } from '@/context/ProgressContext';
 const questions = [
   {
     id: 1,
-    question: "¿Qué es la gestión de riesgo en trading?",
+    question: "¿Qué es el RSI (Relative Strength Index)?",
     options: [
-      "Arriesgar todo el capital en una operación",
-      "Limitar las pérdidas potenciales por operación",
-      "Solo operar cuando hay ganancias seguras",
-      "Ignorar las pérdidas"
-    ],
-    correct: 1
-  },
-  {
-    id: 2,
-    question: "¿Cuál es el porcentaje máximo recomendado de riesgo por operación?",
-    options: [
-      "1-2% del capital",
-      "10-20% del capital",
-      "50% del capital",
-      "100% del capital"
+      "Un indicador de momentum que mide la velocidad y magnitud de los cambios de precio",
+      "Un tipo de media móvil",
+      "Un patrón de velas japonesas",
+      "Un indicador de volumen"
     ],
     correct: 0
   },
   {
-    id: 3,
-    question: "¿Qué es el ratio riesgo/beneficio?",
+    id: 2,
+    question: "¿Qué valores del RSI indican sobreventa?",
     options: [
-      "La relación entre pérdida potencial y ganancia potencial",
-      "El porcentaje de ganancia",
-      "El tiempo de la operación",
-      "El volumen de operaciones"
+      "Por encima de 70",
+      "Por debajo de 30",
+      "Entre 40 y 60",
+      "Por encima de 80"
+    ],
+    correct: 1
+  },
+  {
+    id: 3,
+    question: "¿Qué valores del RSI indican sobrecompra?",
+    options: [
+      "Por encima de 70",
+      "Por debajo de 30",
+      "Entre 40 y 60",
+      "Por debajo de 20"
     ],
     correct: 0
   },
   {
     id: 4,
-    question: "¿Cuál es un ratio riesgo/beneficio mínimo recomendado?",
+    question: "¿Qué es el MACD?",
     options: [
-      "1:1",
-      "1:2",
-      "1:0.5",
-      "1:0.1"
+      "Un indicador de tendencia que combina dos medias móviles",
+      "Un patrón de velas",
+      "Un indicador de volumen",
+      "Un nivel de soporte"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 5,
-    question: "¿Qué es el stop loss?",
+    question: "¿Qué componentes tiene el MACD?",
     options: [
-      "Un nivel de precio donde se cierra la operación para limitar pérdidas",
-      "Un nivel de precio donde se toma ganancia",
-      "El precio de entrada de la operación",
-      "El volumen de la operación"
+      "Línea MACD, línea de señal e histograma",
+      "Solo la línea MACD",
+      "Solo el histograma",
+      "Línea de tendencia y volumen"
     ],
     correct: 0
   },
   {
     id: 6,
-    question: "¿Qué es el take profit?",
+    question: "¿Qué indica cuando el MACD cruza por encima de su línea de señal?",
     options: [
-      "Un nivel de precio donde se cierra la operación para tomar ganancias",
-      "Un nivel de precio donde se limita la pérdida",
-      "El precio de entrada de la operación",
-      "El volumen de la operación"
-    ],
-    correct: 0
-  },
-  {
-    id: 7,
-    question: "¿Qué es la diversificación?",
-    options: [
-      "Concentrar todo el capital en un solo activo",
-      "Distribuir el capital entre diferentes activos o mercados",
-      "Operar solo en un mercado",
-      "Ignorar otros mercados"
+      "Señal de venta",
+      "Señal de compra",
+      "No indica nada",
+      "El mercado está en equilibrio"
     ],
     correct: 1
   },
   {
-    id: 8,
-    question: "¿Por qué es importante la diversificación?",
+    id: 7,
+    question: "¿Qué es el estocástico?",
     options: [
-      "Para concentrar el riesgo",
-      "Para reducir el riesgo general del portafolio",
-      "Para operar solo en un mercado",
-      "Para ignorar la gestión de riesgo"
+      "Un indicador de momentum que mide la posición del precio en relación a su rango",
+      "Un tipo de media móvil",
+      "Un patrón de velas",
+      "Un indicador de volumen"
+    ],
+    correct: 0
+  },
+  {
+    id: 8,
+    question: "¿Qué valores del estocástico indican sobreventa?",
+    options: [
+      "Por encima de 80",
+      "Por debajo de 20",
+      "Entre 40 y 60",
+      "Por encima de 90"
     ],
     correct: 1
   },
   {
     id: 9,
-    question: "¿Qué es un plan de trading?",
+    question: "¿Qué valores del estocástico indican sobrecompra?",
     options: [
-      "Un documento que define estrategias y reglas de trading",
-      "Una lista de activos a comprar",
-      "Un horario de operaciones",
-      "Un presupuesto mensual"
+      "Por encima de 80",
+      "Por debajo de 20",
+      "Entre 40 y 60",
+      "Por debajo de 10"
     ],
     correct: 0
   },
   {
     id: 10,
-    question: "¿Qué debe incluir un plan de trading?",
+    question: "¿Qué son las Bandas de Bollinger?",
     options: [
-      "Solo las entradas",
-      "Entradas, salidas, gestión de riesgo y reglas",
-      "Solo las salidas",
-      "Solo el capital inicial"
+      "Indicadores de volatilidad que muestran niveles de soporte y resistencia dinámicos",
+      "Patrones de velas japonesas",
+      "Medias móviles simples",
+      "Indicadores de volumen"
     ],
-    correct: 1
+    correct: 0
   },
   {
     id: 11,
-    question: "¿Qué son las reglas de trading?",
+    question: "¿Qué indica cuando el precio toca la banda superior de Bollinger?",
     options: [
-      "Normas que definen cuándo y cómo operar",
-      "Solo horarios de operación",
-      "Solo niveles de entrada",
-      "Solo niveles de salida"
+      "Posible sobrecompra o resistencia",
+      "Posible sobreventa o soporte",
+      "Que el mercado está en equilibrio",
+      "Que la tendencia ha terminado"
     ],
     correct: 0
   },
   {
     id: 12,
-    question: "¿Por qué es importante seguir un plan de trading?",
+    question: "¿Qué indica cuando el precio toca la banda inferior de Bollinger?",
     options: [
-      "Para mantener disciplina y consistencia",
-      "Para operar sin pensar",
-      "Para ignorar el análisis",
-      "Para operar solo por intuición"
+      "Posible sobreventa o soporte",
+      "Posible sobrecompra o resistencia",
+      "Que el mercado está en equilibrio",
+      "Que la tendencia ha terminado"
     ],
     correct: 0
   }
@@ -259,7 +259,7 @@ export default function PuntoControlPractico3() {
         {/* Title */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#ec4d58] mb-2">
-            Punto de Control: Gestión de Riesgo y Plan de Trading
+            Punto de Control: Indicadores RSI, MACD, Estocástico y Bandas de Bollinger
           </h1>
           <p className="text-gray-400">
             Evalúa tu comprensión de los módulos 9 y 10. Necesitas 70% para aprobar.
@@ -291,7 +291,7 @@ export default function PuntoControlPractico3() {
           isApproved={score >= 70}
           totalQuestions={shuffledQuestions.length}
           correctAnswers={correctAnswers}
-          checkpointTitle="Punto de Control 3: Gestión de Riesgo y Plan de Trading"
+          checkpointTitle="Punto de Control 3: Indicadores RSI, MACD, Estocástico y Bandas de Bollinger"
         />
       </div>
     </div>
