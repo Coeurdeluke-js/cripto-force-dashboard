@@ -118,7 +118,7 @@ export default function SignInPage() {
             Bienvenido de vuelta
           </h1>
           <p className="text-white/70 text-lg">
-            Inicia sesión en tu cuenta de <span className="text-[#FFD447]">Crypto Force</span>
+            Inicia sesión en tu cuenta de <span className="text-[#EC4D58]">Crypto Force</span>
           </p>
         </div>
 
@@ -189,10 +189,10 @@ export default function SignInPage() {
             {/* Opciones adicionales */}
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 text-sm text-white/70">
-                <input type="checkbox" className="rounded border-white/20 bg-[#2a2d36] text-[#FFD447] focus:ring-[#FFD447]" />
+                <input type="checkbox" className="rounded border-white/20 bg-[#2a2d36] text-[#EC4D58] focus:ring-[#EC4D58]" />
                 Recordarme
               </label>
-              <Link href="/login/forgot-password" className="text-sm text-[#FFD447] hover:text-[#FFB800] transition-colors">
+              <Link href="/login/forgot-password" className="text-sm text-[#EC4D58] hover:text-[#D43F4A] transition-colors">
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
@@ -205,12 +205,12 @@ export default function SignInPage() {
                 className={`w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-300 ${
                   isSubmitting
                     ? 'bg-gray-600 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-[#FFD447] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFD447] text-black hover:shadow-lg hover:shadow-[#FFD447]/25'
+                  : 'bg-gradient-to-r from-[#EC4D58] to-[#D43F4A] hover:from-[#D43F4A] hover:to-[#EC4D58] text-white hover:shadow-lg hover:shadow-[#EC4D58]/25'
                 }`}
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-[#EC4D58] border-t-transparent rounded-full animate-spin"></div>
                     Iniciando sesión...
                   </div>
                 ) : (
@@ -262,7 +262,7 @@ export default function SignInPage() {
             <div className="text-center pt-4">
               <p className="text-white/70">
                 ¿No tienes una cuenta?{' '}
-                <Link href="/login" className="text-[#FFD447] hover:text-[#FFB800] transition-colors font-medium">
+                <Link href="/login" className="text-[#EC4D58] hover:text-[#D43F4A] transition-colors font-medium">
                   Regístrate aquí
                 </Link>
               </p>

@@ -91,7 +91,7 @@ export const ControlPointProvider = ({ children }: { children: ReactNode }) => {
   // Verificar si el usuario está en una página de checkpoint
   useEffect(() => {
     const checkCurrentPage = () => {
-      const currentPath = window.location.pathname;
+      const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
       const isOnCheckpointPage = currentPath.includes('punto-de-control');
       
       // Si no está en una página de checkpoint pero el estado está bloqueado, desbloquear

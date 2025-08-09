@@ -9,8 +9,8 @@ export default function ModuloPractico8Contenido() {
         {/* Botón Volver en la esquina superior izquierda */}
         <div className="absolute top-4 left-4">
           <BackButton />
-        </div>
-        
+          </div>
+
         <h1 className="text-3xl sm:text-4xl font-bold text-[#ec4d58] mb-2 text-center">Curso Practico de Trading</h1>
         <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-center">Lección 7: Análisis Fundamental 2</h2>
 
@@ -43,8 +43,8 @@ export default function ModuloPractico8Contenido() {
                   <p className="text-sm mb-3">
                     Los altos precios del petróleo pueden tener un efecto serio sobre industrias tales como el sector aerocomercial, químico, automotor, y la producción industrial. El precio del petróleo tiene una muy fuerte correlación o relación con el par de divisas USD/CAD.
                   </p>
-                </div>
-                
+          </div>
+
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">JPY: Japón importa el 99% del petróleo que consume</h4>
                   <p className="text-sm mb-3">
@@ -59,9 +59,9 @@ export default function ModuloPractico8Contenido() {
                   <p className="text-sm text-gray-300">
                     <strong>PARA DISCUTIR:</strong> Los operadores que se dan cuenta de esta correlación entre mercados pueden operar en el mercado de divisas con una tendencia, dependiendo de su mercado de commodities respectivo.
                   </p>
-                </div>
-              </div>
-            </div>
+          </div>
+          </div>
+          </div>
 
             {/* Sección B: Oro */}
             <div className="bg-[#181818] rounded-lg p-6">
@@ -79,7 +79,7 @@ export default function ModuloPractico8Contenido() {
                 <p className="text-sm mb-3">
                   A medida que el capital se aleja del USD, el oro tiende a beneficiarse, ya que el capital se ve atraído por bienes tangibles, tales como los metales preciosos, principalmente el oro, en tiempos de incertidumbre. Por otro lado, durante épocas de prosperidad, el capital abandonará la seguridad del oro, y se trasladará a instrumentos financieros más especulativos, como por ejemplo los mercados de acciones.
                 </p>
-                
+
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">USD/CHF & EUR/USD</h4>
                   <p className="text-sm mb-3">
@@ -88,7 +88,7 @@ export default function ModuloPractico8Contenido() {
                   <p className="text-sm mb-3">
                     A medida que aumenta el precio del oro, el capital tiende a salirse del USD, mientras que el CHF tiende a beneficiarse. Además, el par de divisas EUR/USD tiende a tener una fuerte correlación con el precio del oro, y una relación inversa con el par USD/CHF.
                   </p>
-                </div>
+              </div>
               </div>
             </div>
 
@@ -113,8 +113,8 @@ export default function ModuloPractico8Contenido() {
                   <p className="text-sm mb-3">
                     Las tasas de interés más bajas facilitaron al consumidor promedio la compra de hogares nuevos o refinanciamiento de viviendas existentes. Esto ha generado un gran beneficio sobre el dólar australiano.
                   </p>
-                </div>
-                
+          </div>
+
                 <div>
                   <h4 className="font-semibold text-[#ec4d58] mb-2">Operación de Financiación (Carry Trade)</h4>
                   <p className="text-sm mb-3">
@@ -129,9 +129,9 @@ export default function ModuloPractico8Contenido() {
                   <p className="text-sm text-gray-300">
                     <strong>IMPORTANTE:</strong> Los operadores que siguen el comportamiento del AUD deben además observar la acción del precio del cobre al igual que los informes fundamentales emitidos desde Australia que estén relacionados con sus mercados de viviendas.
                   </p>
-                </div>
-              </div>
             </div>
+          </div>
+        </div>
 
             {/* Sección D: La pregunta del día */}
             <div className="bg-[#181818] rounded-lg p-6">
@@ -147,7 +147,7 @@ export default function ModuloPractico8Contenido() {
                     <strong>NOTA:</strong> La pregunta del día es una pregunta retórica, cuyo objetivo es ayudarle a revisar lo que acaba de aprender. NO es necesario enviarnos una respuesta, ya que estas preguntas no son evaluadas.
                   </p>
                 </div>
-              </div>
+        </div>
             </div>
           </div>
         </section>

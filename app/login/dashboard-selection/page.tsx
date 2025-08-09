@@ -346,7 +346,9 @@ export default function DashboardSelectionPage() {
                       <button
                         onClick={() => {
                           console.log('Navigating to:', role.path);
-                          window.location.href = role.path;
+                          if (typeof window !== 'undefined') {
+                            window.location.href = role.path;
+                          }
                         }}
                         className={`w-full flex items-center justify-center px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
                           role.bgColor
@@ -360,7 +362,9 @@ export default function DashboardSelectionPage() {
                       <button
                         onClick={() => {
                           console.log('Navigating to:', role.path);
-                          window.location.href = role.path;
+                          if (typeof window !== 'undefined') {
+                            window.location.href = role.path;
+                          }
                         }}
                         className={`w-full flex items-center justify-center px-4 py-3 rounded-lg font-medium transition-all duration-300 bg-gray-700 text-white hover:bg-gray-600 hover:scale-105 transform relative z-10 cursor-pointer`}
                         style={{ position: 'relative', zIndex: 10 }}

@@ -552,7 +552,7 @@ export default function IniciadoDashboard() {
   const [scrollLeft, setScrollLeft] = useState(0);
   const { progress } = useProgress();
 
-  // Objetivos a lograr
+// Objetivos a lograr
   const objectives: Objective[] = [
   { id: 'obj1', title: 'Completar Nivel 1 Teórico', type: 'nivel1', category: 'theoretical', completed: false },
   { id: 'obj2', title: 'Completar Nivel 1 Práctico', type: 'nivel1', category: 'practical', completed: false },

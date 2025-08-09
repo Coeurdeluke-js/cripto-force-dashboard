@@ -38,6 +38,8 @@ interface FormErrors {
 
 export default function LoginPage() {
   const router = useRouter();
+  const PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qtbplksozfropbubykud.supabase.co';
+  const PUBLIC_SUPABASE_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,8 +59,8 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<FormErrors>({});
 
   const exchanges = [
-    { value: 'budget', label: 'Budget' },
-    { value: 'zoomEx', label: 'ZoomEx' }
+    { value: 'bidget', label: 'Bidget' },
+    { value: 'zoomex', label: 'ZoomEx' }
   ];
 
   const handleInputChange = (field: keyof FormData, value: string) => {
@@ -124,16 +126,33 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      // Simulación de envío de datos
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Aquí iría la lógica real de registro
-      console.log('Datos del formulario:', formData);
-      
-      // Redirigir al dashboard después del registro exitoso
+      const res = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          apellido: formData.apellido,
+          nickname: formData.nickname,
+          email: formData.email,
+          movil: formData.numeroMovil || undefined,
+          exchange: formData.exchange || undefined,
+          uid: formData.uid || undefined,
+          // provide public envs for fallback on the server if needed
+          supabaseUrl: PUBLIC_SUPABASE_URL,
+          supabaseAnon: PUBLIC_SUPABASE_ANON,
+        }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'No se pudo crear el usuario');
+      }
+
+      // Usuario creado correctamente
       router.push('/dashboard/iniciado');
     } catch (error) {
       console.error('Error en el registro:', error);
+      setErrors((prev) => ({ ...prev, submit: (error as Error).message || 'Error desconocido' }));
     } finally {
       setIsSubmitting(false);
     }
@@ -457,7 +476,7 @@ export default function LoginPage() {
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     Creando cuenta...
                   </div>
                 ) : (
@@ -471,6 +490,12 @@ export default function LoginPage() {
 
             {/* Enlace de login */}
             <div className="text-center pt-4">
+              {errors.submit && (
+                <p className="text-red-400 mb-4 flex items-center justify-center gap-2">
+                  <AlertCircle size={16} />
+                  {errors.submit}
+                </p>
+              )}
               <p className="text-white/70">
                 ¿Ya tienes una cuenta?{' '}
                 <Link href="/login/signin" className="text-[#EC4D58] hover:text-[#D43F4A] transition-colors font-medium">

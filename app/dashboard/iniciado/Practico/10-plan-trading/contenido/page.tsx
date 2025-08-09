@@ -50,9 +50,9 @@ export default function ModuloPractico10PlanTradingContenido() {
                     <h4 className="font-semibold text-[#ec4d58] mb-2">3. ¿Qué hará un plan de Trading?</h4>
                     <p className="text-sm mb-3">Un plan de trading hará el acto de operar más simple de lo que sería si se opera sin un plan. Limitará su probabilidad de hacer operaciones malas y le evitará muchos problemas psicológicos desde la raíz.</p>
                     <p className="text-sm mb-3">Un plan de trading debería utilizar la mayor parte del tiempo necesario para la toma de decisiones en el calor del momento. Cuestiones emocionales se harán muy poderosas cuando el dinero real está en la línea y, probablemente, le obliguen a tomar decisiones irracionales.</p>
-                  </div>
-                  
-                  <div>
+              </div>
+
+              <div>
                     <h4 className="font-semibold text-[#ec4d58] mb-2">4. Antes de comenzar...</h4>
                     <p className="text-sm mb-3">Antes de empezar a crear su propio plan de trading, utilizando el modelo, aquí le presentamos algunas sugerencias para ayudar a garantizar que se construye el mejor plan posible.</p>
                     <p className="text-sm mb-3">Evite la tentación de saltarse alguna de las secciones y asegúrese de trabajarlas en el orden en que aparecen. El orden es específico, por razones que deberían quedar claras en su momento.</p>
@@ -67,9 +67,9 @@ export default function ModuloPractico10PlanTradingContenido() {
               
               <div className="space-y-4">
                 <p className="text-sm mb-3">Esta sección es, las tuercas y los tornillos de todo el documento. Consta de diez unidades clave, con una serie de preguntas en cada una de ellas: unas 50 en total. Esto se completa con una unidad final: "Reglas de Oro del Trading".</p>
-                
+              
                 <div className="space-y-4">
-                  <div>
+              <div>
                     <h4 className="font-semibold text-[#ec4d58] mb-2">5. Conózcase a usted mismo. Conozca sus Objetivos</h4>
                     <p className="text-sm mb-3">Casi cualquier operador profesional le dirá que la clave del éxito en los mercados radica en la comprensión de su propia psique. Muchos operadores inexpertos no están preparados para el asalto violento a sus pensamientos y emociones al comienzo de sus carreras.</p>
                     <p className="text-sm mb-3">Junto con la comprensión de su propia psique, es importante saber por qué es que usted quiere ser un operador. ¿Cuál es su objetivo? - ¿Qué significa el éxito como trader para usted?</p>
@@ -117,14 +117,14 @@ export default function ModuloPractico10PlanTradingContenido() {
                   <div>
                     <h4 className="font-semibold text-[#ec4d58] mb-2">13. Después del cierre del mercado</h4>
                     <p className="text-sm mb-3">Una vez que haya terminado el día de trading, es tentador para acabar, abrir una botella ya sea ¡para celebrar o para ahogar tus penas! Su plan de trading puede o no puede permitir estas actividades. De cualquier manera, debe incluir el examen de trades ganadores y perdedores.</p>
-                  </div>
-                  
-                  <div>
+                    </div>
+                    
+              <div>
                     <h4 className="font-semibold text-[#ec4d58] mb-2">14. ¡Disciplina!</h4>
                     <p className="text-sm mb-3">Tener un plan de trading global con criterios de entrada y de salida, con un excelente control del riesgo, y procedimientos de gestión del dinero, no cuentan para nada si falta la disciplina necesaria para ponerlos en práctica.</p>
-                  </div>
-                  
-                  <div>
+                    </div>
+                    
+              <div>
                     <h4 className="font-semibold text-[#ec4d58] mb-2">15. Reglas de Oro del Trading</h4>
                     <p className="text-sm mb-3">Sus reglas deben ser las que son pertinentes y significativos para usted. Aquí hay una lista para hacerle pensar:</p>
                     
@@ -140,18 +140,18 @@ export default function ModuloPractico10PlanTradingContenido() {
                         <li><strong># 8. ¡MANTENER LA DISCIPLINA!</strong></li>
                         <li><strong># 9. MANTENGALO SIMPLE!</strong></li>
                         <li><strong># 10. PLANIFIQUE SU TRADING – OPERE SU PLAN!</strong></li>
-                      </ul>
+                  </ul>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-
+                    </div>
+                    
             {/* EJEMPLOS DE PLAN DE OPERACIONES */}
             <div className="bg-[#181818] rounded-lg p-6">
               <h3 className="text-lg font-bold text-[#ec4d58] mb-4">EJEMPLOS DE PLAN DE OPERACIONES</h3>
               
-              <div className="space-y-4">
+                <div className="space-y-4">
                 <p className="text-sm mb-3">Actualmente, esta sección contiene ejemplos de operaciones del plan. Lo ideal sería que contuviera al menos tres planes de trading completos: uno para los operadores de futuros, uno para los operadores del Forex y uno para los operadores de acciones.</p>
                 
                 <p className="text-sm mb-3">La guinda del pastel sería si también abarcara los tres principales Time Frame: Operador Intradía, Swing Trader y Operador de Posición.</p>
@@ -162,8 +162,8 @@ export default function ModuloPractico10PlanTradingContenido() {
                   <p className="text-sm">Los ejemplos incluirán casos de estudio de diferentes tipos de operadores y estrategias, proporcionando una guía práctica para la implementación del plan de trading.</p>
                 </div>
               </div>
-            </div>
-
+                  </div>
+                  
             {/* Conclusión */}
             <div className="bg-[#181818] rounded-lg p-6">
               <h3 className="text-lg font-bold text-[#ec4d58] mb-4">Conclusión</h3>
