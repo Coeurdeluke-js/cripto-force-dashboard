@@ -8,8 +8,8 @@
     "dev:turbo": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "create:users": "tsx scripts/create_users_table.ts",
-    "create:users:sql": "tsx scripts/create_users_table_sql_api.ts",
+    "create:users": "node -e \"console.log('local-only script');\"",
+    "create:users:sql": "node -e \"console.log('local-only script');\"",
     "tailwind": "node ./node_modules/tailwindcss/cli.js",
     "lint": "next lint"
   },
