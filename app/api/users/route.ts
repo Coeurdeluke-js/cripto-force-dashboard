@@ -73,32 +73,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ user: adminData })
     }
 
-    // Alternative: REST with projectRef + service key (unreachable now, kept for reference)
-    if (serviceKey && projectRef && false) {
-      const restUrl = `https://${projectRef}.supabase.co/rest/v1/users`
-
-      const insertRes = await fetch(restUrl, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${serviceKey}`,
-          apikey: serviceKey,
-          'Content-Type': 'application/json',
-          Prefer: 'return=representation',
-        },
-        body: JSON.stringify(row),
-        cache: 'no-store',
-      })
-
-      if (!insertRes.ok) {
-        const text = await insertRes.text()
-        return NextResponse.json(
-          { error: `Error insertando usuario: ${insertRes.status} ${text}` },
-          { status: 500 }
-        )
-      }
-      const data = await insertRes.json()
-      return NextResponse.json({ user: Array.isArray(data) ? data[0] : data })
-    }
+    // Alternative REST path removed to avoid type issues in Edge build; using supabase-js only.
 
     // Fallback: use anon key via supabase-js (works when RLS está desactivado)
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL || body.supabaseUrl
