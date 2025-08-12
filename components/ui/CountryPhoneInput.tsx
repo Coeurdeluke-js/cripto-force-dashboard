@@ -11,10 +11,10 @@ interface Country {
 }
 
 const countries: Country[] = [
+  { code: 'AR', name: 'Argentina', dialCode: '+54', flag: '🇦🇷' },
   { code: 'US', name: 'Estados Unidos', dialCode: '+1', flag: '🇺🇸' },
   { code: 'MX', name: 'México', dialCode: '+52', flag: '🇲🇽' },
   { code: 'ES', name: 'España', dialCode: '+34', flag: '🇪🇸' },
-  { code: 'AR', name: 'Argentina', dialCode: '+54', flag: '🇦🇷' },
   { code: 'CO', name: 'Colombia', dialCode: '+57', flag: '🇨🇴' },
   { code: 'PE', name: 'Perú', dialCode: '+51', flag: '🇵🇪' },
   { code: 'CL', name: 'Chile', dialCode: '+56', flag: '🇨🇱' },
@@ -51,7 +51,7 @@ export default function CountryPhoneInput({
   className = ""
 }: CountryPhoneInputProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<Country>(countries[0]);
+  const [selectedCountry, setSelectedCountry] = useState<Country>(countries[0]); // Argentina es el primero ahora
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -97,75 +97,74 @@ export default function CountryPhoneInput({
 
   return (
     <div className={`relative ${className}`}>
-      <div className="relative">
-        <input
-          type="tel"
-          value={value}
-          onChange={handlePhoneChange}
-          className="w-full px-4 py-3 bg-[#2a2d36] border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFD447] focus:border-[#FFD447] transition-all pr-12"
-          placeholder={placeholder}
-        />
-        <Phone size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40" />
-      </div>
-
-      {/* Selector de país */}
-      <div className="relative">
+      <div className="relative flex items-center">
+        {/* Selector de país integrado */}
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2 bg-[#2a2d36] border border-white/20 rounded px-2 py-1 text-white/80 hover:text-white transition-colors"
+          className="flex items-center gap-2 bg-[#2a2d36] border-r border-white/20 rounded-l-lg px-3 py-3 text-white/80 hover:text-white transition-colors min-w-[80px] justify-center"
         >
           <span className="text-lg">{selectedCountry.flag}</span>
           <span className="text-sm font-medium">{selectedCountry.dialCode}</span>
           <ChevronDown size={16} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </button>
 
-        {/* Dropdown */}
-        {isOpen && (
-          <div
-            ref={dropdownRef}
-            className="absolute top-full left-0 mt-1 w-80 max-h-60 bg-[#2a2d36] border border-white/20 rounded-lg shadow-xl z-50 overflow-hidden"
-          >
-            {/* Barra de búsqueda */}
-            <div className="p-3 border-b border-white/10">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Buscar país..."
-                className="w-full px-3 py-2 bg-[#1e2028] border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[#FFD447] focus:border-[#FFD447]"
-              />
-            </div>
-
-            {/* Lista de países */}
-            <div className="max-h-48 overflow-y-auto">
-              {filteredCountries.map((country) => (
-                <button
-                  key={country.code}
-                  type="button"
-                  onClick={() => handleCountrySelect(country)}
-                  className="w-full px-4 py-3 flex items-center gap-3 hover:bg-[#3a3d46] transition-colors text-left"
-                >
-                  <span className="text-lg">{country.flag}</span>
-                  <div className="flex-1">
-                    <div className="text-white font-medium">{country.name}</div>
-                    <div className="text-white/60 text-sm">{country.dialCode}</div>
-                  </div>
-                  {selectedCountry.code === country.code && (
-                    <div className="w-2 h-2 bg-[#FFD447] rounded-full"></div>
-                  )}
-                </button>
-              ))}
-              
-              {filteredCountries.length === 0 && (
-                <div className="px-4 py-3 text-white/60 text-center">
-                  No se encontraron países
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        {/* Campo de teléfono */}
+        <input
+          type="tel"
+          value={value}
+          onChange={handlePhoneChange}
+          className="flex-1 px-4 py-3 bg-[#2a2d36] border border-white/20 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-[#ec4d58] focus:border-[#ec4d58] transition-all"
+          placeholder={placeholder}
+        />
+        <Phone size={20} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40" />
       </div>
+
+      {/* Dropdown */}
+      {isOpen && (
+        <div
+          ref={dropdownRef}
+          className="absolute top-full left-0 mt-1 w-80 max-h-60 bg-[#2a2d36] border border-white/20 rounded-lg shadow-xl z-50 overflow-hidden"
+        >
+          {/* Barra de búsqueda */}
+          <div className="p-3 border-b border-white/10">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar país..."
+              className="w-full px-3 py-2 bg-[#1e2028] border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[#ec4d58] focus:border-[#ec4d58]"
+            />
+          </div>
+
+          {/* Lista de países */}
+          <div className="max-h-48 overflow-y-auto">
+            {filteredCountries.map((country) => (
+              <button
+                key={country.code}
+                type="button"
+                onClick={() => handleCountrySelect(country)}
+                className="w-full px-4 py-3 flex items-center gap-3 hover:bg-[#3a3d46] transition-colors text-left"
+              >
+                <span className="text-lg">{country.flag}</span>
+                <div className="flex-1">
+                  <div className="text-white font-medium">{country.name}</div>
+                  <div className="text-white/60 text-sm">{country.dialCode}</div>
+                </div>
+                {selectedCountry.code === country.code && (
+                  <div className="w-2 h-2 bg-[#ec4d58] rounded-full"></div>
+                )}
+              </button>
+            ))}
+            
+            {filteredCountries.length === 0 && (
+              <div className="px-4 py-3 text-white/60 text-center">
+                No se encontraron países
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

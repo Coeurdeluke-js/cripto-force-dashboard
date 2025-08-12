@@ -40,6 +40,16 @@ export default function LoginPage() {
   const router = useRouter();
   const PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qtbplksozfropbubykud.supabase.co';
   const PUBLIC_SUPABASE_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+  
+  // Debug: Log environment variables
+  console.log('=== CLIENT ENV DEBUG ===');
+  console.log('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+  console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  console.log('PUBLIC_SUPABASE_URL:', PUBLIC_SUPABASE_URL);
+  console.log('PUBLIC_SUPABASE_ANON:', PUBLIC_SUPABASE_ANON);
+  console.log('PUBLIC_SUPABASE_ANON length:', PUBLIC_SUPABASE_ANON.length);
+  console.log('=== END CLIENT ENV DEBUG ===');
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -122,37 +132,69 @@ export default function LoginPage() {
     if (!validateForm()) {
       return;
     }
-
+    
     setIsSubmitting(true);
+    setErrors({});
 
     try {
-      const res = await fetch('/api/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nombre: formData.nombre,
-          apellido: formData.apellido,
-          nickname: formData.nickname,
-          email: formData.email,
-          movil: formData.numeroMovil || undefined,
-          exchange: formData.exchange || undefined,
-          uid: formData.uid || undefined,
-          // provide public envs for fallback on the server if needed
-          supabaseUrl: PUBLIC_SUPABASE_URL,
-          supabaseAnon: PUBLIC_SUPABASE_ANON,
-        }),
+      const formDataToSend = {
+        nombre: formData.nombre,
+        apellido: formData.apellido,
+        nickname: formData.nickname,
+        email: formData.email,
+        movil: formData.numeroMovil || null,
+        exchange: formData.exchange || null,
+        uid: formData.uid || null,
+        referralCode: formData.codigoReferido || null,
+        password: formData.password,
+        supabaseUrl: PUBLIC_SUPABASE_URL,
+        supabaseAnon: PUBLIC_SUPABASE_ANON,
+      };
+
+      console.log('Sending form data:', {
+        ...formDataToSend,
+        supabaseAnon: formDataToSend.supabaseAnon ? `${formDataToSend.supabaseAnon.substring(0, 20)}...` : 'undefined'
       });
 
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || 'No se pudo crear el usuario');
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formDataToSend),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(JSON.stringify(data));
       }
 
-      // Usuario creado correctamente
-      router.push('/dashboard/iniciado');
-    } catch (error) {
+      // Success
+      setErrors({ submit: '¡Cuenta creada exitosamente!' });
+      
+      // Clear form
+      setFormData({
+        nombre: '',
+        apellido: '',
+        nickname: '',
+        email: '',
+        numeroMovil: '',
+        exchange: '',
+        uid: '',
+        codigoReferido: '',
+        password: '',
+        confirmPassword: ''
+      });
+      
+      // Redirect to signin after 2 seconds
+      setTimeout(() => {
+        router.push('/login/signin');
+      }, 2000);
+
+    } catch (error: any) {
       console.error('Error en el registro:', error);
-      setErrors((prev) => ({ ...prev, submit: (error as Error).message || 'Error desconocido' }));
+      setErrors(prev => ({ ...prev, submit: error.message }));
     } finally {
       setIsSubmitting(false);
     }
