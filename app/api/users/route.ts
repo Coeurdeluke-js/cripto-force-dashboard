@@ -1,191 +1,128 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// This route ensures the table exists (via Supabase SQL API) and then inserts the user via REST.
-// Required server env vars:
-// - SUPABASE_SERVICE_ROLE_KEY
-// - SUPABASE_PROJECT_REF (e.g. qtbplksozfropbubykud)
-
-type IncomingBody = {
-  nombre: string
-  apellido: string
-  nickname: string
-  email: string
-  movil?: string
-  exchange?: string
-  uid?: string
-  // Optional, only for fallback path (public info)
-  supabaseUrl?: string
-  supabaseAnon?: string
-}
-
-export const runtime = 'nodejs'
-export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    console.log('=== API DEBUG START ===');
-    console.log('Request body:', body);
     
-    // Debug environment variables
-    console.log('Environment variables available:');
-    console.log('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY exists:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-    console.log('SUPABASE_SERVICE_ROLE_KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
-    console.log('SUPABASE_PROJECT_REF:', process.env.SUPABASE_PROJECT_REF);
-    
-    // Check if keys are actually loaded
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const projectRef = process.env.SUPABASE_PROJECT_REF;
-    
-    console.log('Keys loaded:');
-    console.log('Service Key length:', serviceKey ? serviceKey.length : 0);
-    console.log('Anon Key length:', anonKey ? anonKey.length : 0);
-    console.log('URL:', url);
-    console.log('Project Ref:', projectRef);
-    console.log('=== API DEBUG END ===');
+    // Debug: Verificar variables de entorno
+    console.log('🔍 Debug API - Variables de entorno:');
+    console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? '✅ Disponible' : '❌ No disponible');
+    console.log('SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? '✅ Disponible' : '❌ No disponible');
+    console.log('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '✅ Disponible' : '❌ No disponible');
 
-    // Validate required fields
-    const missing: string[] = [];
-    if (!body?.nombre?.trim()) missing.push('nombre');
-    if (!body?.apellido?.trim()) missing.push('apellido');
-    if (!body?.nickname?.trim()) missing.push('nickname');
-    if (!body?.email?.trim()) missing.push('email');
-
-    if (missing.length) {
-      return NextResponse.json(
-        { error: `Campos requeridos faltantes: ${missing.join(', ')}` },
-        { status: 400 }
-      );
+    // Validar campos requeridos
+    const requiredFields = ['nombre', 'apellido', 'nickname', 'email', 'password'];
+    const missing = requiredFields.filter(field => !body[field] || body[field].trim() === '');
+    
+    if (missing.length > 0) {
+      return NextResponse.json({ 
+        error: `Campos requeridos faltantes: ${missing.join(', ')}` 
+      }, { status: 400 });
     }
 
-    // Use client-provided credentials if server env vars are not available
-    const finalUrl = url || body.supabaseUrl;
-    const finalAnonKey = anonKey || body.supabaseAnon;
-    const finalServiceKey = serviceKey;
-    
-    console.log('Final credentials:');
-    console.log('Final URL:', finalUrl);
-    console.log('Final Anon Key exists:', !!finalAnonKey);
-    console.log('Final Service Key exists:', !!finalServiceKey);
-
-    if (!finalUrl) {
-      return NextResponse.json({ error: 'Supabase URL no disponible' }, { status: 400 });
+    // Validar email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(body.email)) {
+      return NextResponse.json({ 
+        error: 'Formato de email inválido' 
+      }, { status: 400 });
     }
 
-    if (!finalAnonKey && !finalServiceKey) {
-      return NextResponse.json({ error: 'No hay claves de Supabase disponibles' }, { status: 400 });
+    // Validar password (mínimo 6 caracteres)
+    if (body.password.length < 6) {
+      return NextResponse.json({ 
+        error: 'La contraseña debe tener al menos 6 caracteres' 
+      }, { status: 400 });
     }
 
-    const row = {
+    // Preparar datos para insertar
+    const userData = {
       nombre: body.nombre.trim(),
       apellido: body.apellido.trim(),
       nickname: body.nickname.trim(),
-      email: body.email.trim().toLowerCase(),
+      email: body.email.toLowerCase().trim(),
       movil: body.movil || null,
       exchange: body.exchange || null,
       uid: body.uid || null,
-      created_at: new Date().toISOString(),
+      codigo_referido: body.codigoReferido || null,
+      // No incluimos password aquí - se manejará por separado
     };
 
-    console.log('Attempting to insert user data:', row);
+    console.log('📝 Datos del usuario a insertar:', userData);
 
-    // Try to create table first if using service role key
-    if (finalServiceKey) {
-      try {
-        console.log('Attempting to create table with service role key...');
-        const admin = createClient(finalUrl, finalServiceKey);
-        
-        // Try to insert directly
-        const { data: adminData, error: adminError } = await admin
-          .from('users')
-          .insert(row)
-          .select()
-          .single();
-          
-        if (adminError) {
-          console.log('Admin insert error:', adminError);
-          // If table doesn't exist, try to create it
-          if (adminError.message.includes('relation "users" does not exist')) {
-            console.log('Table does not exist, attempting to create...');
-            const { error: createError } = await admin.rpc('exec_sql', {
-              sql: `
-                CREATE TABLE IF NOT EXISTS public.users (
-                  id SERIAL PRIMARY KEY,
-                  nombre TEXT NOT NULL,
-                  apellido TEXT NOT NULL,
-                  nickname TEXT NOT NULL,
-                  email TEXT UNIQUE NOT NULL,
-                  movil TEXT,
-                  exchange TEXT,
-                  uid TEXT,
-                  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-                );
-              `
-            });
-            
-            if (createError) {
-              console.log('Table creation error:', createError);
-            } else {
-              console.log('Table created successfully, retrying insert...');
-              const { data: retryData, error: retryError } = await admin
-                .from('users')
-                .insert(row)
-                .select()
-                .single();
-                
-              if (retryError) {
-                console.log('Retry insert error:', retryError);
-                return NextResponse.json({ error: retryError.message }, { status: 500 });
-              }
-              
-              console.log('User created successfully with service role key');
-              return NextResponse.json({ user: retryData });
-            }
-          }
-          return NextResponse.json({ error: adminError.message }, { status: 500 });
-        }
-        
-        console.log('User created successfully with service role key');
-        return NextResponse.json({ user: adminData });
-      } catch (error) {
-        console.log('Service role key attempt failed:', error);
-      }
+    // Obtener variables de entorno
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return NextResponse.json({ 
+        error: 'Configuración de Supabase incompleta' 
+      }, { status: 500 });
     }
 
-    // Fallback: use anon key
-    if (finalAnonKey) {
-      try {
-        console.log('Attempting to insert with anon key...');
-        const client = createClient(finalUrl, finalAnonKey);
-        const { data: anonData, error: anonError } = await client
-          .from('users')
-          .insert(row)
-          .select()
-          .single();
-          
-        if (anonError) {
-          console.log('Anon key insert error:', anonError);
-          return NextResponse.json({ error: anonError.message }, { status: 500 });
+    // Crear cliente de Supabase con anon key (ahora funciona con RLS)
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    console.log('🚀 Intentando insertar usuario en Supabase...');
+
+    // Insertar usuario usando la anon key (ahora funciona con RLS)
+    const { data, error } = await supabase
+      .from('users')
+      .insert([userData])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ Error al insertar usuario:', error);
+      
+      // Manejar errores específicos de validación
+      if (error.code === '23505') { // Unique violation
+        if (error.message.includes('email')) {
+          return NextResponse.json({ 
+            error: 'Este email ya está registrado' 
+          }, { status: 409 });
         }
-        
-        console.log('User created successfully with anon key');
-        return NextResponse.json({ user: anonData });
-      } catch (error) {
-        console.log('Anon key attempt failed:', error);
-        return NextResponse.json({ error: 'Error al crear usuario con clave anónima' }, { status: 500 });
+        if (error.message.includes('nickname')) {
+          return NextResponse.json({ 
+            error: 'Este nickname ya está en uso' 
+          }, { status: 409 });
+        }
+        if (error.message.includes('exchange_uid')) {
+          return NextResponse.json({ 
+            error: 'Esta combinación de Exchange y UID ya existe' 
+          }, { status: 409 });
+        }
       }
+      
+      if (error.code === '23514') { // Check violation
+        return NextResponse.json({ 
+          error: 'Datos inválidos: ' + error.message 
+        }, { status: 400 });
+      }
+
+      return NextResponse.json({ 
+        error: 'Error al crear usuario: ' + error.message 
+      }, { status: 500 });
     }
 
-    return NextResponse.json({ error: 'No se pudo crear el usuario' }, { status: 500 });
+    console.log('✅ Usuario creado exitosamente:', data);
+
+    // Retornar éxito (sin datos sensibles)
+    return NextResponse.json({ 
+      success: true,
+      message: 'Usuario registrado exitosamente',
+      userId: data.id
+    });
+
   } catch (err: any) {
-    return NextResponse.json(
-      { error: err?.message ?? 'Error inesperado' },
-      { status: 500 }
-    )
+    console.error('💥 Error inesperado en API:', err);
+    return NextResponse.json({ 
+      error: 'Error interno del servidor: ' + err.message 
+    }, { status: 500 });
   }
 }
 
