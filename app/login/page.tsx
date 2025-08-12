@@ -149,7 +149,15 @@ export default function RegisterPage() {
         onClick={handleSkip}
         className="absolute bottom-6 right-6 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-4 py-2 text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 flex items-center gap-2 z-50"
       >
-        <SkipForward size={16} /> Saltar
+        <SkipForward size={16} /> Skip
+      </button>
+
+      {/* Botón Referidos */}
+      <button 
+        onClick={() => router.push('/login/referidos')}
+        className="absolute bottom-6 right-32 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-4 py-2 text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 flex items-center gap-2 z-50"
+      >
+        <Gift size={16} /> Referidos
       </button>
 
       <div className="w-full max-w-md">
@@ -394,15 +402,6 @@ export default function RegisterPage() {
               ¿Olvidaste tu contraseña?
             </a>
           </p>
-        </div>
-
-        {/* Código de referido del usuario */}
-        <div className="mt-8">
-          <ReferralCode 
-            code="CF123456"
-            referrals={0}
-            earnings={0}
-          />
         </div>
       </div>
     </div>
