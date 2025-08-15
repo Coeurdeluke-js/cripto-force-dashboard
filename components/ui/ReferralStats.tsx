@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Users, Gift, TrendingUp, Copy, Check, Share2 } from 'lucide-react';
 
 interface ReferralStatsProps {
@@ -26,13 +26,7 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    if (userEmail) {
-      fetchReferralStats();
-    }
-  }, [userEmail]);
-
-  const fetchReferralStats = async () => {
+  const fetchReferralStats = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -56,7 +50,13 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
     } finally {
       setLoading(false);
     }
-  };
+  }, [userEmail]);
+
+  useEffect(() => {
+    if (userEmail) {
+      fetchReferralStats();
+    }
+  }, [userEmail, fetchReferralStats]);
 
   const handleCopyCode = async () => {
     if (!stats?.referralCode) return;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { User, Mail, Lock, Phone, Building, Hash, Gift } from 'lucide-react';
 import CountryPhoneInput from '@/components/ui/CountryPhoneInput';
@@ -8,7 +8,8 @@ import ReferralCode from '@/components/ui/ReferralCode';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useSafeAuth } from '@/context/AuthContext';
 
-export default function RegisterPage() {
+// Componente separado para manejar search params
+function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setUserData, isReady } = useSafeAuth();
@@ -506,5 +507,18 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Componente principal con Suspense
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#121212] text-white font-inter flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    }>
+      <RegisterForm />
+    </Suspense>
   );
 }
