@@ -26,6 +26,23 @@ Crypto Force es una plataforma educativa galáctica para aprender sobre criptomo
 
 ---
 
+## 🚨 Solución de Problemas Comunes
+
+### Error de RLS (Row Level Security)
+Si ves este error al registrar usuarios:
+```
+Error de permisos: La tabla users tiene restricciones de seguridad
+```
+
+**Solución rápida:**
+1. Ve a tu panel de Supabase → SQL Editor
+2. Ejecuta el archivo `fix-rls-complete.sql`
+3. Esto configurará las políticas RLS correctamente
+
+📖 **Guía completa:** Ver [SUPABASE_RLS_FIX.md](./SUPABASE_RLS_FIX.md)
+
+---
+
 ## 📦 Instalación local
 
 1. Clona el repositorio:

@@ -1,11 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getValidatedEnv } from '@/lib/env';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
+    // 🔍 TEST RÁPIDO - Verificar TODAS las variables de entorno
+    console.log('🚨 TEST RÁPIDO - Variables de entorno disponibles:');
+    console.log('================================================');
+    console.log('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL || '❌ NO DISPONIBLE');
+    console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '❌ NO DISPONIBLE');
+    console.log('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY || '❌ NO DISPONIBLE');
+    console.log('NODE_ENV:', process.env.NODE_ENV || '❌ NO DISPONIBLE');
+    console.log('================================================');
+    
+    // 🔍 TEST ADICIONAL - Verificar configuración de Next.js
+    console.log('🔧 TEST CONFIGURACIÓN:');
+    console.log('process.env:', Object.keys(process.env).filter(key => key.includes('SUPABASE')));
+    console.log('================================================');
+    
+    // 🔍 TEST NUEVA CONFIGURACIÓN
+    console.log('🔧 TEST NUEVA CONFIGURACIÓN:');
+    try {
+      const config = getValidatedEnv();
+      console.log('✅ Configuración validada:', config);
+    } catch (error) {
+      console.log('❌ Error en configuración:', error);
+    }
+    console.log('================================================');
+    
     const body = await request.json();
     
     // Debug: Verificar variables de entorno
@@ -39,7 +64,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Preparar datos para insertar
+    // Preparar datos para insertar (solo columnas que existen en la tabla)
     const userData = {
       nombre: body.nombre.trim(),
       apellido: body.apellido.trim(),
@@ -48,19 +73,25 @@ export async function POST(request: NextRequest) {
       movil: body.movil || null,
       exchange: body.exchange || null,
       uid: body.uid || null,
-      codigo_referido: body.codigoReferido || null,
-      // No incluimos password aquí - se manejará por separado
+      // codigo_referido: body.codigoReferido || null, // Comentado - columna no existe aún
+      // No incluimos password aquí - se manejará por separado con Supabase Auth
     };
 
     console.log('📝 Datos del usuario a insertar:', userData);
+    console.log('🔍 Columnas que se insertarán:', Object.keys(userData));
 
-    // Obtener variables de entorno
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl || !supabaseAnonKey) {
+    // Obtener variables de entorno usando la nueva configuración
+    let supabaseUrl: string;
+    let supabaseAnonKey: string;
+    
+    try {
+      const config = getValidatedEnv();
+      supabaseUrl = config.NEXT_PUBLIC_SUPABASE_URL!;
+      supabaseAnonKey = config.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    } catch (error) {
+      console.error('❌ Error al obtener configuración:', error);
       return NextResponse.json({ 
-        error: 'Configuración de Supabase incompleta' 
+        error: 'Configuración de Supabase incompleta: ' + (error as Error).message
       }, { status: 500 });
     }
 
@@ -78,6 +109,12 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('❌ Error al insertar usuario:', error);
+      console.error('🔍 Detalles del error:', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint
+      });
       
       // Manejar errores específicos de validación
       if (error.code === '23505') { // Unique violation
@@ -102,6 +139,42 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ 
           error: 'Datos inválidos: ' + error.message 
         }, { status: 400 });
+      }
+
+      // Error específico de columna no encontrada
+      if (error.code === 'PGRST204' && error.message.includes('codigo_referido')) {
+        return NextResponse.json({ 
+          error: 'Error de configuración de base de datos: columna codigo_referido no encontrada. Contacta al administrador.' 
+        }, { status: 500 });
+      }
+
+      // Error específico de RLS (Row Level Security)
+      if (error.code === '42501' || error.message.includes('row-level security') || error.message.includes('policy')) {
+        console.error('🚨 ERROR RLS DETECTADO - EJECUTAR SCRIPT DE DIAGNOSTICO');
+        return NextResponse.json({ 
+          error: 'ERROR RLS: Ejecuta el script de diagnóstico en Supabase SQL Editor para solucionar este problema.',
+          details: `Código: ${error.code}, Mensaje: ${error.message}`,
+          solution: 'Ve a Supabase → SQL Editor y ejecuta el script de diagnóstico completo'
+        }, { status: 500 });
+      }
+
+      // Error de tabla no encontrada
+      if (error.code === '42P01' || error.message.includes('does not exist')) {
+        console.error('🚨 TABLA NO EXISTE - CREAR TABLA');
+        return NextResponse.json({ 
+          error: 'TABLA NO EXISTE: La tabla users no existe en la base de datos.',
+          solution: 'Ejecuta el script de diagnóstico completo en Supabase SQL Editor'
+        }, { status: 500 });
+      }
+
+      // Error de permisos general
+      if (error.code === '42501') {
+        console.error('🚨 ERROR DE PERMISOS GENERAL');
+        return NextResponse.json({ 
+          error: 'ERROR DE PERMISOS: Problema de permisos en la base de datos.',
+          details: `Código: ${error.code}, Mensaje: ${error.message}`,
+          solution: 'Ejecuta el script de diagnóstico completo en Supabase SQL Editor'
+        }, { status: 500 });
       }
 
       return NextResponse.json({ 

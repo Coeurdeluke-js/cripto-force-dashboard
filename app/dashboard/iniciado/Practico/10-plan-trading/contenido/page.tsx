@@ -46,7 +46,7 @@ export default function ModuloPractico10PlanTradingContenido() {
                     <p className="text-sm mb-3">Algunas personas han descrito un plan de trading como una hoja de ruta. Es, literalmente, la ruta que le llevará desde donde usted está ahora a donde usted desea ir, lo que para la mayoría de los traders, es la rentabilidad consistente.</p>
                   </div>
                   
-                  <div>
+              <div>
                     <h4 className="font-semibold text-[#ec4d58] mb-2">3. ¿Qué hará un plan de Trading?</h4>
                     <p className="text-sm mb-3">Un plan de trading hará el acto de operar más simple de lo que sería si se opera sin un plan. Limitará su probabilidad de hacer operaciones malas y le evitará muchos problemas psicológicos desde la raíz.</p>
                     <p className="text-sm mb-3">Un plan de trading debería utilizar la mayor parte del tiempo necesario para la toma de decisiones en el calor del momento. Cuestiones emocionales se harán muy poderosas cuando el dinero real está en la línea y, probablemente, le obliguen a tomar decisiones irracionales.</p>
