@@ -20,12 +20,38 @@
   body {
     @apply text-[rgb(var(--foreground))] bg-[rgb(var(--background))];
     background: linear-gradient(135deg, #212121 0%, #121212 60%, #121212 100%);
+    /* Mejorar el scroll en móviles */
+    -webkit-overflow-scrolling: touch;
+    /* Evitar zoom en inputs en iOS */
+    touch-action: manipulation;
   }
 
   html,
   body,
   #__next {
     height: 100%;
+  }
+
+  /* Prevenir zoom en inputs en iOS Safari */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Mejorar el rendimiento en móviles */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Estilos específicos para móviles */
+  @media (max-width: 640px) {
+    body {
+      font-size: 14px;
+    }
   }
 }
 

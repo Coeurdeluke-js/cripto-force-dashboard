@@ -11,6 +11,9 @@ export default {
 
   theme: {
     extend: {
+      screens: {
+        'xs': '475px',  // Breakpoint extra pequeño para móviles
+      },
       colors: {
         primary: '#121212',        // Fondo oscuro principal
         secondary: '#1a1a1a',      // Fondo oscuro ligeramente más claro
