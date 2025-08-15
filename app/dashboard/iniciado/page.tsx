@@ -1174,8 +1174,8 @@ export default function IniciadoDashboard() {
               Cada 2 módulos encontrarás un punto de control para evaluar tu progreso y consolidar tu aprendizaje.
             </p>
             <div className="text-yellow-400 text-sm space-y-1">
-              <div>⏰ Duración: 20 minutos máximo</div>
-              <div>🔄 Cooldown: 6 horas entre intentos</div>
+              <div>⏰ Duración: 8 minutos máximo</div>
+              <div>🔄 Cooldown: 1 hora entre intentos</div>
               <div>📝 Formato: 12 preguntas de opción múltiple</div>
               <div>✅ Aprobación: 70% mínimo</div>
             </div>

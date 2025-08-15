@@ -61,7 +61,7 @@ export default function ControlPointModal({
               Metodología de Evaluación
             </h4>
             <ul className="text-sm text-gray-300 space-y-1">
-              <li>• <strong>Duración:</strong> Máximo 20 minutos para completar la evaluación</li>
+              <li>• <strong>Duración:</strong> Máximo 8 minutos para completar la evaluación</li>
               <li>• <strong>Formato:</strong> 12 preguntas de opción múltiple (6 por módulo)</li>
               <li>• <strong>Aprobación:</strong> Mínimo 70% de respuestas correctas</li>
               <li>• <strong>Navegación:</strong> Se bloqueará durante la evaluación</li>
@@ -74,7 +74,7 @@ export default function ControlPointModal({
               Restricciones de Tiempo
             </h4>
             <ul className="text-sm text-gray-300 space-y-1">
-              <li>• <strong>Cooldown:</strong> 6 horas entre intentos del mismo checkpoint</li>
+              <li>• <strong>Cooldown:</strong> 1 hora entre intentos del mismo checkpoint</li>
               <li>• <strong>Preparación:</strong> Te recomendamos revisar el contenido antes</li>
               <li>• <strong>Una vez iniciado:</strong> No podrás salir hasta completarlo</li>
             </ul>
