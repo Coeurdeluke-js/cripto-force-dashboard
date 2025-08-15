@@ -69,7 +69,7 @@ export default function MensajeBienvenida() {
           </div>
 
           {/* Key Features */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
             <div className="text-center p-6 bg-[#232323] rounded-xl">
               <div className="w-12 h-12 bg-[#ec4d58] rounded-lg flex items-center justify-center mx-auto mb-4">
                 <GraduationCap className="text-white text-xl" />
@@ -100,15 +100,7 @@ export default function MensajeBienvenida() {
               </p>
             </div>
 
-            <div className="text-center p-6 bg-[#232323] rounded-xl">
-              <div className="w-12 h-12 bg-[#ec4d58] rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Trophy className="text-white text-xl" />
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Certificación</h3>
-              <p className="text-gray-300 text-sm">
-                Obtén certificaciones que validen tu progreso y conocimiento
-              </p>
-            </div>
+
           </div>
 
           {/* Next Steps */}
@@ -128,16 +120,7 @@ export default function MensajeBienvenida() {
           </div>
         </div>
 
-        {/* Back Button */}
-        <div className="text-center">
-          <Link
-            href="/dashboard/iniciado"
-            className="inline-flex items-center px-4 py-2 text-gray-300 hover:text-white transition-colors"
-          >
-            <ArrowLeft className="mr-2" />
-            Volver al Dashboard
-          </Link>
-        </div>
+
       </div>
     </div>
   );

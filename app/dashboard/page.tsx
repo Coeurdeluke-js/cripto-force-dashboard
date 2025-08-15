@@ -17,8 +17,8 @@ export default function Dashboard() {
         return;
       }
 
-      // Redirigir al mensaje de bienvenida como página predeterminada
-      router.push('/dashboard/mensaje');
+      // Redirigir al dashboard iniciado como página predeterminada
+      router.push('/dashboard/iniciado');
     }
   }, [isReady, userData, router]);
 
