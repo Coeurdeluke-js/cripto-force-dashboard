@@ -13,6 +13,8 @@ import {
   AlertCircle,
   User
 } from 'lucide-react';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useSafeAuth } from '@/context/AuthContext';
 
 interface FormData {
   email: string;
@@ -25,6 +27,7 @@ interface FormErrors {
 
 export default function SignInPage() {
   const router = useRouter();
+  const { setUserData, isReady } = useSafeAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -33,6 +36,15 @@ export default function SignInPage() {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
+
+  // Mostrar loading mientras no esté listo
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f] flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({
@@ -79,13 +91,50 @@ export default function SignInPage() {
       // Simulación de inicio de sesión
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Aquí iría la lógica real de autenticación
-      console.log('Iniciando sesión con:', formData);
+      // Simular datos del usuario logueado basados en el email
+      let simulatedUserData;
       
-      // Redirigir al dashboard después del login exitoso
-      router.push('/dashboard/iniciado');
+      // Datos específicos para emails conocidos
+      if (formData.email.includes('coeurdeluke') || formData.email.includes('luke')) {
+        simulatedUserData = {
+          nombre: 'Lucas',
+          apellido: 'González',
+          nickname: 'Luke',
+          email: formData.email,
+          movil: '+54 11 7060-4565',
+          exchange: 'ZoomEx',
+          uid: 'ZMX11223344',
+          codigo_referido: 'LUKE2025',
+          id: 'usr_luke_12345',
+          joinDate: new Date().toISOString().split('T')[0]
+        };
+      } else {
+        // Datos genéricos para otros usuarios
+        const baseName = formData.email.split('@')[0];
+        simulatedUserData = {
+          nombre: baseName.charAt(0).toUpperCase() + baseName.slice(1),
+          apellido: 'Usuario',
+          nickname: baseName,
+          email: formData.email,
+          movil: '+54 9 11 1234-5678',
+          exchange: 'ZoomEx',
+          uid: 'ZMX' + Math.floor(Math.random() * 100000),
+          codigo_referido: baseName.toUpperCase() + '2025',
+          id: 'usr_' + Math.floor(Math.random() * 1000000),
+          joinDate: new Date().toISOString().split('T')[0]
+        };
+      }
+      
+      // Guardar datos del usuario en el contexto
+      setUserData(simulatedUserData);
+      
+      console.log('Inicio de sesión exitoso para:', formData.email);
+      
+      // Redirigir al mensaje de bienvenida después del login exitoso
+      router.push('/dashboard/mensaje');
     } catch (error) {
       console.error('Error en el login:', error);
+      setErrors({ general: 'Error al iniciar sesión. Inténtalo de nuevo.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -185,6 +234,14 @@ export default function SignInPage() {
                 </p>
               )}
             </div>
+
+            {/* Mensaje de error general */}
+            {errors.general && (
+              <div className="p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-sm flex items-center gap-2">
+                <AlertCircle size={16} />
+                {errors.general}
+              </div>
+            )}
 
             {/* Opciones adicionales */}
             <div className="flex items-center justify-between">

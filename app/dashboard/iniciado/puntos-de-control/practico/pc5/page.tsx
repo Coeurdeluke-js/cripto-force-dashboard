@@ -150,7 +150,7 @@ export default function PuntoControlPractico5() {
   const [shuffledQuestions, setShuffledQuestions] = useState(questions);
   const [answers, setAnswers] = useState<number[]>(new Array(questions.length).fill(-1));
   const [submitted, setSubmitted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(20 * 60); // 20 minutos
+  const [timeLeft, setTimeLeft] = useState(8 * 60); // 8 minutos
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [showReview, setShowReview] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
@@ -221,7 +221,7 @@ export default function PuntoControlPractico5() {
     setCurrentQuestion(0);
     setShowReview(false);
     setShowResultModal(false);
-    setTimeLeft(20 * 60);
+    setTimeLeft(8 * 60);
   };
 
   const handleNavigate = (direction: 'prev' | 'next') => {

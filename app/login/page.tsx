@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, Mail, Lock, Phone, Building, Hash, Gift, SkipForward } from 'lucide-react';
+import { User, Mail, Lock, Phone, Building, Hash, Gift } from 'lucide-react';
 import CountryPhoneInput from '@/components/ui/CountryPhoneInput';
 import ReferralCode from '@/components/ui/ReferralCode';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useSafeAuth } from '@/context/AuthContext';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { setUserData, isReady } = useSafeAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
@@ -22,6 +25,15 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: ''
   });
+  
+  // Mostrar loading mientras no esté listo
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-[#121212] text-white font-inter flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -108,7 +120,21 @@ export default function RegisterPage() {
         throw new Error(result.error || 'Error al crear cuenta');
       }
 
-      // Éxito
+      // Éxito - Guardar datos del usuario
+      const newUserData = {
+        nombre: formData.nombre.trim(),
+        apellido: formData.apellido.trim(),
+        nickname: formData.nickname.trim(),
+        email: formData.email.toLowerCase().trim(),
+        movil: formData.numeroMovil.trim() !== '+54 ' ? formData.numeroMovil.trim() : undefined,
+        exchange: formData.exchange || undefined,
+        uid: formData.uid || undefined,
+        codigo_referido: formData.codigoReferido || undefined,
+        id: result.userId,
+        joinDate: new Date().toISOString().split('T')[0] // Fecha de registro
+      };
+      
+      setUserData(newUserData);
       setErrors({ submit: '¡Cuenta creada exitosamente! Redirigiendo...' });
       
       // Limpiar formulario
@@ -125,9 +151,9 @@ export default function RegisterPage() {
         confirmPassword: ''
       });
 
-      // Redirigir después de 2 segundos
+      // Redirigir después de 2 segundos al mensaje de bienvenida
       setTimeout(() => {
-        router.push('/login/signin');
+        router.push('/dashboard/mensaje');
       }, 2000);
 
     } catch (error: any) {
@@ -138,9 +164,7 @@ export default function RegisterPage() {
     }
   };
 
-  const handleSkip = () => {
-    router.push('/login/dashboard-selection');
-  };
+
 
   return (
     <div className="min-h-screen bg-[#121212] text-white font-inter">
@@ -154,13 +178,7 @@ export default function RegisterPage() {
           <span className="hidden xs:inline">Referidos</span>
         </button>
         
-        <button 
-          onClick={handleSkip}
-          className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 sm:px-4 sm:py-2 text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 flex items-center gap-2 text-sm"
-        >
-          <SkipForward size={14} className="sm:w-4 sm:h-4" /> 
-          <span className="hidden xs:inline">Skip</span>
-        </button>
+
       </div>
 
       {/* Contenedor principal con scroll */}

@@ -1,26 +1,31 @@
-import { redirect } from 'next/navigation';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+'use client';
 
-export const dynamic = 'force-dynamic';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useSafeAuth } from '@/context/AuthContext';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
-export default async function Dashboard() {
-  try {
-    // Verificar que las variables de entorno estén disponibles
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      console.warn('Supabase environment variables not configured, redirecting to iniciado');
-      redirect('/dashboard/iniciado');
+export default function Dashboard() {
+  const router = useRouter();
+  const { userData, isReady } = useSafeAuth();
+
+  useEffect(() => {
+    if (isReady) {
+      // Si no hay usuario logueado, redirigir a login
+      if (!userData) {
+        router.push('/login');
+        return;
+      }
+
+      // Redirigir al mensaje de bienvenida como página predeterminada
+      router.push('/dashboard/mensaje');
     }
+  }, [isReady, userData, router]);
 
-  const supabase = createServerComponentClient({ cookies });
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  // Aquí implementarás la lógica para determinar el nivel del usuario
-  // Por ahora, redirigimos a todos los usuarios al dashboard de iniciado
-  redirect('/dashboard/iniciado');
-  } catch (error) {
-    console.error('Error in dashboard page:', error);
-    // En caso de error, redirigir al dashboard de iniciado
-    redirect('/dashboard/iniciado');
-  }
+  // Mostrar loading mientras se determina la redirección
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f] flex items-center justify-center">
+      <LoadingSpinner message="Cargando dashboard..." />
+    </div>
+  );
 }

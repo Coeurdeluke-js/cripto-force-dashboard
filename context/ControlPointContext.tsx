@@ -31,8 +31,8 @@ export const useControlPoint = () => {
   return context;
 };
 
-const SIX_HOURS_IN_SECONDS = 6 * 60 * 60; // 6 horas en segundos
-const CHECKPOINT_DURATION = 20 * 60; // 20 minutos en segundos
+const ONE_HOUR_IN_SECONDS = 1 * 60 * 60; // 1 hora en segundos
+const CHECKPOINT_DURATION = 8 * 60; // 8 minutos en segundos
 
 export const ControlPointProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<ControlPointState>({
@@ -158,7 +158,7 @@ export const ControlPointProvider = ({ children }: { children: ReactNode }) => {
     if (!lastAttempt) return true;
     
     const timeSinceLastAttempt = (Date.now() - lastAttempt) / 1000;
-    return timeSinceLastAttempt >= SIX_HOURS_IN_SECONDS;
+    return timeSinceLastAttempt >= ONE_HOUR_IN_SECONDS;
   };
 
   const getTimeUntilNextAttempt = (checkpointId: string): number => {
@@ -166,7 +166,7 @@ export const ControlPointProvider = ({ children }: { children: ReactNode }) => {
     if (!lastAttempt) return 0;
     
     const timeSinceLastAttempt = (Date.now() - lastAttempt) / 1000;
-    const timeRemaining = SIX_HOURS_IN_SECONDS - timeSinceLastAttempt;
+    const timeRemaining = ONE_HOUR_IN_SECONDS - timeSinceLastAttempt;
     
     return Math.max(0, timeRemaining);
   };

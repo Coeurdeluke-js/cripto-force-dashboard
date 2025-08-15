@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { 
   User, 
   Mail, 
@@ -16,6 +17,8 @@ import {
   Crown
 } from 'lucide-react';
 import ReferralCode from '@/components/ui/ReferralCode';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useSafeAuth } from '@/context/AuthContext';
 
 interface UserProfile {
   nombre: string;
@@ -33,23 +36,58 @@ interface UserProfile {
 }
 
 export default function ProfilePage() {
+  const router = useRouter();
+  const { userData, isReady, updateUserData } = useSafeAuth();
   const [isEditing, setIsEditing] = useState(false);
+  
   const [profile, setProfile] = useState<UserProfile>({
-    nombre: 'Juan',
-    apellido: 'Pérez',
-    nickname: 'TraderPro',
-    email: 'juan.perez@email.com',
-    numeroMovil: '+1 (555) 123-4567',
-    exchange: 'Budget',
-    uid: 'BUD123456',
+    nombre: '',
+    apellido: '',
+    nickname: '',
+    email: '',
+    numeroMovil: '',
+    exchange: '',
+    uid: '',
     role: 'iniciado',
-    referralCode: 'JUAN123',
-    referrals: 5,
-    earnings: 150,
-    joinDate: '2024-01-15'
+    referralCode: '',
+    referrals: 0,
+    earnings: 0,
+    joinDate: new Date().toISOString().split('T')[0]
   });
 
+  // Cargar datos del usuario desde el contexto
+  useEffect(() => {
+    if (userData) {
+      setProfile({
+        nombre: userData.nombre,
+        apellido: userData.apellido,
+        nickname: userData.nickname,
+        email: userData.email,
+        numeroMovil: userData.movil || '',
+        exchange: userData.exchange || '',
+        uid: userData.uid || '',
+        role: 'iniciado', // Por defecto iniciado
+        referralCode: userData.codigo_referido || userData.nickname.toUpperCase() + '2025',
+        referrals: 0, // Por defecto 0
+        earnings: 0, // Por defecto 0
+        joinDate: userData.joinDate || new Date().toISOString().split('T')[0] // Fecha de registro o actual
+      });
+    } else {
+      // Si no hay datos del usuario, redirigir al login
+      router.push('/login');
+    }
+  }, [userData, router]);
+
   const [editData, setEditData] = useState<UserProfile>(profile);
+
+  // Mostrar loading mientras no esté listo
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f] p-4 flex items-center justify-center">
+        <LoadingSpinner message="Cargando perfil..." />
+      </div>
+    );
+  }
 
   const handleEdit = () => {
     setEditData(profile);
@@ -58,6 +96,19 @@ export default function ProfilePage() {
 
   const handleSave = () => {
     setProfile(editData);
+    
+    // Sincronizar cambios con el contexto global
+    updateUserData({
+      nombre: editData.nombre,
+      apellido: editData.apellido,
+      nickname: editData.nickname,
+      email: editData.email,
+      movil: editData.numeroMovil,
+      exchange: editData.exchange,
+      uid: editData.uid,
+      codigo_referido: editData.referralCode
+    });
+    
     setIsEditing(false);
   };
 
@@ -104,11 +155,11 @@ export default function ProfilePage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link 
-            href="/dashboard/iniciado" 
+            href="/login/dashboard-selection" 
             className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors"
           >
             <ArrowLeft size={20} />
-            Volver al dashboard
+            Volver a selección de dashboard
           </Link>
           
           <div className="flex items-center gap-4">
@@ -265,7 +316,7 @@ export default function ProfilePage() {
                     />
                   ) : (
                     <div className="px-4 py-3 bg-[#2a2d36] border border-white/20 rounded-lg text-white">
-                      {profile.numeroMovil}
+                      {profile.numeroMovil || 'No especificado'}
                     </div>
                   )}
                 </div>

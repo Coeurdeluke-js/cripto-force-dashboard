@@ -33,6 +33,7 @@ import Carousel from './components/Carousel';
 import ProgressRuler from './components/ProgressRuler';
 import { useProgress } from '@/context/ProgressContext';
 import { useScrollPosition, useCarouselPosition } from '@/hooks/useScrollPosition';
+import { useSafeAuth } from '@/context/AuthContext';
 
 interface Module {
   id: string;
@@ -535,6 +536,7 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
 }
 
 export default function IniciadoDashboard() {
+  const { userData } = useSafeAuth();
   const scrollRef = useScrollPosition();
   const carouselRef = useCarouselPosition();
   
@@ -917,7 +919,12 @@ export default function IniciadoDashboard() {
         {/* Welcome Message */}
         <div className="w-full max-w-4xl mx-auto mb-6 md:mb-8 text-center px-4 md:px-0">
           <h2 className="text-xl md:text-2xl font-light text-gray-300 tracking-wide">
-            Te damos la bienvenida
+            Te damos la bienvenida{userData?.nickname ? (
+              <>
+                <span className="text-[#fafafa]">, </span>
+                <span className="text-[#ec4d58] font-medium">{userData.nickname}</span>
+              </>
+            ) : ''}
           </h2>
         </div>
 

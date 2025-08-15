@@ -150,7 +150,7 @@ export default function PuntoControl3() {
   const [shuffledQuestions, setShuffledQuestions] = useState(() => shuffleQuestions(questions));
   const [answers, setAnswers] = useState<number[]>(new Array(questions.length).fill(-1));
   const [submitted, setSubmitted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(20 * 60); // 20 minutos
+  const [timeLeft, setTimeLeft] = useState(8 * 60); // 8 minutos
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showReview, setShowReview] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
@@ -213,7 +213,7 @@ export default function PuntoControl3() {
     setAnswers(new Array(shuffledQuestions.length).fill(-1));
     setSubmitted(false);
     setCurrentQuestionIndex(0);
-    setTimeLeft(20 * 60);
+    setTimeLeft(8 * 60);
   };
 
   const handleNavigate = (direction: 'prev' | 'next') => {

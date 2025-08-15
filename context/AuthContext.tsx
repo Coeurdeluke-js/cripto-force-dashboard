@@ -3,18 +3,89 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 
+// Hook para detectar hidratación
+function useIsClient() {
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  return isClient;
+}
+
+interface UserData {
+  id?: string;
+  nombre: string;
+  apellido: string;
+  nickname: string;
+  email: string;
+  movil?: string;
+  exchange?: string;
+  uid?: string;
+  codigo_referido?: string;
+  joinDate?: string;
+}
+
 interface AuthContextType {
   user: User | null;
+  userData: UserData | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  setUserData: (data: UserData) => void;
+  updateUserData: (updates: Partial<UserData>) => void;
+  clearUserData: () => void;
+  isReady: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const isClient = useIsClient();
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false); // Cambiado a false para evitar loading
+  const [userData, setUserDataState] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [supabase, setSupabase] = useState<any>(null);
+
+  // Funciones para manejar userData
+  const setUserData = (data: UserData) => {
+    setUserDataState(data);
+    // Guardar en localStorage para persistencia
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cryptoforce_userdata', JSON.stringify(data));
+    }
+  };
+
+  const clearUserData = () => {
+    setUserDataState(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('cryptoforce_userdata');
+    }
+  };
+
+  const updateUserData = (updates: Partial<UserData>) => {
+    if (userData) {
+      const updatedData = { ...userData, ...updates };
+      setUserData(updatedData);
+    }
+  };
+
+  // Cargar datos del usuario desde localStorage al inicializar
+  useEffect(() => {
+    if (isClient) {
+      const savedUserData = localStorage.getItem('cryptoforce_userdata');
+      if (savedUserData) {
+        try {
+          setUserDataState(JSON.parse(savedUserData));
+        } catch (error) {
+          console.error('Error parsing saved user data:', error);
+        }
+      }
+      // Marcar como listo después de cargar los datos
+      setIsReady(true);
+    }
+  }, [isClient]);
 
   useEffect(() => {
     // Temporalmente deshabilitado Supabase para evitar errores
@@ -67,10 +138,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (supabase) {
       await supabase.auth.signOut();
     }
+    clearUserData();
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signOut }}>
+    <AuthContext.Provider value={{ user, userData, loading, signOut, setUserData, updateUserData, clearUserData, isReady }}>
       {children}
     </AuthContext.Provider>
   );
@@ -82,4 +154,32 @@ export function useAuth() {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+}
+
+// Hook seguro que maneja la hidratación
+export function useSafeAuth() {
+  const isClient = useIsClient();
+  const context = useContext(AuthContext);
+  
+  if (!isClient) {
+    return {
+      user: null,
+      userData: null,
+      loading: true,
+      signOut: async () => {},
+      setUserData: () => {},
+      updateUserData: () => {},
+      clearUserData: () => {},
+      isReady: false
+    };
+  }
+  
+  if (context === undefined) {
+    throw new Error('useSafeAuth must be used within an AuthProvider');
+  }
+  
+  return {
+    ...context,
+    isReady: true
+  };
 }

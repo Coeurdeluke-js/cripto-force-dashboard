@@ -2,8 +2,20 @@
 
 import Link from 'next/link';
 import { MailOpen, ArrowLeft, Star, GraduationCap, TrendingUp, Users, Trophy, MessageCircle } from 'lucide-react';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useSafeAuth } from '@/context/AuthContext';
 
 export default function MensajeBienvenida() {
+  const { userData, isReady } = useSafeAuth();
+
+  // Mostrar loading mientras no esté listo
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-[#121212] flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-[#121212] text-white pt-8 md:pt-20 pb-20 md:pb-0">
       <div className="container mx-auto px-4 py-4 md:py-8">
@@ -13,20 +25,27 @@ export default function MensajeBienvenida() {
             <MessageCircle className="text-white text-2xl md:text-3xl" />
           </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-            ¡Bienvenido a Crypto Force!
+            ¡Bienvenido{userData?.nickname ? (
+              <>
+                <span className="text-white">, </span>
+                <span className="text-[#ec4d58]">{userData.nickname}</span>
+              </>
+            ) : ''} a Crypto Force!
           </h1>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
-            Tu viaje hacia el dominio del trading comienza aquí
+            {userData?.nickname ? `${userData.nickname}, tu` : 'Tu'} viaje hacia el dominio del trading comienza aquí
           </p>
         </div>
 
         {/* Welcome Message */}
         <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-8 mb-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-[#ec4d58] mb-6">Mensaje de Bienvenida</h2>
+            <h2 className="text-2xl font-bold text-[#ec4d58] mb-6">
+              {userData?.nickname ? `¡Hola ${userData.nickname}!` : 'Mensaje de Bienvenida'}
+            </h2>
             <div className="prose prose-invert max-w-none">
               <p className="text-lg text-gray-300 mb-6 leading-relaxed">
-                Has dado el primer paso hacia una nueva dimensión del trading. En Crypto Force, 
+                {userData?.nickname ? `${userData.nickname}, has` : 'Has'} dado el primer paso hacia una nueva dimensión del trading. En Crypto Force, 
                 no solo aprenderás las técnicas más avanzadas, sino que también desarrollarás 
                 la mentalidad y disciplina necesarias para convertirte en un trader profesional.
               </p>
@@ -37,10 +56,14 @@ export default function MensajeBienvenida() {
                 base sólida en análisis técnico, fundamental y gestión de riesgo.
               </p>
 
-              <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-                Recuerda: el éxito en el trading no se logra de la noche a la mañana. 
+              <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+                {userData?.nickname ? `${userData.nickname}, recuerda` : 'Recuerda'}: el éxito en el trading no se logra de la noche a la mañana. 
                 Es un proceso de aprendizaje continuo, práctica constante y mejora constante. 
                 Estamos aquí para guiarte en cada paso del camino.
+              </p>
+
+              <p className="text-lg text-[#ec4d58] mb-8 leading-relaxed font-medium">
+                ¡Te damos la bienvenida oficialmente a la familia Crypto Force! 🚀
               </p>
             </div>
           </div>
@@ -92,14 +115,14 @@ export default function MensajeBienvenida() {
           <div className="text-center">
             <h3 className="text-xl font-bold text-[#ec4d58] mb-4">¿Qué sigue?</h3>
             <p className="text-gray-300 mb-6">
-              Comienza explorando los módulos disponibles en tu dashboard. 
+              {userData?.nickname ? `${userData.nickname}, comienza` : 'Comienza'} explorando los módulos disponibles en tu dashboard. 
               Te recomendamos empezar con los módulos teóricos para construir una base sólida.
             </p>
             <Link
               href="/dashboard/iniciado"
               className="inline-flex items-center px-6 py-3 bg-[#ec4d58] hover:bg-[#d63d47] text-white rounded-lg transition-colors font-semibold"
             >
-              Ir al Dashboard
+              {userData?.nickname ? `Comenzar mi viaje` : 'Ir al Dashboard'}
               <ArrowLeft className="ml-2 rotate-180" />
             </Link>
           </div>

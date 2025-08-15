@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Lock, Unlock, Crown, Shield, Sword, Star, Zap, Target } from 'lucide-react';
+import { Lock, Unlock, Crown, Shield, Sword, Star, Zap, Target, User, LogOut } from 'lucide-react';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { useSafeAuth } from '@/context/AuthContext';
 
 // Simulación del rol del usuario actual (esto vendría de un sistema de autenticación)
 const getUserRole = () => {
@@ -169,11 +171,21 @@ const roles = [
 export default function DashboardSelectionPage() {
   const [hoveredRole, setHoveredRole] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string>('iniciado');
+  const { userData, signOut, isReady } = useSafeAuth();
   const router = useRouter();
 
   useEffect(() => {
     setUserRole(getUserRole());
   }, []);
+  
+  // Mostrar loading mientras no esté listo
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-[#121212] text-white font-inter flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   const isRoleAccessible = (roleId: string) => {
     const roleLevels = ['iniciado', 'acolito', 'warrior', 'lord', 'darth', 'maestro'];
@@ -194,6 +206,37 @@ export default function DashboardSelectionPage() {
 
   return (
     <div className="min-h-screen bg-[#121212] text-white font-inter">
+      {/* Mini Navbar */}
+      {userData && (
+        <div className="bg-[#1a1a1a] border-b border-gray-800 px-4 sm:px-6 py-3">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-[#ec4d58] rounded-full flex items-center justify-center">
+                <User size={16} className="text-white" />
+              </div>
+              <div>
+                <p className="text-white font-medium text-sm">
+                  {userData.nombre} {userData.apellido}
+                </p>
+                <p className="text-gray-400 text-xs">
+                  @{userData.nickname}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                signOut();
+                router.push('/login');
+              }}
+              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm"
+            >
+              <LogOut size={16} />
+              <span className="hidden sm:inline">Cerrar sesión</span>
+            </button>
+          </div>
+        </div>
+      )}
+      
       {/* Header */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#121212] via-[#1a1a1a] to-[#121212]"></div>
@@ -211,6 +254,11 @@ export default function DashboardSelectionPage() {
             Panel de Control
           </h1>
           <p className="text-lg md:text-xl text-gray-300 mb-2 max-w-4xl mx-auto">
+            Te damos la bienvenida{userData ? (
+              <span className="text-[#EC4D58] font-semibold"> {userData.nickname}</span>
+            ) : ''}
+          </p>
+          <p className="text-base text-gray-400 mb-2 max-w-3xl mx-auto">
             Selecciona tu <span className="text-[#EC4D58] font-semibold">Dashboard</span> o explora otros niveles
           </p>
           <p className="text-base text-gray-400 max-w-3xl mx-auto mb-6">
@@ -425,7 +473,7 @@ export default function DashboardSelectionPage() {
                 Criptomonedas e Inversiones
               </p>
               <p className="text-xs text-gray-500 mt-1">
-                © 2024 Crypto Force. Todos los derechos reservados.
+                © 2025 Crypto Force. Todos los derechos reservados.
               </p>
             </div>
           </div>
