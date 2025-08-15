@@ -17,8 +17,10 @@ import {
   Crown
 } from 'lucide-react';
 import ReferralCode from '@/components/ui/ReferralCode';
+import ReferralStats from '@/components/ui/ReferralStats';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useSafeAuth } from '@/context/AuthContext';
+import { useReferralData } from '@/hooks/useReferralData';
 
 interface UserProfile {
   nombre: string;
@@ -38,6 +40,7 @@ interface UserProfile {
 export default function ProfilePage() {
   const router = useRouter();
   const { userData, isReady, updateUserData } = useSafeAuth();
+  const { stats: referralStats, loading: referralLoading } = useReferralData();
   const [isEditing, setIsEditing] = useState(false);
   
   const [profile, setProfile] = useState<UserProfile>({
@@ -67,16 +70,16 @@ export default function ProfilePage() {
         exchange: userData.exchange || '',
         uid: userData.uid || '',
         role: 'iniciado', // Por defecto iniciado
-        referralCode: userData.codigo_referido || userData.nickname.toUpperCase() + '2025',
-        referrals: 0, // Por defecto 0
-        earnings: 0, // Por defecto 0
+        referralCode: referralStats?.referralCode || userData.codigo_referido || userData.nickname.toUpperCase() + '2025',
+        referrals: referralStats?.totalReferrals || 0,
+        earnings: referralStats?.totalEarnings || 0,
         joinDate: userData.joinDate || new Date().toISOString().split('T')[0] // Fecha de registro o actual
       });
     } else {
       // Si no hay datos del usuario, redirigir al login
       router.push('/login');
     }
-  }, [userData, router]);
+  }, [userData, router, referralStats]);
 
   const [editData, setEditData] = useState<UserProfile>(profile);
 
@@ -375,11 +378,7 @@ export default function ProfilePage() {
 
           {/* Sidebar con código de referido */}
           <div className="space-y-6">
-            <ReferralCode 
-              code={profile.referralCode}
-              referrals={profile.referrals}
-              earnings={profile.earnings}
-            />
+            <ReferralStats userEmail={userData?.email || ''} />
 
             {/* Estadísticas rápidas */}
             <div className="bg-[#1e2028]/80 backdrop-blur-sm rounded-xl p-6 border border-white/10">

@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Preparar datos para insertar (solo columnas que existen en la tabla)
+    // Preparar datos para insertar (incluyendo referidos)
     const userData = {
       nombre: body.nombre.trim(),
       apellido: body.apellido.trim(),
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
       movil: body.movil || null,
       exchange: body.exchange || null,
       uid: body.uid || null,
-      // codigo_referido: body.codigoReferido || null, // Comentado - columna no existe aún
+      referred_by: body.codigoReferido || null, // Código de quien lo refirió
       // No incluimos password aquí - se manejará por separado con Supabase Auth
     };
 
@@ -184,11 +184,44 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Usuario creado exitosamente:', data);
 
+    // Procesar referido si se proporcionó código
+    let referralResult = null;
+    if (body.codigoReferido) {
+      try {
+        console.log('🔗 Procesando referido con código:', body.codigoReferido);
+        
+        // Usar service role para procesamiento interno
+        const supabaseService = createClient(
+          supabaseUrl, 
+          process.env.SUPABASE_SERVICE_ROLE_KEY!
+        );
+        
+        const { data: referralData, error: referralError } = await supabaseService
+          .rpc('process_new_referral', {
+            new_user_email: body.email.toLowerCase().trim(),
+            referrer_code: body.codigoReferido
+          });
+
+        if (referralError) {
+          console.error('⚠️ Error procesando referido (no crítico):', referralError);
+        } else if (referralData?.success) {
+          console.log('✅ Referido procesado exitosamente:', referralData);
+          referralResult = {
+            referrerNickname: referralData.referrer_nickname,
+            commissionEarned: referralData.commission_earned
+          };
+        }
+      } catch (referralError) {
+        console.error('⚠️ Error procesando referido (no crítico):', referralError);
+      }
+    }
+
     // Retornar éxito (sin datos sensibles)
     return NextResponse.json({ 
       success: true,
       message: 'Usuario registrado exitosamente',
-      userId: data.id
+      userId: data.id,
+      referral: referralResult
     });
 
   } catch (err: any) {

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { User, Mail, Lock, Phone, Building, Hash, Gift } from 'lucide-react';
 import CountryPhoneInput from '@/components/ui/CountryPhoneInput';
 import ReferralCode from '@/components/ui/ReferralCode';
@@ -10,9 +10,11 @@ import { useSafeAuth } from '@/context/AuthContext';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { setUserData, isReady } = useSafeAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [referralInfo, setReferralInfo] = useState<{nickname?: string; valid?: boolean} | null>(null);
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -26,6 +28,45 @@ export default function RegisterPage() {
     confirmPassword: ''
   });
   
+  // Auto-llenar código de referido desde URL
+  useEffect(() => {
+    const refCode = searchParams.get('ref');
+    if (refCode && isReady) {
+      setFormData(prev => ({ ...prev, codigoReferido: refCode }));
+      validateReferralCode(refCode);
+    }
+  }, [searchParams, isReady]);
+
+  // Función para validar código de referido
+  const validateReferralCode = async (code: string) => {
+    if (!code.trim()) {
+      setReferralInfo(null);
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/referrals/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code.trim() })
+      });
+
+      const result = await response.json();
+      
+      if (result.success && result.valid) {
+        setReferralInfo({
+          nickname: result.referrer.nickname,
+          valid: true
+        });
+      } else {
+        setReferralInfo({ valid: false });
+      }
+    } catch (error) {
+      console.error('Error validando código:', error);
+      setReferralInfo({ valid: false });
+    }
+  };
+
   // Mostrar loading mientras no esté listo
   if (!isReady) {
     return (
@@ -37,6 +78,16 @@ export default function RegisterPage() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Validación en tiempo real del código de referido
+    if (field === 'codigoReferido') {
+      if (value.trim()) {
+        validateReferralCode(value.trim());
+      } else {
+        setReferralInfo(null);
+      }
+    }
+    
     // Limpiar error del campo cuando el usuario empiece a escribir
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -332,13 +383,39 @@ export default function RegisterPage() {
                 Código de referido (opcional)
               </label>
               <div className="relative">
-                <input
-                  type="text"
-                  value={formData.codigoReferido}
-                  onChange={(e) => handleInputChange('codigoReferido', e.target.value)}
-                  className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-[#2a2d36] border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ec4d58] transition-all text-sm sm:text-base"
-                  placeholder="Código de referido"
-                />
+                <div className="relative">
+                  <Gift className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4 sm:w-5 sm:h-5" />
+                  <input
+                    type="text"
+                    value={formData.codigoReferido}
+                    onChange={(e) => handleInputChange('codigoReferido', e.target.value)}
+                    className={`w-full pl-10 sm:pl-11 pr-3 py-2.5 sm:px-4 sm:py-3 bg-[#2a2d36] border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ec4d58] transition-all text-sm sm:text-base ${
+                      referralInfo?.valid === true ? 'border-green-500' : 
+                      referralInfo?.valid === false ? 'border-red-500' : 'border-white/20'
+                    }`}
+                    placeholder="Código de referido"
+                  />
+                  {referralInfo?.valid === true && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
+                      ✓
+                    </div>
+                  )}
+                  {referralInfo?.valid === false && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-red-500">
+                      ✗
+                    </div>
+                  )}
+                </div>
+                {referralInfo?.valid === true && referralInfo.nickname && (
+                  <p className="text-green-400 text-xs sm:text-sm mt-1">
+                    ✓ Código válido - Referido por: <strong>{referralInfo.nickname}</strong>
+                  </p>
+                )}
+                {referralInfo?.valid === false && (
+                  <p className="text-red-400 text-xs sm:text-sm mt-1">
+                    ✗ Código de referido no válido
+                  </p>
+                )}
               </div>
             </div>
 

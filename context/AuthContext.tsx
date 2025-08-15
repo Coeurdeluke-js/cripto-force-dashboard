@@ -25,6 +25,12 @@ interface UserData {
   uid?: string;
   codigo_referido?: string;
   joinDate?: string;
+  // Campos del sistema de referidos
+  referral_code?: string;
+  referred_by?: string;
+  user_level?: number;
+  total_referrals?: number;
+  total_earnings?: number;
 }
 
 interface AuthContextType {
