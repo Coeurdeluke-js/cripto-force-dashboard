@@ -1,75 +1,52 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
+
+// Lista de emails autorizados para acceder a la dashboard de Maestro
+const MAESTRO_AUTHORIZED_EMAILS = [
+  'infocriptoforce@gmail.com',
+  'coeurdeluke.js@gmail.com'
+];
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
+  const { pathname } = request.nextUrl;
 
-  // Verificar que las variables de entorno de Supabase estén disponibles
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    console.warn('Supabase environment variables not configured in middleware');
-    return response;
-  }
+  // Proteger rutas de Maestro
+  if (pathname.startsWith('/dashboard/maestro')) {
+    try {
+      const supabase = await createClient();
+      const { data: { user }, error } = await supabase.auth.getUser();
 
-  try {
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      {
-        cookies: {
-          get(name) {
-            return request.cookies.get(name)?.value
-          },
-          set(name, value, options) {
-            request.cookies.set({
-              name,
-              value,
-              ...options,
-            })
-            response = NextResponse.next({
-              request: {
-                headers: request.headers,
-              },
-            })
-            response.cookies.set({
-              name,
-              value,
-              ...options,
-            })
-          },
-          remove(name, options) {
-            request.cookies.set({
-              name,
-              value: '',
-              ...options,
-            })
-            response = NextResponse.next({
-              request: {
-                headers: request.headers,
-              },
-            })
-            response.cookies.set({
-              name,
-              value: '',
-              ...options,
-            })
-          },
-        },
+      // Si no hay usuario autenticado, redirigir al login
+      if (error || !user) {
+        console.log('🚫 Middleware: Usuario no autenticado intentando acceder a Maestro');
+        return NextResponse.redirect(new URL('/login/signin', request.url));
       }
-    )
 
-    await supabase.auth.getUser()
-  } catch (error) {
-    console.error('Error in middleware:', error);
-    // En caso de error, continuar sin autenticación
+      // Verificar si el email está autorizado
+      const userEmail = user.email?.toLowerCase().trim();
+      const isAuthorized = userEmail && MAESTRO_AUTHORIZED_EMAILS.includes(userEmail);
+
+      if (!isAuthorized) {
+        console.log(`🚫 Middleware: Usuario ${userEmail?.substring(0, 3)}*** no autorizado para Maestro`);
+        return NextResponse.redirect(new URL('/login/dashboard-selection', request.url));
+      }
+
+      console.log(`✅ Middleware: Acceso autorizado a Maestro para ${userEmail?.substring(0, 3)}***`);
+      return NextResponse.next();
+
+    } catch (error) {
+      console.error('Error en middleware de Maestro:', error);
+      return NextResponse.redirect(new URL('/login/dashboard-selection', request.url));
+    }
   }
 
-  return response
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
-}
+  matcher: [
+    '/dashboard/maestro/:path*',
+    '/api/maestro/:path*'
+  ]
+};

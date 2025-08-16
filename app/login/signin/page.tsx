@@ -290,76 +290,7 @@ export default function SignInPage() {
               </button>
             </div>
             
-            {/* Botones de debug - Solo en desarrollo */}
-            {process.env.NODE_ENV === 'development' && (
-              <div className="pt-2 space-y-2">
-                <details className="bg-gray-800/50 rounded-lg p-2">
-                  <summary className="text-sm text-gray-400 cursor-pointer">🔧 Herramientas de Debug</summary>
-                  <div className="mt-2 space-y-2">
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        if (!formData.email) {
-                          alert('Por favor ingresa un email primero');
-                          return;
-                        }
-                        try {
-                          console.log('🔧 Intentando arreglar usuario:', formData.email);
-                          const response = await fetch('/api/debug/fix-user-auth', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ email: formData.email })
-                          });
-                          const result = await response.json();
-                          alert('Diagnóstico:\n' + JSON.stringify(result, null, 2));
-                          console.log('🔧 Fix User Auth:', result);
-                        } catch (error) {
-                          console.error('Error arreglando usuario:', error);
-                          alert('Error: ' + error);
-                        }
-                      }}
-                      className="w-full bg-orange-600 text-white py-1 px-3 rounded text-xs hover:bg-orange-700 transition-colors"
-                    >
-                      🔧 Diagnosticar Auth
-                    </button>
-                    
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        if (!formData.email || !formData.password) {
-                          alert('Por favor ingresa email Y contraseña primero');
-                          return;
-                        }
-                        const confirmed = confirm('¿Recrear usuario en Auth?');
-                        if (!confirmed) return;
-                        
-                        try {
-                          const response = await fetch('/api/debug/recreate-auth-user', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ 
-                              email: formData.email,
-                              password: formData.password 
-                            })
-                          });
-                          const result = await response.json();
-                          alert('Resultado:\n' + JSON.stringify(result, null, 2));
-                          if (result.success) {
-                            alert('✅ Usuario recreado! Intenta hacer login.');
-                          }
-                        } catch (error) {
-                          console.error('Error recreando usuario:', error);
-                          alert('Error: ' + error);
-                        }
-                      }}
-                      className="w-full bg-red-600 text-white py-1 px-3 rounded text-xs hover:bg-red-700 transition-colors"
-                    >
-                      🚨 Recrear Usuario
-                    </button>
-                  </div>
-                </details>
-              </div>
-            )}
+
 
             {/* Enlaces adicionales */}
             <div className="text-center space-y-4">

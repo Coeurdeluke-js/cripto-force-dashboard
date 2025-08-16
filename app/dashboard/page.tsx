@@ -1,31 +1,19 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useSafeAuth } from '@/context/AuthContext';
-import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function Dashboard() {
-  const router = useRouter();
-  const { userData, isReady } = useSafeAuth();
-
   useEffect(() => {
-    if (isReady) {
-      // Si no hay usuario logueado, redirigir a login
-      if (!userData) {
-        router.push('/login');
-        return;
-      }
+    // Redirección directa usando window.location
+    window.location.href = '/dashboard/iniciado';
+  }, []);
 
-      // Redirigir al dashboard iniciado como página predeterminada
-      router.push('/dashboard/iniciado');
-    }
-  }, [isReady, userData, router]);
-
-  // Mostrar loading mientras se determina la redirección
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f] flex items-center justify-center">
-      <LoadingSpinner message="Cargando dashboard..." />
+    <div className="min-h-screen bg-[#121212] flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ec4d58] mx-auto mb-4"></div>
+        <p className="text-white">Redirigiendo al dashboard...</p>
+      </div>
     </div>
   );
 }

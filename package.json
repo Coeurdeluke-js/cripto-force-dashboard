@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
-    "build": "next build --typescript-config tsconfig.build.json",
+    "build": "next build",
     "start": "next start",
     "create:users": "node -e \"console.log('local-only script');\"",
     "create:users:sql": "node -e \"console.log('local-only script');\"",
@@ -34,6 +34,7 @@
     "pg": "8.16.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-icons": "^4.12.0",
     "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {

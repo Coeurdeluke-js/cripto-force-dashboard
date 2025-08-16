@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
 import { SidebarProvider, useSidebar } from '@/components/sidebar/SidebarContext';
 import { ControlPointProvider, useControlPoint } from '@/context/ControlPointContext';
 import { ProgressProvider } from '@/context/ProgressContext';
@@ -10,6 +11,12 @@ import MobileSidebar from '@/components/sidebar/MobileSidebar';
 function DashboardContent({ children }: { children: ReactNode }) {
   const { isExpanded, toggleSidebar } = useSidebar();
   const { state } = useControlPoint();
+  const pathname = usePathname();
+
+  // Si es la ruta de maestro, no aplicar sidebar ni layout
+  if (pathname?.startsWith('/dashboard/maestro')) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0f0f0f] text-white">

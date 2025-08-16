@@ -8,11 +8,28 @@ import { Lock, Unlock, Crown, Shield, Sword, Star, Zap, Target, User, LogOut } f
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useSafeAuth } from '@/context/AuthContext';
 
-// Simulación del rol del usuario actual (esto vendría de un sistema de autenticación)
-const getUserRole = () => {
-  // Por ahora simulamos que el usuario es "iniciado"
-  // En un sistema real, esto vendría del contexto de autenticación
-  return 'iniciado'; // Puede ser: 'iniciado', 'acolito', 'warrior', 'lord', 'darth', 'maestro'
+// Lista de emails autorizados para acceder a la dashboard de Maestro
+const MAESTRO_AUTHORIZED_EMAILS = [
+  'infocriptoforce@gmail.com',
+  'coeurdeluke.js@gmail.com'
+];
+
+// Función para determinar el rol máximo del usuario basado en su email y datos
+const getUserMaxRole = (userData: any) => {
+  if (!userData || !userData.email) {
+    return 'iniciado';
+  }
+
+  const email = userData.email.toLowerCase().trim();
+  
+  // Verificar si el usuario tiene permisos de Maestro
+  if (MAESTRO_AUTHORIZED_EMAILS.includes(email)) {
+    return 'maestro';
+  }
+  
+  // Para otros usuarios, determinar rol basado en progreso
+  // Por ahora, todos los demás usuarios tienen acceso hasta Darth
+  return 'darth';
 };
 
 const roles = [
@@ -45,11 +62,11 @@ const roles = [
     id: 'acolito',
     name: 'ACÓLITO',
     level: 'II',
-    color: '#EC4D58',
-    bgColor: 'bg-[#EC4D58]',
-    textColor: 'text-[#EC4D58]',
+    color: '#FFD447',
+    bgColor: 'bg-[#FFD447]',
+    textColor: 'text-[#FFD447]',
     cardBg: 'bg-gray-900',
-    hoverColor: 'hover:bg-[#EC4D58]/10',
+    hoverColor: 'hover:bg-[#FFD447]/10',
     path: '/dashboard/acolito',
     philosophy: 'El Acólito ha tomado una decisión: servir y aprender. Es la primera vez que la energía toma forma ascendente.',
     quote: 'La obediencia es el comienzo de la libertad interior.',
@@ -159,7 +176,7 @@ const roles = [
     members: 5,
     activeProjects: 2,
     icon: Star,
-    requirements: 'Completar 100% de todos los niveles anteriores',
+    requirements: 'Acceso exclusivo para usuarios autorizados',
     benefits: [
       'Iluminación total',
       'Sabiduría infinita',
@@ -175,8 +192,10 @@ export default function DashboardSelectionPage() {
   const router = useRouter();
 
   useEffect(() => {
-    setUserRole(getUserRole());
-  }, []);
+    if (userData) {
+      setUserRole(getUserMaxRole(userData));
+    }
+  }, [userData]);
   
   // Mostrar loading mientras no esté listo
   if (!isReady) {
@@ -191,6 +210,12 @@ export default function DashboardSelectionPage() {
     const roleLevels = ['iniciado', 'acolito', 'warrior', 'lord', 'darth', 'maestro'];
     const userLevelIndex = roleLevels.indexOf(userRole);
     const roleLevelIndex = roleLevels.indexOf(roleId);
+    
+    // Verificación especial para el rol de Maestro
+    if (roleId === 'maestro') {
+      return userData && MAESTRO_AUTHORIZED_EMAILS.includes(userData.email.toLowerCase().trim());
+    }
+    
     return roleLevelIndex <= userLevelIndex;
   };
 
@@ -415,7 +440,9 @@ export default function DashboardSelectionPage() {
                             window.location.href = role.path;
                           }
                         }}
-                        className={`w-full flex items-center justify-center px-4 py-3 rounded-lg font-medium transition-all duration-300 bg-gray-700 text-white hover:bg-gray-600 hover:scale-105 transform relative z-10 cursor-pointer`}
+                        className={`w-full flex items-center justify-center px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+                          role.bgColor
+                        } text-black hover:scale-105 transform relative z-10 cursor-pointer`}
                         style={{ position: 'relative', zIndex: 10 }}
                       >
                         <Unlock className="w-4 h-4 mr-2" />
