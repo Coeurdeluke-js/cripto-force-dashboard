@@ -30,10 +30,39 @@ const TradingChart: React.FC<TradingChartProps> = ({
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candlestickSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
-  
+
   const [isMaximized, setIsMaximized] = useState(false);
   const [showIndicatorsMenu, setShowIndicatorsMenu] = useState(false);
   const [activeIndicators, setActiveIndicators] = useState<string[]>([]);
+
+  // Manejar eventos de pantalla completa del navegador
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && 
+          !(document as any).webkitFullscreenElement && 
+          !(document as any).msFullscreenElement) {
+        setIsMaximized(false);
+      }
+    };
+
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMaximized) {
+        setIsMaximized(false);
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('msfullscreenchange', handleFullscreenChange);
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('msfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [isMaximized]);
 
   // Lista de indicadores técnicos
   const technicalIndicators = [
@@ -89,7 +118,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
     // Limpiar gráfico anterior
     if (chartRef.current) {
       try {
-        chartRef.current.remove();
+      chartRef.current.remove();
       } catch (e) {
         console.warn('Error removing chart:', e);
       }
@@ -108,18 +137,18 @@ const TradingChart: React.FC<TradingChartProps> = ({
       const chart = createChart(container, {
         width,
         height,
-        layout: {
+      layout: {
           background: { color: '#121212' },
-          textColor: '#ffffff',
+        textColor: '#ffffff',
           fontSize: isMaximized ? 14 : 12,
           fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
-        },
-        grid: {
-          vertLines: { color: '#2a2a2a' },
-          horzLines: { color: '#2a2a2a' },
-        },
-        crosshair: {
-          mode: 1,
+      },
+      grid: {
+        vertLines: { color: '#2a2a2a' },
+        horzLines: { color: '#2a2a2a' },
+      },
+      crosshair: {
+        mode: 1,
           vertLine: { color: '#ec4d58', width: 1, style: 3 },
           horzLine: { color: '#ec4d58', width: 1, style: 3 },
         },
@@ -137,11 +166,11 @@ const TradingChart: React.FC<TradingChartProps> = ({
           visible: true,
           minimumWidth: isMaximized ? 100 : 80,
           entireTextOnly: false,
-        },
-        timeScale: {
+      },
+      timeScale: {
           borderColor: '#333333',
-          timeVisible: true,
-          secondsVisible: false,
+        timeVisible: true,
+        secondsVisible: false,
           rightOffset: isMaximized ? 20 : 12,
           barSpacing: isMaximized ? 12 : 10,
           minBarSpacing: 3,
@@ -169,11 +198,11 @@ const TradingChart: React.FC<TradingChartProps> = ({
         },
         leftPriceScale: {
           visible: false,
-        },
-      });
+      },
+    });
 
       // Agregar serie de velas con mejores colores
-      const candlestickSeries = chart.addCandlestickSeries({
+    const candlestickSeries = chart.addCandlestickSeries({
         upColor: '#00d4aa',
         downColor: '#ec4d58',
         borderDownColor: '#ec4d58',
@@ -189,10 +218,10 @@ const TradingChart: React.FC<TradingChartProps> = ({
         priceLineStyle: 2,
         lastValueVisible: true,
         title: symbol || 'BTCUSDT',
-      });
+    });
 
-      chartRef.current = chart;
-      candlestickSeriesRef.current = candlestickSeries;
+    chartRef.current = chart;
+    candlestickSeriesRef.current = candlestickSeries;
 
       // Agregar eventos de teclado para navegación mejorada
       const handleKeyDown = (e: KeyboardEvent) => {
@@ -257,23 +286,23 @@ const TradingChart: React.FC<TradingChartProps> = ({
       // Agregar listener de teclado solo si está maximizado
       if (isMaximized) {
         document.addEventListener('keydown', handleKeyDown);
-      }
+    }
 
-      return () => {
+    return () => {
         window.removeEventListener('resize', handleResize);
         if (isMaximized) {
           document.removeEventListener('keydown', handleKeyDown);
-        }
-        if (chartRef.current) {
+      }
+      if (chartRef.current) {
           try {
-            chartRef.current.remove();
+        chartRef.current.remove();
           } catch (e) {
             console.warn('Error in cleanup:', e);
           }
           chartRef.current = null;
           candlestickSeriesRef.current = null;
-        }
-      };
+      }
+    };
     } catch (error) {
       console.error('Error creating chart:', error);
     }
@@ -285,15 +314,15 @@ const TradingChart: React.FC<TradingChartProps> = ({
       try {
         console.log('Loading data:', candles.length, 'candles');
         
-        const formattedData: CandlestickData<Time>[] = candles.map(candle => ({
-          time: candle.time as Time,
-          open: candle.open,
-          high: candle.high,
-          low: candle.low,
-          close: candle.close,
-        }));
+      const formattedData: CandlestickData<Time>[] = candles.map(candle => ({
+        time: candle.time as Time,
+        open: candle.open,
+        high: candle.high,
+        low: candle.low,
+        close: candle.close,
+      }));
 
-        candlestickSeriesRef.current.setData(formattedData);
+      candlestickSeriesRef.current.setData(formattedData);
         console.log('Data loaded successfully');
       } catch (error) {
         console.error('Error loading data:', error);
@@ -329,34 +358,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
     );
   }
 
-  // Manejar eventos de pantalla completa del navegador
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      if (!document.fullscreenElement && 
-          !(document as any).webkitFullscreenElement && 
-          !(document as any).msFullscreenElement) {
-        setIsMaximized(false);
-      }
-    };
 
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isMaximized) {
-        setIsMaximized(false);
-      }
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-    document.addEventListener('msfullscreenchange', handleFullscreenChange);
-    document.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('msfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [isMaximized]);
 
   return (
     <div className={`w-full relative transition-all duration-300 ${
@@ -563,4 +565,4 @@ const TradingChart: React.FC<TradingChartProps> = ({
   );
 };
 
-export default TradingChart;
+export default TradingChart; 
