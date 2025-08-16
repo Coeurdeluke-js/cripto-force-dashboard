@@ -26,6 +26,16 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const { userData } = useSafeAuth();
+
+  // Generar código de referido basado en el nickname como fallback
+  const generateReferralCode = useCallback(() => {
+    if (userData?.nickname) {
+      return `CF${userData.nickname.toUpperCase()}`;
+    }
+    return 'CFUSER';
+  }, [userData?.nickname]);
 
   const fetchReferralStats = useCallback(async () => {
     try {
@@ -60,10 +70,10 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
   }, [userEmail, fetchReferralStats]);
 
   const handleCopyCode = async () => {
-    if (!stats?.referralCode) return;
+    const codeToUse = stats?.referralCode || generateReferralCode();
     
     try {
-      await navigator.clipboard.writeText(stats.referralCode);
+      await navigator.clipboard.writeText(codeToUse);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -72,22 +82,22 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
   };
 
   const handleCopyLink = async () => {
-    if (!stats?.referralCode) return;
+    const codeToUse = stats?.referralCode || generateReferralCode();
     
     try {
-      const referralLink = `https://cripto-force-dashboard.vercel.app/login?ref=${stats.referralCode}`;
+      const referralLink = `https://cripto-force-dashboard.vercel.app/login?ref=${codeToUse}`;
       await navigator.clipboard.writeText(referralLink);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
     } catch (err) {
       console.error('Error al copiar enlace:', err);
     }
   };
 
   const handleShare = async () => {
-    if (!stats?.referralCode) return;
+    const codeToUse = stats?.referralCode || generateReferralCode();
 
-    const referralLink = `https://cripto-force-dashboard.vercel.app/login?ref=${stats.referralCode}`;
+    const referralLink = `https://cripto-force-dashboard.vercel.app/login?ref=${codeToUse}`;
     
     if (navigator.share) {
       try {
@@ -190,7 +200,7 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
         <div className="flex items-center gap-2">
           <div className="flex-1 bg-[#2a2d36] border border-white/20 rounded-lg px-4 py-3">
             <code className="text-[#ec4d58] font-mono text-lg font-bold">
-              {stats.referralCode || 'CARGANDO...'}
+              {stats?.referralCode || generateReferralCode()}
             </code>
           </div>
           <button

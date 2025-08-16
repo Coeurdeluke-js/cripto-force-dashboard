@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { MailOpen, ArrowLeft, Star, GraduationCap, TrendingUp, Users, Trophy, MessageCircle } from 'lucide-react';
+import { MailOpen, ArrowLeft, Star, GraduationCap, TrendingUp, Users, Trophy, MessageCircle, Share2 } from 'lucide-react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useSafeAuth } from '@/context/AuthContext';
 
@@ -120,6 +120,24 @@ export default function MensajeBienvenida() {
           </div>
         </div>
 
+        {/* Sección de Invitación a Compartir */}
+        <div className="mt-12 text-center bg-[#1a1a1a] rounded-xl p-8 border border-white/10">
+          <h3 className="text-xl font-bold text-white mb-4">
+            ¡Ayúdanos a Transformar Más Vidas!
+          </h3>
+          <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+            Tu viaje en Crypto Force es solo el comienzo. Si crees en el poder de la educación financiera, 
+            te invitamos a compartir esta oportunidad con quienes más lo necesitan. Juntos, podemos construir 
+            una comunidad más fuerte y empoderada.
+          </p>
+          <Link
+            href="/login/referidos"
+            className="inline-flex items-center px-6 py-3 bg-[#ec4d58] hover:bg-[#d63d47] text-white rounded-lg transition-colors font-semibold"
+          >
+            <Share2 className="mr-2" />
+            Compartir Crypto Force
+          </Link>
+        </div>
 
       </div>
     </div>

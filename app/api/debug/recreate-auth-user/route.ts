@@ -65,8 +65,19 @@ export async function POST(request: Request) {
       
       // Si el usuario ya existe, intentar actualizar la contraseña
       if (authError.message.includes('already registered')) {
+        // Buscar el usuario por email para obtener su ID
+        const { data: existingUser, error: getUserError } = await supabaseServiceRole.auth.admin.listUsers();
+        const userToUpdate = existingUser?.users?.find(u => u.email === email);
+        
+        if (!userToUpdate) {
+          return NextResponse.json({
+            success: false,
+            error: 'Usuario no encontrado para actualizar'
+          });
+        }
+
         const { data: updateData, error: updateError } = await supabaseServiceRole.auth.admin.updateUserById(
-          authData?.user?.id || '', 
+          userToUpdate.id, 
           { password: password }
         );
         
