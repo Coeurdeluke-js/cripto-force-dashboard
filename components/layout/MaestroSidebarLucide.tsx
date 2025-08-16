@@ -118,12 +118,12 @@ export default function MaestroSidebar() {
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-gradient-to-r from-[#ec4d58] to-[#f73b3b] rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-bold">
-                {userData.full_name?.charAt(0)?.toUpperCase() || 'M'}
+                {userData.nombre?.charAt(0)?.toUpperCase() || 'M'}
               </span>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-white text-sm font-medium truncate">
-                {userData.full_name || 'Maestro'}
+                {userData.nombre || 'Maestro'}
               </p>
               <p className="text-gray-400 text-xs truncate">
                 {userData.email}

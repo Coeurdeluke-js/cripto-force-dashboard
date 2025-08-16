@@ -44,6 +44,60 @@ const TradingChart: React.FC<TradingChartProps> = ({
     }
   }, []);
 
+  // Generar datos de ejemplo con precios actualizados (solo como fallback)
+  const generateUpdatedMockData = useCallback(() => {
+    if (isDestroyedRef.current) return;
+    
+    console.log('Generating updated mock data for:', symbol, timeframe);
+    
+    const mockCandles = [];
+    const now = Date.now();
+    const intervalMs = timeframe === '1m' ? 60000 : 
+                      timeframe === '5m' ? 300000 : 
+                      timeframe === '15m' ? 900000 : 
+                      timeframe === '1h' ? 3600000 : 
+                      timeframe === '4h' ? 14400000 : 86400000;
+    
+    // Precios actualizados y realistas (2024)
+    let basePrice = 116000; // Bitcoin actual ~$116k
+    if (symbol === 'ETHUSDT') basePrice = 3200;      // Ethereum ~$3.2k
+    else if (symbol === 'BNBUSDT') basePrice = 580;  // BNB ~$580
+    else if (symbol === 'ADAUSDT') basePrice = 0.45; // Cardano ~$0.45
+    else if (symbol === 'SOLUSDT') basePrice = 140;  // Solana ~$140
+    else if (symbol === 'DOTUSDT') basePrice = 6.80; // Polkadot ~$6.80
+    else if (symbol === 'MATICUSDT') basePrice = 0.75; // Polygon ~$0.75
+    else if (symbol === 'LINKUSDT') basePrice = 14.50; // Chainlink ~$14.50
+    else if (symbol === 'UNIUSDT') basePrice = 7.20;  // Uniswap ~$7.20
+    else if (symbol === 'AVAXUSDT') basePrice = 35.80; // Avalanche ~$35.80
+
+    for (let i = 200; i >= 0; i--) {
+      const time = now - (i * intervalMs);
+      const volatility = 0.015; // 1.5% de volatilidad (más realista)
+      const change = (Math.random() - 0.5) * volatility;
+      const open = basePrice * (1 + change);
+      const high = open * (1 + Math.random() * 0.008);
+      const low = open * (1 - Math.random() * 0.008);
+      const close = open * (1 + (Math.random() - 0.5) * 0.004);
+      
+      mockCandles.push({
+        time: Math.floor(time / 1000),
+        open: parseFloat(open.toFixed(2)),
+        high: parseFloat(high.toFixed(2)),
+        low: parseFloat(low.toFixed(2)),
+        close: parseFloat(close.toFixed(2))
+      });
+      
+      basePrice = close;
+    }
+    
+    console.log('Generated', mockCandles.length, 'updated mock candles');
+    
+    if (!isDestroyedRef.current) {
+      setCandles(mockCandles);
+      setLoading(false);
+    }
+  }, [symbol, timeframe]);
+
   // Función para obtener datos reales de Binance
   const fetchBinanceData = useCallback(async () => {
     if (isDestroyedRef.current) return;
@@ -111,61 +165,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
         generateUpdatedMockData();
       }
     }
-  }, [symbol, timeframe]);
-
-  // Generar datos de ejemplo con precios actualizados (solo como fallback)
-  const generateUpdatedMockData = useCallback(() => {
-    if (isDestroyedRef.current) return;
-    
-    console.log('Generating updated mock data for:', symbol, timeframe);
-    
-    const mockCandles = [];
-    const now = Date.now();
-    const intervalMs = timeframe === '1m' ? 60000 : 
-                      timeframe === '5m' ? 300000 : 
-                      timeframe === '15m' ? 900000 : 
-                      timeframe === '1h' ? 3600000 : 
-                      timeframe === '4h' ? 14400000 : 86400000;
-    
-    // Precios actualizados y realistas (2024)
-    let basePrice = 116000; // Bitcoin actual ~$116k
-    if (symbol === 'ETHUSDT') basePrice = 3200;      // Ethereum ~$3.2k
-    else if (symbol === 'BNBUSDT') basePrice = 580;  // BNB ~$580
-    else if (symbol === 'ADAUSDT') basePrice = 0.45; // Cardano ~$0.45
-    else if (symbol === 'SOLUSDT') basePrice = 140;  // Solana ~$140
-    else if (symbol === 'DOTUSDT') basePrice = 6.80; // Polkadot ~$6.80
-    else if (symbol === 'MATICUSDT') basePrice = 0.75; // Polygon ~$0.75
-    else if (symbol === 'LINKUSDT') basePrice = 14.50; // Chainlink ~$14.50
-    else if (symbol === 'UNIUSDT') basePrice = 7.20;  // Uniswap ~$7.20
-    else if (symbol === 'AVAXUSDT') basePrice = 35.80; // Avalanche ~$35.80
-
-    for (let i = 200; i >= 0; i--) {
-      const time = now - (i * intervalMs);
-      const volatility = 0.015; // 1.5% de volatilidad (más realista)
-      const change = (Math.random() - 0.5) * volatility;
-      const open = basePrice * (1 + change);
-      const high = open * (1 + Math.random() * 0.008);
-      const low = open * (1 - Math.random() * 0.008);
-      const close = open * (1 + (Math.random() - 0.5) * 0.004);
-      
-      mockCandles.push({
-        time: Math.floor(time / 1000),
-        open: parseFloat(open.toFixed(2)),
-        high: parseFloat(high.toFixed(2)),
-        low: parseFloat(low.toFixed(2)),
-        close: parseFloat(close.toFixed(2))
-      });
-      
-      basePrice = close;
-    }
-    
-    console.log('Generated', mockCandles.length, 'updated mock candles');
-    
-    if (!isDestroyedRef.current) {
-      setCandles(mockCandles);
-      setLoading(false);
-    }
-  }, [symbol, timeframe]);
+  }, [symbol, timeframe, generateUpdatedMockData]);
 
   // Cargar datos cuando cambie el símbolo o timeframe
   useEffect(() => {

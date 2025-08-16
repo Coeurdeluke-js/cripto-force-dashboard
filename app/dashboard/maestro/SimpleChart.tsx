@@ -158,7 +158,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({
         30
       );
     }
-  }, [candles, isMaximized]);
+  }, [candles, isMaximized, symbol]);
 
   useEffect(() => {
     if (candles.length > 0) {
