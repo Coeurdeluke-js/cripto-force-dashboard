@@ -87,26 +87,29 @@ CREATE INDEX IF NOT EXISTS idx_referral_history_date ON referral_history(referra
 CREATE OR REPLACE FUNCTION generate_referral_code(user_nickname TEXT)
 RETURNS TEXT AS $$
 DECLARE
+    clean_nickname TEXT;
     base_code TEXT;
     final_code TEXT;
-    counter INTEGER := 0;
+    counter INTEGER := 1;
     max_attempts INTEGER := 100;
 BEGIN
-    -- Crear código base a partir del nickname (primeras 4 letras + CF)
-    base_code := 'CF' || UPPER(LEFT(REGEXP_REPLACE(user_nickname, '[^a-zA-Z0-9]', '', 'g'), 4));
+    -- Limpiar nickname: solo letras y números, convertir a mayúsculas
+    clean_nickname := UPPER(REGEXP_REPLACE(user_nickname, '[^a-zA-Z0-9]', '', 'g'));
     
-    -- Si el nickname es muy corto, rellenar con números
-    IF LENGTH(base_code) < 6 THEN
-        base_code := base_code || LPAD(floor(random() * 1000)::text, 3, '0');
-    END IF;
-    
+    -- Crear código base: CF + NICKNAME completo
+    base_code := 'CF' || clean_nickname;
     final_code := base_code;
     
-    -- Verificar unicidad y agregar sufijo si es necesario
-    WHILE EXISTS(SELECT 1 FROM users WHERE referral_code = final_code) AND counter < max_attempts LOOP
-        counter := counter + 1;
+    -- Verificar unicidad y agregar sufijo numérico si es necesario
+    WHILE EXISTS(SELECT 1 FROM users WHERE referral_code = final_code) AND counter <= max_attempts LOOP
         final_code := base_code || counter::text;
+        counter := counter + 1;
     END LOOP;
+    
+    -- Si después de intentos sigue existiendo, agregar timestamp
+    IF EXISTS(SELECT 1 FROM users WHERE referral_code = final_code) THEN
+        final_code := base_code || EXTRACT(EPOCH FROM NOW())::INTEGER::TEXT;
+    END IF;
     
     RETURN final_code;
 END;
@@ -179,42 +182,45 @@ $$ LANGUAGE plpgsql;
 -- PASO 5: CONFIGURAR FRANCISCO COMO USUARIO FUNDADOR
 -- =====================================================
 
--- Insertar o actualizar Francisco como fundador
+-- Insertar o actualizar usuario maestro como fundador
 DO $$
 DECLARE
-    francisco_exists BOOLEAN;
-    francisco_code TEXT := 'CFFRANCISCO';
+    master_exists BOOLEAN;
+    master_email TEXT := 'infocriptoforce@gmail.com';
+    master_nickname TEXT := 'INFOCRIPTOFORCE';
+    master_code TEXT := 'CFINFOCRIPTOFORCE';
 BEGIN
-    -- Verificar si Francisco ya existe
+    -- Verificar si el usuario maestro ya existe
     SELECT EXISTS(
-        SELECT 1 FROM users WHERE email = 'josefranciscocastrosias@gmail.com'
-    ) INTO francisco_exists;
+        SELECT 1 FROM users WHERE email = master_email
+    ) INTO master_exists;
     
-    IF francisco_exists THEN
-        -- Actualizar Francisco existente
+    IF master_exists THEN
+        -- Actualizar usuario maestro existente
         UPDATE users 
         SET 
-            referral_code = francisco_code,
-            user_level = 0,  -- Nivel 0 = Fundador
+            nickname = master_nickname,
+            referral_code = master_code,
+            user_level = 0,  -- Nivel 0 = Fundador/Maestro
             total_referrals = COALESCE(total_referrals, 0),
             total_earnings = COALESCE(total_earnings, 0.00),
             updated_at = now()
-        WHERE email = 'josefranciscocastrosias@gmail.com';
+        WHERE email = master_email;
         
-        RAISE NOTICE '✅ Francisco actualizado como fundador con código: %', francisco_code;
+        RAISE NOTICE '✅ Usuario maestro actualizado como fundador con código: %', master_code;
     ELSE
-        -- Crear Francisco como fundador
+        -- Crear usuario maestro como fundador
         INSERT INTO users (
             nombre, apellido, nickname, email, 
             referral_code, user_level, total_referrals, total_earnings,
             created_at, updated_at
         ) VALUES (
-            'Francisco', 'Castro Sias', 'Francisco', 'josefranciscocastrosias@gmail.com',
-            francisco_code, 0, 0, 0.00,
+            'Info', 'Crypto Force', master_nickname, master_email,
+            master_code, 0, 0, 0.00,
             now(), now()
         );
         
-        RAISE NOTICE '✅ Francisco creado como fundador con código: %', francisco_code;
+        RAISE NOTICE '✅ Usuario maestro creado como fundador con código: %', master_code;
     END IF;
 END $$;
 
@@ -350,8 +356,8 @@ GRANT SELECT, INSERT ON referral_history TO anon, authenticated;
 -- Mostrar estado del sistema
 SELECT 
     '🎯 SISTEMA DE REFERIDOS CONFIGURADO' as status,
-    'Francisco configurado como fundador con código: ' || 
-    (SELECT referral_code FROM users WHERE email = 'josefranciscocastrosias@gmail.com') as founder_info;
+    'Usuario maestro configurado como fundador con código: ' || 
+    (SELECT referral_code FROM users WHERE email = 'infocriptoforce@gmail.com') as founder_info;
 
 -- Mostrar estadísticas
 SELECT 

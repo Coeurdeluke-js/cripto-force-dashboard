@@ -226,7 +226,8 @@ export default function DashboardSelectionPage() {
             <button
               onClick={() => {
                 signOut();
-                router.push('/login');
+                // Redirigir a la página de logout que manejará la redirección externa
+                router.push('/logout');
               }}
               className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm"
             >

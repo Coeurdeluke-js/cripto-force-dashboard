@@ -57,6 +57,37 @@ export default function ModuloCarrousel({ modules }: ModuloCarrouselProps) {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
+  // Agregar event listener no-pasivo para wheel
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      console.log('📚 Scroll NATIVO en carrousel TEÓRICO detectado!', e.deltaY);
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Usar deltaY (scroll vertical) para mover horizontalmente
+      const scrollAmount = e.deltaY * 1.5; // Aumentar velocidad
+      const oldScrollLeft = carousel.scrollLeft;
+      const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+      
+      // Calcular nuevo scrollLeft con límites
+      let newScrollLeft = oldScrollLeft + scrollAmount;
+      newScrollLeft = Math.max(0, Math.min(newScrollLeft, maxScrollLeft));
+      
+      carousel.scrollLeft = newScrollLeft;
+      console.log('📖 Teorico scroll NATIVO: ', oldScrollLeft, '->', carousel.scrollLeft, 'max:', maxScrollLeft);
+    };
+
+    // Agregar listener con { passive: false } para poder usar preventDefault
+    carousel.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      carousel.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!carouselRef.current) return;
     setIsDragging(true);
@@ -73,6 +104,8 @@ export default function ModuloCarrousel({ modules }: ModuloCarrouselProps) {
   };
 
   const handleMouseUpOrLeave = () => setIsDragging(false);
+
+
 
   // Actualizar descripciones para terminar con punto y ser coherentes
   const descriptions = [

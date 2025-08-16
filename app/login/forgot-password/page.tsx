@@ -67,15 +67,32 @@ export default function ForgotPasswordPage() {
     setIsSubmitting(true);
 
     try {
-      // Simulación de envío de email
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('🔐 Enviando reset de contraseña a:', formData.email);
       
-      // Aquí iría la lógica real de recuperación de contraseña
-      console.log('Enviando email de recuperación a:', formData.email);
+      const response = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email
+        })
+      });
       
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || 'Error enviando email de recuperación');
+      }
+      
+      console.log('✅ Reset email enviado:', result);
       setIsEmailSent(true);
+      
     } catch (error) {
-      console.error('Error al enviar email:', error);
+      console.error('❌ Error al enviar email:', error);
+      setErrors({ 
+        general: error instanceof Error ? error.message : 'Error al enviar email de recuperación'
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -114,10 +131,10 @@ export default function ForgotPasswordPage() {
               </p>
               
               <div className="pt-4 space-y-3">
-                <Link 
-                  href="/login/signin"
-                  className="block w-full py-3 px-6 bg-gradient-to-r from-[#FFD447] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFD447] text-black font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-[#FFD447]/25"
-                >
+                              <Link 
+                href="/login/signin"
+                className="block w-full py-3 px-6 bg-gradient-to-r from-[#ec4d58] to-[#d93c47] hover:from-[#d93c47] hover:to-[#ec4d58] text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-[#ec4d58]/25"
+              >
                   Volver al login
                 </Link>
                 
@@ -182,7 +199,7 @@ export default function ForgotPasswordPage() {
                   className={`w-full px-4 py-3 bg-[#2a2d36] border rounded-lg focus:outline-none focus:ring-2 transition-all pl-12 ${
                     errors.email 
                       ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-white/20 focus:ring-[#FFD447] focus:border-[#FFD447]'
+                      : 'border-white/20 focus:ring-[#ec4d58] focus:border-[#ec4d58]'
                   }`}
                   placeholder="tu@email.com"
                 />
@@ -195,6 +212,14 @@ export default function ForgotPasswordPage() {
                 </p>
               )}
             </div>
+
+            {/* Mensaje de error general */}
+            {errors.general && (
+              <div className="p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-sm flex items-center gap-2">
+                <AlertCircle size={16} />
+                {errors.general}
+              </div>
+            )}
 
             {/* Información adicional */}
             <div className="bg-[#2a2d36]/50 rounded-lg p-4">
@@ -211,12 +236,12 @@ export default function ForgotPasswordPage() {
                 className={`w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-300 ${
                   isSubmitting
                     ? 'bg-gray-600 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-[#FFD447] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FFD447] text-black hover:shadow-lg hover:shadow-[#FFD447]/25'
+                    : 'bg-gradient-to-r from-[#ec4d58] to-[#d93c47] hover:from-[#d93c47] hover:to-[#ec4d58] text-white hover:shadow-lg hover:shadow-[#ec4d58]/25'
                 }`}
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     Enviando email...
                   </div>
                 ) : (
@@ -232,14 +257,14 @@ export default function ForgotPasswordPage() {
             <div className="text-center pt-4 space-y-3">
               <p className="text-white/70 text-sm">
                 ¿Recordaste tu contraseña?{' '}
-                <Link href="/login/signin" className="text-[#FFD447] hover:text-[#FFB800] transition-colors font-medium">
+                <Link href="/login/signin" className="text-[#ec4d58] hover:text-[#d93c47] transition-colors font-medium">
                   Inicia sesión aquí
                 </Link>
               </p>
               
               <p className="text-white/70 text-sm">
                 ¿No tienes una cuenta?{' '}
-                <Link href="/login" className="text-[#FFD447] hover:text-[#FFB800] transition-colors font-medium">
+                <Link href="/login" className="text-[#ec4d58] hover:text-[#d93c47] transition-colors font-medium">
                   Regístrate aquí
                 </Link>
               </p>

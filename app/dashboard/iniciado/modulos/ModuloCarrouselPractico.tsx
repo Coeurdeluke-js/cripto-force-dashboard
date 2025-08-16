@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import ControlPointBadge from '@/app/dashboard/iniciado/components/ControlPointBadge';
 
 interface Module {
@@ -55,6 +55,37 @@ export default function ModuloCarrouselPractico({ modules }: ModuloCarrouselProp
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
+  // Agregar event listener no-pasivo para wheel
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      console.log('⚡ Scroll NATIVO en carrousel PRÁCTICO detectado!', e.deltaY);
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Usar deltaY (scroll vertical) para mover horizontalmente
+      const scrollAmount = e.deltaY * 1.5; // Aumentar velocidad
+      const oldScrollLeft = carousel.scrollLeft;
+      const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+      
+      // Calcular nuevo scrollLeft con límites
+      let newScrollLeft = oldScrollLeft + scrollAmount;
+      newScrollLeft = Math.max(0, Math.min(newScrollLeft, maxScrollLeft));
+      
+      carousel.scrollLeft = newScrollLeft;
+      console.log('⚡ Práctico scroll NATIVO: ', oldScrollLeft, '->', carousel.scrollLeft, 'max:', maxScrollLeft);
+    };
+
+    // Agregar listener con { passive: false } para poder usar preventDefault
+    carousel.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      carousel.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!carouselRef.current) return;
     setIsDragging(true);
@@ -71,6 +102,8 @@ export default function ModuloCarrouselPractico({ modules }: ModuloCarrouselProp
   };
 
   const handleMouseUpOrLeave = () => setIsDragging(false);
+
+
 
   return (
     <div className="card">

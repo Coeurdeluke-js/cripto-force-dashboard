@@ -554,6 +554,48 @@ export default function IniciadoDashboard() {
   const [scrollLeft, setScrollLeft] = useState(0);
   const { progress } = useProgress();
 
+  // Event listener simplificado con timeout para asegurar que el DOM esté listo
+  useEffect(() => {
+    const setupWheelListener = () => {
+      const carousel = carouselRef.current;
+      if (!carousel) {
+        console.log('❌ No se encontró referencia del carrousel');
+        return;
+      }
+
+      console.log('✅ Configurando wheel listener...');
+
+      const handleWheel = (e: WheelEvent) => {
+        console.log('🎡 WHEEL EVENT:', e.deltaY);
+        
+        // Forzar preventDefault
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Scroll simple y directo
+        const scrollAmount = e.deltaY;
+        carousel.scrollLeft += scrollAmount;
+        
+        console.log('📍 Scroll aplicado:', carousel.scrollLeft);
+      };
+
+      // Agregar con passive: false
+      carousel.addEventListener('wheel', handleWheel, { passive: false });
+      console.log('✅ Listener agregado');
+
+      return () => {
+        carousel.removeEventListener('wheel', handleWheel);
+      };
+    };
+
+    // Dar tiempo para que el DOM se renderice completamente
+    const timeoutId = setTimeout(setupWheelListener, 100);
+    
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [activeTab]); // Dependencia de activeTab para recrear cuando cambie
+
 // Objetivos a lograr
   const objectives: Objective[] = [
   { id: 'obj1', title: 'Completar Nivel 1 Teórico', type: 'nivel1', category: 'theoretical', completed: false },
@@ -761,6 +803,8 @@ export default function IniciadoDashboard() {
   };
 
   const handleMouseUpOrLeave = () => setIsDragging(false);
+
+
 
 
   return (
@@ -1018,11 +1062,90 @@ export default function IniciadoDashboard() {
             </h2>
           </div>
 
+          {/* Botones de test temporales */}
+          <div className="flex justify-center gap-4 mb-4">
+            <button 
+              onClick={() => {
+                const carousel = carouselRef.current;
+                if (carousel) {
+                  console.log('🔧 TEST: Scroll izquierda');
+                  carousel.scrollLeft -= 200;
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded"
+            >
+              ← Test Izq
+            </button>
+            <button 
+              onClick={() => {
+                const carousel = carouselRef.current;
+                if (carousel) {
+                  console.log('🔧 TEST: Scroll derecha');
+                  carousel.scrollLeft += 200;
+                }
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded"
+            >
+              Test Der →
+            </button>
+            <button 
+              onClick={() => {
+                const carousel = carouselRef.current;
+                if (carousel) {
+                  const debugInfo = {
+                    scrollWidth: carousel.scrollWidth,
+                    clientWidth: carousel.clientWidth,
+                    scrollLeft: carousel.scrollLeft,
+                    canScroll: carousel.scrollWidth > carousel.clientWidth,
+                    children: carousel.children.length,
+                    firstChildWidth: carousel.children[0]?.clientWidth || 0,
+                    totalCalculatedWidth: Array.from(carousel.children).reduce((sum, child) => sum + child.clientWidth, 0)
+                  };
+                  console.log('📊 DEBUG INFO:', debugInfo);
+                  alert(JSON.stringify(debugInfo, null, 2));
+                }
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded"
+            >
+              📊 Debug
+            </button>
+            <button 
+              onClick={() => {
+                const carousel = carouselRef.current;
+                if (carousel) {
+                  // Agregar elementos dummy para test
+                  const track = carousel.querySelector('.carousel-track');
+                  if (track) {
+                    for (let i = 0; i < 5; i++) {
+                      const dummyCard = document.createElement('div');
+                      dummyCard.style.cssText = 'min-width: 320px; width: 320px; height: 280px; background: #ec4d58; flex-shrink: 0; margin-right: 16px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;';
+                      dummyCard.textContent = `Test ${i + 1}`;
+                      track.appendChild(dummyCard);
+                    }
+                    console.log('✅ Elementos dummy agregados');
+                  }
+                }
+              }}
+              className="px-4 py-2 bg-purple-600 text-white rounded"
+            >
+              🧪 Add Test Cards
+            </button>
+          </div>
+
           {/* Carrusel mejorado con transiciones suaves */}
           <div className="relative carousel-container px-2 md:px-0">
             <div
               ref={carouselRef}
               className="w-full overflow-x-auto cursor-grab active:cursor-grabbing scroll-smooth custom-scrollbar"
+              style={{ 
+                scrollbarWidth: 'thin',
+                scrollbarColor: 'rgba(236, 77, 88, 0.6) rgba(26, 26, 26, 0.3)',
+                minWidth: '100%',
+                scrollSnapType: 'x mandatory',
+                scrollPadding: '0 16px',
+                WebkitOverflowScrolling: 'touch',
+                scrollBehavior: 'smooth'
+              }}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUpOrLeave}
@@ -1043,14 +1166,16 @@ export default function IniciadoDashboard() {
                 }
               }}
               onTouchEnd={handleMouseUpOrLeave}
-              style={{ 
-                scrollSnapType: 'x mandatory',
-                scrollPadding: '0 16px',
-                WebkitOverflowScrolling: 'touch',
-                scrollBehavior: 'smooth'
-              }}
             >
-              <div className="carousel-track p-2 flex gap-3 md:gap-4 select-none" style={{ minWidth: '100%', width: 'max-content' }}>
+              <div 
+                className="carousel-track p-2 flex gap-3 md:gap-4 select-none" 
+                style={{ 
+                  minWidth: '150%', // Forzar que sea más ancho que el contenedor
+                  width: 'max-content',
+                  display: 'flex',
+                  flexShrink: 0
+                }}
+              >
                 {allModules.map((module, index) => {
                   const isControlPoint = module.id.startsWith('PC');
                   const isLocked = module.isLocked || false;
@@ -1059,8 +1184,13 @@ export default function IniciadoDashboard() {
                   return (
                     <div 
                       key={`${activeTab}-${module.id}-${index}`} 
-                      className="carousel-card flex-shrink-0 w-[calc(85vw-32px)] sm:w-[calc(50vw-32px)] md:w-[calc(33.333%-24px)] lg:w-[calc(25%-24px)] xl:w-[280px]"
-                      style={{ scrollSnapAlign: 'start' }}
+                      className="carousel-card flex-shrink-0"
+                      style={{
+                        minWidth: '320px', // Ancho mínimo fijo
+                        width: '320px',    // Ancho fijo
+                        flexShrink: 0,
+                        scrollSnapAlign: 'start'
+                      }}
                     >
                       {/* Card */}
                       <div className="relative p-4 md:p-6 rounded-xl border transition-all duration-300 group flex flex-col h-[280px] md:h-[320px] module-card bg-[#1a1a1a] border-[#232323] hover:bg-[#2a2a2a] hover:border-[#ec4d58]/30 select-none">

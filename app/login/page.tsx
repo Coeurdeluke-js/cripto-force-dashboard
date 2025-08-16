@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { User, Mail, Lock, Phone, Building, Hash, Gift } from 'lucide-react';
+import { User, Mail, Lock, Phone, Building, Hash } from 'lucide-react';
 import CountryPhoneInput from '@/components/ui/CountryPhoneInput';
 import ReferralCode from '@/components/ui/ReferralCode';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -203,9 +203,9 @@ function RegisterForm() {
         confirmPassword: ''
       });
 
-      // Redirigir después de 2 segundos al mensaje de bienvenida
+      // Redirigir después de 2 segundos al selector de dashboard
       setTimeout(() => {
-        router.push('/dashboard/mensaje');
+        router.push('/login/dashboard-selection');
       }, 2000);
 
     } catch (error: any) {
@@ -220,21 +220,8 @@ function RegisterForm() {
 
   return (
     <div className="min-h-screen bg-[#121212] text-white font-inter">
-      {/* Header con botones - Mejor en móvil */}
-      <div className="w-full flex justify-between items-center p-4 sm:p-6">
-        <button 
-          onClick={() => router.push('/login/referidos')}
-          className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 sm:px-4 sm:py-2 text-white/70 hover:text-white hover:bg-white/20 transition-all duration-300 flex items-center gap-2 text-sm"
-        >
-          <Gift size={14} className="sm:w-4 sm:h-4" /> 
-          <span className="hidden xs:inline">Referidos</span>
-        </button>
-        
-
-      </div>
-
       {/* Contenedor principal con scroll */}
-      <div className="flex items-center justify-center px-4 pb-6 min-h-[calc(100vh-80px)]">
+      <div className="flex items-center justify-center px-4 py-6 min-h-screen">
         <div className="w-full max-w-md">
           {/* Logo y título */}
           <div className="text-center mb-6 sm:mb-8">
@@ -385,7 +372,7 @@ function RegisterForm() {
               </label>
               <div className="relative">
                 <div className="relative">
-                  <Gift className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4 sm:w-5 sm:h-5" />
+                  <Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4 sm:w-5 sm:h-5" />
                   <input
                     type="text"
                     value={formData.codigoReferido}

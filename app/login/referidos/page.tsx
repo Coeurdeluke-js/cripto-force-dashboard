@@ -2,155 +2,168 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Gift, Users, DollarSign, Copy, CheckCircle, Share2 } from 'lucide-react';
-import ReferralCode from '@/components/ui/ReferralCode';
+import { GraduationCap, Users, BookOpen, CheckCircle, Share2, Heart, Target, TrendingUp } from 'lucide-react';
 import ReferralStats from '@/components/ui/ReferralStats';
 import { useSafeAuth } from '@/context/AuthContext';
+import { SidebarProvider, useSidebar } from '@/components/sidebar/SidebarContext';
+import Sidebar from '@/components/sidebar/Sidebar';
+import MobileSidebar from '@/components/sidebar/MobileSidebar';
 
-export default function ReferidosPage() {
+function ReferidosContent() {
   const router = useRouter();
   const { userData, isReady } = useSafeAuth();
-  const [copied, setCopied] = useState(false);
+  const { isExpanded, toggleSidebar } = useSidebar();
 
   // Mostrar loading mientras no esté listo
   if (!isReady || !userData?.email) {
     return (
-      <div className="min-h-screen bg-[#121212] text-white font-inter flex items-center justify-center">
+      <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ec4d58]"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white font-inter">
-      {/* Header */}
-      <div className="bg-[#1a1a1a] border-b border-white/10 p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
-          >
-            <ArrowLeft size={20} />
-            Volver
-          </button>
-          <h1 className="text-xl font-bold text-white">Sistema de Referidos</h1>
-          <div className="w-20"></div> {/* Spacer para centrar el título */}
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0f0f0f] text-white">
+      {/* Sidebar Desktop - SOLO en desktop */}
+      <div className="hidden md:block transition-all duration-300 relative">
+        <Sidebar />
       </div>
-
-      <div className="max-w-4xl mx-auto p-6">
-        {/* Hero Section */}
-        <div className="text-center mb-8">
-          <div className="w-24 h-24 bg-gradient-to-br from-[#ec4d58] to-[#d43d47] rounded-full mx-auto mb-6 flex items-center justify-center">
-            <Gift size={48} className="text-white" />
-          </div>
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Hola, {userData.nickname || userData.nombre}
-          </h2>
-          <p className="text-white/70 text-lg max-w-2xl mx-auto">
-            Gana recompensas invitando a tus amigos a Crypto Force. ¡Cada referido exitoso te da $5!
-          </p>
-        </div>
-
-        {/* Dynamic Referral Stats */}
-        <ReferralStats userEmail={userData.email} className="mb-8" />
-
-        {/* Cómo Funciona */}
-        <div className="bg-[#1a1a1a] rounded-xl p-8 border border-white/10 mb-8">
-          <h3 className="text-xl font-semibold text-white mb-6 text-center">
-            ¿Cómo Funciona?
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#ec4d58]/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-2xl font-bold text-[#ec4d58]">1</span>
+      
+      {/* Sidebar Mobile - SOLO en móvil */}
+      <div className="md:hidden fixed bottom-0 left-0 w-full z-50 transition-all duration-300">
+        <MobileSidebar collapsed={!isExpanded} onToggle={toggleSidebar} />
+      </div>
+      
+      {/* Main Content - Mejorado para responsividad */}
+      <div className={`transition-all duration-500 ease-in-out flex flex-col min-h-screen ${
+        isExpanded ? 'md:ml-64' : 'md:ml-16'
+      }`}>
+        <main className="flex-1 overflow-auto md:pl-6 md:pr-6 transition-all duration-500 ease-in-out">
+          <div className="p-4 md:p-6 max-w-6xl mx-auto">
+            {/* Hero Section */}
+            <div className="text-center mb-8">
+              <div className="w-24 h-24 bg-gradient-to-br from-[#ec4d58] to-[#d43d47] rounded-full mx-auto mb-6 flex items-center justify-center">
+                <GraduationCap size={48} className="text-white" />
               </div>
-              <h4 className="text-lg font-semibold text-white mb-2">Comparte tu Código</h4>
-              <p className="text-white/60">
-                Comparte tu código único con amigos y familiares
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Comparte Conocimiento, {userData.nickname || userData.nombre}
+              </h2>
+              <p className="text-white/70 text-lg max-w-2xl mx-auto">
+                Ayuda a tus amigos y familiares a transformar su futuro financiero a través de la educación. 
+                El verdadero valor está en el conocimiento que compartimos.
               </p>
             </div>
-            
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#ec4d58]/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-2xl font-bold text-[#ec4d58]">2</span>
-              </div>
-              <h4 className="text-lg font-semibold text-white mb-2">Se Registran</h4>
-              <p className="text-white/60">
-                Ellos se registran usando tu código de referido
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#ec4d58]/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-2xl font-bold text-[#ec4d58]">3</span>
-              </div>
-              <h4 className="text-lg font-semibold text-white mb-2">Ganas Recompensas</h4>
-              <p className="text-white/60">
-                Recibes recompensas por cada referido exitoso
-              </p>
-            </div>
-          </div>
-        </div>
 
-        {/* Beneficios */}
-        <div className="bg-[#1a1a1a] rounded-xl p-8 border border-white/10">
-          <h3 className="text-xl font-semibold text-white mb-6 text-center">
-            Beneficios del Sistema de Referidos
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex items-start gap-4">
-              <div className="w-8 h-8 bg-[#ec4d58]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <CheckCircle size={16} className="text-[#ec4d58]" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-white mb-2">Recompensas Inmediatas</h4>
-                <p className="text-white/60">
-                  Gana recompensas desde el primer referido exitoso
-                </p>
+            {/* Dynamic Referral Stats */}
+            <ReferralStats userEmail={userData.email} className="mb-8" />
+
+            {/* Cómo Funciona la Educación Financiera */}
+            <div className="bg-[#1a1a1a] rounded-xl p-8 border border-white/10 mb-8">
+              <h3 className="text-xl font-semibold text-white mb-6 text-center">
+                ¿Cómo Transformamos Vidas a Través de la Educación?
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#ec4d58]/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <Share2 size={24} className="text-[#ec4d58]" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-white mb-2">Comparte Conocimiento</h4>
+                  <p className="text-white/60">
+                    Invita a tus seres queridos a descubrir el poder de la educación financiera
+                  </p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#ec4d58]/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <BookOpen size={24} className="text-[#ec4d58]" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-white mb-2">Aprenden y Crecen</h4>
+                  <p className="text-white/60">
+                    Acceden a una educación de calidad que transforma su relación con el dinero
+                  </p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#ec4d58]/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <TrendingUp size={24} className="text-[#ec4d58]" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-white mb-2">Construimos Juntos</h4>
+                  <p className="text-white/60">
+                    Creamos una comunidad de personas empoderadas financieramente
+                  </p>
+                </div>
               </div>
             </div>
-            
-            <div className="flex items-start gap-4">
-              <div className="w-8 h-8 bg-[#ec4d58]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <CheckCircle size={16} className="text-[#ec4d58]" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-white mb-2">Sin Límites</h4>
-                <p className="text-white/60">
-                  No hay límite en la cantidad de referidos que puedes hacer
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-4">
-              <div className="w-8 h-8 bg-[#ec4d58]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <CheckCircle size={16} className="text-[#ec4d58]" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-white mb-2">Tracking en Tiempo Real</h4>
-                <p className="text-white/60">
-                  Monitorea tus referidos y ganancias en tiempo real
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-4">
-              <div className="w-8 h-8 bg-[#ec4d58]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <CheckCircle size={16} className="text-[#ec4d58]" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-white mb-2">Comunidad Crecida</h4>
-                <p className="text-white/60">
-                  Ayuda a construir la comunidad más poderosa del trading
-                </p>
+
+            {/* Impacto de la Educación Financiera */}
+            <div className="bg-[#1a1a1a] rounded-xl p-8 border border-white/10">
+              <h3 className="text-xl font-semibold text-white mb-6 text-center">
+                El Poder de Compartir Educación Financiera
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-[#ec4d58]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Heart size={16} className="text-[#ec4d58]" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-white mb-2">Transforma Vidas</h4>
+                    <p className="text-white/60">
+                      Cada persona que invitas obtiene las herramientas para mejorar su futuro financiero
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-[#ec4d58]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Users size={16} className="text-[#ec4d58]" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-white mb-2">Construye Comunidad</h4>
+                    <p className="text-white/60">
+                      Formas parte de una red de personas comprometidas con su crecimiento financiero
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-[#ec4d58]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <Target size={16} className="text-[#ec4d58]" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-white mb-2">Crea Impacto Real</h4>
+                    <p className="text-white/60">
+                      Contribuyes a democratizar el acceso a educación financiera de calidad
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-[#ec4d58]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <GraduationCap size={16} className="text-[#ec4d58]" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-white mb-2">Aprende Enseñando</h4>
+                    <p className="text-white/60">
+                      Al compartir conocimiento, refuerzas tu propio aprendizaje y comprensión
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
+  );
+}
+
+export default function ReferidosPage() {
+  return (
+    <SidebarProvider>
+      <ReferidosContent />
+    </SidebarProvider>
   );
 }

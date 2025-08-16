@@ -36,6 +36,8 @@ export default function SignInPage() {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
+  const [attemptCount, setAttemptCount] = useState(0);
+  const [isBlocked, setIsBlocked] = useState(false);
 
   // Mostrar loading mientras no esté listo
   if (!isReady) {
@@ -85,56 +87,68 @@ export default function SignInPage() {
       return;
     }
 
+    // Verificar si está bloqueado por demasiados intentos
+    if (isBlocked) {
+      setErrors({ general: 'Demasiados intentos fallidos. Espera 15 minutos antes de intentar de nuevo.' });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // Simulación de inicio de sesión
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Simular datos del usuario logueado basados en el email
-      let simulatedUserData;
-      
-      // Datos específicos para emails conocidos
-      if (formData.email.includes('coeurdeluke') || formData.email.includes('luke')) {
-        simulatedUserData = {
-          nombre: 'Lucas',
-          apellido: 'González',
-          nickname: 'Luke',
+      // AUTENTICACIÓN REAL CON SUPABASE
+      const response = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           email: formData.email,
-          movil: '+54 11 7060-4565',
-          exchange: 'ZoomEx',
-          uid: 'ZMX11223344',
-          codigo_referido: 'LUKE2025',
-          id: 'usr_luke_12345',
-          joinDate: new Date().toISOString().split('T')[0]
-        };
-      } else {
-        // Datos genéricos para otros usuarios
-        const baseName = formData.email.split('@')[0];
-        simulatedUserData = {
-          nombre: baseName.charAt(0).toUpperCase() + baseName.slice(1),
-          apellido: 'Usuario',
-          nickname: baseName,
-          email: formData.email,
-          movil: '+54 9 11 1234-5678',
-          exchange: 'ZoomEx',
-          uid: 'ZMX' + Math.floor(Math.random() * 100000),
-          codigo_referido: baseName.toUpperCase() + '2025',
-          id: 'usr_' + Math.floor(Math.random() * 1000000),
-          joinDate: new Date().toISOString().split('T')[0]
-        };
+          password: formData.password
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Error en el inicio de sesión');
       }
+
+      if (!result.success) {
+        throw new Error(result.error || 'Credenciales inválidas');
+      }
+
+      // Si la autenticación es exitosa, obtener datos del usuario
+      const userData = result.userData;
       
       // Guardar datos del usuario en el contexto
-      setUserData(simulatedUserData);
+      setUserData(userData);
       
       console.log('Inicio de sesión exitoso para:', formData.email);
       
-      // Redirigir al mensaje de bienvenida después del login exitoso
-      router.push('/dashboard/mensaje');
+      // Redirigir al selector de dashboard después del login exitoso
+      router.push('/login/dashboard-selection');
     } catch (error) {
       console.error('Error en el login:', error);
-      setErrors({ general: 'Error al iniciar sesión. Inténtalo de nuevo.' });
+      const errorMessage = error instanceof Error ? error.message : 'Error al iniciar sesión. Inténtalo de nuevo.';
+      setErrors({ general: errorMessage });
+      
+      // Incrementar contador de intentos fallidos
+      const newAttemptCount = attemptCount + 1;
+      setAttemptCount(newAttemptCount);
+      
+      // Bloquear después de 3 intentos fallidos
+      if (newAttemptCount >= 3) {
+        setIsBlocked(true);
+        setErrors({ general: 'Demasiados intentos fallidos. Cuenta bloqueada por 15 minutos por seguridad.' });
+        
+        // Desbloquear después de 15 minutos
+        setTimeout(() => {
+          setIsBlocked(false);
+          setAttemptCount(0);
+          setErrors({});
+        }, 15 * 60 * 1000); // 15 minutos
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -278,6 +292,77 @@ export default function SignInPage() {
                 )}
               </button>
             </div>
+            
+            {/* Botones de debug - Solo en desarrollo */}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="pt-2 space-y-2">
+                <details className="bg-gray-800/50 rounded-lg p-2">
+                  <summary className="text-sm text-gray-400 cursor-pointer">🔧 Herramientas de Debug</summary>
+                  <div className="mt-2 space-y-2">
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!formData.email) {
+                          alert('Por favor ingresa un email primero');
+                          return;
+                        }
+                        try {
+                          console.log('🔧 Intentando arreglar usuario:', formData.email);
+                          const response = await fetch('/api/debug/fix-user-auth', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: formData.email })
+                          });
+                          const result = await response.json();
+                          alert('Diagnóstico:\n' + JSON.stringify(result, null, 2));
+                          console.log('🔧 Fix User Auth:', result);
+                        } catch (error) {
+                          console.error('Error arreglando usuario:', error);
+                          alert('Error: ' + error);
+                        }
+                      }}
+                      className="w-full bg-orange-600 text-white py-1 px-3 rounded text-xs hover:bg-orange-700 transition-colors"
+                    >
+                      🔧 Diagnosticar Auth
+                    </button>
+                    
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!formData.email || !formData.password) {
+                          alert('Por favor ingresa email Y contraseña primero');
+                          return;
+                        }
+                        const confirmed = confirm('¿Recrear usuario en Auth?');
+                        if (!confirmed) return;
+                        
+                        try {
+                          const response = await fetch('/api/debug/recreate-auth-user', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                              email: formData.email,
+                              password: formData.password 
+                            })
+                          });
+                          const result = await response.json();
+                          alert('Resultado:\n' + JSON.stringify(result, null, 2));
+                          if (result.success) {
+                            alert('✅ Usuario recreado! Intenta hacer login.');
+                          }
+                        } catch (error) {
+                          console.error('Error recreando usuario:', error);
+                          alert('Error: ' + error);
+                        }
+                      }}
+                      className="w-full bg-red-600 text-white py-1 px-3 rounded text-xs hover:bg-red-700 transition-colors"
+                    >
+                      🚨 Recrear Usuario
+                    </button>
+                  </div>
+                </details>
+              </div>
+            )}
 
             {/* Enlaces adicionales */}
             <div className="text-center space-y-4">

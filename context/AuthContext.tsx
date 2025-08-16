@@ -145,6 +145,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await supabase.auth.signOut();
     }
     clearUserData();
+    
+    // Redirigir a thecryptoforce.com después del logout
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        window.location.href = 'https://thecryptoforce.com';
+      }, 500);
+    }
   };
 
   return (
