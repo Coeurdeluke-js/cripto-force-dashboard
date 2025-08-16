@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Maximize2, Minimize2, BarChart3, ChevronDown } from 'lucide-react';
 
 interface SimpleChartProps {
@@ -42,7 +42,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({
     { id: 'volume', name: 'Volume', type: 'Volume', color: '#795548' }
   ];
 
-  const drawChart = () => {
+  const drawChart = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || candles.length === 0) return;
 
@@ -158,7 +158,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({
         30
       );
     }
-  };
+  }, [candles, isMaximized]);
 
   useEffect(() => {
     if (candles.length > 0) {
@@ -182,7 +182,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({
         drawChart();
       }
     }
-  }, [candles, isMaximized]);
+  }, [candles, isMaximized, drawChart]);
 
   // Redraw en resize
   useEffect(() => {
@@ -194,7 +194,7 @@ const SimpleChart: React.FC<SimpleChartProps> = ({
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [candles]);
+  }, [candles, drawChart]);
 
   const toggleMaximize = () => {
     setIsMaximized(!isMaximized);

@@ -181,7 +181,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
           borderVisible: true,
           visible: true,
         },
-        // Configuración de interactividad
+        // Configuración de interactividad mejorada
         handleScroll: {
           mouseWheel: true,
           pressedMouseMove: true,
@@ -195,6 +195,12 @@ const TradingChart: React.FC<TradingChartProps> = ({
           },
           mouseWheel: true,
           pinch: true,
+        },
+        // Habilitar interacción completa
+        scrollPosition: 0,
+        kineticScroll: {
+          touch: true,
+          mouse: false,
         },
         leftPriceScale: {
           visible: false,
@@ -306,7 +312,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
     } catch (error) {
       console.error('Error creating chart:', error);
     }
-  }, [isMaximized]);
+  }, [isMaximized, candles.length, symbol]);
 
   // Cargar datos
   useEffect(() => {
@@ -361,11 +367,23 @@ const TradingChart: React.FC<TradingChartProps> = ({
 
 
   return (
-    <div className={`w-full relative transition-all duration-300 ${
-      isMaximized 
-        ? 'fixed inset-0 z-[9999] bg-[#121212] overflow-hidden' 
-        : 'rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] overflow-hidden'
-    }`}>
+    <div 
+      className={`w-full relative transition-all duration-300 ${
+        isMaximized 
+          ? 'fixed inset-0 z-[9999] bg-[#121212] overflow-hidden' 
+          : 'rounded-xl border border-[#2a2a2a] bg-[#1a1a1a] overflow-hidden'
+      }`}
+      style={isMaximized ? {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 99999,
+        margin: 0,
+        padding: 0
+      } : {}}
+    >
       {/* Controles */}
       <div className="absolute top-2 right-2 z-10 flex items-center gap-2">
         {/* Menú de indicadores */}
@@ -466,18 +484,30 @@ const TradingChart: React.FC<TradingChartProps> = ({
       {/* Contenedor del gráfico */}
       <div 
         ref={chartContainerRef} 
-        className={`w-full ${
+        className={`w-full relative ${
           isMaximized 
             ? 'h-screen' 
             : 'h-96 md:h-[500px] lg:h-[600px]'
         }`}
         style={{
+          width: isMaximized ? '100vw' : '100%',
+          height: isMaximized ? '100vh' : 'auto',
           minHeight: isMaximized ? '100vh' : '400px',
           backgroundColor: '#121212',
           border: isMaximized ? 'none' : '1px solid #333333',
           borderRadius: isMaximized ? '0' : '12px',
-          boxShadow: isMaximized ? 'none' : '0 10px 25px rgba(0,0,0,0.5)'
+          boxShadow: isMaximized ? 'none' : '0 10px 25px rgba(0,0,0,0.5)',
+          cursor: 'crosshair',
+          userSelect: 'none',
+          touchAction: 'pan-x pan-y',
+          overflow: 'hidden',
+          position: isMaximized ? 'absolute' : 'relative',
+          top: isMaximized ? '0' : 'auto',
+          left: isMaximized ? '0' : 'auto'
         }}
+        // Asegurar que el contenedor puede recibir eventos
+        onMouseDown={(e) => e.preventDefault()}
+        onContextMenu={(e) => e.preventDefault()}
       />
       
       {/* Overlay mejorado para pantalla completa */}

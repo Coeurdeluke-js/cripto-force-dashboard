@@ -1,65 +1,87 @@
-'use client';
-
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+"use client";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { 
-  FiHome, 
-  FiBarChart3, 
-  FiUsers, 
-  FiBookOpen, 
-  FiSettings, 
-  FiLogOut,
-  FiChevronLeft,
-  FiChevronRight
-} from 'react-icons/fi';
+  Home, 
+  BarChart3, 
+  Users, 
+  BookOpen, 
+  Settings, 
+  LogOut,
+  Menu,
+  User,
+  TrendingUp,
+  Activity,
+  Database,
+  CheckCircle,
+  Clock,
+  Target,
+  Award,
+  Calendar,
+  LineChart
+} from 'lucide-react';
 import { useSafeAuth } from '@/context/AuthContext';
+import { useMaestroSidebar } from './MaestroSidebarContext';
 
 interface MenuItem {
   href: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ size?: number }>;
   label: string;
-  description?: string;
 }
 
 const menuItems: MenuItem[] = [
   {
+    label: 'Panel General',
     href: '/dashboard/maestro',
-    icon: FiHome,
-    label: 'Dashboard',
-    description: 'Vista general'
+    icon: Home
   },
   {
+    label: 'Analytics',
     href: '/dashboard/maestro/analytics',
-    icon: FiBarChart3,
-    label: 'Análisis',
-    description: 'Métricas y reportes'
+    icon: TrendingUp
   },
   {
-    href: '/dashboard/maestro/students',
-    icon: FiUsers,
     label: 'Estudiantes',
-    description: 'Gestión de alumnos'
+    href: '/dashboard/maestro/students',
+    icon: Users
   },
   {
-    href: '/dashboard/maestro/courses',
-    icon: FiBookOpen,
     label: 'Cursos',
-    description: 'Material educativo'
+    href: '/dashboard/maestro/courses',
+    icon: BookOpen
   },
   {
-    href: '/dashboard/maestro/settings',
-    icon: FiSettings,
+    label: 'Trading Charts',
+    href: '/dashboard/maestro/trading-charts',
+    icon: LineChart
+  },
+  {
     label: 'Configuración',
-    description: 'Ajustes del sistema'
+    href: '/dashboard/maestro/settings',
+    icon: Settings
   }
 ];
 
 export default function MaestroSidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const { isExpanded, toggleSidebar } = useMaestroSidebar();
   const pathname = usePathname();
   const { signOut, userData } = useSafeAuth();
+  const [userProfile, setUserProfile] = useState({ avatar: '/images/default-avatar.png' });
+
+  // Get user data from profile
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('simple_profile');
+      if (saved) {
+        const profileData = JSON.parse(saved);
+        setUserProfile(profileData);
+      }
+    }
+  }, []);
+
+
 
   const handleSignOut = async () => {
     try {
@@ -70,104 +92,124 @@ export default function MaestroSidebar() {
   };
 
   return (
-    <div className={`
-      fixed left-0 top-0 h-full bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] border-r border-[#333] z-40
-      transition-all duration-300 ease-in-out
-      ${isCollapsed ? 'w-16' : 'w-72'}
-    `}>
-      {/* Header con insignia de maestro */}
-      <div className="p-4 border-b border-[#333]">
-        <div className="flex items-center justify-between">
-          {!isCollapsed && (
-            <div className="flex items-center space-x-3">
-              <div className="relative w-10 h-10">
-                <Image
-                  src="/images/insignias/6-maestros.png"
-                  alt="Maestro"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-white font-semibold text-sm">
-                  Panel Maestro
-                </span>
-                <span className="text-[#ec4d58] text-xs font-medium">
-                  CRYPTO FORCE
-                </span>
-              </div>
-            </div>
-          )}
-          
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 rounded-lg bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white transition-colors"
-          >
-            {isCollapsed ? (
-              <FiChevronRight className="w-4 h-4" />
-            ) : (
-              <FiChevronLeft className="w-4 h-4" />
-            )}
-          </button>
+    <aside
+      className={`fixed top-0 left-0 h-full bg-gradient-to-b from-[#121212] to-[#0a0a0a] shadow-2xl z-40 flex flex-col border-r border-gray-800/50 transition-all duration-300 ease-in-out rounded-r-xl ${
+        isExpanded ? "w-72" : "w-20"
+      }`}
+    >
+      <style jsx>{`
+        .sidebar-text {
+          transition: all 0.3s ease-in-out;
+          opacity: 0;
+          transform: translateX(-10px);
+        }
+        
+        .sidebar-text.visible {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        
+        .sidebar-text.delayed-1 {
+          transition-delay: 0.05s;
+        }
+        
+        .sidebar-text.delayed-2 {
+          transition-delay: 0.1s;
+        }
+        
+        .sidebar-text.delayed-3 {
+          transition-delay: 0.15s;
+        }
+        
+        .sidebar-text.delayed-4 {
+          transition-delay: 0.2s;
+        }
+        
+        .sidebar-text.delayed-5 {
+          transition-delay: 0.25s;
+        }
+        
+        .sidebar-text.delayed-6 {
+          transition-delay: 0.3s;
+        }
+        
+        .sidebar-text.delayed-footer-1 {
+          transition-delay: 0.35s;
+        }
+        
+        .sidebar-text.delayed-footer-2 {
+          transition-delay: 0.4s;
+        }
+      `}</style>
+      
+      {/* Header con imagen circular de Maestro */}
+      <div className="flex-shrink-0 h-16 flex items-center justify-center border-b border-gray-800/30 bg-transparent px-4 rounded-t-xl">
+        <div className="w-12 h-12 rounded-full overflow-hidden">
+          <Image
+            src="/images/insignias/6-maestros.png"
+            alt="Maestro"
+            width={48}
+            height={48}
+            className="w-full h-full object-cover"
+            style={{ width: 'auto', height: 'auto' }}
+            priority
+          />
         </div>
       </div>
 
-      {/* Información del usuario */}
-      {!isCollapsed && userData && (
-        <div className="p-4 border-b border-[#333]">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-[#ec4d58] to-[#f73b3b] rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-bold">
-                {userData.full_name?.charAt(0)?.toUpperCase() || 'M'}
-              </span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-medium truncate">
-                {userData.full_name || 'Maestro'}
-              </p>
-              <p className="text-gray-400 text-xs truncate">
-                {userData.email}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Toggle button separado arriba */}
+      <div className="flex-shrink-0 p-3 border-b border-gray-800/30">
+        <button
+          onClick={toggleSidebar}
+          className="group relative flex items-center py-3 px-3 text-gray-400 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full justify-center"
+          title={isExpanded ? "Contraer" : "Expandir"}
+        >
+          <span className="flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-gray-400 group-hover:text-[#8A8A8A]">
+            <Menu size={20} />
+          </span>
+        </button>
+      </div>
 
-      {/* Navigation Menu */}
-      <nav className="flex-1 p-4">
-        <ul className="space-y-2">
-          {menuItems.map((item) => {
+      {/* Navigation - estilo WhatsApp */}
+      <nav className="flex-1 py-4 px-3">
+        <ul className="space-y-1">
+          {/* Elementos de navegación */}
+          {menuItems.map((item, index) => {
             const isActive = pathname === item.href;
-            const Icon = item.icon;
-            
             return (
-              <li key={item.href}>
+              <li key={item.label}>
                 <Link
                   href={item.href}
-                  className={`
-                    flex items-center px-3 py-3 rounded-lg transition-all duration-200 group
-                    ${isActive 
-                      ? 'bg-gradient-to-r from-[#ec4d58] to-[#f73b3b] text-white shadow-lg' 
-                      : 'text-gray-300 hover:bg-[#2a2a2a] hover:text-white'
-                    }
-                  `}
+                  className={`group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full ${
+                    isExpanded ? 'justify-start text-left gap-x-3' : 'justify-center'
+                  } ${isActive ? 'bg-[#8A8A8A] text-white' : ''}`}
+                  title={!isExpanded ? item.label : undefined}
                 >
-                  <Icon className={`w-5 h-5 ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
-                  {!isCollapsed && (
-                    <div className="flex-1 min-w-0">
-                      <span className="block text-sm font-medium">
-                        {item.label}
-                      </span>
-                      {item.description && (
-                        <span className="block text-xs opacity-75 truncate">
-                          {item.description}
-                        </span>
-                      )}
-                    </div>
+                  {/* Active indicator - línea gris como Maestro */}
+                  {isActive && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#8A8A8A] rounded-r-full"></div>
                   )}
                   
-                  {isActive && !isCollapsed && (
-                    <div className="w-2 h-2 bg-white rounded-full ml-auto" />
+                  <span
+                    className={`flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 ${
+                      isActive 
+                        ? 'text-white' 
+                        : 'text-gray-400 group-hover:text-[#8A8A8A]'
+                    } ${isExpanded ? 'mr-3' : ''}`}
+                  >
+                    <item.icon size={20} />
+                  </span>
+                  
+                  {isExpanded && (
+                    <span 
+                      className={`font-medium whitespace-nowrap sidebar-text ${
+                        isActive 
+                          ? 'text-white' 
+                          : 'text-gray-300 group-hover:text-[#8A8A8A]'
+                      } ${isExpanded ? 'visible' : ''} delayed-${Math.min(index + 1, 6)}`}
+                    >
+                      {item.label}
+                    </span>
                   )}
                 </Link>
               </li>
@@ -176,22 +218,50 @@ export default function MaestroSidebar() {
         </ul>
       </nav>
 
-      {/* Footer con logout */}
-      <div className="p-4 border-t border-[#333]">
-        <button
-          onClick={handleSignOut}
-          className={`
-            w-full flex items-center px-3 py-3 rounded-lg text-gray-300 
-            hover:bg-red-500/10 hover:text-red-400 transition-all duration-200 group
-            ${isCollapsed ? 'justify-center' : ''}
-          `}
-        >
-          <FiLogOut className={`w-5 h-5 ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
-          {!isCollapsed && (
-            <span className="text-sm font-medium">Cerrar Sesión</span>
-          )}
-        </button>
+      {/* Footer - estilo WhatsApp */}
+      <div className="flex-shrink-0 p-3 border-t border-gray-800/30 rounded-b-xl">
+        <div className="space-y-1">
+          <Link 
+            href="/dashboard/perfil" 
+            className="group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
+            title={!isExpanded ? "Perfil" : undefined}
+          >
+            <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-gray-400 group-hover:text-[#8A8A8A] ${isExpanded ? 'mr-3' : ''}`}>
+              <Image
+                src={userProfile.avatar}
+                alt="Perfil"
+                width={24}
+                height={24}
+                className="w-6 h-6 rounded-full object-cover"
+              />
+            </span>
+            {isExpanded && (
+              <span 
+                className={`font-medium text-gray-300 group-hover:text-[#8A8A8A] sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-1`}
+              >
+                Perfil
+              </span>
+            )}
+          </Link>
+          
+          <button 
+            onClick={handleSignOut}
+            className="group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
+            title={!isExpanded ? "Salir" : undefined}
+          >
+            <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-gray-400 group-hover:text-[#8A8A8A] ${isExpanded ? 'mr-3' : ''}`}>
+              <LogOut size={20} />
+            </span>
+            {isExpanded && (
+              <span 
+                className={`font-medium text-gray-300 group-hover:text-[#8A8A8A] sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-2`}
+              >
+                Salir
+              </span>
+            )}
+          </button>
+        </div>
       </div>
-    </div>
+    </aside>
   );
 }

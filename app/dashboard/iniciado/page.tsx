@@ -594,7 +594,7 @@ export default function IniciadoDashboard() {
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [activeTab]); // Dependencia de activeTab para recrear cuando cambie
+  }, [activeTab, carouselRef]); // Dependencias para recrear cuando cambien
 
 // Objetivos a lograr
   const objectives: Objective[] = [

@@ -3,23 +3,22 @@
 import { useEffect, useState } from 'react';
 import { useSafeAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import MaestroSidebar from '@/components/layout/MaestroSidebarLucide';
+import MaestroSidebar from '@/components/layout/MaestroSidebar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { MaestroSidebarProvider, useMaestroSidebar } from '@/components/layout/MaestroSidebarContext';
 
 // Lista de emails autorizados para acceder a la dashboard de Maestro
 const MAESTRO_AUTHORIZED_EMAILS = [
   'infocriptoforce@gmail.com',
-  'coeurdeluke.js@gmail.com',
-  // Agregar temporalmente otros emails para testing
-  'test@example.com',
-  'admin@test.com'
+  'coeurdeluke.js@gmail.com'
 ];
 
-export default function MaestroLayout({
+function MaestroLayoutContent({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { isExpanded } = useMaestroSidebar();
   const { userData, isReady } = useSafeAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -44,55 +43,14 @@ export default function MaestroLayout({
         console.log('🔍 MAESTRO LAYOUT: Email procesado:', userEmail);
         console.log('✅ MAESTRO LAYOUT: ¿Autorizado por lista?:', clientAuthorized);
 
-        // TEMPORALMENTE: Permitir acceso a cualquier usuario autenticado para debug
-        const debugAccess = true;
-        console.log('🔧 MAESTRO LAYOUT: Modo debug activado - permitiendo acceso');
-
-        if (!clientAuthorized && !debugAccess) {
+        if (!clientAuthorized) {
           console.log('🚫 MAESTRO LAYOUT: Acceso denegado - Email no autorizado para maestro');
           router.replace('/dashboard/iniciado');
           return;
         }
 
-        console.log('🎯 MAESTRO LAYOUT: Email autorizado, procediendo con verificación de servidor...');
-
-        // Para debug inmediato, usar solo validación por email
-        console.log('✅ MAESTRO LAYOUT: Acceso autorizado por email - saltando verificación de servidor');
+        console.log('✅ MAESTRO LAYOUT: Acceso autorizado por email');
         setIsAuthorized(true);
-        
-        // Verificación adicional del lado del servidor (comentada temporalmente para debug)
-        /*
-        try {
-          const response = await fetch('/api/permissions/maestro', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-
-          if (!response.ok) {
-            console.log('🚫 Error en verificación del servidor');
-            setIsAuthorized(true); // Permitir acceso si API falla
-            return;
-          }
-
-          const data = await response.json();
-          
-          if (!data.authorized) {
-            console.log('🚫 Acceso denegado por el servidor');
-            router.replace('/dashboard/iniciado');
-            return;
-          }
-
-          console.log('✅ Acceso autorizado como maestro');
-          setIsAuthorized(true);
-        } catch (error) {
-          console.error('Error verificando permisos:', error);
-          // En caso de error de la API, permitir acceso si el email está autorizado
-          console.log('⚠️ Error de API, usando validación por email');
-          setIsAuthorized(true);
-        }
-        */
 
         setIsLoading(false);
       }
@@ -124,12 +82,28 @@ export default function MaestroLayout({
     <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f]">
       <MaestroSidebar />
       
-      {/* Main Content Area */}
-      <div className="ml-72 transition-all duration-300">
-        <main className="min-h-screen">
+      {/* Main Content Area - Responsivo basado en estado de sidebar */}
+      <div className={`transition-all duration-300 ${
+        isExpanded ? 'ml-72' : 'ml-20'
+      }`}>
+        <main className="min-h-screen p-4 md:p-6 lg:p-8">
           {children}
         </main>
       </div>
     </div>
+  );
+}
+
+export default function MaestroLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <MaestroSidebarProvider>
+      <MaestroLayoutContent>
+        {children}
+      </MaestroLayoutContent>
+    </MaestroSidebarProvider>
   );
 }
