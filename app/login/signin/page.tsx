@@ -111,7 +111,7 @@ export default function SignInPage() {
       const result = await response.json();
 
       if (!response.ok || !result.success) {
-        setError(result.error || 'Email o contraseña incorrectos');
+        setErrors({ general: result.error || 'Email o contraseña incorrectos' });
         return;
       }
 
