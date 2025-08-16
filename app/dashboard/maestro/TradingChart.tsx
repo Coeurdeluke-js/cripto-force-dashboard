@@ -197,14 +197,10 @@ const TradingChart: React.FC<TradingChartProps> = ({
           pinch: true,
         },
         // Habilitar interacción completa
-        scrollPosition: 0,
         kineticScroll: {
           touch: true,
           mouse: false,
         },
-        leftPriceScale: {
-          visible: false,
-      },
     });
 
       // Agregar serie de velas con mejores colores
