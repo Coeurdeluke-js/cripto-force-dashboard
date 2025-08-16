@@ -103,7 +103,7 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
       try {
         await navigator.share({
           title: '¡Únete a Crypto Force!',
-          text: `¡Descubre el poder de la educación financiera en Crypto Force usando mi código: ${stats.referralCode}!`,
+          text: `¡Descubre el poder de la educación financiera en Crypto Force usando mi código: ${codeToUse}!`,
           url: referralLink
         });
       } catch (err) {

@@ -110,12 +110,9 @@ export default function SignInPage() {
 
       const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(result.error || 'Error en el inicio de sesión');
-      }
-
-      if (!result.success) {
-        throw new Error(result.error || 'Credenciales inválidas');
+      if (!response.ok || !result.success) {
+        setError(result.error || 'Email o contraseña incorrectos');
+        return;
       }
 
       // Si la autenticación es exitosa, obtener datos del usuario
@@ -130,8 +127,8 @@ export default function SignInPage() {
       router.push('/login/dashboard-selection');
     } catch (error) {
       console.error('Error en el login:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Error al iniciar sesión. Inténtalo de nuevo.';
-      setErrors({ general: errorMessage });
+      // Mostrar mensaje limpio al usuario (sin stack trace)
+      setErrors({ general: 'Error al iniciar sesión. Verifica tus credenciales e inténtalo de nuevo.' });
       
       // Incrementar contador de intentos fallidos
       const newAttemptCount = attemptCount + 1;
