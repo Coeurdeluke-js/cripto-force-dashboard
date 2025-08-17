@@ -1,44 +1,36 @@
-// Script de test rápido para variables de entorno
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+// Test environment configuration
+console.log('=== Environment Configuration Test ===');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Leer archivo .env.local manualmente
-try {
-  const envPath = join(__dirname, '.env.local');
-  const envContent = readFileSync(envPath, 'utf8');
+// Check if we're in browser or server
+if (typeof window !== 'undefined') {
+  console.log('Running in browser environment');
   
-  // Parsear variables de entorno
-  const envVars = {};
-  envContent.split('\n').forEach(line => {
-    const [key, ...valueParts] = line.split('=');
-    if (key && valueParts.length > 0) {
-      envVars[key.trim()] = valueParts.join('=').trim();
+  // Check environment variables
+  console.log('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+  console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY length:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.length);
+  
+  // Check if Supabase client can be created
+  try {
+    const { createClient } = require('@supabase/supabase-js');
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    if (supabaseUrl && supabaseAnonKey) {
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+      console.log('✅ Supabase client created successfully');
+      
+      // Test auth methods
+      console.log('Supabase auth methods available:', Object.keys(supabase.auth));
+    } else {
+      console.error('❌ Missing Supabase environment variables');
+      console.log('supabaseUrl:', supabaseUrl);
+      console.log('supabaseAnonKey length:', supabaseAnonKey?.length);
     }
-  });
-  
-  console.log('🔍 TEST RÁPIDO - Variables de entorno:');
-  console.log('================================================');
-  console.log('NEXT_PUBLIC_SUPABASE_URL:', envVars.NEXT_PUBLIC_SUPABASE_URL || '❌ NO DISPONIBLE');
-  console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY:', envVars.NEXT_PUBLIC_SUPABASE_ANON_KEY || '❌ NO DISPONIBLE');
-  console.log('SUPABASE_SERVICE_ROLE_KEY:', envVars.SUPABASE_SERVICE_ROLE_KEY || '❌ NO DISPONIBLE');
-  console.log('================================================');
-  
-  // Verificar si las variables están definidas
-  const required = ['NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'];
-  const missing = required.filter(key => !envVars[key]);
-  
-  if (missing.length > 0) {
-    console.log('❌ Variables faltantes:', missing);
-    process.exit(1);
-  } else {
-    console.log('✅ Todas las variables requeridas están disponibles');
+  } catch (error) {
+    console.error('❌ Error creating Supabase client:', error);
   }
-  
-} catch (error) {
-  console.error('❌ Error al leer .env.local:', error.message);
-  process.exit(1);
+} else {
+  console.log('Running in server environment');
 }
+
+console.log('=== End Environment Test ===');

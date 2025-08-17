@@ -38,7 +38,7 @@ export default function TradingChartsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white p-6">
+    <div className="min-h-screen bg-[#121212] text-white p-6 mobile-container">
       <div className="mb-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-[#8A8A8A] mb-2">
@@ -50,15 +50,15 @@ export default function TradingChartsPage() {
         </div>
 
         {/* Controles del gráfico */}
-        <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6 mb-6">
-          <div className="flex flex-wrap items-center gap-6">
+        <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-4 md:p-6 mb-6">
+          <div className="flex flex-col md:flex-row md:flex-wrap items-start md:items-center gap-4 md:gap-6">
             {/* Selector de criptomoneda */}
-            <div>
+            <div className="w-full md:w-auto">
               <label className="text-sm text-gray-400 block mb-2">Criptomoneda</label>
               <select
                 value={selectedSymbol}
                 onChange={(e) => setSelectedSymbol(e.target.value)}
-                className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                className="w-full md:w-auto bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
               >
                 {topCryptos.map((crypto) => (
                   <option key={crypto.symbol} value={crypto.symbol}>
@@ -69,9 +69,9 @@ export default function TradingChartsPage() {
             </div>
 
             {/* Selector de timeframe */}
-            <div>
+            <div className="w-full md:w-auto">
               <label className="text-sm text-gray-400 block mb-2">Timeframe</label>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {timeframes.map((tf) => (
                   <button
                     key={tf.value}
@@ -89,11 +89,11 @@ export default function TradingChartsPage() {
             </div>
 
             {/* Información del precio */}
-            <div className="ml-auto">
+            <div className="w-full md:w-auto md:ml-auto">
               {(() => {
                 const crypto = topCryptos.find(c => c.symbol === selectedSymbol);
                 return crypto ? (
-                  <div className="text-right">
+                  <div className="text-left md:text-right">
                     <div className="text-sm text-[#8A8A8A] mb-1">{crypto.price}</div>
                     <div className="text-xs text-gray-500">
                       {crypto.change}

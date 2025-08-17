@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useSafeAuth } from '@/context/AuthContext';
+import { useRememberMe } from '@/hooks/useRememberMe';
 
 interface FormData {
   email: string;
@@ -28,6 +29,15 @@ interface FormErrors {
 export default function SignInPage() {
   const router = useRouter();
   const { setUserData, isReady } = useSafeAuth();
+  const { 
+    rememberMe, 
+    hasSavedCredentials, 
+    saveCredentials, 
+    clearSavedCredentials, 
+    getSavedCredentials, 
+    updateRememberMe 
+  } = useRememberMe();
+  
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -39,6 +49,17 @@ export default function SignInPage() {
   const [attemptCount, setAttemptCount] = useState(0);
   const [isBlocked, setIsBlocked] = useState(false);
 
+  // Cargar credenciales guardadas al montar el componente
+  useEffect(() => {
+    const savedCredentials = getSavedCredentials();
+    if (savedCredentials) {
+      setFormData({
+        email: savedCredentials.email,
+        password: savedCredentials.password
+      });
+    }
+  }, [getSavedCredentials]);
+
   // Mostrar loading mientras no esté listo
   if (!isReady) {
     return (
@@ -47,6 +68,62 @@ export default function SignInPage() {
       </div>
     );
   }
+
+  // Función para manejar cambios en "Recordarme"
+  const handleRememberMeChange = (checked: boolean) => {
+    updateRememberMe(checked);
+    
+    // Si se desmarca "Recordarme", limpiar credenciales guardadas
+    if (!checked) {
+      clearSavedCredentials();
+      console.log('Casilla "Recordarme" desmarcada - credenciales eliminadas');
+    }
+  };
+
+  // Función para limpiar credenciales guardadas manualmente
+  const handleClearCredentials = () => {
+    clearSavedCredentials();
+    setFormData({ email: '', password: '' });
+    console.log('Credenciales guardadas limpiadas manualmente');
+  };
+
+  // Función para manejar login con Google
+  const handleGoogleLogin = async () => {
+    try {
+      setIsSubmitting(true);
+      console.log('Iniciando sesión con Google...');
+      
+      // Aquí iría la implementación real de Google OAuth
+      // Por ahora solo simulamos el proceso
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      console.log('Redirigiendo a Google OAuth...');
+      // En implementación real: window.location.href = googleOAuthUrl;
+      
+    } catch (error) {
+      setErrors({ general: 'Error al conectar con Google. Intenta de nuevo.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Función para manejar login con Twitter
+  const handleTwitterLogin = async () => {
+    try {
+      setIsSubmitting(true);
+      console.log('Iniciando sesión con Twitter...');
+      
+      // Implementación futura de Twitter OAuth
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      console.log('Funcionalidad de Twitter en desarrollo...');
+      
+    } catch (error) {
+      setErrors({ general: 'Funcionalidad de Twitter no disponible aún.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({
@@ -115,6 +192,17 @@ export default function SignInPage() {
         return;
       }
 
+      // Si la autenticación es exitosa, manejar "Recordarme"
+      if (rememberMe) {
+        // Guardar credenciales en localStorage
+        saveCredentials(formData.email, formData.password, true);
+        console.log('Credenciales guardadas para recordar');
+      } else {
+        // Limpiar credenciales guardadas si no se marca "Recordarme"
+        clearSavedCredentials();
+        console.log('Credenciales guardadas eliminadas');
+      }
+
       // Si la autenticación es exitosa, obtener datos del usuario
       const userData = result.userData;
       
@@ -153,13 +241,13 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f] flex items-center justify-center p-4">
-      {/* Fondo con triángulos */}
+      {/* Fondo con elementos sutiles */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-5">
-          <div className="absolute top-20 left-20 w-32 h-32 border border-white/10 transform rotate-45"></div>
-          <div className="absolute top-40 right-20 w-24 h-24 border border-white/10 transform -rotate-45"></div>
-          <div className="absolute bottom-20 left-1/4 w-40 h-40 border border-white/10 transform rotate-12"></div>
-          <div className="absolute bottom-40 right-1/4 w-28 h-28 border border-white/10 transform -rotate-12"></div>
+        <div className="absolute top-0 left-0 w-full h-full opacity-3">
+          <div className="absolute top-20 left-20 w-32 h-32 border border-[#2a2a2a] transform rotate-45"></div>
+          <div className="absolute top-40 right-20 w-24 h-24 border border-[#2a2a2a] transform -rotate-45"></div>
+          <div className="absolute bottom-20 left-1/4 w-40 h-40 border border-[#2a2a2a] transform rotate-12"></div>
+          <div className="absolute bottom-40 right-1/4 w-28 h-28 border border-[#2a2a2a] transform -rotate-12"></div>
         </div>
       </div>
 
@@ -168,26 +256,26 @@ export default function SignInPage() {
         <div className="text-center mb-8">
           <Link 
             href="/" 
-            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-[#8a8a8a] hover:text-[#a0a0a0] transition-colors mb-4"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={18} />
             Volver al inicio
           </Link>
           
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-3xl font-semibold text-white mb-2">
             Bienvenido de vuelta
           </h1>
-          <p className="text-white/70 text-lg">
-            Inicia sesión en tu cuenta de <span className="text-[#EC4D58]">Crypto Force</span>
+          <p className="text-[#8a8a8a] text-base">
+            Inicia sesión en tu cuenta de <span className="text-[#a0a0a0] font-medium">Crypto Force</span>
           </p>
         </div>
 
         {/* Formulario */}
-        <div className="bg-[#1e2028]/80 backdrop-blur-sm rounded-2xl p-8 border border-white/10 shadow-2xl">
+        <div className="bg-[#1e1e1e]/90 backdrop-blur-sm rounded-xl p-8 border border-[#2a2a2a] shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-white/80 mb-2">
+              <label className="block text-sm font-medium text-[#a0a0a0] mb-2">
                 Email
               </label>
               <div className="relative">
@@ -195,17 +283,17 @@ export default function SignInPage() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className={`w-full px-4 py-3 bg-[#2a2d36] border rounded-lg focus:outline-none focus:ring-2 transition-all pl-12 ${
+                  className={`w-full px-4 py-3 bg-[#2a2a2a] border rounded-lg focus:outline-none focus:ring-2 transition-all pl-12 ${
                     errors.email 
-                      ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-white/20 focus:ring-[#FFD447] focus:border-[#FFD447]'
+                      ? 'border-[#ec4d58] focus:ring-[#ec4d58]/50' 
+                      : 'border-[#3a3a3a] focus:ring-[#4a4a4a] focus:border-[#4a4a4a]'
                   }`}
                   placeholder="tu@email.com"
                 />
-                <Mail size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40" />
+                <Mail size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6a6a6a]" />
               </div>
               {errors.email && (
-                <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
+                <p className="text-[#ec4d58] text-sm mt-1 flex items-center gap-1">
                   <AlertCircle size={14} />
                   {errors.email}
                 </p>
@@ -214,7 +302,7 @@ export default function SignInPage() {
 
             {/* Contraseña */}
             <div>
-              <label className="block text-sm font-medium text-white/80 mb-2">
+              <label className="block text-sm font-medium text-[#a0a0a0] mb-2">
                 Contraseña
               </label>
               <div className="relative">
@@ -222,24 +310,24 @@ export default function SignInPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className={`w-full px-4 py-3 bg-[#2a2d36] border rounded-lg focus:outline-none focus:ring-2 transition-all pl-12 pr-12 ${
+                  className={`w-full px-4 py-3 bg-[#2a2a2a] border rounded-lg focus:outline-none focus:ring-2 transition-all pl-12 pr-12 ${
                     errors.password 
-                      ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-white/20 focus:ring-[#FFD447] focus:border-[#FFD447]'
+                      ? 'border-[#ec4d58] focus:ring-[#ec4d58]/50' 
+                      : 'border-[#3a3a3a] focus:ring-[#4a4a4a] focus:border-[#4a4a4a]'
                   }`}
                   placeholder="Tu contraseña"
                 />
-                <Lock size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40" />
+                <Lock size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6a6a6a]" />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#6a6a6a] hover:text-[#8a8a8a] transition-colors"
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
+                <p className="text-[#ec4d58] text-sm mt-1 flex items-center gap-1">
                   <AlertCircle size={14} />
                   {errors.password}
                 </p>
@@ -248,7 +336,7 @@ export default function SignInPage() {
 
             {/* Mensaje de error general */}
             {errors.general && (
-              <div className="p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-sm flex items-center gap-2">
+              <div className="p-3 rounded-lg bg-[#ec4d58]/10 border border-[#ec4d58]/20 text-[#ec4d58] text-sm flex items-center gap-2">
                 <AlertCircle size={16} />
                 {errors.general}
               </div>
@@ -256,59 +344,114 @@ export default function SignInPage() {
 
             {/* Opciones adicionales */}
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm text-white/70">
-                <input type="checkbox" className="rounded border-white/20 bg-[#2a2d36] text-[#EC4D58] focus:ring-[#EC4D58]" />
-                Recordarme
-              </label>
-              <Link href="/login/forgot-password" className="text-sm text-[#EC4D58] hover:text-[#D43F4A] transition-colors">
+              <div className="flex items-center gap-3">
+                <label className="flex items-center gap-2 text-sm text-[#8a8a8a]">
+                  <input 
+                    type="checkbox" 
+                    checked={rememberMe} 
+                    onChange={(e) => handleRememberMeChange(e.target.checked)} 
+                    className="rounded border-[#3a3a3a] bg-[#2a2a2a] text-[#4a4a4a] focus:ring-[#4a4a4a] focus:ring-offset-2 focus:ring-offset-[#1e1e1e]" 
+                  />
+                  <span>Recordarme</span>
+                </label>
+                
+                {/* Estado de credenciales guardadas - CORREGIDO: Una sola línea */}
+                {hasSavedCredentials && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-md border border-emerald-500/20 flex items-center gap-1">
+                      <span>✓</span>
+                      <span>Guardado</span>
+                    </span>
+                    {rememberMe && (
+                      <button
+                        type="button"
+                        onClick={handleClearCredentials}
+                        className="text-xs text-[#6a6a6a] hover:text-[#8a8a8a] transition-colors px-2 py-1 rounded-md hover:bg-[#3a3a3a]"
+                        title="Limpiar credenciales guardadas"
+                      >
+                        Limpiar
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+              
+              <Link 
+                href="/login/forgot-password" 
+                className="text-sm text-[#6a6a6a] hover:text-[#8a8a8a] transition-colors"
+              >
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
+
+            {/* Información sobre "Recordarme" */}
+            {rememberMe && (
+              <div className="p-3 bg-[#2a2a2a]/50 border border-[#3a3a3a] rounded-lg">
+                <p className="text-[#8a8a8a] text-xs leading-relaxed">
+                  <span className="font-medium text-[#a0a0a0]">Recordarme activado:</span> Tus credenciales se guardarán en este dispositivo para futuros inicios de sesión.
+                  {hasSavedCredentials && (
+                    <span className="block mt-1 text-emerald-400">
+                      ✓ Credenciales actualmente guardadas en este dispositivo.
+                    </span>
+                  )}
+                </p>
+              </div>
+            )}
+
+            {/* Advertencia de seguridad */}
+            {hasSavedCredentials && (
+              <div className="p-3 bg-[#2a2a2a]/50 border border-[#3a3a3a] rounded-lg">
+                <p className="text-[#8a8a8a] text-xs leading-relaxed">
+                  <span className="font-medium text-[#a0a0a0]">Seguridad:</span> Las credenciales están guardadas en este dispositivo. 
+                  Solo usa esta función en dispositivos personales y seguros.
+                </p>
+              </div>
+            )}
 
             {/* Botón de envío */}
             <div className="pt-4">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-300 ${
+                className={`w-full py-3 px-6 rounded-lg font-medium text-base transition-all duration-200 ${
                   isSubmitting
-                    ? 'bg-gray-600 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-[#EC4D58] to-[#D43F4A] hover:from-[#D43F4A] hover:to-[#EC4D58] text-white hover:shadow-lg hover:shadow-[#EC4D58]/25'
+                    ? 'bg-[#3a3a3a] cursor-not-allowed text-[#6a6a6a]'
+                  : 'bg-[#4a4a4a] hover:bg-[#5a5a5a] text-white shadow-sm hover:shadow-md'
                 }`}
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-[#EC4D58] border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-[#6a6a6a] border-t-transparent rounded-full animate-spin"></div>
                     Iniciando sesión...
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-2">
-                    <LogIn size={20} />
+                    <LogIn size={18} />
                     Iniciar Sesión
                   </div>
                 )}
               </button>
             </div>
-            
-
 
             {/* Enlaces adicionales */}
             <div className="text-center space-y-4">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/20"></div>
+                  <div className="w-full border-t border-[#3a3a3a]"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-[#1e2028] text-white/60">O continúa con</span>
+                  <span className="px-2 bg-[#1e1e1e] text-[#6a6a6a]">O continúa con</span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  className="flex items-center justify-center gap-2 py-3 px-4 bg-[#2a2d36] border border-white/20 rounded-lg hover:bg-[#3a3d46] transition-colors"
+                  onClick={handleGoogleLogin}
+                  disabled={isSubmitting}
+                  className="flex items-center justify-center gap-2 py-2.5 px-4 bg-[#2a2a2a]/50 border border-[#3a3a3a] rounded-lg hover:bg-[#3a3a3a]/70 transition-colors text-[#8a8a8a] hover:text-[#a0a0a0] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                     <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -318,9 +461,11 @@ export default function SignInPage() {
                 </button>
                 <button
                   type="button"
-                  className="flex items-center justify-center gap-2 py-3 px-4 bg-[#2a2d36] border border-white/20 rounded-lg hover:bg-[#3a3d46] transition-colors"
+                  onClick={handleTwitterLogin}
+                  disabled={isSubmitting}
+                  className="flex items-center justify-center gap-2 py-2.5 px-4 bg-[#2a2a2a]/50 border border-[#3a3a3a] rounded-lg hover:bg-[#3a3a3a]/70 transition-colors text-[#8a8a8a] hover:text-[#a0a0a0] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
                   </svg>
                   Twitter
@@ -330,9 +475,9 @@ export default function SignInPage() {
 
             {/* Enlace de registro */}
             <div className="text-center pt-4">
-              <p className="text-white/70">
+              <p className="text-[#6a6a6a]">
                 ¿No tienes una cuenta?{' '}
-                <Link href="/login" className="text-[#EC4D58] hover:text-[#D43F4A] transition-colors font-medium">
+                <Link href="/login" className="text-[#8a8a8a] hover:text-[#a0a0a0] transition-colors font-medium">
                   Regístrate aquí
                 </Link>
               </p>

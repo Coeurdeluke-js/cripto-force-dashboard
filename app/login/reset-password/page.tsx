@@ -30,8 +30,6 @@ function ResetPasswordContent() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [refreshToken, setRefreshToken] = useState<string | null>(null);
   
   const [formData, setFormData] = useState<FormData>({
     password: '',
@@ -41,18 +39,14 @@ function ResetPasswordContent() {
   const [errors, setErrors] = useState<FormErrors>({});
 
   useEffect(() => {
-    // Extraer tokens del URL hash o query params
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const queryParams = searchParams;
+    // Extraer el código de reset del URL
+    const resetCode = searchParams.get('code');
     
-    const access_token = hashParams.get('access_token') || queryParams.get('access_token');
-    const refresh_token = hashParams.get('refresh_token') || queryParams.get('refresh_token');
+    console.log('🔐 Reset Password Code:', resetCode ? 'Presente' : 'No encontrado');
     
-    console.log('🔐 Reset Password Tokens:', { access_token: !!access_token, refresh_token: !!refresh_token });
-    
-    if (access_token && refresh_token) {
-      setAccessToken(access_token);
-      setRefreshToken(refresh_token);
+    if (resetCode) {
+      // El código está presente, proceder con la validación
+      console.log('🔐 Código de reset encontrado, procediendo con validación...');
     } else {
       setErrors({ general: 'Enlace de reset inválido o expirado. Solicita un nuevo enlace.' });
     }
@@ -99,7 +93,8 @@ function ResetPasswordContent() {
       return;
     }
 
-    if (!accessToken) {
+    const resetCode = searchParams.get('code');
+    if (!resetCode) {
       setErrors({ general: 'Enlace de reset inválido. Solicita un nuevo enlace.' });
       return;
     }
@@ -109,17 +104,17 @@ function ResetPasswordContent() {
     try {
       const supabase = createClient();
       
-      // Set the session using the tokens from the URL
-      const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken || ''
+      // Usar el código de reset para cambiar la contraseña
+      const { data, error } = await supabase.auth.verifyOtp({
+        token_hash: resetCode,
+        type: 'recovery'
       });
       
-      if (sessionError) {
-        throw new Error('Enlace de reset inválido o expirado');
+      if (error) {
+        throw new Error('Código de reset inválido o expirado');
       }
       
-      // Update the password
+      // Ahora actualizar la contraseña
       const { data: updateData, error: updateError } = await supabase.auth.updateUser({
         password: formData.password
       });
@@ -297,9 +292,9 @@ function ResetPasswordContent() {
             <div className="pt-4">
               <button
                 type="submit"
-                disabled={isSubmitting || !accessToken}
+                disabled={isSubmitting}
                 className={`w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-300 ${
-                  isSubmitting || !accessToken
+                  isSubmitting
                     ? 'bg-gray-600 cursor-not-allowed'
                     : 'bg-gradient-to-r from-[#ec4d58] to-[#d93c47] hover:from-[#d93c47] hover:to-[#ec4d58] text-white hover:shadow-lg hover:shadow-[#ec4d58]/25'
                 }`}

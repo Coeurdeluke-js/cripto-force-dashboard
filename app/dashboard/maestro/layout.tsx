@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSafeAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import MaestroSidebar from '@/components/layout/MaestroSidebar';
+import MaestroDownbar from '@/components/layout/MaestroDownbar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { MaestroSidebarProvider, useMaestroSidebar } from '@/components/layout/MaestroSidebarContext';
 
@@ -79,17 +80,23 @@ function MaestroLayoutContent({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f]">
-      <MaestroSidebar />
+    <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f] mobile-container">
+      {/* Sidebar - Solo visible en desktop */}
+      <div className="hidden md:block">
+        <MaestroSidebar />
+      </div>
       
       {/* Main Content Area - Responsivo basado en estado de sidebar */}
       <div className={`transition-all duration-300 ${
-        isExpanded ? 'ml-72' : 'ml-20'
+        isExpanded ? 'md:ml-72' : 'md:ml-20'
       }`}>
-        <main className="min-h-screen p-4 md:p-6 lg:p-8">
+        <main className="min-h-screen p-4 md:p-6 lg:p-8 pb-20 md:pb-6">
           {children}
         </main>
       </div>
+
+      {/* Downbar móvil - Solo visible en móvil */}
+      <MaestroDownbar />
     </div>
   );
 }
