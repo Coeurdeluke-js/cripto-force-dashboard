@@ -94,15 +94,31 @@ export async function POST(request: NextRequest) {
     console.log('API DIAGNOSE: Total users count:', totalUsers);
     console.log('API DIAGNOSE: Count error:', countError);
 
-    // Buscar posibles duplicados
-    const { data: possibleDuplicates, error: duplicatesError } = await supabase
+    // Buscar posibles duplicados usando una consulta más simple
+    const { data: allUsers, error: allUsersError } = await supabase
       .from('users')
-      .select('uid, email, COUNT(*)')
-      .group('uid, email')
-      .having('COUNT(*) > 1');
+      .select('uid, email');
+
+    let possibleDuplicates: any[] = [];
+    if (allUsers && !allUsersError) {
+      // Agrupar manualmente para encontrar duplicados
+      const userCounts: { [key: string]: number } = {};
+      allUsers.forEach(user => {
+        const key = `${user.uid}-${user.email}`;
+        userCounts[key] = (userCounts[key] || 0) + 1;
+      });
+      
+      // Encontrar duplicados
+      Object.entries(userCounts).forEach(([key, count]) => {
+        if (count > 1) {
+          const [uid, email] = key.split('-');
+          possibleDuplicates.push({ uid, email, count });
+        }
+      });
+    }
 
     console.log('API DIAGNOSE: Possible duplicates:', possibleDuplicates);
-    console.log('API DIAGNOSE: Duplicates error:', duplicatesError);
+    console.log('API DIAGNOSE: All users error:', allUsersError);
 
     // Preparar diagnóstico completo
     const diagnosis = {
