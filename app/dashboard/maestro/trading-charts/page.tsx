@@ -38,27 +38,27 @@ export default function TradingChartsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white p-6 mobile-container">
-      <div className="mb-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-[#8A8A8A] mb-2">
+    <div className="w-full max-w-none">
+      <div className="mb-6 sm:mb-8">
+        <div className="mb-4 sm:mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#8A8A8A] mb-2">
             Trading Charts
           </h1>
-          <p className="text-gray-400">
+          <p className="text-sm sm:text-base text-gray-400">
             Gráficos en tiempo real de las principales criptomonedas
           </p>
         </div>
 
-        {/* Controles del gráfico */}
-        <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-4 md:p-6 mb-6">
-          <div className="flex flex-col md:flex-row md:flex-wrap items-start md:items-center gap-4 md:gap-6">
+        {/* Controles del gráfico - Responsive */}
+        <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-3 sm:p-4 md:p-6 mb-4 sm:mb-6">
+          <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:flex-wrap md:items-center md:gap-6">
             {/* Selector de criptomoneda */}
             <div className="w-full md:w-auto">
               <label className="text-sm text-gray-400 block mb-2">Criptomoneda</label>
               <select
                 value={selectedSymbol}
                 onChange={(e) => setSelectedSymbol(e.target.value)}
-                className="w-full md:w-auto bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                className="w-full md:w-auto bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-3 sm:px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm sm:text-base"
               >
                 {topCryptos.map((crypto) => (
                   <option key={crypto.symbol} value={crypto.symbol}>
@@ -68,18 +68,18 @@ export default function TradingChartsPage() {
               </select>
             </div>
 
-            {/* Selector de timeframe */}
+            {/* Selector de timeframe - Responsive */}
             <div className="w-full md:w-auto">
               <label className="text-sm text-gray-400 block mb-2">Timeframe</label>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-1 sm:gap-2">
                 {timeframes.map((tf) => (
                   <button
                     key={tf.value}
                     onClick={() => setTimeframe(tf.value)}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                       timeframe === tf.value
                         ? 'bg-[#8A8A8A] text-white'
-                        : 'bg-[#2a2a2a] text-gray-400 hover:text-white'
+                        : 'bg-[#2a2a2a] text-gray-400 hover:text-white hover:bg-[#3a3a3a]'
                     }`}
                   >
                     {tf.label}
@@ -88,7 +88,7 @@ export default function TradingChartsPage() {
               </div>
             </div>
 
-            {/* Información del precio */}
+            {/* Información del precio - Responsive */}
             <div className="w-full md:w-auto md:ml-auto">
               {(() => {
                 const crypto = topCryptos.find(c => c.symbol === selectedSymbol);
@@ -106,10 +106,10 @@ export default function TradingChartsPage() {
         </div>
       </div>
 
-      {/* Gráfico principal */}
-      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-semibold text-white">
+      {/* Gráfico principal - Responsive */}
+      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-3 sm:p-4 md:p-6 mb-4 sm:mb-6">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <h3 className="text-lg sm:text-xl font-semibold text-white">
             {selectedSymbol} - {timeframe}
           </h3>
         </div>

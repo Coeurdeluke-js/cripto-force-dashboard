@@ -22,7 +22,7 @@ export default function MaestroDashboardPage() {
     totalModules: 19,
     theoreticalModules: 8,
     practicalModules: 11,
-    totalCheckpoints: 9,
+    totalCheckpoints: 10,
     systemUptime: '99.8%',
     lastBackup: new Date().toLocaleDateString('es-ES'),
     activeSessions: 0,
@@ -133,144 +133,112 @@ export default function MaestroDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white p-6">
+    <div className="w-full max-w-none">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-[#8A8A8A] mb-2">
-          Panel General del Sistema
+        <h1 className="text-3xl md:text-4xl font-bold text-[#8A8A8A] mb-4">
+          Dashboard Maestro
         </h1>
         <p className="text-gray-400 text-lg">
-          Resumen ejecutivo y estado general de la plataforma
+          Panel de control y gestión del sistema CryptoForce
         </p>
       </div>
 
-      {/* Quick Stats - Diferentes a Analytics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {quickStats.map((stat, index) => {
-          const IconComponent = stat.icon;
-          return (
-            <Link 
-              key={index} 
-              href={stat.href}
-              className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl p-6 border border-[#3a3a3a] hover:border-[#8A8A8A] transition-all duration-300 hover:scale-105 cursor-pointer"
-            >
+      {/* Estadísticas rápidas */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+        {quickStats.map((stat, index) => (
+          <Link
+            key={index}
+            href={stat.href}
+            className="group block"
+          >
+            <div className={`p-6 rounded-xl border border-[#3a3a3a] bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] hover:from-[#2a2a2a] hover:to-[#3a3a3a] transition-all duration-300 hover:scale-105 hover:shadow-lg`}>
               <div className="flex items-center justify-between mb-4">
-                <div className={`p-3 ${stat.bgColor} rounded-lg`}>
-                  <IconComponent className={`w-6 h-6 ${stat.color}`} />
+                <div className={`p-3 rounded-lg ${stat.bgColor}`}>
+                  <stat.icon className={`w-6 h-6 ${stat.color}`} />
                 </div>
-                <TrendingUp className="w-5 h-5 text-green-400" />
+                <div className="text-right">
+                  <div className="text-2xl md:text-3xl font-bold text-white">
+                    {stat.value}
+                  </div>
+                </div>
               </div>
-              <div className="space-y-1">
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
-                <p className="text-sm text-gray-400">{stat.title}</p>
-              </div>
-            </Link>
-          );
-        })}
+              <h3 className="text-white font-medium text-sm md:text-base">
+                {stat.title}
+              </h3>
+            </div>
+          </Link>
+        ))}
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {quickActions.map((action, index) => {
-          const IconComponent = action.icon;
-          return (
-            <Link 
-              key={index} 
-              href={action.href}
-              className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl p-6 border border-[#3a3a3a] hover:border-[#8A8A8A] transition-all duration-300 hover:scale-105 cursor-pointer"
-            >
+      {/* Acciones rápidas */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
+        {quickActions.map((action, index) => (
+          <Link
+            key={index}
+            href={action.href}
+            className="group block"
+          >
+            <div className={`p-6 rounded-xl border border-[#3a3a3a] bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] hover:from-[#2a2a2a] hover:to-[#3a3a3a] transition-all duration-300 hover:scale-105 hover:shadow-lg`}>
               <div className="flex items-center gap-4">
-                <div className={`p-4 ${action.bgColor} rounded-lg`}>
-                  <IconComponent className={`w-8 h-8 ${action.color}`} />
+                <div className={`p-3 rounded-lg ${action.bgColor}`}>
+                  <action.icon className={`w-6 h-6 ${action.color}`} />
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-white mb-2">
+                <div>
+                  <h3 className="text-white font-medium text-lg mb-2">
                     {action.title}
                   </h3>
-                  <p className="text-gray-400">
+                  <p className="text-gray-400 text-sm">
                     {action.description}
                   </p>
                 </div>
               </div>
-            </Link>
-          );
-        })}
+            </div>
+          </Link>
+        ))}
       </div>
 
-      {/* System Overview */}
+      {/* Información del sistema */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <Database className="w-6 h-6 text-[#8A8A8A]" />
-            <h3 className="text-xl font-semibold text-white">Contenido Educativo</h3>
-          </div>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-400">Módulos Teóricos:</span>
-              <span className="text-blue-400 font-medium">{systemStats.theoreticalModules}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-400">Módulos Prácticos:</span>
-              <span className="text-green-400 font-medium">{systemStats.practicalModules}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-400">Total Módulos:</span>
-              <span className="text-white font-medium">{systemStats.totalModules}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-400">Puntos de Control:</span>
-              <span className="text-purple-400 font-medium">{systemStats.totalCheckpoints}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <Clock className="w-6 h-6 text-[#8A8A8A]" />
-            <h3 className="text-xl font-semibold text-white">Estado del Sistema</h3>
-          </div>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-400">Uptime:</span>
+        <div className="p-6 rounded-xl border border-[#3a3a3a] bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a]">
+          <h3 className="text-white font-semibold text-lg mb-4 flex items-center gap-2">
+            <Database className="w-5 h-5 text-[#8A8A8A]" />
+            Estado del Sistema
+          </h3>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-400">Uptime del Sistema</span>
               <span className="text-green-400 font-medium">{systemStats.systemUptime}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-400">Último Backup:</span>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-400">Último Backup</span>
               <span className="text-white">{systemStats.lastBackup}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-400">Almacenamiento:</span>
-              <span className="text-blue-400 font-medium">{systemStats.totalStorage}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-400">Sesiones Activas:</span>
-              <span className="text-[#8A8A8A] font-medium">{systemStats.activeSessions}</span>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-400">Almacenamiento</span>
+              <span className="text-white">{systemStats.totalStorage}</span>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* System Status */}
-      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <CheckCircle className="w-6 h-6 text-green-400" />
-          <h3 className="text-xl font-semibold text-white">Estado General del Sistema</h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-            <span className="text-gray-400">Sistema:</span>
-            <span className="text-green-400 font-medium">Operativo</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-            <span className="text-gray-400">Base de Datos:</span>
-            <span className="text-green-400 font-medium">Conectada</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-            <span className="text-gray-400">API:</span>
-            <span className="text-green-400 font-medium">Funcionando</span>
+        <div className="p-6 rounded-xl border border-[#3a3a3a] bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a]">
+          <h3 className="text-white font-semibold text-lg mb-4 flex items-center gap-2">
+            <Activity className="w-5 h-5 text-[#8A8A8A]" />
+            Actividad Reciente
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+              <span className="text-gray-400 text-sm">Sistema operativo</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+              <span className="text-gray-400 text-sm">Base de datos sincronizada</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+              <span className="text-gray-400 text-sm">APIs funcionando correctamente</span>
+            </div>
           </div>
         </div>
       </div>

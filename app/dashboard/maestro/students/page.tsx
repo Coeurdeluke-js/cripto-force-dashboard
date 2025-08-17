@@ -67,6 +67,49 @@ export default function StudentsPage() {
   
   const { token, loading: tokenLoading, error: tokenError, refreshToken, createSessionFromCurrentUser, signOut } = useAuthToken();
 
+  // Funciones de manejo de acciones
+  const handleSendMagicLink = async () => {
+    try {
+      await createSessionFromCurrentUser();
+      setSuccess('Magic Link enviado correctamente');
+    } catch (error) {
+      setError('Error al enviar Magic Link');
+    }
+  };
+
+  const handleRefreshToken = async () => {
+    try {
+      await refreshToken();
+      setSuccess('Token refrescado correctamente');
+    } catch (error) {
+      setError('Error al refrescar token');
+    }
+  };
+
+  const handleDebugAuth = async () => {
+    try {
+      const response = await fetch('/api/maestro/debug-auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAuthDebugInfo(data.diagnosis);
+        setSuccess('Debug de autenticación completado');
+      } else {
+        setError('Error en debug de autenticación');
+      }
+    } catch (error) {
+      setError('Error al realizar debug de autenticación');
+    }
+  };
+
+
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -437,429 +480,219 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
   }
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white p-6 pb-24 md:pb-6 mobile-container">
-      <div className="mb-8">
+    <div className="w-full max-w-none">
+      {/* Header */}
+      <div className="mb-6">
         <h1 className="text-3xl font-bold text-[#8A8A8A] mb-2">
           Gestión de Estudiantes
         </h1>
         <p className="text-gray-400">
-          Administra usuarios del sistema con acceso completo de super admin
+          Administra y gestiona todos los usuarios del sistema
         </p>
       </div>
 
-      {/* Estado de Autenticación */}
-      <div className="mb-6 p-4 bg-[#1a1a1a] rounded-lg border border-[#3a3a3a]">
-        <h3 className="text-lg font-semibold text-[#8A8A8A] mb-3">Estado de Autenticación:</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-2">
-            <div className={`w-3 h-3 rounded-full ${token ? 'bg-green-500' : 'bg-red-500'}`}></div>
-            <span className={token ? 'text-green-400' : 'text-red-400'}>
-              {token ? 'Con Token' : 'Sin Token'}
-            </span>
-          </div>
-          <div className="text-sm text-gray-400">
-            Longitud del token: {token ? `${token.length} caracteres` : 'N/A'}
-          </div>
-          <div className="text-sm text-gray-400">
-            Estado: {loading ? 'Cargando...' : 'Listo'}
-          </div>
+      {/* Barra de acciones */}
+      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-4 mb-6">
+        <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+          <Users className="w-5 h-5 text-[#8A8A8A]" />
+          Acciones:
+        </h3>
+        <div className="flex flex-wrap gap-2 sm:gap-3">
+          <button
+            onClick={handleSendMagicLink}
+            className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+          >
+            <Phone className="w-4 h-4" />
+            Enviar Magic Link
+          </button>
+          <button
+            onClick={handleRefreshToken}
+            className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+          >
+            <UserCheck className="w-4 h-4" />
+            Refresh Token
+          </button>
+          <button
+            onClick={handleDebugUser}
+            className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+          >
+            <Eye className="w-4 h-4" />
+            Debug User
+          </button>
+          <button
+            onClick={handleCleanupDuplicates}
+            className="px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+          >
+            <Building className="w-4 h-4" />
+            Limpiar Duplicados
+          </button>
+          <button
+            onClick={handleCreateProfile}
+            className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+          >
+            <Save className="w-4 h-4" />
+            Crear Perfil
+          </button>
+          <button
+            onClick={handleDebugAuth}
+            className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+          >
+            <UserCheck className="w-4 h-4" />
+            Debug Auth
+          </button>
+          <button
+            onClick={() => handleDiagnoseUser('', '')}
+            className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+          >
+            <Eye className="w-4 h-4" />
+            Diagnóstico
+          </button>
         </div>
-        {error && (
-          <div className="mt-3 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
-            <div className="text-red-400 text-sm font-medium">Error de Autenticación:</div>
-            <div className="text-red-300 text-sm">{error}</div>
+      </div>
+
+      {/* Barra de búsqueda */}
+      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-4 mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input
+            type="text"
+            placeholder="Buscar por nombre, nickname o email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+          />
+        </div>
+      </div>
+
+      {/* Lista de usuarios */}
+      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-white font-semibold text-lg">
+            Usuarios ({filteredUsers.length})
+          </h3>
+        </div>
+
+        {loading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8A8A8A] mx-auto mb-4"></div>
+            <p className="text-gray-400">Cargando usuarios...</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-full">
+              <thead>
+                <tr className="border-b border-[#3a3a3a]">
+                  <th className="text-left py-3 px-4 text-gray-400 font-medium">USUARIO</th>
+                  <th className="text-left py-3 px-4 text-gray-400 font-medium">EMAIL</th>
+                  <th className="text-left py-3 px-4 text-gray-400 font-medium">NIVEL</th>
+                  <th className="text-left py-3 px-4 text-gray-400 font-medium">REFERIDOS</th>
+                  <th className="text-left py-3 px-4 text-gray-400 font-medium">ACCIONES</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.map((user) => (
+                  <tr key={user.id} className="border-b border-[#2a2a2a] hover:bg-[#2a2a2a]/50">
+                    <td className="py-3 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-[#3a3a3a] rounded-full flex items-center justify-center text-white font-semibold">
+                          {user.nombre?.charAt(0) || user.nickname?.charAt(0) || 'U'}
+                        </div>
+                        <div>
+                          <div className="text-white font-medium">
+                            {user.nombre} {user.apellido}
+                          </div>
+                          <div className="text-gray-400 text-sm">
+                            @{user.nickname}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-gray-300">{user.email}</td>
+                    <td className="py-3 px-4">
+                      <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        {user.user_level}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-gray-300">
+                      {user.total_referrals || 0}
+                    </td>
+                    <td className="py-3 px-4">
+                      <button
+                        onClick={() => handleViewUser(user)}
+                        className="p-2 text-gray-400 hover:text-white transition-colors"
+                        title="Ver detalles"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
 
       {/* Mensajes de estado */}
       {error && (
-        <div className="mb-6 p-4 bg-red-900/20 border border-red-500/50 rounded-lg text-red-400">
+        <div className="mt-6 p-4 bg-red-900/20 border border-red-500/50 rounded-lg text-red-400">
           {error}
         </div>
       )}
       
       {success && (
-        <div className="mb-6 p-4 bg-green-900/20 border border-green-500/50 rounded-lg text-green-400">
+        <div className="mt-6 p-4 bg-green-900/20 border border-green-500/50 rounded-lg text-green-400">
           {success}
         </div>
       )}
 
-      {/* Estado del token para debugging */}
-      <div className="mb-6 p-4 bg-[#1a1a1a] border border-[#3a3a3a] rounded-lg">
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-400">
-            Estado de Autenticación:
-          </div>
-          <div className="flex items-center gap-2">
-            <div className={`w-3 h-3 rounded-full ${token ? 'bg-green-500' : 'bg-red-500'}`}></div>
-            <span className="text-sm text-white">
-              {tokenLoading ? 'Cargando...' : token ? 'Token Disponible' : 'Sin Token'}
-            </span>
-          </div>
-        </div>
-        
-        {token && (
-          <div className="mt-2 text-xs text-gray-500">
-            Token: {token.substring(0, 20)}...{token.substring(token.length - 10)}
-          </div>
-        )}
-        
-        {tokenError && (
-          <div className="mt-2 p-2 bg-red-900/20 border border-red-500/30 rounded text-xs text-red-400">
-            <div className="flex items-center justify-between">
-              <span>Error: {tokenError}</span>
-              <div className="flex gap-2">
-                <button
-                  onClick={refreshToken}
-                  className="px-2 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors"
-                >
-                  Refresh
-                </button>
-                <button
-                  onClick={createSessionFromCurrentUser}
-                  className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors"
-                >
-                  Magic Link
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Opciones de autenticación */}
-        <div className="mt-3 pt-3 border-t border-[#3a3a3a]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-400">Acciones:</span>
-            <div className="flex gap-2">
-              {token ? (
-                <button
-                  onClick={signOut}
-                  className="px-3 py-1 bg-gray-600 text-white text-xs rounded hover:bg-gray-700 transition-colors"
-                >
-                  Cerrar Sesión
-                </button>
-              ) : (
-                <button
-                  onClick={createSessionFromCurrentUser}
-                  className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors"
-                >
-                  Enviar Magic Link
-                </button>
-              )}
-              <button
-                onClick={refreshToken}
-                className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors"
-              >
-                Refresh Token
-              </button>
-              <button
-                onClick={handleDebugUser}
-                className="px-3 py-1 bg-purple-600 text-white text-xs rounded hover:bg-purple-700 transition-colors"
-              >
-                Debug User
-              </button>
-              <button
-                onClick={handleCleanupDuplicates}
-                className="px-3 py-1 bg-orange-600 text-white text-xs rounded hover:bg-orange-700 transition-colors"
-              >
-                Limpiar Duplicados
-              </button>
-              <button
-                onClick={handleCreateProfile}
-                className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors"
-              >
-                Crear Perfil
-              </button>
-              <button
-                onClick={handleAuthDebug}
-                className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors"
-              >
-                Debug Auth
-              </button>
-              <button
-                onClick={() => handleDiagnoseUser('', '')}
-                className="px-3 py-1 bg-purple-600 text-white text-xs rounded hover:bg-purple-700 transition-colors"
-                title="Diagnosticar problemas generales del sistema"
-              >
-                Diagnóstico General
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Información de Debug */}
       {debugInfo && (
-        <div className="mb-6 p-4 bg-purple-900/20 border border-purple-500/30 rounded-lg">
+        <div className="mt-6 p-4 bg-purple-900/20 border border-purple-500/30 rounded-lg">
           <h4 className="text-sm font-medium text-purple-300 mb-3">Información de Debug del Usuario</h4>
           <div className="space-y-2 text-xs">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="text-purple-400">Auth User ID:</span>
-                <span className="text-white ml-2">{debugInfo.authUser.id}</span>
-              </div>
-              <div>
-                <span className="text-purple-400">Auth User Email:</span>
-                <span className="text-white ml-2">{debugInfo.authUser.email}</span>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="text-purple-400">Database User Level:</span>
-                <span className="text-white ml-2">{debugInfo.userLevel.value} ({debugInfo.userLevel.type})</span>
-              </div>
-              <div>
-                <span className="text-purple-400">Is Maestro:</span>
-                <span className={`ml-2 ${debugInfo.userLevel.isMaestro ? 'text-green-400' : 'text-red-400'}`}>
-                  {debugInfo.userLevel.isMaestro ? 'SÍ' : 'NO'}
-                </span>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="text-purple-400">Can Edit Users:</span>
-                <span className={`ml-2 ${debugInfo.permissions.canEditUsers ? 'text-green-400' : 'text-red-400'}`}>
-                  {debugInfo.permissions.canEditUsers ? 'SÍ' : 'NO'}
-                </span>
-              </div>
-              <div>
-                <span className="text-purple-400">Can Access Maestro Dashboard:</span>
-                <span className={`ml-2 ${debugInfo.permissions.canAccessMaestroDashboard ? 'text-green-400' : 'text-red-400'}`}>
-                  {debugInfo.permissions.canAccessMaestroDashboard ? 'SÍ' : 'NO'}
-                </span>
-              </div>
-            </div>
-            <div className="mt-3 p-2 bg-gray-800/50 rounded text-xs">
-              <span className="text-purple-400">Perfil Completo:</span>
-              <pre className="text-white mt-1 overflow-x-auto">
-                {JSON.stringify(debugInfo.databaseProfile, null, 2)}
-              </pre>
-            </div>
+            <pre className="text-white overflow-x-auto">
+              {JSON.stringify(debugInfo, null, 2)}
+            </pre>
           </div>
         </div>
       )}
 
       {/* Información de Limpieza */}
       {cleanupInfo && (
-        <div className="mb-6 p-4 bg-orange-900/20 border border-orange-500/30 rounded-lg">
+        <div className="mt-6 p-4 bg-orange-900/20 border border-orange-500/30 rounded-lg">
           <h4 className="text-sm font-medium text-orange-300 mb-3">Información de Limpieza de Duplicados</h4>
           <div className="space-y-2 text-xs">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="text-orange-400">Registros Eliminados:</span>
-                <span className="text-white ml-2">{cleanupInfo.deletedCount || 0}</span>
-              </div>
-              <div>
-                <span className="text-orange-400">Estado:</span>
-                <span className="text-green-400 ml-2">Completado</span>
-              </div>
-            </div>
-            {cleanupInfo.duplicates && cleanupInfo.duplicates.length > 0 && (
-              <div className="mt-3 p-2 bg-gray-800/50 rounded text-xs">
-                <span className="text-orange-400">Duplicados Encontrados:</span>
-                <pre className="text-white mt-1 overflow-x-auto">
-                  {JSON.stringify(cleanupInfo.duplicates, null, 2)}
-                </pre>
-              </div>
-            )}
+            <pre className="text-white overflow-x-auto">
+              {JSON.stringify(cleanupInfo, null, 2)}
+            </pre>
           </div>
         </div>
       )}
 
       {/* Información de Creación de Perfil */}
       {profileCreationInfo && (
-        <div className="mb-6 p-4 bg-green-900/20 border border-green-500/30 rounded-lg">
+        <div className="mt-6 p-4 bg-green-900/20 border border-green-500/30 rounded-lg">
           <h4 className="text-sm font-medium text-green-300 mb-3">Información de Creación de Perfil</h4>
           <div className="space-y-2 text-xs">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="text-green-400">Estado:</span>
-                <span className="text-green-400 ml-2">Completado</span>
-              </div>
-              <div>
-                <span className="text-green-400">Mensaje:</span>
-                <span className="text-white ml-2">{profileCreationInfo.message}</span>
-              </div>
-            </div>
-            {profileCreationInfo.profile && (
-              <div className="mt-3 p-2 bg-gray-800/50 rounded text-xs">
-                <span className="text-green-400">Perfil Creado:</span>
-                <pre className="text-white mt-1 overflow-x-auto">
-                  {JSON.stringify(profileCreationInfo.profile, null, 2)}
-                </pre>
-              </div>
-            )}
+            <pre className="text-white overflow-x-auto">
+              {JSON.stringify(profileCreationInfo, null, 2)}
+            </pre>
           </div>
         </div>
       )}
 
       {/* Información de Debug de Autenticación */}
       {authDebugInfo && (
-        <div className="mb-6 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+        <div className="mt-6 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
           <h4 className="text-sm font-medium text-red-300 mb-3">Información de Debug de Autenticación</h4>
           <div className="space-y-2 text-xs">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <span className="text-red-400">User ID:</span>
-                <span className="text-white ml-2">{authDebugInfo.user?.id || 'N/A'}</span>
-              </div>
-              <div>
-                <span className="text-red-400">User Email:</span>
-                <span className="text-white ml-2">{authDebugInfo.user?.email || 'N/A'}</span>
-              </div>
-              <div>
-                <span className="text-red-400">Email Confirmed:</span>
-                <span className="text-white ml-2">{authDebugInfo.user?.emailConfirmed ? 'Sí' : 'No'}</span>
-              </div>
-              <div>
-                <span className="text-red-400">Profile Count:</span>
-                <span className="text-white ml-2">{authDebugInfo.profileCount || 0}</span>
-              </div>
-            </div>
-            {authDebugInfo.session && (
-              <div className="mt-3 p-2 bg-red-800/30 rounded">
-                <div className="text-red-300 font-medium mb-2">Información de Sesión:</div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                  <div>
-                    <span className="text-red-400">Access Token:</span>
-                    <span className="text-white ml-2">{authDebugInfo.session.accessToken || 'N/A'}</span>
-                  </div>
-                  <div>
-                    <span className="text-red-400">Expires At:</span>
-                    <span className="text-white ml-2">{authDebugInfo.session.expiresAt || 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-            )}
-            {authDebugInfo.tokenInfo && (
-              <div className="mt-3 p-2 bg-red-800/30 rounded">
-                <div className="text-red-300 font-medium mb-2">Información del Token:</div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                  <div>
-                    <span className="text-red-400">Length:</span>
-                    <span className="text-white ml-2">{authDebugInfo.tokenInfo.length || 'N/A'}</span>
-                  </div>
-                  <div>
-                    <span className="text-red-400">Starts With:</span>
-                    <span className="text-white ml-2">{authDebugInfo.tokenInfo.startsWith || 'N/A'}</span>
-                  </div>
-                </div>
-              </div>
-            )}
+            <pre className="text-white overflow-x-auto">
+              {JSON.stringify(authDebugInfo, null, 2)}
+            </pre>
           </div>
         </div>
       )}
-
-      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl p-6 border border-[#3a3a3a] mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Buscar por nombre, nickname o email..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] focus:border-transparent"
-          />
-        </div>
-      </div>
-
-      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] overflow-hidden">
-        <div className="p-6 border-b border-[#3a3a3a]">
-          <h3 className="text-xl font-semibold text-white">
-            Usuarios ({filteredUsers.length})
-          </h3>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-[#2a2a2a]">
-              <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Usuario
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Nivel
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Referidos
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#3a3a3a]">
-              {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-[#2a2a2a] transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10">
-                        <div className="h-10 w-10 rounded-full bg-[#8A8A8A] flex items-center justify-center">
-                          <span className="text-sm font-medium text-white">
-                            {user.nombre?.[0]?.toUpperCase() || user.nickname?.[0]?.toUpperCase() || 'U'}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-white">
-                          {user.nombre} {user.apellido}
-                        </div>
-                        <div className="text-sm text-gray-400">
-                          @{user.nickname}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-white">{user.email}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getLevelColor(user.user_level)}`}>
-                      {user.user_level || 'iniciado'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-400">
-                      {user.total_referrals || 0} referidos
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleViewUser(user)}
-                        className="text-[#8A8A8A] hover:text-white transition-colors p-1"
-                        title="Ver detalles"
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleEditUser(user)}
-                        className="text-blue-400 hover:text-blue-300 transition-colors p-1"
-                        title="Editar usuario"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDiagnoseUser(user.id, user.email)}
-                        className="text-purple-400 hover:text-purple-300 transition-colors p-1"
-                        title="Diagnosticar usuario"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
 
       {/* Modal de detalles del usuario */}
       {showUserModal && selectedUser && (

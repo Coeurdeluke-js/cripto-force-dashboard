@@ -47,6 +47,14 @@ export async function GET() {
       user.created_at && user.created_at.startsWith(today)
     ).length || 0;
 
+    // Calcular usuarios activos (usuarios que se han registrado en los últimos 30 días)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const activeUsers = users?.filter(user => 
+      user.created_at && new Date(user.created_at) > thirtyDaysAgo
+    ).length || 0;
+
+    // Calcular métricas de referidos
     const usersWithReferrals = users?.filter(user => 
       user.total_referrals && user.total_referrals > 0
     ).length || 0;
@@ -55,13 +63,24 @@ export async function GET() {
       sum + (user.total_referrals || 0), 0
     ) || 0;
 
+    // Calcular usuarios que han sido referidos por otros
+    const referredUsers = users?.filter(user => 
+      user.referred_by && user.referred_by.trim() !== ''
+    ).length || 0;
+
+    // Calcular tasa de conversión de referidos (porcentaje de usuarios que han referido a otros)
+    const referralConversionRate = totalUsers > 0 ? Math.round((usersWithReferrals / totalUsers) * 100) : 0;
+
     return NextResponse.json({
       success: true,
       metrics: {
         totalUsers,
+        activeUsers,
         registrationsToday,
         usersWithReferrals,
         totalReferrals,
+        referredUsers,
+        referralConversionRate,
         systemStatus: 'Operativo',
         lastUpdate: new Date().toISOString()
       },

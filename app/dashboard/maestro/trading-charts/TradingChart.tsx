@@ -30,6 +30,57 @@ const TradingChart: React.FC<TradingChartProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [showIndicatorsMenu, setShowIndicatorsMenu] = useState(false);
   const [currentPrice, setCurrentPrice] = useState<string>('');
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : 1200,
+    height: typeof window !== 'undefined' ? window.innerHeight : 800
+  });
+
+  // Hook para manejar el redimensionamiento de la ventana
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+      
+      // Redimensionar el gráfico si existe
+      if (chartRef.current && chartContainerRef.current) {
+        const resizeObserver = new ResizeObserver(() => {
+          if (chartRef.current && chartContainerRef.current) {
+            chartRef.current.applyOptions({
+              width: chartContainerRef.current.clientWidth,
+              height: chartContainerRef.current.clientHeight,
+            });
+          }
+        });
+        
+        resizeObserver.observe(chartContainerRef.current);
+        return () => resizeObserver.disconnect();
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
+  // Hook para redimensionar el gráfico cuando cambie el tamaño del contenedor
+  useEffect(() => {
+    if (!chartRef.current || !chartContainerRef.current) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (chartRef.current && chartContainerRef.current) {
+        chartRef.current.applyOptions({
+          width: chartContainerRef.current.clientWidth,
+          height: chartContainerRef.current.clientHeight,
+        });
+      }
+    });
+
+    resizeObserver.observe(chartContainerRef.current);
+    return () => resizeObserver.disconnect();
+  }, [candles]);
 
   // Función para limpiar el gráfico de forma segura
   const cleanupChart = useCallback(() => {
@@ -239,6 +290,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
         layout: {
           background: { color: '#121212' },
           textColor: '#d1d4dc',
+          fontSize: windowSize.width < 640 ? 10 : windowSize.width < 1024 ? 12 : 14,
         },
         grid: {
           vertLines: { color: '#2a2a2a' },
@@ -249,11 +301,17 @@ const TradingChart: React.FC<TradingChartProps> = ({
         },
         rightPriceScale: {
           borderColor: '#2a2a2a',
+          scaleMargins: {
+            top: 0.1,
+            bottom: 0.1,
+          },
         },
         timeScale: {
           borderColor: '#2a2a2a',
           timeVisible: true,
           secondsVisible: false,
+          rightOffset: windowSize.width < 640 ? 8 : 12,
+          barSpacing: windowSize.width < 640 ? 2 : windowSize.width < 1024 ? 4 : 6,
         },
         handleScroll: {
           mouseWheel: true,
@@ -332,7 +390,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
         setError('Error al crear el gráfico: ' + error);
       }
     }
-  }, [candles, cleanupChart]);
+  }, [candles, cleanupChart, windowSize]);
 
   // Cleanup al desmontar el componente
   useEffect(() => {
@@ -349,10 +407,10 @@ const TradingChart: React.FC<TradingChartProps> = ({
   if (loading) {
     console.log('Rendering loading state');
     return (
-      <div className="flex items-center justify-center h-96">
+      <div className="flex items-center justify-center h-48 sm:h-64 md:h-96">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8A8A8A] mb-4"></div>
-          <div className="text-gray-400">Cargando datos reales del mercado...</div>
+          <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-[#8A8A8A] mb-3 sm:mb-4"></div>
+          <div className="text-sm sm:text-base text-gray-400">Cargando datos reales del mercado...</div>
         </div>
       </div>
     );
@@ -361,17 +419,17 @@ const TradingChart: React.FC<TradingChartProps> = ({
   if (error) {
     console.log('Rendering error state:', error);
     return (
-      <div className="flex items-center justify-center h-96">
+      <div className="flex items-center justify-center h-48 sm:h-64 md:h-96">
         <div className="text-center">
-          <div className="text-red-400 text-lg mb-2">Error</div>
-          <div className="text-gray-400">{error}</div>
+          <div className="text-red-400 text-base sm:text-lg mb-2">Error</div>
+          <div className="text-sm sm:text-base text-gray-400 px-4">{error}</div>
           <button
             onClick={() => {
               setError(null);
               setLoading(true);
               fetchBinanceData();
             }}
-            className="mt-4 px-4 py-2 bg-[#8A8A8A] text-white rounded-lg hover:bg-[#9A9A9A] transition-colors"
+            className="mt-3 sm:mt-4 px-3 sm:px-4 py-2 bg-[#8A8A8A] text-white rounded-lg hover:bg-[#9A9A9A] transition-colors text-sm sm:text-base"
           >
             Reintentar
           </button>
@@ -384,25 +442,34 @@ const TradingChart: React.FC<TradingChartProps> = ({
 
   return (
     <div className="w-full relative">
-      {/* Controles del gráfico */}
-      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+      {/* Controles del gráfico - Responsive */}
+      <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10 flex items-center gap-1 sm:gap-2">
         {/* Menú de indicadores */}
         <div className="relative">
           <button
             onClick={() => setShowIndicatorsMenu(!showIndicatorsMenu)}
-            className="p-2 bg-[#2a2a2a] rounded-lg text-gray-400 hover:text-white transition-colors"
+            className="p-1.5 sm:p-2 bg-[#2a2a2a] rounded-lg text-gray-400 hover:text-white transition-colors"
             title="Indicadores Técnicos"
           >
-            <BarChart3 className="w-4 h-4" />
+            <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
           
           {showIndicatorsMenu && (
-            <div className="absolute right-0 top-full mt-2 w-64 bg-[#1a1a1a] border border-[#3a3a3a] rounded-lg shadow-lg z-20">
-              <div className="p-4">
-                <h4 className="text-white font-medium mb-3">Indicadores Técnicos</h4>
+            <div className="absolute right-0 top-full mt-2 w-48 sm:w-64 bg-[#1a1a1a] border border-[#3a3a3a] rounded-lg shadow-lg z-20">
+              <div className="p-3 sm:p-4">
+                <h4 className="text-white font-medium mb-2 sm:mb-3 text-sm sm:text-base">Indicadores Técnicos</h4>
                 <div className="space-y-2">
-                  <div className="text-sm text-gray-400">Próximamente...</div>
+                  <div className="text-xs sm:text-sm text-gray-400">Próximamente...</div>
                 </div>
+              </div>
+              {/* Botón para cerrar en móviles */}
+              <div className="sm:hidden p-2 border-t border-[#3a3a3a]">
+                <button
+                  onClick={() => setShowIndicatorsMenu(false)}
+                  className="w-full text-center text-xs text-gray-400 hover:text-white py-1"
+                >
+                  Cerrar
+                </button>
               </div>
             </div>
           )}
@@ -414,33 +481,43 @@ const TradingChart: React.FC<TradingChartProps> = ({
             setLoading(true);
             fetchBinanceData();
           }}
-          className="p-2 bg-[#2a2a2a] rounded-lg text-gray-400 hover:text-white transition-colors"
+          className="p-1.5 sm:p-2 bg-[#2a2a2a] rounded-lg text-gray-400 hover:text-white transition-colors"
           title="Actualizar datos"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
         </button>
       </div>
 
-      {/* Información del precio actual */}
+      {/* Información del precio actual - Responsive */}
       {currentPrice && (
-        <div className="absolute top-4 left-4 z-10">
-          <div className="bg-[#2a2a2a] rounded-lg px-3 py-2 border border-[#3a3a3a]">
-            <div className="text-sm text-gray-400">Precio Actual</div>
-            <div className="text-lg font-bold text-white">${currentPrice}</div>
+        <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-10">
+          <div className="bg-[#2a2a2a] rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-[#3a3a3a]">
+            <div className="text-xs sm:text-sm text-gray-400">Precio Actual</div>
+            <div className="text-sm sm:text-lg font-bold text-white">${currentPrice}</div>
           </div>
         </div>
       )}
 
-      {/* Contenedor del gráfico */}
+      {/* Indicador de estado de actualización */}
+      <div className="absolute top-2 sm:top-4 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="bg-[#2a2a2a] rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-[#3a3a3a]">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-xs sm:text-sm text-gray-400">Actualizando...</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Contenedor del gráfico - Responsive */}
       <div
         ref={chartContainerRef}
-        className="w-full h-96 md:h-[500px] lg:h-[600px]"
+        className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px]"
         style={{
           backgroundColor: '#121212',
           border: '1px solid #333333',
-          borderRadius: '12px',
+          borderRadius: '8px sm:rounded-xl',
           cursor: 'crosshair',
           userSelect: 'none',
           touchAction: 'pan-x pan-y',

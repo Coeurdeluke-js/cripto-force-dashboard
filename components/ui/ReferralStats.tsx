@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Users, GraduationCap, TrendingUp, Copy, Check, Share2, BookOpen } from 'lucide-react';
+import { Copy, Share2, RefreshCw, CheckCircle, AlertCircle } from 'lucide-react';
 import { useSafeAuth } from '@/context/AuthContext';
 
 interface ReferralStatsProps {
@@ -27,14 +27,15 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [updating, setUpdating] = useState(false);
   const { userData } = useSafeAuth();
 
   // Generar código de referido basado en el nickname como fallback
   const generateReferralCode = useCallback(() => {
     if (userData?.nickname) {
-      return `CF${userData.nickname.toUpperCase()}`;
+      return `CRYPTOFORCE_${userData.nickname.toUpperCase()}`;
     }
-    return 'CFUSER';
+    return 'CRYPTOFORCE_USER';
   }, [userData?.nickname]);
 
   const fetchReferralStats = useCallback(async () => {
@@ -82,10 +83,12 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
   };
 
   const handleCopyLink = async () => {
-    const codeToUse = stats?.referralCode || generateReferralCode();
+    const codeToUse = stats?.referralCode;
+    if (!codeToUse) return;
+
+    const referralLink = `${window.location.origin}/login?ref=${codeToUse}`;
     
     try {
-      const referralLink = `https://cripto-force-dashboard.vercel.app/login?ref=${codeToUse}`;
       await navigator.clipboard.writeText(referralLink);
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
@@ -95,37 +98,62 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
   };
 
   const handleShare = async () => {
-    const codeToUse = stats?.referralCode || generateReferralCode();
+    const codeToUse = stats?.referralCode;
+    if (!codeToUse) return;
 
-    const referralLink = `https://cripto-force-dashboard.vercel.app/login?ref=${codeToUse}`;
-    
+    const referralLink = `${window.location.origin}/login?ref=${codeToUse}`;
+    const shareText = `¡Únete a Crypto Force usando mi código de referido: ${codeToUse}! ${referralLink}`;
+
     if (navigator.share) {
       try {
         await navigator.share({
-          title: '¡Únete a Crypto Force!',
-          text: `¡Descubre el poder de la educación financiera en Crypto Force usando mi código: ${codeToUse}!`,
+          title: 'Crypto Force - Código de Referido',
+          text: shareText,
           url: referralLink
         });
       } catch (err) {
-        console.error('Error al compartir:', err);
-        handleCopyLink(); // Fallback
+        console.error('Error compartiendo:', err);
       }
     } else {
-      handleCopyLink(); // Fallback
+      // Fallback para navegadores que no soportan Web Share API
+      try {
+        await navigator.clipboard.writeText(shareText);
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 2000);
+      } catch (err) {
+        console.error('Error al copiar:', err);
+      }
     }
+  };
+
+  const handleRefresh = async () => {
+    setUpdating(true);
+    await fetchReferralStats();
+    setUpdating(false);
+  };
+
+  const getLevelBadge = (level: number) => {
+    if (level === 0) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+          🏆 Fundador
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+        Nivel {level}
+      </span>
+    );
   };
 
   if (loading) {
     return (
-      <div className={`bg-[#1a1a1a] rounded-xl p-6 border border-white/10 ${className}`}>
-        <div className="animate-pulse">
-          <div className="h-6 bg-white/10 rounded mb-4"></div>
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="h-16 bg-white/10 rounded"></div>
-            <div className="h-16 bg-white/10 rounded"></div>
-            <div className="h-16 bg-white/10 rounded"></div>
-          </div>
-          <div className="h-12 bg-white/10 rounded"></div>
+      <div className={`bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6 ${className}`}>
+        <div className="animate-pulse space-y-4">
+          <div className="h-4 bg-[#3a3a3a] rounded w-1/3"></div>
+          <div className="h-8 bg-[#3a3a3a] rounded w-1/2"></div>
+          <div className="h-4 bg-[#3a3a3a] rounded w-2/3"></div>
         </div>
       </div>
     );
@@ -133,144 +161,144 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
 
   if (error) {
     return (
-      <div className={`bg-[#1a1a1a] rounded-xl p-6 border border-red-500/30 ${className}`}>
-        <div className="text-center">
-          <div className="text-red-400 text-sm mb-2">Error cargando estadísticas</div>
-          <p className="text-white/60 text-xs">{error}</p>
-          <button 
-            onClick={fetchReferralStats}
-            className="mt-3 px-4 py-2 bg-[#ec4d58] hover:bg-[#d43d47] text-white text-sm rounded-lg transition-colors"
-          >
-            Reintentar
-          </button>
+      <div className={`bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6 ${className}`}>
+        <div className="flex items-center gap-3 text-red-400">
+          <AlertCircle className="w-5 h-5" />
+          <span>Error: {error}</span>
         </div>
+        <button
+          onClick={handleRefresh}
+          className="mt-3 text-sm text-gray-400 hover:text-white transition-colors"
+        >
+          Reintentar
+        </button>
       </div>
     );
   }
 
-  if (!stats) {
-    return (
-      <div className={`bg-[#1a1a1a] rounded-xl p-6 border border-white/10 ${className}`}>
-        <div className="text-center text-white/60">
-          No se encontraron datos de referidos
-        </div>
-      </div>
-    );
-  }
+  const codeToUse = stats?.referralCode || generateReferralCode();
+  const referralLink = `${window.location.origin}/login?ref=${codeToUse}`;
 
   return (
-    <div className={`bg-[#1a1a1a] rounded-xl p-6 border border-white/10 ${className}`}>
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 bg-[#ec4d58]/20 rounded-lg flex items-center justify-center">
-          <GraduationCap className="text-[#ec4d58] w-5 h-5" />
-        </div>
+    <div className={`bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6 ${className}`}>
+      {/* Header con nivel */}
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-white">Centro de Educación Financiera</h3>
-          <p className="text-white/60 text-sm">Nivel {stats.userLevel}</p>
+          <h3 className="text-xl font-semibold text-white mb-2">
+            Sistema de Referidos
+          </h3>
+          {stats && getLevelBadge(stats.userLevel)}
         </div>
+        <button
+          onClick={handleRefresh}
+          disabled={updating}
+          className="p-2 text-gray-400 hover:text-white transition-colors disabled:opacity-50"
+          title="Actualizar estadísticas"
+        >
+          <RefreshCw className={`w-5 h-5 ${updating ? 'animate-spin' : ''}`} />
+        </button>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-[#2a2d36]/50 rounded-lg p-4 text-center">
-          <Users className="text-[#ec4d58] w-6 h-6 mx-auto mb-2" />
-          <div className="text-xl font-bold text-white">{stats.totalReferrals}</div>
-          <div className="text-white/60 text-xs">Estudiantes</div>
-        </div>
-        
-        <div className="bg-[#2a2d36]/50 rounded-lg p-4 text-center">
-          <BookOpen className="text-blue-500 w-6 h-6 mx-auto mb-2" />
-          <div className="text-xl font-bold text-white">{stats.totalReferrals * 3}</div>
-          <div className="text-white/60 text-xs">Lecciones Compartidas</div>
-        </div>
-        
-        <div className="bg-[#2a2d36]/50 rounded-lg p-4 text-center">
-          <GraduationCap className="text-yellow-500 w-6 h-6 mx-auto mb-2" />
-          <div className="text-xl font-bold text-white">{stats.userLevel}</div>
-          <div className="text-white/60 text-xs">Nivel Educador</div>
-        </div>
-      </div>
-
-      {/* Referral Code */}
+      {/* Código de referido */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-white/80 mb-2">
-          Tu código de referido (CF + Tu Nickname)
+        <label className="block text-sm font-medium text-gray-400 mb-2">
+          Tu Código de Referido
         </label>
         <div className="flex items-center gap-2">
-          <div className="flex-1 bg-[#2a2d36] border border-white/20 rounded-lg px-4 py-3">
-            <code className="text-[#ec4d58] font-mono text-lg font-bold">
-              {stats?.referralCode || generateReferralCode()}
-            </code>
+          <div className="flex-1 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-3 py-2">
+            <code className="text-white font-mono text-sm">{codeToUse}</code>
           </div>
           <button
             onClick={handleCopyCode}
-            className="px-4 py-3 bg-[#2a2d36] border border-white/20 rounded-lg hover:bg-[#3a3d46] transition-colors"
+            className="p-2 bg-[#8A8A8A] hover:bg-[#9A9A9A] text-white rounded-lg transition-colors"
             title="Copiar código"
           >
-            {copied ? <Check size={18} className="text-green-400" /> : <Copy size={18} className="text-white/60" />}
-          </button>
-          <button
-            onClick={handleShare}
-            className="px-4 py-3 bg-[#ec4d58] hover:bg-[#d43d47] text-white rounded-lg transition-colors"
-            title="Compartir enlace"
-          >
-            <Share2 size={18} />
+            {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
           </button>
         </div>
       </div>
 
-      {/* Referral Link */}
+      {/* Enlace de referido */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-white/80 mb-2">
-          Tu enlace de referido (auto-completa el código)
+        <label className="block text-sm font-medium text-gray-400 mb-2">
+          Enlace de Referido
         </label>
         <div className="flex items-center gap-2">
-          <div className="flex-1 bg-[#2a2d36] border border-white/20 rounded-lg px-4 py-3 overflow-hidden">
-            <code className="text-white/80 font-mono text-sm break-all">
-              {`https://cripto-force-dashboard.vercel.app/login?ref=${stats.referralCode}`}
-            </code>
+          <div className="flex-1 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-3 py-2">
+            <code className="text-white font-mono text-xs break-all">{referralLink}</code>
           </div>
           <button
             onClick={handleCopyLink}
-            className="px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+            className="p-2 bg-[#8A8A8A] hover:bg-[#9A9A9A] text-white rounded-lg transition-colors"
             title="Copiar enlace"
           >
-            {copied ? <Check size={18} /> : <Copy size={18} />}
+            {copiedLink ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
           </button>
         </div>
-        <p className="text-white/50 text-xs mt-2">
-          💡 Al compartir este enlace, el código se auto-completa automáticamente en el formulario de registro
-        </p>
       </div>
 
-      {/* Recent Referrals */}
-      {stats.recentReferrals && stats.recentReferrals.length > 0 && (
+      {/* Botón de compartir */}
+      <div className="mb-6">
+        <button
+          onClick={handleShare}
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#8A8A8A] to-[#9A9A9A] hover:from-[#9A9A9A] hover:to-[#AAAAAA] text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105"
+        >
+          <Share2 className="w-5 h-5" />
+          Compartir Código de Referido
+        </button>
+      </div>
+
+      {/* Estadísticas */}
+      {stats && (
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="text-center p-4 bg-[#2a2a2a] rounded-lg">
+            <div className="text-2xl font-bold text-white">{stats.totalReferrals}</div>
+            <div className="text-sm text-gray-400">Referidos</div>
+          </div>
+          <div className="text-center p-4 bg-[#2a2a2a] rounded-lg">
+            <div className="text-2xl font-bold text-green-400">${stats.totalEarnings.toFixed(2)}</div>
+            <div className="text-sm text-gray-400">Ganancias</div>
+          </div>
+        </div>
+      )}
+
+      {/* Referidos recientes */}
+      {stats && stats.recentReferrals.length > 0 && (
         <div>
-          <h4 className="text-white font-medium mb-3">Nuevos Estudiantes</h4>
+          <h4 className="text-sm font-medium text-gray-400 mb-3">
+            Referidos Recientes
+          </h4>
           <div className="space-y-2">
-            {stats.recentReferrals.slice(0, 3).map((referral, index) => (
-              <div key={index} className="bg-[#2a2d36]/30 rounded-lg p-3 flex items-center justify-between">
-                <div>
-                  <div className="text-white/80 text-sm">{referral.email.replace(/(.{3}).*@/, '$1***@')}</div>
-                  <div className="text-white/50 text-xs">{new Date(referral.date).toLocaleDateString()}</div>
+            {stats.recentReferrals.map((referral, index) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-[#2a2a2a] rounded-lg">
+                <div className="flex-1">
+                  <div className="text-white text-sm font-medium">
+                    {referral.email}
+                  </div>
+                  <div className="text-gray-400 text-xs">
+                    {new Date(referral.date).toLocaleDateString('es-ES')}
+                  </div>
                 </div>
-                <div className="text-blue-400 text-sm font-medium">📚 Estudiante</div>
+                <div className="text-green-400 font-medium">
+                  +${referral.commission.toFixed(2)}
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Info */}
-      <div className="mt-6 bg-[#2a2d36]/30 rounded-lg p-4">
-        <h4 className="text-white font-medium mb-2">Comparte Educación Financiera</h4>
-        <ul className="text-white/70 text-sm space-y-1">
-          <li>• Comparte conocimiento que transforma vidas</li>
-          <li>• Ayuda a tus seres queridos a empoderarse financieramente</li>
-          <li>• Construye una comunidad de aprendizaje</li>
-          <li>• El valor real está en la educación que compartes</li>
-        </ul>
+      {/* Información adicional */}
+      <div className="mt-6 p-4 bg-[#2a2a2a] rounded-lg border border-[#3a3a3a]">
+        <div className="text-sm text-gray-400">
+          <p className="mb-2">💡 <strong>¿Cómo funciona?</strong></p>
+          <ul className="space-y-1 text-xs">
+            <li>• Comparte tu código con amigos</li>
+            <li>• Gana $5 por cada referido exitoso</li>
+            <li>• Sin límite de referidos</li>
+            <li>• Comisiones instantáneas</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

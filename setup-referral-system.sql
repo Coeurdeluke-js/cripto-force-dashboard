@@ -1,8 +1,8 @@
 -- =====================================================
--- CRYPTO FORCE - SISTEMA DE REFERIDOS COMPLETO
+-- CRYPTO FORCE - SISTEMA DE REFERIDOS COMPLETO Y SEGURO
 -- =====================================================
 -- Este script configura todo el sistema de referidos desde cero
--- Francisco será el usuario fundador en la cúspide de la pirámide
+-- Solo 2 usuarios pueden tener nivel 0: coeurdeluke.js@gmail.com e infocryptoforce@gmail.com
 
 -- =====================================================
 -- PASO 1: VERIFICAR Y PREPARAR TABLA USUARIOS
@@ -96,8 +96,8 @@ BEGIN
     -- Limpiar nickname: solo letras y números, convertir a mayúsculas
     clean_nickname := UPPER(REGEXP_REPLACE(user_nickname, '[^a-zA-Z0-9]', '', 'g'));
     
-    -- Crear código base: CF + NICKNAME completo
-    base_code := 'CF' || clean_nickname;
+    -- Crear código base: CRYPTOFORCE + NICKNAME completo
+    base_code := 'CRYPTOFORCE_' || clean_nickname;
     final_code := base_code;
     
     -- Verificar unicidad y agregar sufijo numérico si es necesario
@@ -179,61 +179,112 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- =====================================================
--- PASO 5: CONFIGURAR FRANCISCO COMO USUARIO FUNDADOR
+-- PASO 5: CONFIGURAR SOLO 2 USUARIOS FUNDADORES (NIVEL 0)
 -- =====================================================
 
--- Insertar o actualizar usuario maestro como fundador
-DO $$
+-- Función para configurar usuarios fundadores de forma segura
+CREATE OR REPLACE FUNCTION setup_founders()
+RETURNS VOID AS $$
 DECLARE
-    master_exists BOOLEAN;
-      master_email TEXT := 'infocryptoforce@gmail.com';
-  master_nickname TEXT := 'INFOCRYPTOFORCE';
-  master_code TEXT := 'CFINFOCRYPTOFORCE';
-BEGIN
-    -- Verificar si el usuario maestro ya existe
-    SELECT EXISTS(
-        SELECT 1 FROM users WHERE email = master_email
-    ) INTO master_exists;
+    founder1_email TEXT := 'coeurdeluke.js@gmail.com';
+    founder1_nickname TEXT := 'Luke';
+    founder1_code TEXT := 'CRYPTOFORCE_LUKE';
     
-    IF master_exists THEN
-        -- Actualizar usuario maestro existente
+    founder2_email TEXT := 'infocryptoforce@gmail.com';
+    founder2_nickname TEXT := 'INFOCRYPTOFORCE';
+    founder2_code TEXT := 'CRYPTOFORCE_INFOCRYPTOFORCE';
+BEGIN
+    -- Resetear todos los usuarios a nivel 1 (por seguridad)
+    UPDATE users 
+    SET user_level = 1 
+    WHERE user_level = 0;
+    
+    RAISE NOTICE '🔒 Todos los usuarios reseteados a nivel 1 por seguridad';
+    
+    -- Configurar primer fundador (Luke)
+    IF EXISTS(SELECT 1 FROM users WHERE email = founder1_email) THEN
         UPDATE users 
         SET 
-            nickname = master_nickname,
-            referral_code = master_code,
-            user_level = 0,  -- Nivel 0 = Fundador/Maestro
+            nickname = founder1_nickname,
+            referral_code = founder1_code,
+            user_level = 0,  -- Nivel 0 = Fundador
             total_referrals = COALESCE(total_referrals, 0),
             total_earnings = COALESCE(total_earnings, 0.00),
             updated_at = now()
-        WHERE email = master_email;
+        WHERE email = founder1_email;
         
-        RAISE NOTICE '✅ Usuario maestro actualizado como fundador con código: %', master_code;
+        RAISE NOTICE '✅ Usuario % configurado como fundador con código: %', founder1_email, founder1_code;
     ELSE
-        -- Crear usuario maestro como fundador
+        -- Crear usuario fundador si no existe
         INSERT INTO users (
             nombre, apellido, nickname, email, 
             referral_code, user_level, total_referrals, total_earnings,
             created_at, updated_at
         ) VALUES (
-            'Info', 'Crypto Force', master_nickname, master_email,
-            master_code, 0, 0, 0.00,
+            'Luke', 'Crypto', founder1_nickname, founder1_email,
+            founder1_code, 0, 0, 0.00,
             now(), now()
         );
         
-        RAISE NOTICE '✅ Usuario maestro creado como fundador con código: %', master_code;
+        RAISE NOTICE '✅ Usuario fundador % creado con código: %', founder1_email, founder1_code;
     END IF;
-END $$;
+    
+    -- Configurar segundo fundador (Info Crypto Force)
+    IF EXISTS(SELECT 1 FROM users WHERE email = founder2_email) THEN
+        UPDATE users 
+        SET 
+            nickname = founder2_nickname,
+            referral_code = founder2_code,
+            user_level = 0,  -- Nivel 0 = Fundador
+            total_referrals = COALESCE(total_referrals, 0),
+            total_earnings = COALESCE(total_earnings, 0.00),
+            updated_at = now()
+        WHERE email = founder2_email;
+        
+        RAISE NOTICE '✅ Usuario % configurado como fundador con código: %', founder2_email, founder2_code;
+    ELSE
+        -- Crear usuario fundador si no existe
+        INSERT INTO users (
+            nombre, apellido, nickname, email, 
+            referral_code, user_level, total_referrals, total_earnings,
+            created_at, updated_at
+        ) VALUES (
+            'Info', 'Crypto Force', founder2_nickname, founder2_email,
+            founder2_code, 0, 0, 0.00,
+            now(), now()
+        );
+        
+        RAISE NOTICE '✅ Usuario fundador % creado con código: %', founder2_email, founder2_code;
+    END IF;
+    
+    -- Verificar que solo estos 2 usuarios tengan nivel 0
+    IF (SELECT COUNT(*) FROM users WHERE user_level = 0) != 2 THEN
+        RAISE EXCEPTION '❌ ERROR: Solo deben existir 2 usuarios fundadores (nivel 0)';
+    END IF;
+    
+    RAISE NOTICE '🎯 Sistema de fundadores configurado correctamente';
+END;
+$$ LANGUAGE plpgsql;
+
+-- Ejecutar configuración de fundadores
+SELECT setup_founders();
 
 -- =====================================================
--- PASO 6: TRIGGER PARA AUTO-GENERAR CÓDIGOS
+-- PASO 6: TRIGGER PARA AUTO-GENERAR Y ACTUALIZAR CÓDIGOS
 -- =====================================================
 
 CREATE OR REPLACE FUNCTION auto_generate_referral_code()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Solo generar código si no existe uno
+    -- Solo generar código si no existe uno o si el nickname cambió
     IF NEW.referral_code IS NULL OR NEW.referral_code = '' THEN
+        -- Generar código inicial
         NEW.referral_code := generate_referral_code(NEW.nickname);
+    ELSIF OLD.nickname IS DISTINCT FROM NEW.nickname THEN
+        -- Actualizar código si cambió el nickname (excepto para fundadores)
+        IF NEW.user_level != 0 THEN
+            NEW.referral_code := generate_referral_code(NEW.nickname);
+        END IF;
     END IF;
     
     RETURN NEW;
@@ -248,7 +299,47 @@ CREATE TRIGGER trigger_auto_referral_code
     EXECUTE FUNCTION auto_generate_referral_code();
 
 -- =====================================================
--- PASO 7: FUNCIONES DE CONSULTA PARA EL FRONTEND
+-- PASO 7: FUNCIÓN PARA ACTUALIZAR CÓDIGOS EXISTENTES
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION update_all_referral_codes()
+RETURNS VOID AS $$
+DECLARE
+    user_record RECORD;
+    new_code TEXT;
+    updated_count INTEGER := 0;
+BEGIN
+    -- Actualizar códigos de todos los usuarios (excepto fundadores)
+    FOR user_record IN 
+        SELECT id, email, nickname, referral_code, user_level 
+        FROM users 
+        WHERE user_level != 0 
+        AND nickname IS NOT NULL 
+        AND nickname != ''
+    LOOP
+        -- Generar nuevo código
+        new_code := generate_referral_code(user_record.nickname);
+        
+        -- Actualizar si es diferente
+        IF user_record.referral_code != new_code THEN
+            UPDATE users 
+            SET referral_code = new_code, updated_at = now()
+            WHERE id = user_record.id;
+            
+            updated_count := updated_count + 1;
+            RAISE NOTICE '🔄 Código actualizado para %: % -> %', user_record.email, user_record.referral_code, new_code;
+        END IF;
+    END LOOP;
+    
+    RAISE NOTICE '✅ Total de códigos actualizados: %', updated_count;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Ejecutar actualización de códigos existentes
+SELECT update_all_referral_codes();
+
+-- =====================================================
+-- PASO 8: FUNCIONES DE CONSULTA PARA EL FRONTEND
 -- =====================================================
 
 -- Función para obtener estadísticas de referidos de un usuario
@@ -329,7 +420,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- =====================================================
--- PASO 8: POLÍTICAS RLS PARA SEGURIDAD
+-- PASO 9: POLÍTICAS RLS PARA SEGURIDAD ROBUSTA
 -- =====================================================
 
 -- Habilitar RLS en tabla de historial
@@ -346,25 +437,67 @@ CREATE POLICY "Users can view their own referral history" ON referral_history
 CREATE POLICY "Allow inserting new referrals" ON referral_history
     FOR INSERT WITH CHECK (true);
 
+-- Política para actualizar referidos (solo el propietario)
+CREATE POLICY "Users can update their own referrals" ON referral_history
+    FOR UPDATE USING (
+        referrer_email = current_setting('app.current_user_email', true)
+    );
+
 -- Otorgar permisos
-GRANT SELECT, INSERT ON referral_history TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE ON referral_history TO anon, authenticated;
 
 -- =====================================================
--- PASO 9: VERIFICACIÓN FINAL
+-- PASO 10: VERIFICACIÓN FINAL Y SEGURIDAD
 -- =====================================================
+
+-- Verificar que solo existen 2 fundadores
+DO $$
+DECLARE
+    founder_count INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO founder_count
+    FROM users 
+    WHERE user_level = 0;
+    
+    IF founder_count != 2 THEN
+        RAISE EXCEPTION '❌ ERROR DE SEGURIDAD: Deben existir exactamente 2 usuarios fundadores (nivel 0), actualmente hay %', founder_count;
+    END IF;
+    
+    RAISE NOTICE '✅ Verificación de seguridad: % usuarios fundadores confirmados', founder_count;
+END $$;
 
 -- Mostrar estado del sistema
 SELECT 
-    '🎯 SISTEMA DE REFERIDOS CONFIGURADO' as status,
-    'Usuario maestro configurado como fundador con código: ' || 
-    (SELECT referral_code FROM users WHERE email = 'infocryptoforce@gmail.com') as founder_info;
+    '🎯 SISTEMA DE REFERIDOS CONFIGURADO Y SEGURO' as status,
+    'Solo 2 usuarios fundadores autorizados (nivel 0)' as security_info;
+
+-- Mostrar fundadores
+SELECT 
+    'FUNDADORES DEL SISTEMA' as section,
+    email,
+    nickname,
+    referral_code,
+    user_level
+FROM users 
+WHERE user_level = 0
+ORDER BY created_at;
 
 -- Mostrar estadísticas
 SELECT 
     'ESTADÍSTICAS INICIALES' as section,
     COUNT(*) as total_users,
     COUNT(CASE WHEN referral_code IS NOT NULL THEN 1 END) as users_with_codes,
-    COUNT(CASE WHEN user_level = 0 THEN 1 END) as founders
+    COUNT(CASE WHEN user_level = 0 THEN 1 END) as founders,
+    COUNT(CASE WHEN user_level = 1 THEN 1 END) as regular_users
 FROM users;
 
-SELECT 'Sistema listo para procesar referidos! 🚀' as final_message;
+-- Verificar formato de códigos
+SELECT 
+    'VERIFICACIÓN DE FORMATO DE CÓDIGOS' as section,
+    COUNT(*) as total_users,
+    COUNT(CASE WHEN referral_code LIKE 'CRYPTOFORCE_%' THEN 1 END) as correct_format,
+    COUNT(CASE WHEN referral_code NOT LIKE 'CRYPTOFORCE_%' THEN 1 END) as incorrect_format
+FROM users 
+WHERE referral_code IS NOT NULL;
+
+SELECT '🚀 Sistema de referidos seguro y configurado correctamente!' as final_message;
