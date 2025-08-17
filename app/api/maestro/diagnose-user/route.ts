@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
         possibleDuplicates: possibleDuplicates || [],
         hasDuplicates: possibleDuplicates && possibleDuplicates.length > 0
       },
-      recommendations: []
+      recommendations: [] as string[]
     };
 
     // Generar recomendaciones
