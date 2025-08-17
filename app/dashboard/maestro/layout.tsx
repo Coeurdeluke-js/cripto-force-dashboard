@@ -10,7 +10,7 @@ import { MaestroSidebarProvider, useMaestroSidebar } from '@/components/layout/M
 
 // Lista de emails autorizados para acceder a la dashboard de Maestro
 const MAESTRO_AUTHORIZED_EMAILS = [
-  'infocriptoforce@gmail.com',
+  'infocryptoforce@gmail.com',
   'coeurdeluke.js@gmail.com'
 ];
 

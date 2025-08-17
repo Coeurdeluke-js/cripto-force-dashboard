@@ -186,9 +186,9 @@ $$ LANGUAGE plpgsql;
 DO $$
 DECLARE
     master_exists BOOLEAN;
-    master_email TEXT := 'infocriptoforce@gmail.com';
-    master_nickname TEXT := 'INFOCRIPTOFORCE';
-    master_code TEXT := 'CFINFOCRIPTOFORCE';
+      master_email TEXT := 'infocryptoforce@gmail.com';
+  master_nickname TEXT := 'INFOCRYPTOFORCE';
+  master_code TEXT := 'CFINFOCRYPTOFORCE';
 BEGIN
     -- Verificar si el usuario maestro ya existe
     SELECT EXISTS(
@@ -357,7 +357,7 @@ GRANT SELECT, INSERT ON referral_history TO anon, authenticated;
 SELECT 
     '🎯 SISTEMA DE REFERIDOS CONFIGURADO' as status,
     'Usuario maestro configurado como fundador con código: ' || 
-    (SELECT referral_code FROM users WHERE email = 'infocriptoforce@gmail.com') as founder_info;
+    (SELECT referral_code FROM users WHERE email = 'infocryptoforce@gmail.com') as founder_info;
 
 -- Mostrar estadísticas
 SELECT 

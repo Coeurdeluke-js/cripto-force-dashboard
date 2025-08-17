@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       profileCount: userProfiles ? userProfiles.length : 0,
       errors: {
         session: sessionError ? 'Error de sesión' : null,
-        profile: profileError ? profileError.message : null
+        profile: profileError ? (profileError as any).message || 'Error de perfil' : null
       },
       tokenInfo: {
         length: token.length,

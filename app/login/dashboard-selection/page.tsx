@@ -10,7 +10,7 @@ import { useSafeAuth } from '@/context/AuthContext';
 
 // Lista de emails autorizados para acceder a la dashboard de Maestro
 const MAESTRO_AUTHORIZED_EMAILS = [
-  'infocriptoforce@gmail.com',
+  'infocryptoforce@gmail.com',
   'coeurdeluke.js@gmail.com'
 ];
 
