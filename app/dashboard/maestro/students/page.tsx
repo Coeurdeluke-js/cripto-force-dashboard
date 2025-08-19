@@ -108,6 +108,41 @@ export default function StudentsPage() {
     }
   };
 
+  const handleFixFounderPermissions = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      setSuccess(null);
+      
+      const response = await fetch('/api/maestro/fix-founder-permissions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setSuccess('Permisos de fundador corregidos correctamente');
+        console.log('Founder permissions fixed:', data);
+        
+        // Recargar usuarios para mostrar cambios
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        const errorData = await response.json();
+        setError(`Error corrigiendo permisos: ${errorData.error}`);
+      }
+    } catch (error) {
+      setError('Error al corregir permisos de fundador');
+      console.error('Error in handleFixFounderPermissions:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
 
   useEffect(() => {
@@ -480,149 +515,168 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
   }
 
   return (
-    <div className="w-full max-w-none">
+    <div className="w-full max-w-none min-w-0">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-[#8A8A8A] mb-2">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#8A8A8A] mb-2">
           Gestión de Estudiantes
         </h1>
-        <p className="text-gray-400">
+        <p className="text-sm sm:text-base text-gray-400">
           Administra y gestiona todos los usuarios del sistema
         </p>
       </div>
 
       {/* Barra de acciones */}
-      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-4 mb-6">
-        <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-          <Users className="w-5 h-5 text-[#8A8A8A]" />
-          Acciones:
+      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-3 sm:p-4 mb-4 sm:mb-6">
+        <h3 className="text-white font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+          <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#8A8A8A]" />
+          <span className="text-sm sm:text-base">Acciones:</span>
         </h3>
-        <div className="flex flex-wrap gap-2 sm:gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
           <button
             onClick={handleSendMagicLink}
-            className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+            className="px-2 sm:px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-1 sm:gap-2"
           >
-            <Phone className="w-4 h-4" />
-            Enviar Magic Link
+            <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Enviar Magic Link</span>
+            <span className="sm:hidden">Magic Link</span>
           </button>
           <button
             onClick={handleRefreshToken}
-            className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+            className="px-2 sm:px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-1 sm:gap-2"
           >
-            <UserCheck className="w-4 h-4" />
-            Refresh Token
+            <UserCheck className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Refresh Token</span>
+            <span className="sm:hidden">Refresh</span>
           </button>
           <button
             onClick={handleDebugUser}
-            className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+            className="px-2 sm:px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-1 sm:gap-2"
           >
-            <Eye className="w-4 h-4" />
-            Debug User
+            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Debug User</span>
+            <span className="sm:hidden">Debug</span>
           </button>
           <button
             onClick={handleCleanupDuplicates}
-            className="px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+            className="px-2 sm:px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-1 sm:gap-2"
           >
-            <Building className="w-4 h-4" />
-            Limpiar Duplicados
+            <Building className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Limpiar Duplicados</span>
+            <span className="sm:hidden">Limpiar</span>
           </button>
           <button
             onClick={handleCreateProfile}
-            className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+            className="px-2 sm:px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-1 sm:gap-2"
           >
-            <Save className="w-4 h-4" />
-            Crear Perfil
+            <Save className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Crear Perfil</span>
+            <span className="sm:hidden">Perfil</span>
           </button>
           <button
             onClick={handleDebugAuth}
-            className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+            className="px-2 sm:px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-1 sm:gap-2"
           >
-            <UserCheck className="w-4 h-4" />
-            Debug Auth
+            <UserCheck className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Debug Auth</span>
+            <span className="sm:hidden">Auth</span>
+          </button>
+          <button
+            onClick={handleFixFounderPermissions}
+            className="px-2 sm:px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-1 sm:gap-2"
+          >
+            <Crown className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Corregir Permisos Fundador</span>
+            <span className="sm:hidden">Corregir</span>
           </button>
           <button
             onClick={() => handleDiagnoseUser('', '')}
-            className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg transition-colors flex items-center gap-2"
+            className="px-2 sm:px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-1 sm:gap-2"
           >
-            <Eye className="w-4 h-4" />
-            Diagnóstico
+            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Diagnóstico</span>
+            <span className="sm:hidden">Diag</span>
           </button>
         </div>
       </div>
 
       {/* Barra de búsqueda */}
-      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-4 mb-6">
+      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-3 sm:p-4 mb-4 sm:mb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
           <input
             type="text"
             placeholder="Buscar por nombre, nickname o email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+            className="w-full pl-9 sm:pl-10 pr-4 py-2 sm:py-3 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm sm:text-base"
           />
         </div>
       </div>
 
       {/* Lista de usuarios */}
-      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-white font-semibold text-lg">
+      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-3 sm:p-4">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <h3 className="text-white font-semibold text-base sm:text-lg">
             Usuarios ({filteredUsers.length})
           </h3>
         </div>
 
         {loading ? (
-          <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8A8A8A] mx-auto mb-4"></div>
-            <p className="text-gray-400">Cargando usuarios...</p>
+          <div className="text-center py-6 sm:py-8">
+            <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-[#8A8A8A] mx-auto mb-3 sm:mb-4"></div>
+            <p className="text-gray-400 text-sm sm:text-base">Cargando usuarios...</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-full">
               <thead>
                 <tr className="border-b border-[#3a3a3a]">
-                  <th className="text-left py-3 px-4 text-gray-400 font-medium">USUARIO</th>
-                  <th className="text-left py-3 px-4 text-gray-400 font-medium">EMAIL</th>
-                  <th className="text-left py-3 px-4 text-gray-400 font-medium">NIVEL</th>
-                  <th className="text-left py-3 px-4 text-gray-400 font-medium">REFERIDOS</th>
-                  <th className="text-left py-3 px-4 text-gray-400 font-medium">ACCIONES</th>
+                  <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm">USUARIO</th>
+                  <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm hidden sm:table-cell">EMAIL</th>
+                  <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm">NIVEL</th>
+                  <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm hidden sm:table-cell">REFERIDOS</th>
+                  <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm">ACCIONES</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredUsers.map((user) => (
                   <tr key={user.id} className="border-b border-[#2a2a2a] hover:bg-[#2a2a2a]/50">
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-[#3a3a3a] rounded-full flex items-center justify-center text-white font-semibold">
+                    <td className="py-2 sm:py-3 px-2 sm:px-4">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#3a3a3a] rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-base">
                           {user.nombre?.charAt(0) || user.nickname?.charAt(0) || 'U'}
                         </div>
-                        <div>
-                          <div className="text-white font-medium">
+                        <div className="min-w-0 flex-1">
+                          <div className="text-white font-medium text-sm sm:text-base truncate">
                             {user.nombre} {user.apellido}
                           </div>
-                          <div className="text-gray-400 text-sm">
+                          <div className="text-gray-400 text-xs sm:text-sm truncate">
                             @{user.nickname}
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-gray-300">{user.email}</td>
-                    <td className="py-3 px-4">
-                      <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    <td className="py-2 sm:py-3 px-2 sm:px-4 text-gray-300 text-xs sm:text-sm hidden sm:table-cell">
+                      <div className="truncate max-w-[200px]" title={user.email}>
+                        {user.email}
+                      </div>
+                    </td>
+                    <td className="py-2 sm:py-3 px-2 sm:px-4">
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                         {user.user_level}
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-gray-300">
+                    <td className="py-2 sm:py-3 px-2 sm:px-4 text-gray-300 text-xs sm:text-sm hidden sm:table-cell">
                       {user.total_referrals || 0}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-2 sm:py-3 px-2 sm:px-4">
                       <button
                         onClick={() => handleViewUser(user)}
-                        className="p-2 text-gray-400 hover:text-white transition-colors"
+                        className="p-1.5 sm:p-2 text-gray-400 hover:text-white transition-colors"
                         title="Ver detalles"
                       >
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                       </button>
                     </td>
                   </tr>
@@ -635,23 +689,23 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
 
       {/* Mensajes de estado */}
       {error && (
-        <div className="mt-6 p-4 bg-red-900/20 border border-red-500/50 rounded-lg text-red-400">
+        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-red-900/20 border border-red-500/50 rounded-lg text-red-400 text-sm sm:text-base">
           {error}
         </div>
       )}
       
       {success && (
-        <div className="mt-6 p-4 bg-green-900/20 border border-green-500/50 rounded-lg text-green-400">
+        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-green-900/20 border border-green-500/50 rounded-lg text-green-400 text-sm sm:text-base">
           {success}
         </div>
       )}
 
       {/* Información de Debug */}
       {debugInfo && (
-        <div className="mt-6 p-4 bg-purple-900/20 border border-purple-500/30 rounded-lg">
-          <h4 className="text-sm font-medium text-purple-300 mb-3">Información de Debug del Usuario</h4>
+        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-purple-900/20 border border-purple-500/30 rounded-lg">
+          <h4 className="text-sm font-medium text-purple-300 mb-2 sm:mb-3">Información de Debug del Usuario</h4>
           <div className="space-y-2 text-xs">
-            <pre className="text-white overflow-x-auto">
+            <pre className="text-white overflow-x-auto text-xs sm:text-sm">
               {JSON.stringify(debugInfo, null, 2)}
             </pre>
           </div>
@@ -660,10 +714,10 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
 
       {/* Información de Limpieza */}
       {cleanupInfo && (
-        <div className="mt-6 p-4 bg-orange-900/20 border border-orange-500/30 rounded-lg">
-          <h4 className="text-sm font-medium text-orange-300 mb-3">Información de Limpieza de Duplicados</h4>
+        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-orange-900/20 border border-orange-500/30 rounded-lg">
+          <h4 className="text-sm font-medium text-orange-300 mb-2 sm:mb-3">Información de Limpieza de Duplicados</h4>
           <div className="space-y-2 text-xs">
-            <pre className="text-white overflow-x-auto">
+            <pre className="text-white overflow-x-auto text-xs sm:text-sm">
               {JSON.stringify(cleanupInfo, null, 2)}
             </pre>
           </div>
@@ -672,10 +726,10 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
 
       {/* Información de Creación de Perfil */}
       {profileCreationInfo && (
-        <div className="mt-6 p-4 bg-green-900/20 border border-green-500/30 rounded-lg">
-          <h4 className="text-sm font-medium text-green-300 mb-3">Información de Creación de Perfil</h4>
+        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-green-900/20 border border-green-500/30 rounded-lg">
+          <h4 className="text-sm font-medium text-green-300 mb-2 sm:mb-3">Información de Creación de Perfil</h4>
           <div className="space-y-2 text-xs">
-            <pre className="text-white overflow-x-auto">
+            <pre className="text-white overflow-x-auto text-xs sm:text-sm">
               {JSON.stringify(profileCreationInfo, null, 2)}
             </pre>
           </div>
@@ -684,10 +738,10 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
 
       {/* Información de Debug de Autenticación */}
       {authDebugInfo && (
-        <div className="mt-6 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
-          <h4 className="text-sm font-medium text-red-300 mb-3">Información de Debug de Autenticación</h4>
+        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+          <h4 className="text-sm font-medium text-red-300 mb-2 sm:mb-3">Información de Debug de Autenticación</h4>
           <div className="space-y-2 text-xs">
-            <pre className="text-white overflow-x-auto">
+            <pre className="text-white overflow-x-auto text-xs sm:text-sm">
               {JSON.stringify(authDebugInfo, null, 2)}
             </pre>
           </div>
@@ -696,71 +750,71 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
 
       {/* Modal de detalles del usuario */}
       {showUserModal && selectedUser && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#1a1a1a] rounded-xl border border-[#3a3a3a] max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-[#3a3a3a] flex justify-between items-center">
-              <h3 className="text-xl font-semibold text-white">Detalles del Usuario</h3>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-[#1a1a1a] rounded-xl border border-[#3a3a3a] w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="p-4 sm:p-6 border-b border-[#3a3a3a] flex justify-between items-center">
+              <h3 className="text-lg sm:text-xl font-semibold text-white">Detalles del Usuario</h3>
               <button
                 onClick={() => setShowUserModal(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors p-1"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
-            <div className="p-6 space-y-4">
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-16 h-16 rounded-full bg-[#8A8A8A] flex items-center justify-center">
-                  <span className="text-xl font-bold text-white">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#8A8A8A] flex items-center justify-center">
+                  <span className="text-lg sm:text-xl font-bold text-white">
                     {selectedUser.nombre?.[0]?.toUpperCase() || selectedUser.nickname?.[0]?.toUpperCase() || 'U'}
                   </span>
                 </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-white">
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-base sm:text-lg font-semibold text-white truncate">
                     {selectedUser.nombre} {selectedUser.apellido}
                   </h4>
-                  <p className="text-gray-400">@{selectedUser.nickname}</p>
+                  <p className="text-gray-400 text-sm truncate">@{selectedUser.nickname}</p>
                 </div>
               </div>
               
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-sm">
-                  <UserCheck className="w-4 h-4 text-gray-400" />
+              <div className="space-y-2 sm:space-y-3">
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
+                  <UserCheck className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                   <span className="text-gray-400">Email:</span>
-                  <span className="text-white">{selectedUser.email}</span>
+                  <span className="text-white truncate">{selectedUser.email}</span>
                 </div>
                 
                 {selectedUser.movil && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone className="w-4 h-4 text-gray-400" />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                     <span className="text-gray-400">Móvil:</span>
-                    <span className="text-white">{selectedUser.movil}</span>
+                    <span className="text-white truncate">{selectedUser.movil}</span>
                   </div>
                 )}
                 
                 {selectedUser.exchange && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Building className="w-4 h-4 text-gray-400" />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Building className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                     <span className="text-gray-400">Exchange:</span>
-                    <span className="text-white">{selectedUser.exchange}</span>
+                    <span className="text-white truncate">{selectedUser.exchange}</span>
                   </div>
                 )}
                 
-                <div className="flex items-center gap-2 text-sm">
-                  <Crown className="w-4 h-4 text-gray-400" />
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
+                  <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                   <span className="text-gray-400">Nivel:</span>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getLevelColor(selectedUser.user_level)}`}>
                     {selectedUser.user_level || 'iniciado'}
                   </span>
                 </div>
                 
-                <div className="flex items-center gap-2 text-sm">
-                  <Star className="w-4 h-4 text-gray-400" />
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
+                  <Star className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                   <span className="text-gray-400">Referidos:</span>
                   <span className="text-white">{selectedUser.total_referrals || 0}</span>
                 </div>
                 
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="w-4 h-4 text-gray-400" />
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
+                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                   <span className="text-gray-400">Registrado:</span>
                   <span className="text-white">
                     {new Date(selectedUser.created_at).toLocaleDateString()}
@@ -768,20 +822,20 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                 </div>
               </div>
             </div>
-            <div className="p-6 border-t border-[#3a3a3a] flex justify-between">
+            <div className="p-4 sm:p-6 border-t border-[#3a3a3a] flex flex-col sm:flex-row gap-2 sm:gap-3">
               <button
                 onClick={() => {
                   setShowUserModal(false);
                   handleEditUser(selectedUser);
                 }}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                className="px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 text-sm"
               >
-                <Edit className="w-4 h-4" />
+                <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                 Editar
               </button>
               <button
                 onClick={() => setShowUserModal(false)}
-                className="px-4 py-2 bg-[#8A8A8A] text-white rounded-lg hover:bg-[#9A9A9A] transition-colors"
+                className="px-3 sm:px-4 py-2 bg-[#8A8A8A] text-white rounded-lg hover:bg-[#9A9A9A] transition-colors text-sm"
               >
                 Cerrar
               </button>
@@ -792,99 +846,99 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
 
       {/* Modal de edición del usuario */}
       {showEditModal && selectedUser && editingUser && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#1a1a1a] rounded-xl border border-[#3a3a3a] max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-[#3a3a3a] flex justify-between items-center">
-              <h3 className="text-xl font-semibold text-white">Editar Usuario</h3>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-[#1a1a1a] rounded-xl border border-[#3a3a3a] w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="p-4 sm:p-6 border-b border-[#3a3a3a] flex justify-between items-center">
+              <h3 className="text-lg sm:text-xl font-semibold text-white">Editar Usuario</h3>
               <button
                 onClick={() => setShowEditModal(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors p-1"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
             
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-4 sm:p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* Información personal */}
-                <div className="space-y-4">
-                  <h4 className="text-lg font-medium text-white border-b border-[#3a3a3a] pb-2">
+                <div className="space-y-3 sm:space-y-4">
+                  <h4 className="text-base sm:text-lg font-medium text-white border-b border-[#3a3a3a] pb-2">
                     Información Personal
                   </h4>
                   
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Nombre</label>
+                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Nombre</label>
                     <input
                       type="text"
                       value={editingUser.nombre}
                       onChange={(e) => handleInputChange('nombre', e.target.value)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Apellido</label>
+                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Apellido</label>
                     <input
                       type="text"
                       value={editingUser.apellido}
                       onChange={(e) => handleInputChange('apellido', e.target.value)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Nickname</label>
+                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Nickname</label>
                     <input
                       type="text"
                       value={editingUser.nickname}
                       onChange={(e) => handleInputChange('nickname', e.target.value)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Email</label>
+                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Email</label>
                     <input
                       type="email"
                       value={editingUser.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Móvil</label>
+                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Móvil</label>
                     <input
                       type="text"
                       value={editingUser.movil}
                       onChange={(e) => handleInputChange('movil', e.target.value)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Exchange</label>
+                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Exchange</label>
                     <input
                       type="text"
                       value={editingUser.exchange}
                       onChange={(e) => handleInputChange('exchange', e.target.value)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     />
                   </div>
                 </div>
                 
                 {/* Información del sistema */}
-                <div className="space-y-4">
-                  <h4 className="text-lg font-medium text-white border-b border-[#3a3a3a] pb-2">
+                <div className="space-y-3 sm:space-y-4">
+                  <h4 className="text-base sm:text-lg font-medium text-white border-b border-[#3a3a3a] pb-2">
                     Información del Sistema
                   </h4>
                   
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Nivel de Usuario</label>
+                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Nivel de Usuario</label>
                     <select
                       value={editingUser.user_level}
                       onChange={(e) => handleInputChange('user_level', e.target.value)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     >
                       <option value="iniciado">Iniciado</option>
                       <option value="acolito">Acólito</option>
@@ -893,53 +947,53 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                   </div>
                   
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Código de Referido</label>
+                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Código de Referido</label>
                     <input
                       type="text"
                       value={editingUser.referral_code}
                       onChange={(e) => handleInputChange('referral_code', e.target.value)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Referido por</label>
+                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Referido por</label>
                     <input
                       type="text"
                       value={editingUser.referred_by}
                       onChange={(e) => handleInputChange('referred_by', e.target.value)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Total de Referidos</label>
+                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Total de Referidos</label>
                     <input
                       type="number"
                       value={editingUser.total_referrals}
                       onChange={(e) => handleInputChange('total_referrals', parseInt(e.target.value) || 0)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Ganancias Totales</label>
+                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Ganancias Totales</label>
                     <input
                       type="number"
                       step="0.01"
                       value={editingUser.total_earnings}
                       onChange={(e) => handleInputChange('total_earnings', parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A]"
+                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     />
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="p-6 border-t border-[#3a3a3a] flex justify-end gap-3">
+            <div className="p-4 sm:p-6 border-t border-[#3a3a3a] flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
               <button
                 onClick={() => setShowEditModal(false)}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                className="px-3 sm:px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
                 disabled={saving}
               >
                 Cancelar
@@ -947,16 +1001,16 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
               <button
                 onClick={handleSaveUser}
                 disabled={saving}
-                className="px-4 py-2 bg-[#8A8A8A] text-white rounded-lg hover:bg-[#9A9A9A] transition-colors flex items-center gap-2 disabled:opacity-50"
+                className="px-3 sm:px-4 py-2 bg-[#8A8A8A] text-white rounded-lg hover:bg-[#9A9A9A] transition-colors flex items-center justify-center gap-2 text-sm disabled:opacity-50"
               >
                 {saving ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-3 h-3 sm:h-4 sm:w-4 border-b-2 border-white"></div>
                     Guardando...
                   </>
                 ) : (
                   <>
-                    <Save className="w-4 h-4" />
+                    <Save className="w-3 h-3 sm:w-4 sm:h-4" />
                     Guardar Cambios
                   </>
                 )}

@@ -38,27 +38,27 @@ export default function TradingChartsPage() {
   ];
 
   return (
-    <div className="w-full max-w-none">
-      <div className="mb-6 sm:mb-8">
-        <div className="mb-4 sm:mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#8A8A8A] mb-2">
+    <div className="w-full max-w-none min-w-0">
+      <div className="mb-4 sm:mb-6 lg:mb-8">
+        <div className="mb-3 sm:mb-4 lg:mb-6">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#8A8A8A] mb-2">
             Trading Charts
           </h1>
-          <p className="text-sm sm:text-base text-gray-400">
+          <p className="text-sm sm:text-base lg:text-lg text-gray-400">
             Gráficos en tiempo real de las principales criptomonedas
           </p>
         </div>
 
-        {/* Controles del gráfico - Responsive */}
-        <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-3 sm:p-4 md:p-6 mb-4 sm:mb-6">
-          <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:flex-wrap md:items-center md:gap-6">
+        {/* Controles del gráfico - Completamente Responsive */}
+        <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-3 sm:p-4 lg:p-6 mb-4 sm:mb-6">
+          <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:flex-wrap lg:items-center lg:gap-4 xl:gap-6">
             {/* Selector de criptomoneda */}
-            <div className="w-full md:w-auto">
-              <label className="text-sm text-gray-400 block mb-2">Criptomoneda</label>
+            <div className="w-full lg:w-auto">
+              <label className="text-xs sm:text-sm text-gray-400 block mb-2">Criptomoneda</label>
               <select
                 value={selectedSymbol}
                 onChange={(e) => setSelectedSymbol(e.target.value)}
-                className="w-full md:w-auto bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-3 sm:px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm sm:text-base"
+                className="w-full lg:w-auto bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg px-3 sm:px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm sm:text-base"
               >
                 {topCryptos.map((crypto) => (
                   <option key={crypto.symbol} value={crypto.symbol}>
@@ -68,9 +68,9 @@ export default function TradingChartsPage() {
               </select>
             </div>
 
-            {/* Selector de timeframe - Responsive */}
-            <div className="w-full md:w-auto">
-              <label className="text-sm text-gray-400 block mb-2">Timeframe</label>
+            {/* Selector de timeframe - Completamente Responsive */}
+            <div className="w-full lg:w-auto">
+              <label className="text-xs sm:text-sm text-gray-400 block mb-2">Timeframe</label>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-1 sm:gap-2">
                 {timeframes.map((tf) => (
                   <button
@@ -88,12 +88,12 @@ export default function TradingChartsPage() {
               </div>
             </div>
 
-            {/* Información del precio - Responsive */}
-            <div className="w-full md:w-auto md:ml-auto">
+            {/* Información del precio - Completamente Responsive */}
+            <div className="w-full lg:w-auto lg:ml-auto">
               {(() => {
                 const crypto = topCryptos.find(c => c.symbol === selectedSymbol);
                 return crypto ? (
-                  <div className="text-left md:text-right">
+                  <div className="text-left lg:text-right">
                     <div className="text-sm text-[#8A8A8A] mb-1">{crypto.price}</div>
                     <div className="text-xs text-gray-500">
                       {crypto.change}
@@ -104,20 +104,61 @@ export default function TradingChartsPage() {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Gráfico principal - Responsive */}
-      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-3 sm:p-4 md:p-6 mb-4 sm:mb-6">
-        <div className="flex items-center justify-between mb-3 sm:mb-4">
-          <h3 className="text-lg sm:text-xl font-semibold text-white">
-            {selectedSymbol} - {timeframe}
-          </h3>
+        {/* Gráfico principal - Completamente Responsive */}
+        <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-3 sm:p-4 lg:p-6">
+          <div className="mb-4">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-white mb-2">
+              {(() => {
+                const crypto = topCryptos.find(c => c.symbol === selectedSymbol);
+                return crypto ? `${crypto.name} (${selectedSymbol})` : selectedSymbol;
+              })()}
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-400">
+              Timeframe: {timeframe} | Datos en tiempo real desde Binance
+            </p>
+          </div>
+          
+          <TradingChart 
+            symbol={selectedSymbol} 
+            timeframe={timeframe}
+          />
         </div>
-        
-        <TradingChart 
-          symbol={selectedSymbol} 
-          timeframe={timeframe}
-        />
+
+        {/* Lista de criptomonedas - Completamente Responsive */}
+        <div className="mt-4 sm:mt-6 lg:mt-8">
+          <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-white mb-3 sm:mb-4">
+            Top 10 Criptomonedas
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
+            {topCryptos.map((crypto) => (
+              <button
+                key={crypto.symbol}
+                onClick={() => setSelectedSymbol(crypto.symbol)}
+                className={`p-3 sm:p-4 rounded-xl border transition-all duration-300 text-left ${
+                  selectedSymbol === crypto.symbol
+                    ? 'border-[#8A8A8A] bg-gradient-to-br from-[#2a2a2a] to-[#3a3a3a]'
+                    : 'border-[#3a3a3a] bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] hover:border-[#4a4a4a] hover:scale-105'
+                }`}
+              >
+                <div className="flex flex-col">
+                  <div className="text-white font-medium text-sm sm:text-base mb-1">
+                    {crypto.name}
+                  </div>
+                  <div className="text-gray-400 text-xs sm:text-sm mb-2">
+                    {crypto.symbol}
+                  </div>
+                  <div className="text-[#8A8A8A] text-xs sm:text-sm">
+                    {crypto.price}
+                  </div>
+                  <div className="text-gray-500 text-xs">
+                    {crypto.change}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

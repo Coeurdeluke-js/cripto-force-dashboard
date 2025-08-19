@@ -36,10 +36,12 @@ export async function PUT(request: NextRequest) {
 
     // Verificar que el usuario sea Maestro
     console.log('API: Checking if user is Maestro...');
-    const { data: userProfiles, error: profileError } = await supabase
+    console.log('API: User email from token:', user.email);
+    
+    let { data: userProfiles, error: profileError } = await supabase
       .from('users')
       .select('user_level, email, nickname, id')
-      .eq('uid', user.id);
+      .eq('email', user.email);
 
     console.log('API: User profiles data:', userProfiles);
     console.log('API: Profile error:', profileError);
@@ -50,8 +52,26 @@ export async function PUT(request: NextRequest) {
     }
 
     if (!userProfiles || userProfiles.length === 0) {
-      console.error('API: No user profile found');
-      return NextResponse.json({ error: 'Perfil de usuario no encontrado' }, { status: 404 });
+      console.error('API: No user profile found for email:', user.email);
+      
+      // Intentar buscar por uid como fallback
+      console.log('API: Trying fallback search by uid...');
+      const { data: fallbackProfiles, error: fallbackError } = await supabase
+        .from('users')
+        .select('user_level, email, nickname, id')
+        .eq('uid', user.id);
+      
+      console.log('API: Fallback profiles data:', fallbackProfiles);
+      console.log('API: Fallback error:', fallbackError);
+      
+      if (fallbackError || !fallbackProfiles || fallbackProfiles.length === 0) {
+        return NextResponse.json({ 
+          error: 'Perfil de usuario no encontrado. Email: ' + user.email + ', UID: ' + user.id 
+        }, { status: 404 });
+      }
+      
+      // Usar el perfil encontrado por uid
+      userProfiles = fallbackProfiles;
     }
 
     // Si hay múltiples registros, usar el primero o el más reciente
@@ -64,8 +84,8 @@ export async function PUT(request: NextRequest) {
     console.log('API: User level from database:', userLevel);
     console.log('API: User level type:', typeof userLevel);
     
-    // Verificar si es maestro (puede ser string 'maestro' o número 3)
-    const isMaestro = userLevel === 'maestro' || userLevel === 3 || userLevel === '3';
+    // Verificar si es maestro (puede ser string 'maestro' o número 3, o nivel 0 para fundadores)
+    const isMaestro = userLevel === 'maestro' || userLevel === 3 || userLevel === '3' || userLevel === 0;
     console.log('API: Is user Maestro?', isMaestro);
 
     if (!isMaestro) {
@@ -179,7 +199,7 @@ export async function GET(request: NextRequest) {
     const { data: userProfiles, error: profileError } = await supabase
       .from('users')
       .select('user_level, email, nickname, id')
-      .eq('uid', user.id);
+      .eq('email', user.email);
 
     console.log('API GET: User profiles data:', userProfiles);
     console.log('API GET: Profile error:', profileError);
@@ -204,8 +224,8 @@ export async function GET(request: NextRequest) {
     console.log('API GET: User level from database:', userLevel);
     console.log('API GET: User level type:', typeof userLevel);
     
-    // Verificar si es maestro (puede ser string 'maestro' o número 3)
-    const isMaestro = userLevel === 'maestro' || userLevel === 3 || userLevel === '3';
+    // Verificar si es maestro (puede ser string 'maestro' o número 3, o nivel 0 para fundadores)
+    const isMaestro = userLevel === 'maestro' || userLevel === 3 || userLevel === '3' || userLevel === 0;
     console.log('API GET: Is user Maestro?', isMaestro);
 
     if (!isMaestro) {

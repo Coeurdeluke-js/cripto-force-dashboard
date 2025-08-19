@@ -94,24 +94,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [isClient]);
 
   useEffect(() => {
-    // Temporalmente deshabilitado Supabase para evitar errores
-    setLoading(false);
-    setUser(null);
-    
-    // Comentado temporalmente
-    /*
     // Only initialize Supabase on the client side
     if (typeof window !== 'undefined') {
       // Dynamic import to prevent server-side execution
-      import('@/utils/supabase/client').then(({ createClient }) => {
-        const client = createClient();
-        setSupabase(client);
+      import('@/lib/supabaseClient').then(({ supabase }) => {
+        setSupabase(supabase);
 
         // Get initial session
         const getSession = async () => {
           try {
-            const { data: { session } } = await client.auth.getSession();
+            const { data: { session } } = await supabase.auth.getSession();
             setUser(session?.user ?? null);
+            
+            // Si hay usuario autenticado, obtener sus datos
+            if (session?.user) {
+              await fetchUserData(supabase, session.user);
+            }
           } catch (error) {
             console.error('Error getting session:', error);
           } finally {
@@ -122,9 +120,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         getSession();
 
         // Listen for auth changes
-        const { data: { subscription } } = client.auth.onAuthStateChange(
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
           async (event, session) => {
+            console.log('Auth state changed:', event, session?.user?.email);
             setUser(session?.user ?? null);
+            
+            if (event === 'SIGNED_IN' && session?.user) {
+              await fetchUserData(supabase, session.user);
+            } else if (event === 'SIGNED_OUT') {
+              clearUserData();
+            }
+            
             setLoading(false);
           }
         );
@@ -137,8 +143,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else {
       setLoading(false);
     }
-    */
   }, []);
+
+  // Función para obtener datos del usuario desde la base de datos
+  const fetchUserData = async (supabase: any, user: User) => {
+    try {
+      const { data: profile, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', user.email)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching user data:', error);
+        return;
+      }
+
+      if (profile) {
+        const userData: UserData = {
+          id: profile.id,
+          nombre: profile.nombre || '',
+          apellido: profile.apellido || '',
+          nickname: profile.nickname || '',
+          email: profile.email,
+          movil: profile.movil,
+          exchange: profile.exchange,
+          uid: profile.uid,
+          codigo_referido: profile.codigo_referido,
+          joinDate: profile.created_at,
+          referral_code: profile.referral_code,
+          referred_by: profile.referred_by,
+          user_level: profile.user_level,
+          total_referrals: profile.total_referrals,
+          total_earnings: profile.total_earnings
+        };
+        setUserData(userData);
+      } else {
+        // Si no existe el perfil, crear uno básico
+        console.log('Creating basic profile for user:', user.email);
+        const basicUserData: UserData = {
+          nombre: user.user_metadata?.full_name?.split(' ')[0] || '',
+          apellido: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+          nickname: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
+          email: user.email || '',
+          uid: user.id,
+          user_level: 1
+        };
+        setUserData(basicUserData);
+      }
+    } catch (error) {
+      console.error('Error in fetchUserData:', error);
+    }
+  };
 
   const signOut = async () => {
     if (supabase) {

@@ -87,10 +87,10 @@ function MaestroLayoutContent({
       </div>
       
       {/* Main Content Area - Completamente visible con scroll horizontal si es necesario */}
-      <div className={`transition-all duration-300 min-w-full ${
-        isExpanded ? 'md:ml-72' : 'md:ml-20'
+      <div className={`transition-all duration-300 w-full ${
+        isExpanded ? 'md:ml-64' : 'md:ml-16'
       }`}>
-        <main className="min-h-screen p-4 md:p-6 lg:p-8 pb-20 md:pb-6 min-w-max">
+        <main className="min-h-screen p-3 sm:p-4 md:p-6 lg:p-8 pb-20 md:pb-6 w-full">
           {children}
         </main>
       </div>

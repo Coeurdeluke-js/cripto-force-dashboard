@@ -1,12 +1,18 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { createChart, IChartApi, ISeriesApi, CandlestickData, Time } from 'lightweight-charts';
-import { BarChart3 } from 'lucide-react';
+import { createChart, IChartApi, ISeriesApi, CandlestickData, Time, LineStyle } from 'lightweight-charts';
+import { BarChart3, Settings, TrendingUp } from 'lucide-react';
 
 interface TradingChartProps {
   symbol?: string;
   timeframe?: string;
+}
+
+interface StochasticData {
+  time: number;
+  k: number; // %K line
+  d: number; // %D line (SMA de %K)
 }
 
 const TradingChart: React.FC<TradingChartProps> = ({ 
@@ -16,6 +22,8 @@ const TradingChart: React.FC<TradingChartProps> = ({
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candlestickSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
+  const stochasticKSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
+  const stochasticDSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
   const isDestroyedRef = useRef(false);
   const updateIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -30,6 +38,10 @@ const TradingChart: React.FC<TradingChartProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [showIndicatorsMenu, setShowIndicatorsMenu] = useState(false);
   const [currentPrice, setCurrentPrice] = useState<string>('');
+  const [stochasticEnabled, setStochasticEnabled] = useState(true);
+  const [stochasticPeriod, setStochasticPeriod] = useState(14);
+  const [stochasticKPeriod, setStochasticKPeriod] = useState(3);
+  const [stochasticDPeriod, setStochasticDPeriod] = useState(3);
   const [windowSize, setWindowSize] = useState({
     width: typeof window !== 'undefined' ? window.innerWidth : 1200,
     height: typeof window !== 'undefined' ? window.innerHeight : 800
@@ -89,6 +101,8 @@ const TradingChart: React.FC<TradingChartProps> = ({
         chartRef.current.remove();
         chartRef.current = null;
         candlestickSeriesRef.current = null;
+        stochasticKSeriesRef.current = null;
+        stochasticDSeriesRef.current = null;
       } catch (error) {
         console.warn('Error during chart cleanup:', error);
       }
@@ -149,40 +163,93 @@ const TradingChart: React.FC<TradingChartProps> = ({
     }
   }, [symbol, timeframe]);
 
-  // Función para obtener datos reales de Binance
+  // Función para calcular el Estocástico REAL
+  const calculateStochastic = useCallback((candles: Array<{time: number, open: number, high: number, low: number, close: number}>, period: number, kPeriod: number, dPeriod: number): StochasticData[] => {
+    if (candles.length < period) return [];
+
+    const stochasticData: StochasticData[] = [];
+    
+    for (let i = period - 1; i < candles.length; i++) {
+      // Encontrar el máximo y mínimo en el período
+      let highestHigh = candles[i].high;
+      let lowestLow = candles[i].low;
+      
+      for (let j = i - period + 1; j <= i; j++) {
+        if (candles[j].high > highestHigh) highestHigh = candles[j].high;
+        if (candles[j].low < lowestLow) lowestLow = candles[j].low;
+      }
+      
+      // Calcular %K
+      const currentClose = candles[i].close;
+      const range = highestHigh - lowestLow;
+      const k = range === 0 ? 50 : ((currentClose - lowestLow) / range) * 100;
+      
+      // Calcular %D (SMA de %K)
+      let dSum = k;
+      let dCount = 1;
+      
+      for (let j = 1; j < kPeriod && (i - j) >= 0; j++) {
+        const prevIndex = i - j;
+        if (prevIndex >= period - 1) {
+          let prevHighestHigh = candles[prevIndex].high;
+          let prevLowestLow = candles[prevIndex].low;
+          
+          for (let k = prevIndex - period + 1; k <= prevIndex; k++) {
+            if (candles[k].high > prevHighestHigh) prevHighestHigh = candles[k].high;
+            if (candles[k].low < prevLowestLow) prevLowestLow = candles[k].low;
+          }
+          
+          const prevRange = prevHighestHigh - prevLowestLow;
+          const prevK = prevRange === 0 ? 50 : ((candles[prevIndex].close - prevLowestLow) / prevRange) * 100;
+          dSum += prevK;
+          dCount++;
+        }
+      }
+      
+      const d = dSum / dCount;
+      
+      stochasticData.push({
+        time: candles[i].time,
+        k: k,
+        d: d
+      });
+    }
+    
+    // Aplicar suavizado adicional a %D si es necesario
+    if (dPeriod > 1) {
+      for (let i = dPeriod - 1; i < stochasticData.length; i++) {
+        let dSum = 0;
+        for (let j = 0; j < dPeriod; j++) {
+          dSum += stochasticData[i - j].d;
+        }
+        stochasticData[i].d = dSum / dPeriod;
+      }
+    }
+    
+    return stochasticData;
+  }, []);
+
+  // Función para obtener datos de Binance en tiempo real
   const fetchBinanceData = useCallback(async () => {
     if (isDestroyedRef.current) return;
     
     try {
+      console.log('Fetching real-time data from Binance for', symbol, timeframe);
       setLoading(true);
       setError(null);
       
-      console.log('Fetching real data from Binance for:', symbol, timeframe);
+      // Calcular límite basado en el timeframe para obtener suficientes datos para el estocástico
+      const limit = Math.max(100, stochasticPeriod * 3); // Mínimo 100, idealmente 3x el período del estocástico
       
-      // Convertir timeframe a formato de Binance
-      const intervalMap: { [key: string]: string } = {
-        '1m': '1m',
-        '5m': '5m',
-        '15m': '15m',
-        '1h': '1h',
-        '4h': '4h',
-        '1d': '1d'
-      };
-      
-      const interval = intervalMap[timeframe] || '1h';
-      const limit = 200; // Más datos para un gráfico más completo
-      
-      const response = await fetch(
-        `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`
-      );
+      const response = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${timeframe}&limit=${limit}`);
       
       if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       
       const data = await response.json();
       
-      // Convertir datos de Binance al formato requerido
+      // Formatear datos de velas
       const formattedCandles = data.map((candle: any) => ({
         time: Math.floor(new Date(candle[0]).getTime() / 1000),
         open: parseFloat(candle[1]),
@@ -192,10 +259,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
       }));
       
       // Obtener precio actual
-      const currentPriceResponse = await fetch(
-        `https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`
-      );
-      
+      const currentPriceResponse = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`);
       if (currentPriceResponse.ok) {
         const priceData = await currentPriceResponse.json();
         setCurrentPrice(parseFloat(priceData.price).toFixed(2));
@@ -216,7 +280,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
         generateUpdatedMockData();
       }
     }
-  }, [symbol, timeframe, generateUpdatedMockData]);
+  }, [symbol, timeframe, generateUpdatedMockData, stochasticPeriod]);
 
   // Cargar datos cuando cambie el símbolo o timeframe
   useEffect(() => {
@@ -347,7 +411,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
 
       console.log('Candlestick series created');
 
-      // Configurar datos
+      // Configurar datos de velas
       const candlestickData = candles.map(c => ({
         time: c.time as Time,
         open: c.open,
@@ -358,6 +422,99 @@ const TradingChart: React.FC<TradingChartProps> = ({
       
       console.log('Setting chart data:', candlestickData.length);
       candlestickSeries.setData(candlestickData);
+
+      // Calcular y agregar Estocástico si está habilitado
+      if (stochasticEnabled && candles.length >= stochasticPeriod) {
+        try {
+          console.log('Calculating stochastic with period:', stochasticPeriod);
+          const stochasticData = calculateStochastic(candles, stochasticPeriod, stochasticKPeriod, stochasticDPeriod);
+          
+          if (stochasticData.length > 0) {
+            console.log('Stochastic data calculated:', stochasticData.length, 'points');
+            
+            // Crear serie %K (línea azul) en el gráfico principal
+            const kSeries = chart.addLineSeries({
+              color: '#3B82F6',
+              lineWidth: 2,
+              title: `%K (${stochasticPeriod},${stochasticKPeriod})`,
+              priceScaleId: 'stochastic',
+            });
+
+            // Crear serie %D (línea roja) en el gráfico principal
+            const dSeries = chart.addLineSeries({
+              color: '#EF4444',
+              lineWidth: 2,
+              title: `%D (${stochasticPeriod},${stochasticKPeriod},${stochasticDPeriod})`,
+              priceScaleId: 'stochastic',
+            });
+
+            // Líneas de referencia de sobrecompra (80) y sobreventa (20)
+            const overboughtLine = chart.addLineSeries({
+              color: '#F59E0B',
+              lineWidth: 1,
+              lineStyle: LineStyle.Dashed,
+              title: 'Sobrecompra (80)',
+              priceScaleId: 'stochastic',
+            });
+
+            const oversoldLine = chart.addLineSeries({
+              color: '#F59E0B',
+              lineWidth: 1,
+              lineStyle: LineStyle.Dashed,
+              title: 'Sobreventa (20)',
+              priceScaleId: 'stochastic',
+            });
+
+            // Crear escala de precios separada para el estocástico
+            const stochasticPriceScale = chart.priceScale('stochastic');
+            if (stochasticPriceScale) {
+              stochasticPriceScale.applyOptions({
+                scaleMargins: {
+                  top: 0.1,
+                  bottom: 0.1,
+                },
+                visible: true,
+                autoScale: false,
+              });
+            }
+
+            // Configurar datos del estocástico
+            const kData = stochasticData.map(s => ({
+              time: s.time as Time,
+              value: s.k
+            }));
+
+            const dData = stochasticData.map(s => ({
+              time: s.time as Time,
+              value: s.d
+            }));
+
+            // Líneas de referencia
+            const overboughtData = stochasticData.map(s => ({
+              time: s.time as Time,
+              value: 80
+            }));
+
+            const oversoldData = stochasticData.map(s => ({
+              time: s.time as Time,
+              value: 20
+            }));
+
+            kSeries.setData(kData);
+            dSeries.setData(dData);
+            overboughtLine.setData(overboughtData);
+            oversoldLine.setData(oversoldData);
+
+            // Guardar referencias
+            stochasticKSeriesRef.current = kSeries;
+            stochasticDSeriesRef.current = dSeries;
+
+            console.log('Stochastic indicator added successfully');
+          }
+        } catch (stochError) {
+          console.error('Error adding stochastic indicator:', stochError);
+        }
+      }
 
       // Guardar referencias
       chartRef.current = chart;
@@ -390,7 +547,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
         setError('Error al crear el gráfico: ' + error);
       }
     }
-  }, [candles, cleanupChart, windowSize]);
+  }, [candles, cleanupChart, windowSize, stochasticEnabled, stochasticPeriod, stochasticKPeriod, stochasticDPeriod, calculateStochastic]);
 
   // Cleanup al desmontar el componente
   useEffect(() => {
@@ -404,128 +561,131 @@ const TradingChart: React.FC<TradingChartProps> = ({
     };
   }, [cleanupChart]);
 
-  if (loading) {
-    console.log('Rendering loading state');
-    return (
-      <div className="flex items-center justify-center h-48 sm:h-64 md:h-96">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-[#8A8A8A] mb-3 sm:mb-4"></div>
-          <div className="text-sm sm:text-base text-gray-400">Cargando datos reales del mercado...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    console.log('Rendering error state:', error);
-    return (
-      <div className="flex items-center justify-center h-48 sm:h-64 md:h-96">
-        <div className="text-center">
-          <div className="text-red-400 text-base sm:text-lg mb-2">Error</div>
-          <div className="text-sm sm:text-base text-gray-400 px-4">{error}</div>
-          <button
-            onClick={() => {
-              setError(null);
-              setLoading(true);
-              fetchBinanceData();
-            }}
-            className="mt-3 sm:mt-4 px-3 sm:px-4 py-2 bg-[#8A8A8A] text-white rounded-lg hover:bg-[#9A9A9A] transition-colors text-sm sm:text-base"
-          >
-            Reintentar
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  console.log('Rendering chart container with', candles.length, 'candles');
-
   return (
-    <div className="w-full relative">
-      {/* Controles del gráfico - Responsive */}
-      <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10 flex items-center gap-1 sm:gap-2">
-        {/* Menú de indicadores */}
-        <div className="relative">
-          <button
-            onClick={() => setShowIndicatorsMenu(!showIndicatorsMenu)}
-            className="p-1.5 sm:p-2 bg-[#2a2a2a] rounded-lg text-gray-400 hover:text-white transition-colors"
-            title="Indicadores Técnicos"
-          >
-            <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
-          </button>
+    <div className="w-full h-full relative">
+      {/* Controles del Indicador Estocástico */}
+      <div className="absolute top-4 right-4 z-10">
+        <div className="bg-[#1a1a1a] rounded-lg border border-[#3a3a3a] p-3 shadow-lg">
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp className="w-4 h-4 text-blue-400" />
+            <span className="text-white text-sm font-medium">Estocástico</span>
+            <button
+              onClick={() => setStochasticEnabled(!stochasticEnabled)}
+              className={`ml-auto px-2 py-1 rounded text-xs font-medium transition-colors ${
+                stochasticEnabled 
+                  ? 'bg-green-600 text-white' 
+                  : 'bg-gray-600 text-gray-300'
+              }`}
+            >
+              {stochasticEnabled ? 'ON' : 'OFF'}
+            </button>
+          </div>
           
-          {showIndicatorsMenu && (
-            <div className="absolute right-0 top-full mt-2 w-48 sm:w-64 bg-[#1a1a1a] border border-[#3a3a3a] rounded-lg shadow-lg z-20">
-              <div className="p-3 sm:p-4">
-                <h4 className="text-white font-medium mb-2 sm:mb-3 text-sm sm:text-base">Indicadores Técnicos</h4>
-                <div className="space-y-2">
-                  <div className="text-xs sm:text-sm text-gray-400">Próximamente...</div>
-                </div>
+          {stochasticEnabled && (
+            <div className="space-y-2">
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">Período</label>
+                <input
+                  type="number"
+                  min="5"
+                  max="50"
+                  value={stochasticPeriod}
+                  onChange={(e) => setStochasticPeriod(parseInt(e.target.value) || 14)}
+                  className="w-16 px-2 py-1 bg-[#2a2a2a] border border-[#3a3a3a] rounded text-white text-xs focus:outline-none focus:ring-1 focus:ring-blue-400"
+                />
               </div>
-              {/* Botón para cerrar en móviles */}
-              <div className="sm:hidden p-2 border-t border-[#3a3a3a]">
-                <button
-                  onClick={() => setShowIndicatorsMenu(false)}
-                  className="w-full text-center text-xs text-gray-400 hover:text-white py-1"
-                >
-                  Cerrar
-                </button>
+              
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">%K</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={stochasticKPeriod}
+                  onChange={(e) => setStochasticKPeriod(parseInt(e.target.value) || 3)}
+                  className="w-16 px-2 py-1 bg-[#2a2a2a] border border-[#3a3a3a] rounded text-white text-xs focus:outline-none focus:ring-1 focus:ring-blue-400"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-xs text-gray-400 mb-1">%D</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={stochasticDPeriod}
+                  onChange={(e) => setStochasticDPeriod(parseInt(e.target.value) || 3)}
+                  className="w-16 px-2 py-1 bg-[#2a2a2a] border border-[#3a3a3a] rounded text-white text-xs focus:outline-none focus:ring-1 focus:ring-blue-400"
+                />
               </div>
             </div>
           )}
         </div>
-
-        {/* Botón de refresh */}
-        <button
-          onClick={() => {
-            setLoading(true);
-            fetchBinanceData();
-          }}
-          className="p-1.5 sm:p-2 bg-[#2a2a2a] rounded-lg text-gray-400 hover:text-white transition-colors"
-          title="Actualizar datos"
-        >
-          <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-        </button>
       </div>
 
-      {/* Información del precio actual - Responsive */}
-      {currentPrice && (
-        <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-10">
-          <div className="bg-[#2a2a2a] rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-[#3a3a3a]">
-            <div className="text-xs sm:text-sm text-gray-400">Precio Actual</div>
-            <div className="text-sm sm:text-lg font-bold text-white">${currentPrice}</div>
+      {/* Estado de Carga */}
+      {loading && (
+        <div className="absolute inset-0 bg-[#121212]/80 flex items-center justify-center z-20">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8A8A8A] mx-auto mb-4"></div>
+            <p className="text-white text-sm">Cargando datos en tiempo real...</p>
           </div>
         </div>
       )}
 
-      {/* Indicador de estado de actualización */}
-      <div className="absolute top-2 sm:top-4 left-1/2 transform -translate-x-1/2 z-10">
-        <div className="bg-[#2a2a2a] rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-[#3a3a3a]">
-          <div className="flex items-center gap-1 sm:gap-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-xs sm:text-sm text-gray-400">Actualizando...</span>
+      {/* Estado de Error */}
+      {error && (
+        <div className="absolute top-4 left-4 z-10 bg-red-900/80 border border-red-500/50 rounded-lg p-3 max-w-md">
+          <p className="text-red-400 text-sm">{error}</p>
+        </div>
+      )}
+
+      {/* Información del Precio */}
+      {currentPrice && (
+        <div className="absolute top-4 left-4 z-10 bg-[#1a1a1a]/90 border border-[#3a3a3a] rounded-lg p-3">
+          <div className="text-center">
+            <p className="text-gray-400 text-xs mb-1">Precio Actual</p>
+            <p className="text-white text-lg font-bold">${currentPrice}</p>
+            <p className="text-gray-500 text-xs">{symbol}</p>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Contenedor del gráfico - Responsive */}
-      <div
-        ref={chartContainerRef}
-        className="w-full h-64 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px]"
-        style={{
-          backgroundColor: '#121212',
-          border: '1px solid #333333',
-          borderRadius: '8px sm:rounded-xl',
-          cursor: 'crosshair',
-          userSelect: 'none',
-          touchAction: 'pan-x pan-y',
-          overflow: 'hidden'
+      {/* Contenedor del Gráfico */}
+      <div 
+        ref={chartContainerRef} 
+        className="w-full h-full min-h-[400px]"
+        style={{ 
+          height: Math.max(400, windowSize.height * 0.6),
+          width: '100%'
         }}
-        onMouseDown={(e) => e.preventDefault()}
-        onContextMenu={(e) => e.preventDefault()}
       />
+      
+      {/* Información del Indicador */}
+      {stochasticEnabled && (
+        <div className="absolute bottom-4 left-4 z-10 bg-[#1a1a1a]/90 border border-[#3a3a3a] rounded-lg p-3">
+          <div className="text-center">
+            <p className="text-gray-400 text-xs mb-2">Estocástico</p>
+            <div className="flex items-center gap-3 text-xs">
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                <span className="text-white">%K</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <span className="text-white">%D</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 bg-yellow-500 rounded-full border border-dashed"></div>
+                <span className="text-white">80/20</span>
+              </div>
+            </div>
+            <p className="text-gray-500 text-xs mt-2">
+              {stochasticPeriod},{stochasticKPeriod},{stochasticDPeriod}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

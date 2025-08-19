@@ -16,6 +16,7 @@ import {
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useSafeAuth } from '@/context/AuthContext';
 import { useRememberMe } from '@/hooks/useRememberMe';
+import { supabase } from '@/lib/supabaseClient';
 
 interface FormData {
   email: string;
@@ -93,14 +94,29 @@ export default function SignInPage() {
       setIsSubmitting(true);
       console.log('Iniciando sesión con Google...');
       
-      // Aquí iría la implementación real de Google OAuth
-      // Por ahora solo simulamos el proceso
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      console.log('Redirigiendo a Google OAuth...');
-      // En implementación real: window.location.href = googleOAuthUrl;
+      // Implementación real con Supabase OAuth
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: 'https://qtbplksozfropbubykud.supabase.co/auth/v1/callback',
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) {
+        console.error('Error en Google OAuth:', error);
+        setErrors({ general: `Error al conectar con Google: ${error.message}` });
+        return;
+      }
+
+      console.log('Redirigiendo a Google OAuth...', data);
+      // Supabase maneja la redirección automáticamente
       
     } catch (error) {
+      console.error('Error inesperado en Google login:', error);
       setErrors({ general: 'Error al conectar con Google. Intenta de nuevo.' });
     } finally {
       setIsSubmitting(false);
@@ -266,7 +282,7 @@ export default function SignInPage() {
             Bienvenido de vuelta
           </h1>
           <p className="text-[#8a8a8a] text-base">
-            Inicia sesión en tu cuenta de <span className="text-[#a0a0a0] font-medium">Crypto Force</span>
+            Inicia sesión en tu cuenta de <span className="text-[#ec4d58] font-medium">Crypto Force</span>
           </p>
         </div>
 
@@ -416,7 +432,7 @@ export default function SignInPage() {
                 className={`w-full py-3 px-6 rounded-lg font-medium text-base transition-all duration-200 ${
                   isSubmitting
                     ? 'bg-[#3a3a3a] cursor-not-allowed text-[#6a6a6a]'
-                  : 'bg-[#4a4a4a] hover:bg-[#5a5a5a] text-white shadow-sm hover:shadow-md'
+                  : 'bg-[#ec4d58] hover:bg-[#d43d48] text-white shadow-sm hover:shadow-md'
                 }`}
               >
                 {isSubmitting ? (
@@ -471,6 +487,47 @@ export default function SignInPage() {
                   Twitter
                 </button>
               </div>
+            </div>
+
+            {/* Opción para vincular cuenta existente */}
+            <div className="text-center pt-2">
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    setIsSubmitting(true);
+                    // Usar el mismo flujo de OAuth pero con login_hint
+                    const { data, error } = await supabase.auth.signInWithOAuth({
+                      provider: 'google',
+                      options: {
+                        redirectTo: 'https://qtbplksozfropbubykud.supabase.co/auth/v1/callback',
+                        queryParams: {
+                          access_type: 'offline',
+                          prompt: 'consent',
+                          login_hint: formData.email, // Sugerir el email al usuario
+                        },
+                      },
+                    });
+
+                    if (error) {
+                      setErrors({ general: `Error al conectar con Google: ${error.message}` });
+                      return;
+                    }
+
+                    console.log('Redirigiendo a Google para vincular cuenta...', data);
+                    // Supabase maneja la redirección automáticamente
+                    
+                  } catch (error) {
+                    setErrors({ general: 'Error al vincular cuenta con Google' });
+                  } finally {
+                    setIsSubmitting(false);
+                  }
+                }}
+                disabled={isSubmitting || !formData.email}
+                className="text-sm text-[#6a6a6a] hover:text-[#8a8a8a] transition-colors underline disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                ¿Ya tienes cuenta? Vincular con Google
+              </button>
             </div>
 
             {/* Enlace de registro */}
