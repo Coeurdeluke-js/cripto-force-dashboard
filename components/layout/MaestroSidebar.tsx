@@ -93,8 +93,8 @@ export default function MaestroSidebar() {
 
   return (
     <aside
-      className={`fixed top-0 left-0 h-full bg-gradient-to-b from-[#121212] to-[#0a0a0a] shadow-2xl z-40 flex flex-col border-r border-gray-800/50 transition-all duration-300 ease-in-out rounded-r-xl ${
-        isExpanded ? "w-72" : "w-20"
+      className={`h-full bg-gradient-to-b from-[#121212] to-[#0a0a0a] shadow-2xl flex flex-col border-r border-gray-800/50 transition-all duration-300 ease-in-out rounded-r-xl ${
+        isExpanded ? "w-64" : "w-16"
       }`}
     >
       <style jsx>{`

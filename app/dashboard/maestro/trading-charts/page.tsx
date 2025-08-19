@@ -10,10 +10,12 @@ import {
   Info
 } from 'lucide-react';
 import TradingChart from './TradingChart';
+import IndicatorsDropdown from '@/components/ui/IndicatorsDropdown';
 
 export default function TradingChartsPage() {
   const [selectedSymbol, setSelectedSymbol] = useState('BTCUSDT');
   const [timeframe, setTimeframe] = useState('1h');
+  const [selectedIndicator, setSelectedIndicator] = useState<string | null>(null);
 
   const topCryptos = [
     { symbol: 'BTCUSDT', name: 'Bitcoin', price: 'Datos en tiempo real', change: 'Actualizando...' },
@@ -88,6 +90,16 @@ export default function TradingChartsPage() {
               </div>
             </div>
 
+            {/* Selector de Indicadores */}
+            <div className="w-full lg:w-auto">
+              <label className="text-xs sm:text-sm text-gray-400 block mb-2">Indicadores</label>
+              <IndicatorsDropdown
+                selectedIndicator={selectedIndicator}
+                onIndicatorSelect={setSelectedIndicator}
+                className="w-full lg:w-48"
+              />
+            </div>
+
             {/* Información del precio - Completamente Responsive */}
             <div className="w-full lg:w-auto lg:ml-auto">
               {(() => {
@@ -122,6 +134,7 @@ export default function TradingChartsPage() {
           <TradingChart 
             symbol={selectedSymbol} 
             timeframe={timeframe}
+            selectedIndicator={selectedIndicator}
           />
         </div>
 

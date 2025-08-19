@@ -80,19 +80,22 @@ function MaestroLayoutContent({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f] mobile-container overflow-x-auto">
-      {/* Sidebar - Solo visible en desktop y colapsable */}
-      <div className="hidden md:block">
-        <MaestroSidebar />
-      </div>
-      
-      {/* Main Content Area - Completamente visible con scroll horizontal si es necesario */}
-      <div className={`transition-all duration-300 w-full ${
-        isExpanded ? 'md:ml-64' : 'md:ml-16'
-      }`}>
-        <main className="min-h-screen p-3 sm:p-4 md:p-6 lg:p-8 pb-20 md:pb-6 w-full">
-          {children}
-        </main>
+    <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f] mobile-container">
+      {/* Layout container con flexbox */}
+      <div className="flex min-h-screen">
+        {/* Sidebar - Solo visible en desktop y colapsable */}
+        <div className="hidden md:block flex-shrink-0">
+          <MaestroSidebar />
+        </div>
+        
+        {/* Main Content Area - Completamente visible y responsive */}
+        <div className={`flex-1 transition-all duration-300 ${
+          isExpanded ? 'md:ml-0' : 'md:ml-0'
+        }`}>
+          <main className="min-h-screen p-3 sm:p-4 md:p-6 lg:p-8 pb-20 md:pb-6 w-full max-w-none">
+            {children}
+          </main>
+        </div>
       </div>
 
       {/* Downbar móvil - Solo visible en móvil */}

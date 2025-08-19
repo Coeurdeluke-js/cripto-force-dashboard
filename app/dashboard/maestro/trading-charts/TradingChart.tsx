@@ -7,6 +7,7 @@ import { BarChart3, Settings, TrendingUp } from 'lucide-react';
 interface TradingChartProps {
   symbol?: string;
   timeframe?: string;
+  selectedIndicator?: string | null;
 }
 
 interface StochasticData {
@@ -17,7 +18,8 @@ interface StochasticData {
 
 const TradingChart: React.FC<TradingChartProps> = ({ 
   symbol = "BTCUSDT", 
-  timeframe = "1h"
+  timeframe = "1h",
+  selectedIndicator = null
 }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
@@ -38,7 +40,7 @@ const TradingChart: React.FC<TradingChartProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [showIndicatorsMenu, setShowIndicatorsMenu] = useState(false);
   const [currentPrice, setCurrentPrice] = useState<string>('');
-  const [stochasticEnabled, setStochasticEnabled] = useState(true);
+  const [stochasticEnabled, setStochasticEnabled] = useState(false);
   const [stochasticPeriod, setStochasticPeriod] = useState(14);
   const [stochasticKPeriod, setStochasticKPeriod] = useState(3);
   const [stochasticDPeriod, setStochasticDPeriod] = useState(3);
@@ -93,6 +95,15 @@ const TradingChart: React.FC<TradingChartProps> = ({
     resizeObserver.observe(chartContainerRef.current);
     return () => resizeObserver.disconnect();
   }, [candles]);
+
+  // Hook para manejar el cambio de indicador seleccionado
+  useEffect(() => {
+    if (selectedIndicator === 'stochastic') {
+      setStochasticEnabled(true);
+    } else {
+      setStochasticEnabled(false);
+    }
+  }, [selectedIndicator]);
 
   // Función para limpiar el gráfico de forma segura
   const cleanupChart = useCallback(() => {
