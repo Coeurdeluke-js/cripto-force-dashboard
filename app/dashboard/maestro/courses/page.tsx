@@ -178,28 +178,7 @@ const iniciadosModules: Module[] = [
     icon: Brain,
     level: 'iniciados'
   },
-  {
-    id: 't7',
-    title: 'Análisis de Mercados Financieros',
-    type: 'theoretical',
-    description: 'Estructura y funcionamiento de mercados financieros',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: BarChart3,
-    level: 'iniciados'
-  },
-  {
-    id: 't8',
-    title: 'Regulaciones y Compliance',
-    type: 'theoretical',
-    description: 'Marco regulatorio y cumplimiento normativo',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: Shield,
-    level: 'iniciados'
-  },
+
   // Módulos Prácticos (10) - Solo estos, NO incluir puntos de control
   {
     id: 'p1',
@@ -367,50 +346,7 @@ const iniciadosModules: Module[] = [
     icon: CheckCircle,
     level: 'iniciados'
   },
-  {
-    id: 'pc6',
-    title: 'Punto de Control 6: Indicadores Técnicos',
-    type: 'practical',
-    description: 'Evaluación de uso de indicadores',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: CheckCircle,
-    level: 'iniciados'
-  },
-  {
-    id: 'pc7',
-    title: 'Punto de Control 7: Gestión de Riesgo',
-    type: 'practical',
-    description: 'Evaluación de estrategias de riesgo',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: CheckCircle,
-    level: 'iniciados'
-  },
-  {
-    id: 'pc8',
-    title: 'Punto de Control 8: Análisis Fundamental',
-    type: 'practical',
-    description: 'Evaluación de análisis fundamental',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: CheckCircle,
-    level: 'iniciados'
-  },
-  {
-    id: 'pc9',
-    title: 'Punto de Control 9: Plan de Trading',
-    type: 'practical',
-    description: 'Evaluación de planificación de trading',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: CheckCircle,
-    level: 'iniciados'
-  }
+
 ];
 
 export default function CoursesPage() {
