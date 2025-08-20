@@ -19,10 +19,10 @@ import Link from 'next/link';
 
 export default function MaestroDashboardPage() {
   const [systemStats, setSystemStats] = useState({
-    totalModules: 19,
+    totalModules: 18, // 8 teóricos + 10 prácticos
     theoreticalModules: 8,
-    practicalModules: 11,
-    totalCheckpoints: 10,
+    practicalModules: 10, // Corregido de 11 a 10
+    totalCheckpoints: 9, // Corregido de 10 a 9 (4 teóricos + 5 prácticos)
     systemUptime: '99.8%',
     lastBackup: new Date().toLocaleDateString('es-ES'),
     activeSessions: 0,

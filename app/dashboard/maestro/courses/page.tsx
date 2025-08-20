@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { 
   BookOpen, 
   Plus,
@@ -38,7 +39,7 @@ interface Level {
   id: string;
   name: string;
   description: string;
-  icon: React.ComponentType<{ className?: string }>;
+  image: string;
   color: string;
   bgColor: string;
   modules: Module[];
@@ -50,7 +51,7 @@ const levels: Level[] = [
     id: 'iniciados',
     name: 'Iniciados',
     description: 'Fundamentos básicos de economía y trading',
-    icon: Users,
+    image: '/images/insignias/1-iniciados.png',
     color: 'text-blue-400',
     bgColor: 'bg-blue-500/20',
     isUnlocked: true,
@@ -60,7 +61,7 @@ const levels: Level[] = [
     id: 'acolitos',
     name: 'Acólitos',
     description: 'Conceptos intermedios y análisis técnico',
-    icon: Shield,
+    image: '/images/insignias/2-acolitos.png',
     color: 'text-green-400',
     bgColor: 'bg-green-500/20',
     isUnlocked: true,
@@ -70,37 +71,47 @@ const levels: Level[] = [
     id: 'warriors',
     name: 'Warriors',
     description: 'Estrategias avanzadas y gestión de riesgo',
-    icon: Sword,
+    image: '/images/insignias/3-warriors.png',
     color: 'text-purple-400',
     bgColor: 'bg-purple-500/20',
-    isUnlocked: false,
+    isUnlocked: true,
     modules: []
   },
   {
     id: 'lord',
     name: 'Lord',
     description: 'Mastery en análisis fundamental',
-    icon: Crown,
+    image: '/images/insignias/4-lords.png',
     color: 'text-yellow-400',
     bgColor: 'bg-yellow-500/20',
-    isUnlocked: false,
+    isUnlocked: true,
     modules: []
   },
   {
     id: 'darth',
     name: 'Darth',
     description: 'Nivel máximo: Trading institucional',
-    icon: Zap,
+    image: '/images/insignias/5-darths.png',
     color: 'text-red-400',
     bgColor: 'bg-red-500/20',
-    isUnlocked: false,
+    isUnlocked: true,
+    modules: []
+  },
+  {
+    id: 'maestro',
+    name: 'Maestro',
+    description: 'Control total del sistema educativo',
+    image: '/images/insignias/6-maestros.png',
+    color: 'text-gray-400',
+    bgColor: 'bg-gray-500/20',
+    isUnlocked: true,
     modules: []
   }
 ];
 
-// Módulos de Iniciados (6 teóricos + 13 prácticos + 5 puntos de control)
+// Módulos de Iniciados (8 teóricos + 10 prácticos + 9 puntos de control)
 const iniciadosModules: Module[] = [
-  // Módulos Teóricos (6)
+  // Módulos Teóricos (8)
   {
     id: 't1',
     title: 'Introducción a la Lógica Económica',
@@ -167,7 +178,29 @@ const iniciadosModules: Module[] = [
     icon: Brain,
     level: 'iniciados'
   },
-  // Módulos Prácticos (13)
+  {
+    id: 't7',
+    title: 'Análisis de Mercados Financieros',
+    type: 'theoretical',
+    description: 'Estructura y funcionamiento de mercados financieros',
+    duration: '',
+    checkpoints: 1,
+    status: 'active',
+    icon: BarChart3,
+    level: 'iniciados'
+  },
+  {
+    id: 't8',
+    title: 'Regulaciones y Compliance',
+    type: 'theoretical',
+    description: 'Marco regulatorio y cumplimiento normativo',
+    duration: '',
+    checkpoints: 1,
+    status: 'active',
+    icon: Shield,
+    level: 'iniciados'
+  },
+  // Módulos Prácticos (10) - Solo estos, NO incluir puntos de control
   {
     id: 'p1',
     title: 'Introducción al Trading',
@@ -278,40 +311,7 @@ const iniciadosModules: Module[] = [
     icon: BarChart3,
     level: 'iniciados'
   },
-  {
-    id: 'p11',
-    title: 'Análisis de Volatilidad',
-    type: 'practical',
-    description: 'Medición y gestión de la volatilidad',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: TrendingUp,
-    level: 'iniciados'
-  },
-  {
-    id: 'p12',
-    title: 'Backtesting de Estrategias',
-    type: 'practical',
-    description: 'Validación histórica de estrategias',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: Target,
-    level: 'iniciados'
-  },
-  {
-    id: 'p13',
-    title: 'Optimización de Portafolio',
-    type: 'practical',
-    description: 'Diversificación y asignación de activos',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: BarChart3,
-    level: 'iniciados'
-  },
-  // Puntos de Control (5 total: 4 teóricos + 1 práctico)
+  // Puntos de Control (9 total: 4 teóricos + 5 prácticos)
   {
     id: 'pc1',
     title: 'Punto de Control 1: Fundamentos Económicos',
@@ -358,9 +358,53 @@ const iniciadosModules: Module[] = [
   },
   {
     id: 'pc5',
-    title: 'Punto de Control 5: Análisis Técnico',
+    title: 'Punto de Control 5: Análisis Técnico Básico',
     type: 'practical',
-    description: 'Evaluación de habilidades técnicas',
+    description: 'Evaluación de habilidades técnicas básicas',
+    duration: '',
+    checkpoints: 1,
+    status: 'active',
+    icon: CheckCircle,
+    level: 'iniciados'
+  },
+  {
+    id: 'pc6',
+    title: 'Punto de Control 6: Indicadores Técnicos',
+    type: 'practical',
+    description: 'Evaluación de uso de indicadores',
+    duration: '',
+    checkpoints: 1,
+    status: 'active',
+    icon: CheckCircle,
+    level: 'iniciados'
+  },
+  {
+    id: 'pc7',
+    title: 'Punto de Control 7: Gestión de Riesgo',
+    type: 'practical',
+    description: 'Evaluación de estrategias de riesgo',
+    duration: '',
+    checkpoints: 1,
+    status: 'active',
+    icon: CheckCircle,
+    level: 'iniciados'
+  },
+  {
+    id: 'pc8',
+    title: 'Punto de Control 8: Análisis Fundamental',
+    type: 'practical',
+    description: 'Evaluación de análisis fundamental',
+    duration: '',
+    checkpoints: 1,
+    status: 'active',
+    icon: CheckCircle,
+    level: 'iniciados'
+  },
+  {
+    id: 'pc9',
+    title: 'Punto de Control 9: Plan de Trading',
+    type: 'practical',
+    description: 'Evaluación de planificación de trading',
     duration: '',
     checkpoints: 1,
     status: 'active',
@@ -373,8 +417,36 @@ export default function CoursesPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>('iniciados');
   const [activeTab, setActiveTab] = useState<'overview' | 'theoretical' | 'practical' | 'checkpoints'>('overview');
 
+  // Estilos CSS para line-clamp
+  const lineClampStyle = {
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical' as const,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  };
+
   // Asignar módulos de Iniciados al nivel correspondiente
   levels[0].modules = iniciadosModules;
+  
+  // Para otros niveles, crear módulos básicos (esto se puede expandir después)
+  levels.forEach((level, index) => {
+    if (index > 0) { // No es iniciados
+      level.modules = [
+        {
+          id: 'placeholder',
+          title: 'Contenido en desarrollo',
+          type: 'theoretical' as const,
+          description: 'Este nivel está en desarrollo',
+          duration: '',
+          checkpoints: 0,
+          status: 'draft' as const,
+          icon: BookOpen,
+          level: level.id
+        }
+      ];
+    }
+  });
 
   const currentLevel = levels.find(level => level.id === selectedLevel);
   const theoreticalModules = currentLevel?.modules.filter(m => m.type === 'theoretical') || [];
@@ -408,36 +480,56 @@ export default function CoursesPage() {
         </p>
       </div>
 
-      {/* Selector de Niveles */}
-      <div className="mb-4 sm:mb-6 lg:mb-8">
-        <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-white mb-3 sm:mb-4">Seleccionar Nivel:</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
+      {/* Header con Botón de Crear Contenido */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div>
+          <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-white mb-2">Seleccionar Nivel:</h3>
+          <p className="text-sm text-gray-400">Haz clic en un nivel para gestionar su contenido</p>
+        </div>
+        
+        {/* Botón para Crear Contenido */}
+        <button
+          onClick={() => {
+            // TODO: Implementar sistema de creación de contenido
+            console.log('Sistema de creación de contenido - Plan de acción en desarrollo');
+            alert('🚀 Sistema de creación de contenido en desarrollo\n\nPlan de acción:\n1. Botón implementado ✅\n2. Sistema Carrousel > Card > Índice > Contenido\n3. Integración en todas las dashboards\n4. Gestión desde Maestro');
+          }}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#8A8A8A] to-[#6A6A6A] hover:from-[#7A7A7A] hover:to-[#5A5A5A] text-white font-medium rounded-lg transition-all duration-300 hover:scale-105 shadow-lg"
+        >
+          <Plus className="w-4 h-4" />
+          Crear Contenido
+        </button>
+      </div>
+
+      {/* Selector de Niveles - Cards más pequeñas */}
+      <div className="mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
           {levels.map((level) => (
             <button
               key={level.id}
               onClick={() => setSelectedLevel(level.id)}
-              className={`p-3 sm:p-4 lg:p-5 rounded-xl border transition-all duration-300 ${
+              className={`p-3 rounded-lg border transition-all duration-300 ${
                 selectedLevel === level.id
                   ? 'border-[#8A8A8A] bg-gradient-to-br from-[#2a2a2a] to-[#3a3a3a]'
                   : 'border-[#3a3a3a] bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] hover:border-[#4a4a4a]'
-              } ${!level.isUnlocked ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`}
-              disabled={!level.isUnlocked}
+              } hover:scale-105`}
             >
               <div className="flex flex-col items-center text-center">
-                <div className={`p-2 sm:p-3 rounded-lg ${level.bgColor} mb-2 sm:mb-3`}>
-                  <level.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${level.color}`} />
+                <div className="w-12 h-12 mb-2 relative">
+                  <Image
+                    src={level.image}
+                    alt={level.name}
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
-                <h4 className="text-white font-medium text-xs sm:text-sm lg:text-base mb-1">
+                <h4 className="text-white font-medium text-xs mb-1">
                   {level.name}
                 </h4>
-                <p className="text-gray-400 text-xs sm:text-sm leading-tight">
+                <p className="text-gray-400 text-xs leading-tight" style={lineClampStyle}>
                   {level.description}
                 </p>
-                {!level.isUnlocked && (
-                  <div className="mt-2 text-xs text-gray-500">
-                    🔒 Bloqueado
-                  </div>
-                )}
               </div>
             </button>
           ))}
@@ -448,8 +540,14 @@ export default function CoursesPage() {
       {currentLevel && (
         <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-3 sm:p-4 lg:p-6 mb-4 sm:mb-6 lg:mb-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
-            <div className={`p-2 sm:p-3 rounded-lg ${currentLevel.bgColor}`}>
-              <currentLevel.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${currentLevel.color}`} />
+            <div className="w-16 h-16 relative">
+              <Image
+                src={currentLevel.image}
+                alt={currentLevel.name}
+                width={64}
+                height={64}
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-white">
