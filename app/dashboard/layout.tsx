@@ -32,7 +32,7 @@ function DashboardContent({ children }: { children: ReactNode }) {
       
       {/* Main Content - Mejorado para responsividad */}
       <div className={`transition-all duration-500 ease-in-out flex flex-col min-h-screen ${
-        isExpanded ? 'md:ml-64' : 'md:ml-16'
+        isExpanded ? 'md:ml-72' : 'md:ml-20'
       }`}>
         <main className="flex-1 overflow-auto md:pl-6 md:pr-6 transition-all duration-500 ease-in-out">
             {children}

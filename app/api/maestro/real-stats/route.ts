@@ -88,8 +88,9 @@ export async function GET() {
       if (!recentError && recentUsers) {
         activeUsers = recentUsers.length;
       } else {
-        // Fallback final: simular usuarios activos
-        activeUsers = Math.min(totalUsers, Math.max(1, Math.floor(Math.random() * 3)));
+        // Fallback final: usar un valor consistente basado en el usuario actual
+        // En lugar de números aleatorios, usamos un valor fijo para evitar cambios
+        activeUsers = 1; // Al menos el usuario actual está activo
       }
     }
 
