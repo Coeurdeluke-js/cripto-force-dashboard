@@ -25,11 +25,11 @@ interface User {
   email: string;
   movil?: string;
   exchange?: string;
-  user_level: string;
+  user_level: number;
   referral_code?: string;
   referred_by?: string;
   total_referrals?: number;
-  total_earnings?: number;
+ 
   created_at: string;
   uid?: string;
 }
@@ -41,11 +41,10 @@ interface EditUserData {
   email: string;
   movil: string;
   exchange: string;
-  user_level: string;
+  user_level: number;
   referral_code: string;
   referred_by: string;
   total_referrals: number;
-  total_earnings: number;
 }
 
 export default function StudentsPage() {
@@ -148,17 +147,31 @@ export default function StudentsPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/maestro/real-stats');
+        setLoading(true);
+        const response = await fetch('/api/maestro/students');
         if (response.ok) {
           const data = await response.json();
-          console.log('Datos recibidos de la API:', data);
-          setAllUsers(data.recentUsers || []);
-          setFilteredUsers(data.recentUsers || []);
+          console.log('Datos recibidos de la API de estudiantes:', data);
+          if (data.success && data.users) {
+            setAllUsers(data.users);
+            setFilteredUsers(data.users);
+          } else {
+            console.error('Error en la respuesta de la API:', data.error);
+            setError(data.error || 'Error obteniendo usuarios');
+          }
         } else {
-          console.error('Error en la respuesta de la API:', response.status);
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch (e) {
+            errorData = { error: 'No se pudo leer la respuesta del servidor' };
+          }
+          console.error('Error en la respuesta de la API:', response.status, errorData);
+          setError(errorData.error || `Error ${response.status}: ${response.statusText}`);
         }
       } catch (error) {
         console.error('Error fetching users:', error);
+        setError('Error de conexión al obtener usuarios');
       } finally {
         setLoading(false);
       }
@@ -194,11 +207,10 @@ export default function StudentsPage() {
       email: user.email || '',
       movil: user.movil || '',
       exchange: user.exchange || '',
-      user_level: user.user_level || 'iniciado',
+      user_level: user.user_level || 1,
       referral_code: user.referral_code || '',
       referred_by: user.referred_by || '',
-      total_referrals: user.total_referrals || 0,
-      total_earnings: user.total_earnings || 0
+      total_referrals: user.total_referrals || 0
     });
     setSelectedUser(user);
     setShowEditModal(true);
@@ -210,12 +222,6 @@ export default function StudentsPage() {
     if (!editingUser || !selectedUser) {
       console.error('handleSaveUser: No editingUser or selectedUser');
       setError('Datos de usuario no disponibles');
-      return;
-    }
-    
-    if (!token) {
-      console.error('handleSaveUser: No token available');
-      setError('Token de autenticación no disponible. Intenta refrescar la página o iniciar sesión nuevamente.');
       return;
     }
 
@@ -231,18 +237,18 @@ export default function StudentsPage() {
 
     try {
       const requestBody = {
+        action: 'update_user',
         userId: selectedUser.id,
-        updates: editingUser
+        userData: editingUser
       };
       
       console.log('handleSaveUser: Request body:', requestBody);
-      console.log('handleSaveUser: Making API call to /api/maestro/update-user');
+      console.log('handleSaveUser: Making API call to /api/maestro/students');
 
-      const response = await fetch('/api/maestro/update-user', {
-        method: 'PUT',
+      const response = await fetch('/api/maestro/students', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(requestBody)
       });
@@ -493,14 +499,42 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
     }
   };
 
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case 'maestro':
-        return 'bg-[#8A8A8A] text-white';
-      case 'acolito':
-        return 'bg-purple-900 text-purple-200';
-      case 'iniciado':
-        return 'bg-yellow-900 text-yellow-200';
+  // Función para mapear niveles numéricos a strings legibles
+  const getLevelDisplay = (level: string | number) => {
+    const numLevel = typeof level === 'string' ? parseInt(level) : level;
+    switch (numLevel) {
+      case 0:
+        return 'Maestro';
+      case 1:
+        return 'Iniciado';
+      case 2:
+        return 'Acólito';
+      case 3:
+        return 'Warrior';
+      case 4:
+        return 'Lord';
+      case 5:
+        return 'Darth';
+      default:
+        return 'Iniciado';
+    }
+  };
+
+  const getLevelColor = (level: string | number) => {
+    const numLevel = typeof level === 'string' ? parseInt(level) : level;
+    switch (numLevel) {
+      case 0:
+        return 'bg-[#8A8A8A] text-white'; // Maestro - Gris
+      case 1:
+        return 'bg-yellow-900 text-yellow-200'; // Iniciado - Amarillo
+      case 2:
+        return 'bg-purple-900 text-purple-200'; // Acólito - Púrpura
+      case 3:
+        return 'bg-blue-900 text-blue-200'; // Warrior - Azul
+      case 4:
+        return 'bg-green-900 text-green-200'; // Lord - Verde
+      case 5:
+        return 'bg-red-900 text-red-200'; // Darth - Rojo
       default:
         return 'bg-gray-700 text-gray-200';
     }
@@ -663,9 +697,9 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                       </div>
                     </td>
                     <td className="py-2 sm:py-3 px-2 sm:px-4">
-                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                        {user.user_level}
-                      </div>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getLevelColor(user.user_level)}`}>
+                        {getLevelDisplay(user.user_level)}
+                      </span>
                     </td>
                     <td className="py-2 sm:py-3 px-2 sm:px-4 text-gray-300 text-xs sm:text-sm hidden sm:table-cell">
                       {user.total_referrals || 0}
@@ -803,7 +837,7 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                   <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                   <span className="text-gray-400">Nivel:</span>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getLevelColor(selectedUser.user_level)}`}>
-                    {selectedUser.user_level || 'iniciado'}
+                    {getLevelDisplay(selectedUser.user_level)}
                   </span>
                 </div>
                 
@@ -937,12 +971,15 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                     <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Nivel de Usuario</label>
                     <select
                       value={editingUser.user_level}
-                      onChange={(e) => handleInputChange('user_level', e.target.value)}
+                      onChange={(e) => handleInputChange('user_level', parseInt(e.target.value))}
                       className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     >
-                      <option value="iniciado">Iniciado</option>
-                      <option value="acolito">Acólito</option>
-                      <option value="maestro">Maestro</option>
+                      <option value={0}>Maestro</option>
+                      <option value={1}>Iniciado</option>
+                      <option value={2}>Acólito</option>
+                      <option value={3}>Warrior</option>
+                      <option value={4}>Lord</option>
+                      <option value={5}>Darth</option>
                     </select>
                   </div>
                   
@@ -976,16 +1013,7 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                     />
                   </div>
                   
-                  <div>
-                    <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Ganancias Totales</label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={editingUser.total_earnings}
-                      onChange={(e) => handleInputChange('total_earnings', parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
-                    />
-                  </div>
+
                 </div>
               </div>
             </div>

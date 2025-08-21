@@ -515,20 +515,7 @@ export default function TradingPage() {
         </>
       )}
 
-      {/* Footer con Botón de Ayuda */}
-      <div className="flex-shrink-0 p-4 bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a] border-t border-[#3a3a3a]">
-        <div className="flex items-center justify-center">
-          {/* Botón para abrir/cerrar menú de ayuda */}
-          <button
-            onClick={isHelpMenuOpen ? closeHelpMenu : () => setIsHelpMenuOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#8A8A8A] hover:bg-[#7A7A7A] rounded-lg transition-colors text-white font-medium"
-          >
-            <BookOpen className="w-4 h-4" />
-            {isHelpMenuOpen ? 'Ocultar Tips Básicos' : 'Mostrar Tips Básicos'}
-            {isHelpMenuOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
-        </div>
-      </div>
+      {/* Footer eliminado - El botón de tips ahora está en el header */}
     </div>
   );
 }
