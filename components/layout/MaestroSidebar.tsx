@@ -21,7 +21,8 @@ import {
   Award,
   Calendar,
   LineChart,
-  UserPlus
+  UserPlus,
+  Compass
 } from 'lucide-react';
 import { useSafeAuth } from '@/context/AuthContext';
 import { useMaestroSidebar } from './MaestroSidebarContext';
@@ -62,6 +63,11 @@ const menuItems: MenuItem[] = [
     label: 'Mi Código de Referido',
     href: '/dashboard/maestro/referral-code',
     icon: UserPlus
+  },
+  {
+    label: 'Navegar por Dashboards',
+    href: '/dashboard/maestro/dashboard-selection',
+    icon: Compass
   },
   {
     label: 'Configuración',

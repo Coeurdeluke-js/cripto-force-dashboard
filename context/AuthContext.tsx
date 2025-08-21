@@ -96,8 +96,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Only initialize Supabase on the client side
     if (typeof window !== 'undefined') {
-      // Dynamic import to prevent server-side execution
-      import('@/lib/supabaseClient').then(({ supabase }) => {
+              // Dynamic import to prevent server-side execution
+        import('@/utils/supabase/client').then(({ createClient }) => {
+          const supabase = createClient();
         setSupabase(supabase);
 
         // Get initial session
@@ -122,7 +123,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
           async (event, session) => {
-            console.log('Auth state changed:', event, session?.user?.email);
             setUser(session?.user ?? null);
             
             if (event === 'SIGNED_IN' && session?.user) {
@@ -148,17 +148,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Función para obtener datos del usuario desde la base de datos
   const fetchUserData = async (supabase: any, user: User) => {
     try {
-      const { data: profile, error } = await supabase
+      // Agregar timeout más largo para evitar que se cuelgue
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Timeout en consulta SQL')), 15000);
+      });
+      
+      const queryPromise = supabase
         .from('users')
         .select('*')
         .eq('email', user.email)
         .single();
-
-      if (error && error.code !== 'PGRST116') {
+      
+      const { data: profile, error } = await Promise.race([queryPromise, timeoutPromise]);
+      
+      if (error) {
         console.error('Error fetching user data:', error);
         return;
       }
-
+      
       if (profile) {
         const userData: UserData = {
           id: profile.id,
@@ -177,22 +184,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           total_referrals: profile.total_referrals,
           total_earnings: profile.total_earnings
         };
+        
         setUserData(userData);
-      } else {
-        // Si no existe el perfil, crear uno básico
-        console.log('Creating basic profile for user:', user.email);
-        const basicUserData: UserData = {
-          nombre: user.user_metadata?.full_name?.split(' ')[0] || '',
-          apellido: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
-          nickname: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
-          email: user.email || '',
-          uid: user.id,
-          user_level: 1
-        };
-        setUserData(basicUserData);
       }
     } catch (error) {
-      console.error('Error in fetchUserData:', error);
+      console.error('Error en fetchUserData:', error);
     }
   };
 
