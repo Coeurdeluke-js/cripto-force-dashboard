@@ -48,24 +48,7 @@ export default function ReferralCodeDisplay({ userLevel, className = "" }: Refer
     return `https://cripto-force-dashboard.vercel.app/login/register?ref=${referralCode}`;
   };
 
-  const shareReferralCode = async () => {
-    const registrationLink = generateRegistrationLink();
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: '¡Únete a Crypto Force!',
-          text: `Usa mi código de referido: ${referralCode}`,
-          url: registrationLink
-        });
-      } catch (error) {
-        console.error('Error sharing:', error);
-      }
-    } else {
-      // Fallback para navegadores que no soportan Web Share API
-      copyToClipboard(registrationLink, 'link');
-    }
-  };
+  // Función de compartir eliminada - solo mantenemos copiar
 
   const getLevelDisplay = (level: number) => {
     switch (level) {
@@ -76,6 +59,18 @@ export default function ReferralCodeDisplay({ userLevel, className = "" }: Refer
       case 4: return 'Lord';
       case 5: return 'Darth';
       default: return 'Iniciado';
+    }
+  };
+
+  const getLevelColor = (level: number) => {
+    switch (level) {
+      case 0: return '#8A8A8A'; // Maestro - Gris
+      case 1: return '#fafafa'; // Iniciado - Blanco
+      case 2: return '#8B5CF6'; // Acólito - Púrpura
+      case 3: return '#3B82F6'; // Warrior - Azul
+      case 4: return '#10B981'; // Lord - Verde
+      case 5: return '#EF4444'; // Darth - Rojo
+      default: return '#fafafa'; // Iniciado por defecto
     }
   };
 
@@ -133,23 +128,14 @@ export default function ReferralCodeDisplay({ userLevel, className = "" }: Refer
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => copyToClipboard(referralCode, 'code')}
-              className="px-4 py-2 bg-[#8A8A8A] hover:bg-[#7a7a7a] text-white rounded-lg transition-colors flex items-center gap-2"
-            >
-              <Copy className="w-4 h-4" />
-              Copiar Código
-            </button>
-            
-            <button
-              onClick={shareReferralCode}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
-            >
-              <Share2 className="w-4 h-4" />
-              Compartir
-            </button>
-          </div>
+          {/* Solo el botón de copiar código principal */}
+          <button
+            onClick={() => copyToClipboard(referralCode, 'code')}
+            className="px-4 py-2 bg-[#8A8A8A] hover:bg-[#7a7a7a] text-white rounded-lg transition-colors flex items-center gap-2"
+          >
+            <Copy className="w-4 h-4" />
+            Copiar Código
+          </button>
         </div>
 
         {/* Enlace de Registro */}
@@ -178,44 +164,33 @@ export default function ReferralCodeDisplay({ userLevel, className = "" }: Refer
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => copyToClipboard(generateRegistrationLink(), 'link')}
-              className="px-4 py-2 bg-[#8A8A8A] hover:bg-[#7a7a7a] text-white rounded-lg transition-colors flex items-center gap-2"
-            >
-              <Copy className="w-4 h-4" />
-              Copiar Enlace
-            </button>
-            
-            <a
-              href={generateRegistrationLink()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-[#3ED598] hover:bg-[#2EC487] text-white rounded-lg transition-colors flex items-center gap-2"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Probar Enlace
-            </a>
-          </div>
+          {/* Solo el botón de copiar enlace principal */}
+          <button
+            onClick={() => copyToClipboard(generateRegistrationLink(), 'link')}
+            className="px-4 py-2 bg-[#8A8A8A] hover:bg-[#7a7a7a] text-white rounded-lg transition-colors flex items-center gap-2"
+          >
+            <Copy className="w-4 h-4" />
+            Copiar Enlace
+          </button>
         </div>
 
         {/* Estadísticas */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6">
             <div className="flex items-center gap-3 mb-3">
-              <Users className="w-6 h-6 text-blue-400" />
+              <Users className="w-6 h-6 text-[#ec4d58]" />
               <h3 className="text-lg font-semibold text-white">Total Referidos</h3>
             </div>
-            <p className="text-3xl font-bold text-blue-400">{totalReferrals}</p>
+            <p className="text-3xl font-bold text-[#ec4d58]">{totalReferrals}</p>
             <p className="text-sm text-gray-400">usuarios referidos</p>
           </div>
 
           <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6">
             <div className="flex items-center gap-3 mb-3">
-              <Crown className="w-6 h-6 text-yellow-400" />
+              <Crown className="w-6 h-6" style={{ color: getLevelColor(userLevel) }} />
               <h3 className="text-lg font-semibold text-white">Tu Nivel</h3>
             </div>
-            <p className="text-3xl font-bold text-yellow-400">{getLevelDisplay(userLevel)}</p>
+            <p className="text-3xl font-bold" style={{ color: getLevelColor(userLevel) }}>{getLevelDisplay(userLevel)}</p>
             <p className="text-sm text-gray-400">nivel actual</p>
           </div>
         </div>
