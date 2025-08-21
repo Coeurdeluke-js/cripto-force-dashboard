@@ -5,7 +5,7 @@ export const sidebarItems = [
   { label: "Mensaje de bienvenida", href: "/dashboard/mensaje", icon: MessageCircle },
   { label: "Explora la Academia", href: "/dashboard/iniciado/cursos", icon: BookOpen },
   { label: "Dashboard de Trading", href: "/dashboard/iniciado/trading", icon: LineChart },
-  { label: "Sistema de Referidos", href: "/login/referidos", icon: UserPlus },
+  { label: "Mi Código de Referido", href: "/dashboard/iniciado/referral-code", icon: UserPlus },
   { label: "Ajustes básicos", href: "/dashboard/iniciado/ajustes-basicos", icon: Settings }
 ];
 

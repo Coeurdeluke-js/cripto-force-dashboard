@@ -20,7 +20,8 @@ import {
   Target,
   Award,
   Calendar,
-  LineChart
+  LineChart,
+  UserPlus
 } from 'lucide-react';
 import { useSafeAuth } from '@/context/AuthContext';
 import { useMaestroSidebar } from './MaestroSidebarContext';
@@ -56,6 +57,11 @@ const menuItems: MenuItem[] = [
     label: 'Trading Charts',
     href: '/dashboard/maestro/trading-charts',
     icon: LineChart
+  },
+  {
+    label: 'Mi Código de Referido',
+    href: '/dashboard/maestro/referral-code',
+    icon: UserPlus
   },
   {
     label: 'Configuración',

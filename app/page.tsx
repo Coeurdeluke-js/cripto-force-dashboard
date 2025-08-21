@@ -8,8 +8,8 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to login page when accessing the root
-    router.push('/login');
+    // Redirect to signin page when accessing the root
+    router.push('/login/signin');
   }, [router]);
 
   // Show a loading state while redirecting

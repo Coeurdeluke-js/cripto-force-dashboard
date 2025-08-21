@@ -1,50 +1,80 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
 
-// Configuración de Supabase
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
+    console.log('🔍 API /api/referrals/validate - Iniciando...');
+    
+    const supabase = await createClient();
+    console.log('✅ Cliente Supabase creado');
+    
+    // Obtener datos del request
     const { code } = await request.json();
-
-    if (!code) {
-      return NextResponse.json(
-        { error: 'Código de referido es requerido' },
-        { status: 400 }
-      );
+    
+    if (!code || typeof code !== 'string') {
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Código de referido requerido' 
+      }, { status: 400 });
     }
 
-    // Crear cliente con service role para consultas avanzadas
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    console.log('🔍 Validando código:', code);
 
-    // Validar código usando la función SQL
-    const { data, error } = await supabase
-      .rpc('validate_referral_code', { code });
+    // Buscar usuario con ese código de referido
+    const { data: referrer, error: searchError } = await supabase
+      .from('users')
+      .select('id, nickname, email, user_level')
+      .eq('referral_code', code.trim())
+      .single();
 
-    if (error) {
-      console.error('Error validando código:', error);
-      return NextResponse.json(
-        { error: 'Error interno del servidor' },
-        { status: 500 }
-      );
+    if (searchError) {
+      if (searchError.code === 'PGRST116') {
+        // No se encontró ningún usuario con ese código
+        console.log('❌ Código no válido:', code);
+        return NextResponse.json({
+          success: true,
+          valid: false,
+          error: 'Código de referido no válido'
+        });
+      }
+      
+      console.error('❌ Error buscando referido:', searchError);
+      return NextResponse.json({
+        success: false,
+        error: 'Error validando código de referido'
+      }, { status: 500 });
     }
+
+    if (!referrer) {
+      console.log('❌ Código no válido:', code);
+      return NextResponse.json({
+        success: true,
+        valid: false,
+        error: 'Código de referido no válido'
+      });
+    }
+
+    // Verificar que el referido no sea el mismo usuario (evitar auto-referencias)
+    // Esto se puede implementar si es necesario
+
+    console.log('✅ Código válido para:', referrer.nickname);
 
     return NextResponse.json({
       success: true,
-      valid: data.valid,
-      referrer: data.valid ? {
-        nickname: data.referrer_nickname,
-        email: data.referrer_email
-      } : null
+      valid: true,
+      referrer: {
+        nickname: referrer.nickname,
+        email: referrer.email,
+        user_level: referrer.user_level
+      }
     });
 
   } catch (error) {
-    console.error('Error en validación de referido:', error);
-    return NextResponse.json(
-      { error: 'Error interno del servidor' },
-      { status: 500 }
-    );
+    console.error('❌ Error en API de validación de referidos:', error);
+    return NextResponse.json({ 
+      success: false,
+      error: 'Error interno del servidor',
+      details: error instanceof Error ? error.message : 'Error desconocido'
+    }, { status: 500 });
   }
 }
