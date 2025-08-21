@@ -37,7 +37,10 @@ export default function Sidebar() {
     user_level: authUserData?.user_level,
     isMaestro,
     email: authUserData?.email,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    // DEBUG EXTENDIDO - Ver todos los campos
+    allFields: authUserData ? Object.keys(authUserData) : 'NO DATA',
+    fullObject: JSON.stringify(authUserData, null, 2)
   });
   
 
