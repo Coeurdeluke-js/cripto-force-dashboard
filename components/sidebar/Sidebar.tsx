@@ -14,6 +14,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const authContext = useSafeAuth();
   const authUserData = authContext?.userData;
+  const loading = authContext?.loading;
   const [isClient, setIsClient] = useState(false);
   
   // Verificar si estamos en el cliente
@@ -30,18 +31,7 @@ export default function Sidebar() {
   // Verificar si el usuario es Maestro (solo en el cliente)
   const isMaestro = isClient && authUserData?.user_level === 0;
   
-  // DEBUG TEMPORAL PARA PRODUCCIÓN
-  console.log('🔍 SIDEBAR PRODUCCIÓN:', {
-    isClient,
-    authUserData: authUserData,
-    user_level: authUserData?.user_level,
-    isMaestro,
-    email: authUserData?.email,
-    timestamp: new Date().toISOString(),
-    // DEBUG EXTENDIDO - Ver todos los campos
-    allFields: authUserData ? Object.keys(authUserData) : 'NO DATA',
-    fullObject: JSON.stringify(authUserData, null, 2)
-  });
+
   
 
   
@@ -148,10 +138,10 @@ export default function Sidebar() {
 
           
           {/* Enlace de retorno al dashboard de Maestro - solo visible para Maestros */}
-          {isMaestro && (
+                    {!loading && isMaestro && (
             <li>
-                                                  <Link
-                  href="/dashboard/maestro/dashboard-selection"
+              <Link
+                href="/dashboard/maestro/dashboard-selection"
                 className="group relative flex items-center py-3 px-3 text-[#ec4d58] hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full border border-[#ec4d58]/30 hover:border-[#ec4d58]/60"
                                       title={!isExpanded ? "Selección de Dashboard" : undefined}
               >
@@ -174,19 +164,7 @@ export default function Sidebar() {
           
 
           
-          {/* DEBUG TEMPORAL PARA PRODUCCIÓN - Mostrar siempre */}
-          <li>
-            <div className="group relative flex items-center py-3 px-3 text-yellow-400 border border-yellow-400/30 rounded-lg">
-              <span className="flex items-center justify-center text-xl w-6 h-6">
-                🐛
-              </span>
-              {isExpanded && (
-                <span className="font-medium whitespace-nowrap sidebar-text text-yellow-400 visible delayed-1">
-                  PROD: {isMaestro ? 'ES MAESTRO' : 'NO ES MAESTRO'} (Level: {authUserData?.user_level || 'undefined'})
-                </span>
-              )}
-            </div>
-          </li>
+
           
           {/* Resto de elementos de navegación */}
           {items.map((item, index) => {
