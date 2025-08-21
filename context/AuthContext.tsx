@@ -148,6 +148,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Función para obtener datos del usuario desde la base de datos
   const fetchUserData = async (supabase: any, user: User) => {
     try {
+      console.log('🔍 fetchUserData PRODUCCIÓN - Iniciando para usuario:', user.email);
+      console.log('🔍 fetchUserData PRODUCCIÓN - Cliente Supabase:', supabase);
+      console.log('🔍 fetchUserData PRODUCCIÓN - URL de Supabase:', supabase?.supabaseUrl);
+      
       // Agregar timeout más largo para evitar que se cuelgue
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Timeout en consulta SQL')), 15000);
@@ -159,14 +163,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq('email', user.email)
         .single();
       
+      console.log('🔍 fetchUserData PRODUCCIÓN - Ejecutando consulta SQL...');
+      
       const { data: profile, error } = await Promise.race([queryPromise, timeoutPromise]);
       
+      console.log('🔍 fetchUserData PRODUCCIÓN - Resultado de la consulta:', { profile, error });
+      
       if (error) {
-        console.error('Error fetching user data:', error);
+        console.error('❌ Error fetching user data:', error);
+        console.error('❌ Código de error:', error.code);
+        console.error('❌ Mensaje de error:', error.message);
         return;
       }
       
       if (profile) {
+        console.log('✅ Perfil encontrado en PRODUCCIÓN:', profile);
+        console.log('🔍 Campo user_level en profile:', profile.user_level);
+        console.log('🔍 Tipo de user_level:', typeof profile.user_level);
+        
         const userData: UserData = {
           id: profile.id,
           nombre: profile.nombre || '',
@@ -185,10 +199,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           total_earnings: profile.total_earnings
         };
         
+        console.log('📊 UserData preparado en PRODUCCIÓN:', userData);
         setUserData(userData);
+      } else {
+        console.log('❌ No se encontró perfil para el usuario en PRODUCCIÓN');
       }
     } catch (error) {
-      console.error('Error en fetchUserData:', error);
+      console.error('❌ Error en fetchUserData PRODUCCIÓN:', error);
     }
   };
 
