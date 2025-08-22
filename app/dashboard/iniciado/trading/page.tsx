@@ -31,7 +31,17 @@ export default function TradingViewPage() {
     "🎯 No inviertas más de lo que puedas permitirte perder",
     "📈 Mantén un diario de trading para aprender de tus errores",
     "🔍 Usa indicadores técnicos como confirmación, no como predicción",
-    "⏰ El timing es crucial - espera confirmaciones claras"
+    "⏰ El timing es crucial - espera confirmaciones claras",
+    "📉 Las tendencias pueden continuar más tiempo del esperado",
+    "🔄 Diversifica tu portafolio para reducir riesgos",
+    "💰 Gestiona tu capital con la regla del 1-2% por operación",
+    "🎲 No operes por emociones, sigue tu plan de trading",
+    "📚 Aprende continuamente y mantente actualizado",
+    "🔒 Usa siempre stop-loss y take-profit",
+    "📊 Analiza el contexto del mercado antes de operar",
+    "⏳ Sé paciente, las mejores oportunidades requieren espera",
+    "📝 Documenta cada operación para mejorar",
+    "🎯 Mantén un enfoque en la gestión de riesgo"
   ];
 
   const nextTip = () => {
@@ -68,55 +78,57 @@ export default function TradingViewPage() {
           </p>
         </div>
 
-        {/* Mini-Carrusel de Tips Navegable */}
-        <div className="mb-6 p-4 bg-[#1a1a1a] border border-[#232323] rounded-lg">
-          <h3 className="text-lg font-semibold text-[#fafafa] mb-4 flex items-center">
-            <Lightbulb className="w-5 h-5 text-[#fafafa] mr-2" />
-            Tips de Trading
-          </h3>
-          
-          <div className="relative">
-            {/* Navegación del carrusel */}
-            <button
-              onClick={prevTip}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-[#232323]/80 hover:bg-[#232323] text-[#fafafa] p-2 rounded-full transition-all duration-200 hover:scale-110"
-              aria-label="Tip anterior"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
+        {/* Mini-Carrusel de Tips Navegable - Solo visible cuando showTips es true */}
+        {showTips && (
+          <div className="mb-6 p-4 bg-[#1a1a1a] border border-[#232323] rounded-lg">
+            <h3 className="text-lg font-semibold text-[#fafafa] mb-4 flex items-center">
+              <Lightbulb className="w-5 h-5 text-[#fafafa] mr-2" />
+              Tips de Trading
+            </h3>
             
-            <button
-              onClick={nextTip}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-[#232323]/80 hover:bg-[#232323] text-[#fafafa] p-2 rounded-full transition-all duration-200 hover:scale-110"
-              aria-label="Tip siguiente"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
+            <div className="relative">
+              {/* Navegación del carrusel */}
+              <button
+                onClick={prevTip}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-[#232323]/80 hover:bg-[#232323] text-[#fafafa] p-2 rounded-full transition-all duration-200 hover:scale-110"
+                aria-label="Tip anterior"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              
+              <button
+                onClick={nextTip}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-[#232323]/80 hover:bg-[#232323] text-[#fafafa] p-2 rounded-full transition-all duration-200 hover:scale-110"
+                aria-label="Tip siguiente"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
 
-            {/* Contenido del tip actual */}
-            <div className="text-center py-8 px-12">
-              <div className="text-[#fafafa] text-lg font-medium">
-                {tradingTips[currentTipIndex]}
+              {/* Contenido del tip actual */}
+              <div className="text-center py-8 px-12">
+                <div className="text-[#fafafa] text-lg font-medium">
+                  {tradingTips[currentTipIndex]}
+                </div>
+              </div>
+
+              {/* Indicadores de posición */}
+              <div className="flex justify-center space-x-2 mt-4">
+                {tradingTips.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentTipIndex(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      index === currentTipIndex 
+                        ? 'bg-[#fafafa]' 
+                        : 'bg-[#8A8A8A] hover:bg-[#fafafa]/70'
+                    }`}
+                    aria-label={`Ir al tip ${index + 1}`}
+                  />
+                ))}
               </div>
             </div>
-
-            {/* Indicadores de posición */}
-            <div className="flex justify-center space-x-2 mt-4">
-              {tradingTips.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentTipIndex(index)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    index === currentTipIndex 
-                      ? 'bg-[#fafafa]' 
-                      : 'bg-[#8A8A8A] hover:bg-[#fafafa]/70'
-                  }`}
-                  aria-label={`Ir al tip ${index + 1}`}
-                />
-              ))}
-            </div>
           </div>
-        </div>
+        )}
 
         {/* Gráfico TradingView */}
         <div className="mb-6">

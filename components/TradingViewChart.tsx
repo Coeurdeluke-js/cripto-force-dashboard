@@ -84,43 +84,42 @@ export default function TradingViewChart({
           'use_localstorage_for_settings',
           'create_volume_indicator_by_default', // Deshabilitar volumen por defecto
           'volume_force_overlay', // Deshabilitar overlay de volumen
-          'show_volume_scale' // Ocultar escala de volumen
+          'show_volume_scale', // Ocultar escala de volumen
+          'header_symbol_search', // Deshabilitar búsqueda de símbolos
+          'header_compare', // Deshabilitar comparación
+          'header_settings', // Deshabilitar configuración
+          'header_indicators', // Deshabilitar indicadores
+          'header_fullscreen_button', // Deshabilitar botón pantalla completa
+          'timeframes_toolbar', // Deshabilitar barra de timeframes
+          'header_saveload', // Deshabilitar guardar/cargar
+          'control_bar', // Deshabilitar barra de control
+          'countdown', // Deshabilitar countdown
+          'display_market_status', // Deshabilitar estado del mercado
+          'chart_property_page', // Deshabilitar página de propiedades
+          'go_to_date', // Deshabilitar ir a fecha
+          'symbol_info', // Deshabilitar información del símbolo
+          'chart_crosshair_menu', // Deshabilitar menú de crosshair
+          'high_density_bars', // Deshabilitar barras de alta densidad
+          'left_toolbar', // Deshabilitar barra de herramientas izquierda
+          'legend_widget', // Deshabilitar widget de leyenda
+          'overlay_price_scale', // Deshabilitar escala de precio superpuesta
+          'pane_legend', // Deshabilitar leyenda del panel
+          'popup_hints', // Deshabilitar pistas emergentes
+          'scale_series_only', // Deshabilitar escala solo para series
+          'scrolling_on_touch', // Deshabilitar scroll táctil
+          'show_chart_property_page', // Deshabilitar mostrar página de propiedades
+          'show_interval_dialog_on_key_press', // Deshabilitar diálogo de intervalo
+          'show_logo_on_all_charts', // Deshabilitar logo en todos los gráficos
+          'show_symbol_logo', // Deshabilitar logo del símbolo
+          'support_multicharts', // Deshabilitar soporte para múltiples gráficos
+          'use_localstorage_for_chart_properties' // Deshabilitar localStorage para propiedades
         ],
         enabled_features: [
           'study_templates',
           'side_toolbar_in_fullscreen_mode',
-          'header_symbol_search',
-          'header_compare',
-          'header_settings',
-          'header_indicators',
-          'header_fullscreen_button',
-          'timeframes_toolbar',
           'edit_buttons_in_legend',
           'context_menus',
-          'border_around_the_chart',
-          'header_saveload',
-          'control_bar',
-          'countdown',
-          'display_market_status',
-          'chart_property_page',
-          'go_to_date',
-          'symbol_info',
-          'chart_crosshair_menu',
-          'high_density_bars',
-          'left_toolbar',
-          'legend_widget',
-          'overlay_price_scale',
-          'pane_legend',
-          'popup_hints',
-          'scale_series_only',
-          'scrolling_on_touch',
-          'show_chart_property_page',
-          'show_interval_dialog_on_key_press',
-          'show_logo_on_all_charts',
-          'show_symbol_logo',
-          'support_multicharts',
-          'timeframes_toolbar',
-          'use_localstorage_for_chart_properties'
+          'border_around_the_chart'
         ],
         overrides: {
           'mainSeriesProperties.candleStyle.upColor': '#3ED598',
