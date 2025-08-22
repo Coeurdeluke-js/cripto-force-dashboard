@@ -27,7 +27,8 @@ import {
   AlertTriangle, 
   Calendar, 
   LogOut, 
-  Star
+  Star,
+  Bitcoin
 } from 'lucide-react';
 import EnhancedCarousel from './components/EnhancedCarousel';
 import ProgressRuler from './components/ProgressRuler';
@@ -57,7 +58,7 @@ interface Objective {
   completed: boolean;
 }
 
-// Módulos Teóricos Base
+// Módulos Teóricos Base - Nivel 1 (4 módulos)
 const theoreticalModulesBase: Module[] = [
   {
     id: '1',
@@ -82,17 +83,6 @@ const theoreticalModulesBase: Module[] = [
     moduleNumber: 2
   },
   {
-    id: 'PC1',
-    title: 'Evaluación: Introducción a la Lógica Económica y Fuerzas del Mercado',
-    path: '/dashboard/iniciado/puntos-de-control/teorico/pc1',
-    icon: <CheckCircle />,
-    description: 'Punto de control: Evalúa los módulos "Introducción a la Lógica Económica" y "Fuerzas del Mercado"',
-    isLocked: false,
-    level: 'nivel1',
-    type: 'checkpoint',
-    moduleNumber: 1
-  },
-  {
     id: '3',
     title: 'Acción del Gobierno en los Mercados',
     path: '/dashboard/iniciado/Teorico/3-accion-gobierno-mercados',
@@ -113,21 +103,10 @@ const theoreticalModulesBase: Module[] = [
     level: 'nivel1',
     type: 'content',
     moduleNumber: 4
-  },
-  {
-    id: 'PC2',
-    title: 'Evaluación: Acción del Gobierno en los Mercados y Competencia Perfecta',
-    path: '/dashboard/iniciado/puntos-de-control/teorico/pc2',
-    icon: <CheckCircle />,
-    description: 'Punto de control: Evalúa los módulos "Acción del Gobierno en los Mercados" y "Competencia Perfecta"',
-    isLocked: false,
-    level: 'nivel1',
-    type: 'checkpoint',
-    moduleNumber: 2
   }
 ];
 
-// Módulos Teóricos Nivel 2 (50% del contenido)
+// Módulos Teóricos Nivel 2 (4 módulos)
 const theoreticalModulesNivel2: Module[] = [
   {
     id: '5',
@@ -144,7 +123,7 @@ const theoreticalModulesNivel2: Module[] = [
     id: '6',
     title: 'Tecnología Blockchain',
     path: '/dashboard/iniciado/Teorico/6-tecnologia-blockchain',
-    icon: <Network />,
+    icon: <Shield />,
     description: 'Fundamentos de la tecnología blockchain y criptomonedas',
     isLocked: true,
     level: 'nivel2',
@@ -152,21 +131,10 @@ const theoreticalModulesNivel2: Module[] = [
     moduleNumber: 6
   },
   {
-    id: 'PC3',
-    title: 'Evaluación: Monopolio y Oligopolio y Tecnología Blockchain',
-    path: '/dashboard/iniciado/puntos-de-control/teorico/pc3',
-    icon: <CheckCircle />,
-    description: 'Punto de control: Evalúa los módulos "Monopolio y Oligopolio" y "Tecnología Blockchain"',
-    isLocked: true,
-    level: 'nivel2',
-    type: 'checkpoint',
-    moduleNumber: 3
-  },
-  {
     id: '7',
     title: 'Criptomonedas',
     path: '/dashboard/iniciado/Teorico/7-criptomonedas',
-    icon: <DollarSign />,
+    icon: <Bitcoin />,
     description: 'Análisis fundamental de criptomonedas y tokens',
     isLocked: true,
     level: 'nivel2',
@@ -177,16 +145,53 @@ const theoreticalModulesNivel2: Module[] = [
     id: '8',
     title: 'Operaciones con Criptomonedas',
     path: '/dashboard/iniciado/Teorico/8-operaciones-criptomonedas',
-    icon: <Wrench />,
+    icon: <TrendingUp />,
     description: 'Técnicas avanzadas de trading en criptomonedas',
     isLocked: true,
     level: 'nivel2',
     type: 'content',
     moduleNumber: 8
+  }
+];
+
+// Puntos de Control Teóricos (4 puntos de control)
+const theoreticalCheckpoints: Module[] = [
+  {
+    id: 'PC1',
+    title: 'Punto de Control: Introducción a la Lógica Económica y Fuerzas del Mercado',
+    path: '/dashboard/iniciado/puntos-de-control/teorico/pc1',
+    icon: <CheckCircle />,
+    description: 'Punto de control: Evalúa los módulos "Introducción a la Lógica Económica" y "Fuerzas del Mercado"',
+    isLocked: false,
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: 1
+  },
+  {
+    id: 'PC2',
+    title: 'Punto de Control: Acción del Gobierno en los Mercados y Competencia Perfecta',
+    path: '/dashboard/iniciado/puntos-de-control/teorico/pc2',
+    icon: <CheckCircle />,
+    description: 'Punto de control: Evalúa los módulos "Acción del Gobierno en los Mercados" y "Competencia Perfecta"',
+    isLocked: false,
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: 2
+  },
+  {
+    id: 'PC3',
+    title: 'Punto de Control: Monopolio y Oligopolio y Tecnología Blockchain',
+    path: '/dashboard/iniciado/puntos-de-control/teorico/pc3',
+    icon: <CheckCircle />,
+    description: 'Punto de control: Evalúa los módulos "Monopolio y Oligopolio" y "Tecnología Blockchain"',
+    isLocked: true,
+    level: 'nivel2',
+    type: 'checkpoint',
+    moduleNumber: 3
   },
   {
     id: 'PC4',
-    title: 'Evaluación: Criptomonedas y Operaciones con Criptomonedas',
+    title: 'Punto de Control: Criptomonedas y Operaciones con Criptomonedas',
     path: '/dashboard/iniciado/puntos-de-control/teorico/pc4',
     icon: <CheckCircle />,
     description: 'Punto de control: Evalúa los módulos "Criptomonedas" y "Operaciones con Criptomonedas"',
@@ -504,14 +509,14 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
     if (module.level === 'nivel1' && !module.id.startsWith('PC')) {
       const moduleIndex = parseInt(module.id);
       
-      if (moduleIndex <= 2) {
-        // Los primeros dos módulos siempre están desbloqueados
+      if (moduleIndex <= 4) {
+        // Los primeros cuatro módulos siempre están desbloqueados
         isLocked = false;
-      } else if (moduleIndex === 3 || moduleIndex === 4) {
-        // Módulos 3 y 4 se desbloquean cuando PC1 está completado
-        isLocked = !isCheckpointCompleted('PC1', 'nivel1');
       } else if (moduleIndex === 5 || moduleIndex === 6) {
-        // Módulos 5 y 6 se desbloquean cuando PC2 está completado
+        // Módulos 5 y 6 se desbloquean cuando PC1 está completado
+        isLocked = !isCheckpointCompleted('PC1', 'nivel1');
+      } else if (moduleIndex === 7 || moduleIndex === 8) {
+        // Módulos 7 y 8 se desbloquean cuando PC2 está completado
         isLocked = !isCheckpointCompleted('PC2', 'nivel1');
       }
     }
@@ -538,11 +543,11 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
     if (module.level === 'nivel2' && !module.id.startsWith('PC')) {
       const moduleIndex = parseInt(module.id);
       
-      if (moduleIndex === 7 || moduleIndex === 8) {
-        // Módulos 7 y 8 se desbloquean cuando PC3 está completado
+      if (moduleIndex === 5 || moduleIndex === 6) {
+        // Módulos 5 y 6 se desbloquean cuando PC3 está completado
         isLocked = !isCheckpointCompleted('PC3', 'nivel1');
-      } else if (moduleIndex === 9 || moduleIndex === 10) {
-        // Módulos 9 y 10 se desbloquean cuando PC4 está completado
+      } else if (moduleIndex === 7 || moduleIndex === 8) {
+        // Módulos 7 y 8 se desbloquean cuando PC4 está completado
         isLocked = !isCheckpointCompleted('PC4', 'nivel2');
       }
     }
@@ -767,7 +772,7 @@ export default function IniciadoDashboard() {
   // Obtener todos los módulos según el tab activo
   const getAllModules = () => {
     if (activeTab === 'theoretical') {
-      const allTheoreticalModules = [...theoreticalModulesBase, ...theoreticalModulesNivel2];
+      const allTheoreticalModules = [...theoreticalModulesBase, ...theoreticalModulesNivel2, ...theoreticalCheckpoints];
       return calculateUnlockedModules(allTheoreticalModules, progress, 'theoretical');
     } else if (activeTab === 'practical') {
       return calculateUnlockedModules(practicalModules, progress, 'practical');

@@ -221,7 +221,9 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
 
       <h3 className="text-xl font-semibold text-[#fafafa] mb-4 flex items-center">
         {title}
-        <span className="ml-2 text-sm text-gray-400">({modules.length} módulos)</span>
+        <span className="ml-2 text-sm text-gray-400">
+          ({modules.filter(m => m.type === 'content').length} módulos, {modules.filter(m => m.type === 'checkpoint').length} puntos de control)
+        </span>
       </h3>
 
       <div className="relative group">
@@ -273,7 +275,7 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
               {modules.map((module) => (
                 <div
                   key={module.id}
-                  className="module-card flex-shrink-0 w-80 bg-[#0f0f0f] border border-[#232323] rounded-lg p-4 transition-all duration-200 hover:border-[#ec4d58]/50 hover:shadow-lg hover:shadow-[#ec4d58]/10 flex flex-col hover:border-t-[#ec4d58]/50"
+                  className="module-card flex-shrink-0 w-80 bg-[#0f0f0f] border border-[#232323] rounded-lg p-4 transition-all duration-200 hover:border-[#ec4d58]/50 hover:shadow-lg hover:shadow-[#ec4d58]/10 flex flex-col hover:border-t-[#ec4d58]"
                   style={{ minHeight: '220px' }}
                 >
                   {/* Module Header */}
@@ -309,14 +311,14 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
                         href={module.path}
                         className={`block w-full px-4 py-2 text-white rounded-lg text-sm font-medium text-center transition-colors duration-200 flex items-center justify-center space-x-2 ${
                           module.type === 'checkpoint' 
-                            ? 'bg-[#FFD447] hover:bg-[#FFC437] text-gray-900' 
+                            ? 'bg-[#FFD447] hover:bg-[#FFC437] text-gray-900 font-semibold' 
                             : 'bg-[#ec4d58] hover:bg-[#d43d48]'
                         }`}
                       >
                         {module.type === 'checkpoint' ? (
                           <>
                             <Check className="w-4 h-4" />
-                            <span>Punto de Control</span>
+                            <span>Tomar Punto de Control</span>
                           </>
                         ) : (
                           <>
