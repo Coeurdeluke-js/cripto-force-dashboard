@@ -147,48 +147,97 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Función para obtener datos del usuario desde la base de datos
   const fetchUserData = async (supabase: any, user: User) => {
-    try {
-      // Agregar timeout más largo para evitar que se cuelgue
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Timeout en consulta SQL')), 15000);
-      });
-      
-      const queryPromise = supabase
-        .from('users')
-        .select('*')
-        .eq('email', user.email)
-        .single();
-      
-      const { data: profile, error } = await Promise.race([queryPromise, timeoutPromise]);
-      
-      if (error) {
-        console.error('Error fetching user data:', error);
-        return;
-      }
-      
-      if (profile) {
-        const userData: UserData = {
-          id: profile.id,
-          nombre: profile.nombre || '',
-          apellido: profile.apellido || '',
-          nickname: profile.nickname || '',
-          email: profile.email,
-          movil: profile.movil,
-          exchange: profile.exchange,
-          uid: profile.uid,
-          codigo_referido: profile.codigo_referido,
-          joinDate: profile.created_at,
-          referral_code: profile.referral_code,
-          referred_by: profile.referred_by,
-          user_level: profile.user_level,
-          total_referrals: profile.total_referrals,
-          total_earnings: profile.total_earnings
-        };
+    const maxRetries = 3;
+    let retryCount = 0;
+    
+    const attemptFetch = async (): Promise<any> => {
+      try {
+        console.log(`🔍 fetchUserData - Intento ${retryCount + 1} para usuario:`, user.email);
         
-        setUserData(userData);
+        // Verificar que el cliente Supabase esté disponible
+        if (!supabase) {
+          console.error('❌ Cliente Supabase no disponible');
+          return null;
+        }
+        
+        // Consulta optimizada con solo los campos necesarios
+        const { data: profile, error } = await supabase
+          .from('users')
+          .select('id, nombre, apellido, nickname, email, movil, exchange, uid, codigo_referido, created_at, referral_code, referred_by, user_level, total_referrals, total_earnings')
+          .eq('email', user.email)
+          .single();
+        
+        if (error) {
+          console.error(`❌ Error en intento ${retryCount + 1}:`, error);
+          throw error;
+        }
+        
+        return profile;
+      } catch (error) {
+        console.error(`❌ Error en intento ${retryCount + 1}:`, error);
+        throw error;
       }
-    } catch (error) {
-      console.error('Error en fetchUserData:', error);
+    };
+    
+    while (retryCount < maxRetries) {
+      try {
+        const profile = await attemptFetch();
+        
+        if (profile) {
+          console.log('✅ Perfil encontrado:', profile);
+          const userData: UserData = {
+            id: profile.id,
+            nombre: profile.nombre || '',
+            apellido: profile.apellido || '',
+            nickname: profile.nickname || '',
+            email: profile.email,
+            movil: profile.movil,
+            exchange: profile.exchange,
+            uid: profile.uid,
+            codigo_referido: profile.codigo_referido,
+            joinDate: profile.created_at,
+            referral_code: profile.referral_code,
+            referred_by: profile.referred_by,
+            user_level: profile.user_level,
+            total_referrals: profile.total_referrals,
+            total_earnings: profile.total_earnings
+          };
+          
+          setUserData(userData);
+          console.log('✅ UserData configurado correctamente');
+          return; // Éxito, salir de la función
+        }
+      } catch (error) {
+        retryCount++;
+        
+        if (retryCount >= maxRetries) {
+          console.error('❌ Máximo de reintentos alcanzado');
+          
+          // Último intento con consulta mínima
+          try {
+            console.log('🔄 Último intento con consulta mínima...');
+            const { data: fallbackProfile } = await supabase
+              .from('users')
+              .select('user_level, nickname')
+              .eq('email', user.email)
+              .single();
+            
+            if (fallbackProfile) {
+              console.log('✅ Consulta mínima exitosa:', fallbackProfile);
+              setUserData(prev => ({
+                ...prev,
+                user_level: fallbackProfile.user_level,
+                nickname: fallbackProfile.nickname
+              }));
+            }
+          } catch (finalError) {
+            console.error('❌ Error final en consulta mínima:', finalError);
+          }
+        } else {
+          // Esperar antes del siguiente intento
+          await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+        }
+      }
     }
   };
 

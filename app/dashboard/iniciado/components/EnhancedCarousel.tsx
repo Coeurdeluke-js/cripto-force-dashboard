@@ -17,15 +17,9 @@ interface EnhancedCarouselProps {
 export default function EnhancedCarousel({ content, className = '' }: EnhancedCarouselProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [showScrollbar, setShowScrollbar] = useState(false);
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const contentRef = useRef(content);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   // Update content ref when content changes
   useEffect(() => {
@@ -64,105 +58,6 @@ export default function EnhancedCarousel({ content, className = '' }: EnhancedCa
     };
   }, [isPaused, currentSlide]);
 
-  // Wheel navigation with enhanced focus
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Enhanced wheel navigation with smooth scrolling
-      const scrollAmount = e.deltaY * 1.5;
-      const currentScroll = carousel.scrollLeft;
-      const maxScroll = carousel.scrollWidth - carousel.clientWidth;
-      
-      let newScroll = currentScroll + scrollAmount;
-      newScroll = Math.max(0, Math.min(newScroll, maxScroll));
-      
-      carousel.scrollTo({
-        left: newScroll,
-        behavior: 'smooth'
-      });
-    };
-
-    // Add wheel listener with passive: false
-    carousel.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => {
-      carousel.removeEventListener('wheel', handleWheel);
-    };
-  }, []);
-
-  // Drag and drop navigation
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (!carouselRef.current) return;
-    
-    setIsDragging(true);
-    setStartX(e.pageX - carouselRef.current.offsetLeft);
-    setScrollLeft(carouselRef.current.scrollLeft);
-    
-    // Add cursor style
-    if (carouselRef.current) {
-      carouselRef.current.style.cursor = 'grabbing';
-      carouselRef.current.style.userSelect = 'none';
-    }
-  }, []);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isDragging || !carouselRef.current) return;
-    
-    e.preventDefault();
-    const x = e.pageX - carouselRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    carouselRef.current.scrollLeft = scrollLeft - walk;
-  }, [isDragging, startX, scrollLeft]);
-
-  const handleMouseUpOrLeave = useCallback(() => {
-    setIsDragging(false);
-    
-    if (carouselRef.current) {
-      carouselRef.current.style.cursor = 'grab';
-      carouselRef.current.style.userSelect = 'auto';
-    }
-  }, []);
-
-  // Touch support for mobile
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    if (!carouselRef.current) return;
-    
-    setIsDragging(true);
-    setStartX(e.touches[0].pageX - carouselRef.current.offsetLeft);
-    setScrollLeft(carouselRef.current.scrollLeft);
-  }, []);
-
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isDragging || !carouselRef.current) return;
-    
-    e.preventDefault();
-    const x = e.touches[0].pageX - carouselRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    carouselRef.current.scrollLeft = scrollLeft - walk;
-  }, [isDragging, startX, scrollLeft]);
-
-  const handleTouchEnd = useCallback(() => {
-    setIsDragging(false);
-  }, []);
-
-  // Show scrollbar on desktop when hovering
-  const handleMouseEnter = useCallback(() => {
-    setIsPaused(true);
-    if (window.innerWidth >= 768) { // Desktop only
-      setShowScrollbar(true);
-    }
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setIsPaused(false);
-    setShowScrollbar(false);
-  }, []);
-
   // Navigation functions
   const goToPrevious = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + content.length) % content.length);
@@ -187,7 +82,7 @@ export default function EnhancedCarousel({ content, className = '' }: EnhancedCa
       case 'title':
         return (
           <div className="flex items-center justify-center h-full text-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#ec4d58] tracking-wider">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#fafafa] tracking-wider">
               {slide.content}
             </h2>
           </div>
@@ -203,7 +98,7 @@ export default function EnhancedCarousel({ content, className = '' }: EnhancedCa
       case 'description':
         return (
           <div className="flex items-center justify-center h-full text-center px-8">
-            <p className="text-base md:text-lg text-gray-300 leading-relaxed max-w-2xl">
+            <p className="text-base md:text-lg text-[#fafafa] leading-relaxed max-w-2xl">
               {slide.content}
             </p>
           </div>
@@ -219,7 +114,7 @@ export default function EnhancedCarousel({ content, className = '' }: EnhancedCa
       case 'philosophy':
         return (
           <div className="flex items-center justify-center h-full text-center px-8">
-            <p className="text-sm md:text-base text-gray-400 leading-relaxed max-w-3xl">
+            <p className="text-sm md:text-base text-[#fafafa] leading-relaxed max-w-3xl">
               {slide.content}
             </p>
           </div>
@@ -232,8 +127,6 @@ export default function EnhancedCarousel({ content, className = '' }: EnhancedCa
   return (
     <div 
       className={`w-full max-w-4xl mx-auto mb-16 ${className}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
     >
       <style jsx>{`
         @keyframes fadeIn {
@@ -323,49 +216,6 @@ export default function EnhancedCarousel({ content, className = '' }: EnhancedCa
                 aria-label={`Ir al slide ${index + 1}`}
               />
             ))}
-          </div>
-        </div>
-
-        {/* Enhanced scrollable content area */}
-        <div 
-          ref={containerRef}
-          className="relative overflow-hidden"
-        >
-          <div
-            ref={carouselRef}
-            className={`custom-scrollbar transition-all duration-300 ${
-              showScrollbar ? 'overflow-x-auto' : 'overflow-x-hidden'
-            }`}
-            style={{
-              scrollbarWidth: showScrollbar ? 'auto' : 'none',
-              msOverflowStyle: showScrollbar ? 'auto' : 'none'
-            }}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUpOrLeave}
-            onMouseLeave={handleMouseUpOrLeave}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            style={{
-              cursor: isDragging ? 'grabbing' : 'grab',
-              userSelect: isDragging ? 'none' : 'auto'
-            }}
-          >
-            {/* Content slides for horizontal scrolling */}
-            <div className="flex" style={{ width: `${content.length * 100}%` }}>
-              {content.map((slide, index) => (
-                <div
-                  key={index}
-                  className="flex-shrink-0"
-                  style={{ width: `${100 / content.length}%` }}
-                >
-                  <div className="h-64 flex items-center justify-center">
-                    {renderSlide(slide)}
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 

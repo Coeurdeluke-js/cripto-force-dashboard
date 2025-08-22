@@ -2,13 +2,12 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Lock, CheckCircle, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Module {
   id: string;
   title: string;
   path: string;
-  icon: React.JSX.Element;
   description: string;
   isCompleted?: boolean;
   isLocked?: boolean;
@@ -256,7 +255,9 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
             }`}
             style={{
               scrollbarWidth: showScrollbar ? 'auto' : 'none',
-              msOverflowStyle: showScrollbar ? 'auto' : 'none'
+              msOverflowStyle: showScrollbar ? 'auto' : 'none',
+              cursor: isDragging ? 'grabbing' : 'grab',
+              userSelect: isDragging ? 'none' : 'auto'
             }}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -265,38 +266,20 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            style={{
-              cursor: isDragging ? 'grabbing' : 'grab',
-              userSelect: isDragging ? 'none' : 'auto'
-            }}
           >
             <div className="flex space-x-4 pb-4">
               {modules.map((module) => (
                 <div
                   key={module.id}
-                  className="module-card flex-shrink-0 w-80 bg-[#0f0f0f] border border-[#232323] rounded-lg p-4 transition-all duration-200 hover:border-[#ec4d58]/50 hover:shadow-lg hover:shadow-[#ec4d58]/10"
-                  style={{ minHeight: '200px' }}
+                  className="module-card flex-shrink-0 w-80 bg-[#0f0f0f] border border-[#232323] rounded-lg p-4 transition-all duration-200 hover:border-[#ec4d58]/50 hover:shadow-lg hover:shadow-[#ec4d58]/10 flex flex-col"
+                  style={{ minHeight: '220px' }}
                 >
                   {/* Module Header */}
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center space-x-2">
-                      <div className="text-[#ec4d58]">
-                        {module.icon}
-                      </div>
                       <span className="text-xs text-gray-400 uppercase tracking-wide">
                         {module.level}
                       </span>
-                    </div>
-                    
-                    {/* Status Icon */}
-                    <div className="flex-shrink-0">
-                      {module.isLocked ? (
-                        <Lock className="w-5 h-5 text-gray-500" />
-                      ) : module.isCompleted ? (
-                        <CheckCircle className="w-5 h-5 text-[#3ED598]" />
-                      ) : (
-                        <Play className="w-5 h-5 text-[#ec4d58]" />
-                      )}
                     </div>
                   </div>
 
@@ -311,7 +294,7 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
                   </p>
 
                   {/* Action Button - ONLY this button allows access */}
-                  <div className="mt-auto">
+                  <div className="mt-auto flex justify-center">
                     {module.isLocked ? (
                       <button
                         disabled
