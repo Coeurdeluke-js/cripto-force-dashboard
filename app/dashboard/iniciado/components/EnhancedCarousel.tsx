@@ -188,15 +188,6 @@ export default function EnhancedCarousel({ content, className = '' }: EnhancedCa
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          {/* Indicador de estado pausado */}
-          {isPaused && (
-            <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-30">
-              <div className="bg-[#232323]/90 text-[#fafafa] px-4 py-2 rounded-lg text-sm font-medium">
-                ⏸️ Pausado
-              </div>
-            </div>
-          )}
-          
           <div 
             key={currentSlide}
             className="absolute inset-0 animate-fade-in"

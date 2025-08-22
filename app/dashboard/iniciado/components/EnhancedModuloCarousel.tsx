@@ -275,7 +275,7 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
               {modules.map((module) => (
                 <div
                   key={module.id}
-                  className="module-card flex-shrink-0 w-80 bg-[#0f0f0f] border border-[#232323] rounded-lg p-4 transition-all duration-200 hover:border-[#ec4d58]/50 hover:shadow-lg hover:shadow-[#ec4d58]/10 flex flex-col hover:border-t-[#ec4d58]"
+                  className="module-card flex-shrink-0 w-80 bg-[#0f0f0f] border border-[#232323] rounded-lg p-4 transition-all duration-200 hover:border-[#ec4d58]/50 hover:shadow-lg hover:shadow-[#ec4d58]/10 flex flex-col hover:border-t-2 hover:border-t-[#ec4d58]"
                   style={{ minHeight: '220px' }}
                 >
                   {/* Module Header */}

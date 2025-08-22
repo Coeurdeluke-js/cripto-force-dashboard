@@ -58,14 +58,14 @@ interface Objective {
   completed: boolean;
 }
 
-// Módulos Teóricos Base - Nivel 1 (4 módulos)
+// Módulos Teóricos Base (4 módulos)
 const theoreticalModulesBase: Module[] = [
   {
     id: '1',
     title: 'Introducción a la Lógica Económica',
     path: '/dashboard/iniciado/Teorico/1-introduccion-logica-economica',
-    icon: <BookOpen />,
-    description: 'Fundamentos de la economía y su aplicación en los mercados',
+    icon: <Brain />,
+    description: 'Fundamentos de la lógica económica y toma de decisiones',
     isLocked: false,
     level: 'nivel1',
     type: 'content',
@@ -74,9 +74,9 @@ const theoreticalModulesBase: Module[] = [
   {
     id: '2',
     title: 'Fuerzas del Mercado',
-    path: '/dashboard/iniciado/Teorico/2-fuerzas-del-mercado',
+    path: '/dashboard/iniciado/Teorico/2-fuerzas-mercado',
     icon: <TrendingUp />,
-    description: 'Oferta, demanda y las fuerzas que mueven los mercados',
+    description: 'Oferta, demanda y equilibrio del mercado',
     isLocked: false,
     level: 'nivel1',
     type: 'content',
@@ -86,9 +86,9 @@ const theoreticalModulesBase: Module[] = [
     id: '3',
     title: 'Acción del Gobierno en los Mercados',
     path: '/dashboard/iniciado/Teorico/3-accion-gobierno-mercados',
-    icon: <Cog />,
-    description: 'Cómo las políticas gubernamentales afectan los mercados',
-    isLocked: false,
+    icon: <Shield />,
+    description: 'Intervención gubernamental y regulaciones',
+    isLocked: true,
     level: 'nivel1',
     type: 'content',
     moduleNumber: 3
@@ -99,7 +99,7 @@ const theoreticalModulesBase: Module[] = [
     path: '/dashboard/iniciado/Teorico/4-competencia-perfecta',
     icon: <Target />,
     description: 'Análisis de mercados en competencia perfecta',
-    isLocked: false,
+    isLocked: true,
     level: 'nivel1',
     type: 'content',
     moduleNumber: 4
@@ -173,7 +173,7 @@ const theoreticalCheckpoints: Module[] = [
     path: '/dashboard/iniciado/puntos-de-control/teorico/pc2',
     icon: <CheckCircle />,
     description: 'Punto de control: Evalúa los módulos "Acción del Gobierno en los Mercados" y "Competencia Perfecta"',
-    isLocked: false,
+    isLocked: true,
     level: 'nivel1',
     type: 'checkpoint',
     moduleNumber: 2
