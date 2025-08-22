@@ -23,6 +23,7 @@ export default function TradingViewChart({
 }: TradingViewChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetRef = useRef<any>(null);
+  const containerId = useRef(`tradingview-${Math.random().toString(36).substr(2, 9)}`);
 
   useEffect(() => {
     // Cargar el script de TradingView si no está disponible
@@ -37,8 +38,14 @@ export default function TradingViewChart({
     }
 
     return () => {
-      if (widgetRef.current) {
-        widgetRef.current.remove();
+      // Cleanup seguro del widget
+      if (widgetRef.current && typeof widgetRef.current.remove === 'function') {
+        try {
+          widgetRef.current.remove();
+        } catch (error) {
+          console.warn('Error al eliminar widget TradingView:', error);
+        }
+        widgetRef.current = null;
       }
     };
   }, [symbol, interval, theme, height]);
@@ -46,53 +53,66 @@ export default function TradingViewChart({
   const createWidget = () => {
     if (!containerRef.current || !window.TradingView) return;
 
-    // Limpiar el contenedor
-    containerRef.current.innerHTML = '';
-
-    // Crear el widget
-    widgetRef.current = new window.TradingView.widget({
-      symbol: symbol,
-      interval: interval,
-      timezone: 'America/New_York',
-      theme: theme,
-      style: '1',
-      locale: 'es',
-      toolbar_bg: '#f1f3f6',
-      enable_publishing: false,
-      allow_symbol_change: true,
-      container_id: containerRef.current.id,
-      width: '100%',
-      height: height,
-      studies: [], // Sin indicadores por defecto
-      disabled_features: [
-        'use_localstorage_for_settings',
-        'volume_force_overlay',
-        'create_volume_indicator_by_default'
-      ],
-      enabled_features: [
-        'study_templates',
-        'side_toolbar_in_fullscreen_mode'
-      ],
-      overrides: {
-        'mainSeriesProperties.candleStyle.upColor': '#3ED598',
-        'mainSeriesProperties.candleStyle.downColor': '#ec4d58',
-        'mainSeriesProperties.candleStyle.wickUpColor': '#3ED598',
-        'mainSeriesProperties.candleStyle.wickDownColor': '#ec4d58',
-        'mainSeriesProperties.candleStyle.borderUpColor': '#3ED598',
-        'mainSeriesProperties.candleStyle.borderDownColor': '#ec4d58'
-      },
-      loading_screen: {
-        backgroundColor: '#0f0f0f',
-        foregroundColor: '#ec4d58'
+    try {
+      // Limpiar el contenedor de forma segura
+      if (containerRef.current && containerRef.current.innerHTML !== '') {
+        containerRef.current.innerHTML = '';
       }
-    });
+
+      // Verificar que el contenedor sigue siendo válido
+      if (!containerRef.current || !document.contains(containerRef.current)) {
+        console.warn('Contenedor TradingView no válido');
+        return;
+      }
+
+      // Crear el widget
+      widgetRef.current = new window.TradingView.widget({
+        symbol: symbol,
+        interval: interval,
+        timezone: 'America/New_York',
+        theme: theme,
+        style: '1',
+        locale: 'es',
+        toolbar_bg: '#f1f3f6',
+        enable_publishing: false,
+        allow_symbol_change: true,
+        container_id: containerRef.current.id,
+        width: '100%',
+        height: height,
+        studies: [], // Sin indicadores por defecto
+        disabled_features: [
+          'use_localstorage_for_settings',
+          'volume_force_overlay',
+          'create_volume_indicator_by_default'
+        ],
+        enabled_features: [
+          'study_templates',
+          'side_toolbar_in_fullscreen_mode'
+        ],
+        overrides: {
+          'mainSeriesProperties.candleStyle.upColor': '#3ED598',
+          'mainSeriesProperties.candleStyle.downColor': '#ec4d58',
+          'mainSeriesProperties.candleStyle.wickUpColor': '#3ED598',
+          'mainSeriesProperties.candleStyle.wickDownColor': '#ec4d58',
+          'mainSeriesProperties.candleStyle.borderUpColor': '#3ED598',
+          'mainSeriesProperties.candleStyle.borderDownColor': '#ec4d58'
+        },
+        loading_screen: {
+          backgroundColor: '#0f0f0f',
+          foregroundColor: '#ec4d58'
+        }
+      });
+    } catch (error) {
+      console.error('Error al crear widget TradingView:', error);
+      widgetRef.current = null;
+    }
   };
 
   return (
     <div className="w-full">
       <div 
         ref={containerRef}
-        id={`tradingview-widget-${Math.random().toString(36).substr(2, 9)}`}
+        id={containerId.current}
         className="tradingview-widget-container"
       />
       
@@ -109,8 +129,12 @@ export default function TradingViewChart({
         
         <button
           onClick={() => {
-            if (widgetRef.current) {
-              widgetRef.current.fullscreen();
+            if (widgetRef.current && typeof widgetRef.current.fullscreen === 'function') {
+              try {
+                widgetRef.current.fullscreen();
+              } catch (error) {
+                console.warn('Error al activar pantalla completa:', error);
+              }
             }
           }}
           className="px-4 py-2 bg-[#ec4d58] hover:bg-[#d43d48] text-white rounded-lg transition-colors duration-200 flex items-center space-x-2"
