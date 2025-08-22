@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useSafeAuth } from '@/context/AuthContext';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
-import { LineChart, RefreshCw, Lightbulb } from 'lucide-react';
+import { LineChart, Lightbulb, ChevronLeft, ChevronRight } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 // Importar el gráfico TradingView dinámicamente para evitar errores de SSR
@@ -22,12 +22,8 @@ const TradingViewChart = dynamic(() => import('@/components/TradingViewChart'), 
 export default function TradingViewPage() {
   const { userData } = useSafeAuth();
   const scrollRef = useScrollPosition();
-  const [lastUpdate, setLastUpdate] = React.useState(new Date());
-  const [showTips, setShowTips] = React.useState(false);
-
-  const updateTimestamp = () => {
-    setLastUpdate(new Date());
-  };
+  const [showTips, setShowTips] = useState(false);
+  const [currentTipIndex, setCurrentTipIndex] = useState(0);
 
   const tradingTips = [
     "💡 Siempre usa stop-loss para proteger tu capital",
@@ -35,10 +31,16 @@ export default function TradingViewPage() {
     "🎯 No inviertas más de lo que puedas permitirte perder",
     "📈 Mantén un diario de trading para aprender de tus errores",
     "🔍 Usa indicadores técnicos como confirmación, no como predicción",
-    "⏰ El timing es crucial - espera confirmaciones claras",
-    "📉 Las tendencias pueden continuar más tiempo del esperado",
-    "🔄 Diversifica tu portafolio para reducir riesgos"
+    "⏰ El timing es crucial - espera confirmaciones claras"
   ];
+
+  const nextTip = () => {
+    setCurrentTipIndex((prev) => (prev + 1) % tradingTips.length);
+  };
+
+  const prevTip = () => {
+    setCurrentTipIndex((prev) => (prev - 1 + tradingTips.length) % tradingTips.length);
+  };
 
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-white" ref={scrollRef}>
@@ -52,18 +54,11 @@ export default function TradingViewPage() {
             </div>
             <div className="flex items-center space-x-3">
               <button
-                onClick={updateTimestamp}
-                className="p-2 bg-[#2a2a2a] hover:bg-[#3a3a3a] rounded-lg transition-colors duration-200"
-                title="Actualizar"
-              >
-                <RefreshCw className="w-5 h-5 text-[#fafafa]" />
-              </button>
-              <button
                 onClick={() => setShowTips(!showTips)}
-                className="px-4 py-2 bg-[#3ED598] hover:bg-[#2EC589] text-white rounded-lg transition-colors duration-200 flex items-center space-x-2"
+                className="px-4 py-2 bg-[#fafafa] hover:bg-[#e5e5e5] text-[#0f0f0f] rounded-lg transition-colors duration-200 flex items-center space-x-2"
               >
                 <Lightbulb className="w-4 h-4" />
-                <span>Mostrar Tips</span>
+                <span>{showTips ? 'Ocultar Tips' : 'Mostrar Tips'}</span>
               </button>
             </div>
           </div>
@@ -71,28 +66,57 @@ export default function TradingViewPage() {
           <p className="text-[#8A8A8A] text-lg mb-2">
             Análisis técnico profesional de criptomonedas con TradingView
           </p>
-          
-          <p className="text-[#8A8A8A] text-sm">
-            Última actualización: {lastUpdate.toLocaleTimeString()}
-          </p>
         </div>
 
-        {/* Tips de Trading */}
-        {showTips && (
-          <div className="mb-6 p-4 bg-[#1a1a1a] border border-[#232323] rounded-lg">
-            <h3 className="text-lg font-semibold text-[#fafafa] mb-3 flex items-center">
-              <Lightbulb className="w-5 h-5 text-[#3ED598] mr-2" />
-              Tips de Trading
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {tradingTips.map((tip, index) => (
-                <div key={index} className="text-[#8A8A8A] text-sm">
-                  {tip}
-                </div>
+        {/* Mini-Carrusel de Tips Navegable */}
+        <div className="mb-6 p-4 bg-[#1a1a1a] border border-[#232323] rounded-lg">
+          <h3 className="text-lg font-semibold text-[#fafafa] mb-4 flex items-center">
+            <Lightbulb className="w-5 h-5 text-[#fafafa] mr-2" />
+            Tips de Trading
+          </h3>
+          
+          <div className="relative">
+            {/* Navegación del carrusel */}
+            <button
+              onClick={prevTip}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-[#232323]/80 hover:bg-[#232323] text-[#fafafa] p-2 rounded-full transition-all duration-200 hover:scale-110"
+              aria-label="Tip anterior"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            
+            <button
+              onClick={nextTip}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-[#232323]/80 hover:bg-[#232323] text-[#fafafa] p-2 rounded-full transition-all duration-200 hover:scale-110"
+              aria-label="Tip siguiente"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+
+            {/* Contenido del tip actual */}
+            <div className="text-center py-8 px-12">
+              <div className="text-[#fafafa] text-lg font-medium">
+                {tradingTips[currentTipIndex]}
+              </div>
+            </div>
+
+            {/* Indicadores de posición */}
+            <div className="flex justify-center space-x-2 mt-4">
+              {tradingTips.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTipIndex(index)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === currentTipIndex 
+                      ? 'bg-[#fafafa]' 
+                      : 'bg-[#8A8A8A] hover:bg-[#fafafa]/70'
+                  }`}
+                  aria-label={`Ir al tip ${index + 1}`}
+                />
               ))}
             </div>
           </div>
-        )}
+        </div>
 
         {/* Gráfico TradingView */}
         <div className="mb-6">
@@ -103,7 +127,7 @@ export default function TradingViewPage() {
         </div>
 
         {/* Información adicional */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <div className="p-4 bg-[#1a1a1a] border border-[#232323] rounded-lg">
             <h3 className="text-lg font-semibold text-[#fafafa] mb-2">Análisis Técnico</h3>
             <p className="text-[#8A8A8A] text-sm">
@@ -120,7 +144,7 @@ export default function TradingViewPage() {
             </p>
           </div>
           
-          <div className="p-4 bg-[#1a1a1a] border border-[#232323] rounded-lg">
+          <div className="p-4 bg-[#1a1a1a] border border-[#232323] rounded-lg md:col-span-2 lg:col-span-1">
             <h3 className="text-lg font-semibold text-[#fafafa] mb-2">Herramientas</h3>
             <p className="text-[#8A8A8A] text-sm">
               Dibuja líneas de tendencia, canales, patrones armónicos y 
