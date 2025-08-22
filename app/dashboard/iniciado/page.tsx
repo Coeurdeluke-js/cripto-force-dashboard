@@ -583,6 +583,7 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
       isLocked
     };
   });
+}
 
 export default function IniciadoDashboard() {
   const { userData } = useSafeAuth();

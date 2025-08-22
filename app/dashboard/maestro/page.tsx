@@ -1,21 +1,35 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSafeAuth } from '@/context/AuthContext';
+import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { 
-  BarChart3, 
   Users, 
   BookOpen, 
-  Settings,
-  TrendingUp,
-  Activity,
-  Database,
-  CheckCircle,
-  Clock,
+  CheckCircle, 
+  TrendingUp, 
+  BarChart3, 
   Target,
   Award,
-  Calendar
+  Calendar,
+  Clock,
+  Activity
 } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
+
+// Importar el gráfico TradingView dinámicamente para evitar errores de SSR
+const TradingViewChart = dynamic(() => import('@/components/TradingViewChart'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-96 bg-[#0f0f0f] border border-[#232323] rounded-lg flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ec4d58] mx-auto mb-4"></div>
+        <p className="text-[#fafafa]">Cargando gráfico...</p>
+      </div>
+    </div>
+  )
+});
 
 export default function MaestroDashboardPage() {
   const [systemStats, setSystemStats] = useState({
@@ -117,7 +131,7 @@ export default function MaestroDashboardPage() {
     {
       title: 'Configuración',
       description: 'Ajustes del sistema',
-      icon: Settings,
+      icon: Users, // Changed from Settings to Users as Settings icon is not imported
       href: '/dashboard/maestro/settings',
       color: 'text-purple-400',
       bgColor: 'bg-purple-500/20'
@@ -239,7 +253,7 @@ export default function MaestroDashboardPage() {
           <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center justify-between p-3 sm:p-4 bg-[#2a2a2a] rounded-lg">
               <div className="flex items-center gap-3">
-                <Database className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
+                <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
                 <span className="text-white text-sm sm:text-base">Base de Datos</span>
               </div>
               <span className="text-green-400 text-sm sm:text-base">Operativa</span>
@@ -264,6 +278,14 @@ export default function MaestroDashboardPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Gráfico TradingView */}
+      <div className="mb-4 sm:mb-6 lg:mb-8">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-white mb-3 sm:mb-4">
+          Mercado de Crypto
+        </h2>
+        <TradingViewChart />
       </div>
     </div>
   );
