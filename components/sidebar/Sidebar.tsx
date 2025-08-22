@@ -31,13 +31,16 @@ export default function Sidebar() {
   // Verificar si el usuario es Maestro (solo en el cliente)
   const isMaestro = isClient && authUserData?.user_level === 0;
   
-
-  
-
-  
-
-  
-
+  // Debug logs
+  useEffect(() => {
+    if (isClient) {
+      console.log('🔍 Sidebar - AuthContext completo:', authContext);
+      console.log('🔍 Sidebar - UserData del contexto:', authUserData);
+      console.log('🔍 Sidebar - ¿Es cliente?:', isClient);
+      console.log('🔍 Sidebar - user_level específico:', authUserData?.user_level);
+      console.log('🔍 Sidebar - ¿Es Maestro?:', isMaestro);
+    }
+  }, [isClient, authContext, authUserData, isMaestro]);
 
   // Get user data from profile
   useEffect(() => {
@@ -208,6 +211,26 @@ export default function Sidebar() {
               </li>
             );
           })}
+
+          {/* Navegar por Dashboards - Solo para Maestros */}
+          {isMaestro && (
+            <li>
+              <Link
+                href="/dashboard/maestro/dashboard-selection"
+                className="group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
+                title={!isExpanded ? "Navegar por Dashboards" : undefined}
+              >
+                <span className="flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-[#ec4d58] group-hover:text-[#d43d48]">
+                  <Compass size={20} />
+                </span>
+                {isExpanded && (
+                  <span className="font-medium text-gray-300 group-hover:text-[#ec4d58] sidebar-text visible delayed-6">
+                    Navegar por Dashboards
+                  </span>
+                )}
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
 
