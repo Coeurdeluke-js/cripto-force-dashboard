@@ -3,7 +3,7 @@
 import React from 'react';
 import { useSafeAuth } from '@/context/AuthContext';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
-import { LineChart, RefreshCw, Lightbulb } from 'lucide-react';
+import { LineChart, RefreshCw, Lightbulb, TrendingUp, BarChart3, Target } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 // Importar el gráfico TradingView dinámicamente para evitar errores de SSR
@@ -19,7 +19,7 @@ const TradingViewChart = dynamic(() => import('@/components/TradingViewChart'), 
   )
 });
 
-export default function TradingViewPage() {
+export default function MaestroTradingViewPage() {
   const { userData } = useSafeAuth();
   const scrollRef = useScrollPosition();
   const [lastUpdate, setLastUpdate] = React.useState(new Date());
@@ -29,15 +29,17 @@ export default function TradingViewPage() {
     setLastUpdate(new Date());
   };
 
-  const tradingTips = [
-    "💡 Siempre usa stop-loss para proteger tu capital",
-    "📊 Analiza múltiples timeframes antes de tomar decisiones",
-    "🎯 No inviertas más de lo que puedas permitirte perder",
-    "📈 Mantén un diario de trading para aprender de tus errores",
-    "🔍 Usa indicadores técnicos como confirmación, no como predicción",
+  const advancedTradingTips = [
+    "🎯 Como Maestro, enseña a tus estudiantes a usar stop-loss dinámicos",
+    "📊 Analiza múltiples timeframes para confirmar tendencias",
+    "💼 Gestiona el riesgo con posición sizing adecuado",
+    "📈 Mantén un diario de trading detallado",
+    "🔍 Usa indicadores técnicos como confirmación, no predicción",
     "⏰ El timing es crucial - espera confirmaciones claras",
     "📉 Las tendencias pueden continuar más tiempo del esperado",
-    "🔄 Diversifica tu portafolio para reducir riesgos"
+    "🔄 Diversifica tu portafolio para reducir riesgos",
+    "📚 Comparte tu conocimiento con la comunidad",
+    "🎓 Guía a otros en su camino de aprendizaje"
   ];
 
   return (
@@ -47,8 +49,11 @@ export default function TradingViewPage() {
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
-              <LineChart className="w-8 h-8 text-[#ec4d58]" />
+              <LineChart className="w-8 h-8 text-[#8A8A8A]" />
               <h1 className="text-3xl font-bold text-[#fafafa]">TradingView</h1>
+              <span className="px-3 py-1 bg-[#8A8A8A] text-[#0f0f0f] rounded-full text-sm font-semibold">
+                MAESTRO
+              </span>
             </div>
             <div className="flex items-center space-x-3">
               <button
@@ -69,7 +74,7 @@ export default function TradingViewPage() {
           </div>
           
           <p className="text-[#8A8A8A] text-lg mb-2">
-            Análisis técnico profesional de criptomonedas con TradingView
+            Análisis técnico profesional de criptomonedas con TradingView - Acceso Maestro
           </p>
           
           <p className="text-[#8A8A8A] text-sm">
@@ -77,15 +82,15 @@ export default function TradingViewPage() {
           </p>
         </div>
 
-        {/* Tips de Trading */}
+        {/* Tips de Trading Avanzados */}
         {showTips && (
           <div className="mb-6 p-4 bg-[#1a1a1a] border border-[#232323] rounded-lg">
             <h3 className="text-lg font-semibold text-[#fafafa] mb-3 flex items-center">
               <Lightbulb className="w-5 h-5 text-[#3ED598] mr-2" />
-              Tips de Trading
+              Tips Avanzados para Maestros
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {tradingTips.map((tip, index) => (
+              {advancedTradingTips.map((tip, index) => (
                 <div key={index} className="text-[#8A8A8A] text-sm">
                   {tip}
                 </div>
@@ -97,34 +102,43 @@ export default function TradingViewPage() {
         {/* Gráfico TradingView */}
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-[#fafafa] mb-4">
-            Gráfico en Tiempo Real
+            Gráfico Profesional en Tiempo Real
           </h2>
-          <TradingViewChart height={600} />
+          <TradingViewChart height={700} />
         </div>
 
-        {/* Información adicional */}
+        {/* Información adicional para Maestros */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="p-4 bg-[#1a1a1a] border border-[#232323] rounded-lg">
-            <h3 className="text-lg font-semibold text-[#fafafa] mb-2">Análisis Técnico</h3>
+            <div className="flex items-center mb-2">
+              <TrendingUp className="w-5 h-5 text-[#8A8A8A] mr-2" />
+              <h3 className="text-lg font-semibold text-[#fafafa]">Análisis Avanzado</h3>
+            </div>
             <p className="text-[#8A8A8A] text-sm">
-              Utiliza las herramientas profesionales de TradingView para analizar patrones, 
-              tendencias y niveles de soporte/resistencia en tiempo real.
+              Como Maestro, utiliza todas las herramientas profesionales de TradingView 
+              para análisis técnico avanzado y enseñanza.
             </p>
           </div>
           
           <div className="p-4 bg-[#1a1a1a] border border-[#232323] rounded-lg">
-            <h3 className="text-lg font-semibold text-[#fafafa] mb-2">Indicadores</h3>
+            <div className="flex items-center mb-2">
+              <BarChart3 className="w-5 h-5 text-[#8A8A8A] mr-2" />
+              <h3 className="text-lg font-semibold text-[#fafafa]">Indicadores Pro</h3>
+            </div>
             <p className="text-[#8A8A8A] text-sm">
-              Accede a más de 100 indicadores técnicos incluyendo RSI, MACD, 
-              Bollinger Bands, Fibonacci y muchos más.
+              Acceso completo a más de 100 indicadores técnicos, patrones armónicos, 
+              y herramientas de análisis profesional.
             </p>
           </div>
           
           <div className="p-4 bg-[#1a1a1a] border border-[#232323] rounded-lg">
-            <h3 className="text-lg font-semibold text-[#fafafa] mb-2">Herramientas</h3>
+            <div className="flex items-center mb-2">
+              <Target className="w-5 h-5 text-[#8A8A8A] mr-2" />
+              <h3 className="text-lg font-semibold text-[#fafafa]">Enseñanza</h3>
+            </div>
             <p className="text-[#8A8A8A] text-sm">
-              Dibuja líneas de tendencia, canales, patrones armónicos y 
-              utiliza herramientas de análisis avanzado.
+              Comparte tu conocimiento con estudiantes, crea estrategias de trading 
+              y guía a otros en su desarrollo profesional.
             </p>
           </div>
         </div>

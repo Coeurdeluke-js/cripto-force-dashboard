@@ -13,23 +13,10 @@ import {
   Award,
   Calendar,
   Clock,
-  Activity
+  Activity,
+  LineChart
 } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
-
-// Importar el gráfico TradingView dinámicamente para evitar errores de SSR
-const TradingViewChart = dynamic(() => import('@/components/TradingViewChart'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-96 bg-[#0f0f0f] border border-[#232323] rounded-lg flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ec4d58] mx-auto mb-4"></div>
-        <p className="text-[#fafafa]">Cargando gráfico...</p>
-      </div>
-    </div>
-  )
-});
 
 export default function MaestroDashboardPage() {
   const [systemStats, setSystemStats] = useState({
@@ -280,12 +267,60 @@ export default function MaestroDashboardPage() {
         </div>
       </div>
 
-      {/* Gráfico TradingView */}
+      {/* Información adicional del sistema */}
       <div className="mb-4 sm:mb-6 lg:mb-8">
         <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-white mb-3 sm:mb-4">
-          Mercado de Crypto
+          Información Adicional
         </h2>
-        <TradingViewChart />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="p-6 bg-[#1a1a1a] border border-[#232323] rounded-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-[#fafafa]">Sistema de Usuarios</h3>
+              <Users className="w-6 h-6 text-[#8A8A8A]" />
+            </div>
+            <p className="text-[#8A8A8A] text-sm mb-4">
+              Gestiona estudiantes, monitorea progreso y asigna roles en la plataforma.
+            </p>
+            <Link 
+              href="/dashboard/maestro/students"
+              className="inline-flex items-center text-[#8A8A8A] hover:text-[#fafafa] transition-colors"
+            >
+              Ver Estudiantes →
+            </Link>
+          </div>
+
+          <div className="p-6 bg-[#1a1a1a] border border-[#232323] rounded-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-[#fafafa]">Análisis de Datos</h3>
+              <BarChart3 className="w-6 h-6 text-[#8A8A8A]" />
+            </div>
+            <p className="text-[#8A8A8A] text-sm mb-4">
+              Accede a estadísticas detalladas y métricas de rendimiento del sistema.
+            </p>
+            <Link 
+              href="/dashboard/maestro/analytics"
+              className="inline-flex items-center text-[#8A8A8A] hover:text-[#fafafa] transition-colors"
+            >
+              Ver Analytics →
+            </Link>
+          </div>
+
+          <div className="p-6 bg-[#1a1a1a] border border-[#232323] rounded-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-[#fafafa]">TradingView Pro</h3>
+              <LineChart className="w-6 h-6 text-[#8A8A8A]" />
+            </div>
+            <p className="text-[#8A8A8A] text-sm mb-4">
+              Acceso completo a gráficos profesionales y herramientas de análisis técnico.
+            </p>
+            <Link 
+              href="/dashboard/maestro/trading"
+              className="inline-flex items-center text-[#8A8A8A] hover:text-[#fafafa] transition-colors"
+            >
+              Ir a TradingView →
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

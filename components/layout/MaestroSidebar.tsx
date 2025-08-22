@@ -55,8 +55,8 @@ const menuItems: MenuItem[] = [
     icon: BookOpen
   },
   {
-    label: 'Trading Charts',
-    href: '/dashboard/maestro/trading-charts',
+    label: 'TradingView',
+    href: '/dashboard/maestro/trading',
     icon: LineChart
   },
   {
