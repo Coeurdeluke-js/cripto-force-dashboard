@@ -74,8 +74,10 @@ const TradingViewChart = ({ symbol, interval = '1D', theme = 'dark' }: {
           enable_publishing: false,
           allow_symbol_change: true,
           container_id: chartRef.current.id,
-          // Sin indicadores por defecto - gráfico limpio
+          // Sin indicadores por defecto - gráfico completamente limpio
           studies: [],
+          // Ocultar volumen y otros elementos por defecto
+          hide_volume: true,
           // Configuración para pantalla completa integrada
           fullscreen: false,
           // Deshabilitar popup de pantalla completa
@@ -88,12 +90,99 @@ const TradingViewChart = ({ symbol, interval = '1D', theme = 'dark' }: {
           autosize: true,
           // Configuraciones de UI
           toolbar_bg: '#1a1a1a',
-          // Configuraciones de pantalla completa integrada
+          // Configuraciones para ocultar elementos por defecto
           overrides: {
             'paneProperties.background': '#1a1a1a',
             'paneProperties.vertGridProperties.color': '#2a2a2a',
-            'paneProperties.horzGridProperties.color': '#2a2a2a'
-          }
+            'paneProperties.horzGridProperties.color': '#2a2a2a',
+            // Ocultar volumen completamente
+            'volumePaneSize': 'tiny',
+            'scalesProperties.showVolume': false,
+            // Ocultar otros indicadores por defecto
+            'mainSeriesProperties.candleStyle.drawWick': true,
+            'mainSeriesProperties.candleStyle.drawBorder': true,
+            'mainSeriesProperties.candleStyle.borderColor': '#ec4d58',
+            'mainSeriesProperties.candleStyle.wickColor': '#666666',
+            'mainSeriesProperties.candleStyle.borderUpColor': '#3ED598',
+            'mainSeriesProperties.candleStyle.borderDownColor': '#ec4d58',
+            'mainSeriesProperties.candleStyle.upColor': '#3ED598',
+            'mainSeriesProperties.candleStyle.downColor': '#ec4d58'
+          },
+          // Configuraciones adicionales para gráfico limpio
+          disabled_features: [
+            'volume_force_overlay',
+            'create_volume_indicator_by_default',
+            'header_symbol_search',
+            'header_compare',
+            'header_settings',
+            'header_indicators',
+            'header_fullscreen_button',
+            'header_screenshot',
+            'header_chart_type',
+            'header_undo_redo',
+            'header_interval_dialog_button',
+            'show_interval_dialog_on_key_press',
+            'header_resolutions',
+            'header_share',
+            'timeframes_toolbar',
+            'edit_buttons_in_legend',
+            'context_menus',
+            'border_around_the_chart',
+            'header_saveload',
+            'control_bar',
+            'countdown',
+            'display_market_status',
+            'chart_property_page_background',
+            'compare_symbol',
+            'high_density_bars',
+            'chart_property_page_scales',
+            'chart_property_page_style',
+            'chart_property_page_timezone_sessions',
+            'chart_property_page_trading',
+            'side_toolbar_in_fullscreen_mode',
+            'left_toolbar',
+            'show_logo_on_all_charts',
+            'caption_buttons_text_if_possible',
+            'dom_widget',
+            'trading_notifications',
+            'header_undo_redo',
+            'header_fullscreen_button',
+            'header_screenshot',
+            'header_chart_type',
+            'header_indicators',
+            'header_compare',
+            'header_symbol_search',
+            'header_settings',
+            'header_resolutions',
+            'header_share',
+            'timeframes_toolbar',
+            'edit_buttons_in_legend',
+            'context_menus',
+            'border_around_the_chart',
+            'header_saveload',
+            'control_bar',
+            'countdown',
+            'display_market_status',
+            'chart_property_page_background',
+            'compare_symbol',
+            'high_density_bars',
+            'chart_property_page_scales',
+            'chart_property_page_style',
+            'chart_property_page_timezone_sessions',
+            'chart_property_page_trading',
+            'side_toolbar_in_fullscreen_mode',
+            'left_toolbar',
+            'show_logo_on_all_charts',
+            'caption_buttons_text_if_possible',
+            'dom_widget',
+            'trading_notifications'
+          ],
+          // Habilitar solo funcionalidades esenciales
+          enabled_features: [
+            'study_templates',
+            'use_localstorage_for_settings',
+            'save_chart_properties_to_local_storage'
+          ]
         });
 
         console.log('TradingView widget creado para', symbol);
