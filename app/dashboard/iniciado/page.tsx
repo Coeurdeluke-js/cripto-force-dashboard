@@ -497,97 +497,85 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
   };
 
   // Separar módulos por nivel para facilitar el cálculo
-  const nivel1Modules = modules.filter(m => m.level === 'nivel1' && !m.id.startsWith('PC'));
-  const nivel1Checkpoints = modules.filter(m => m.level === 'nivel1' && m.id.startsWith('PC'));
-  const nivel2Modules = modules.filter(m => m.level === 'nivel2' && !m.id.startsWith('PC'));
-  const nivel2Checkpoints = modules.filter(m => m.level === 'nivel2' && m.id.startsWith('PC'));
-
   return modules.map((module) => {
-    let isLocked = false;
+    let isLocked = module.isLocked || false;
     
-    // Si es un módulo del nivel 1
-    if (module.level === 'nivel1' && !module.id.startsWith('PC')) {
+    // Si es un módulo de contenido (no punto de control)
+    if (module.type === 'content') {
       const moduleIndex = parseInt(module.id);
       
-      if (moduleIndex <= 4) {
-        // Los primeros cuatro módulos siempre están desbloqueados
-        isLocked = false;
-      } else if (moduleIndex === 5 || moduleIndex === 6) {
-        // Módulos 5 y 6 se desbloquean cuando PC1 está completado
-        isLocked = !isCheckpointCompleted('PC1', 'nivel1');
-      } else if (moduleIndex === 7 || moduleIndex === 8) {
-        // Módulos 7 y 8 se desbloquean cuando PC2 está completado
-        isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+      if (courseType === 'theoretical') {
+        // Lógica para módulos teóricos
+        if (moduleIndex <= 2) {
+          // Los primeros dos módulos siempre están desbloqueados
+          isLocked = false;
+        } else if (moduleIndex === 3 || moduleIndex === 4) {
+          // Módulos 3 y 4 se desbloquean cuando PC1 está completado
+          isLocked = !isCheckpointCompleted('PC1', 'nivel1');
+        } else if (moduleIndex === 5 || moduleIndex === 6) {
+          // Módulos 5 y 6 se desbloquean cuando PC2 está completado
+          isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+        } else if (moduleIndex === 7 || moduleIndex === 8) {
+          // Módulos 7 y 8 se desbloquean cuando PC3 está completado
+          isLocked = !isCheckpointCompleted('PC3', 'nivel2');
+        }
+      } else {
+        // Lógica para módulos prácticos
+        if (moduleIndex <= 2) {
+          // Los primeros dos módulos siempre están desbloqueados
+          isLocked = false;
+        } else if (moduleIndex === 3 || moduleIndex === 4) {
+          // Módulos 3 y 4 se desbloquean cuando PC1 está completado
+          isLocked = !isCheckpointCompleted('PC1', 'nivel1');
+        } else if (moduleIndex === 5 || moduleIndex === 6) {
+          // Módulos 5 y 6 se desbloquean cuando PC2 está completado
+          isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+        } else if (moduleIndex === 7 || moduleIndex === 8) {
+          // Módulos 7 y 8 se desbloquean cuando PC3 está completado
+          isLocked = !isCheckpointCompleted('PC3', 'nivel1');
+        } else if (moduleIndex === 9 || moduleIndex === 10) {
+          // Módulos 9 y 10 se desbloquean cuando PC4 está completado
+          isLocked = !isCheckpointCompleted('PC4', 'nivel2');
+        }
       }
-    }
-    
-    // Si es un punto de control del nivel 1
-    if (module.level === 'nivel1' && module.id.startsWith('PC')) {
+    } else {
+      // Si es un punto de control
       const checkpointNumber = parseInt(module.id.replace('PC', ''));
       
-      if (checkpointNumber === 1) {
-        // PC1 siempre está desbloqueado
-        isLocked = false;
-      } else if (checkpointNumber === 2) {
-        // PC2 se desbloquea cuando PC1 está completado
-        isLocked = !isCheckpointCompleted('PC1', 'nivel1');
-      } else if (checkpointNumber === 3) {
-        // PC3 se desbloquea cuando PC1 Y PC2 están completados
-        const pc1Completed = isCheckpointCompleted('PC1', 'nivel1');
-        const pc2Completed = isCheckpointCompleted('PC2', 'nivel1');
-        isLocked = !(pc1Completed && pc2Completed);
-      }
-    }
-    
-    // Si es un módulo del nivel 2
-    if (module.level === 'nivel2' && !module.id.startsWith('PC')) {
-      const moduleIndex = parseInt(module.id);
-      
-      if (moduleIndex === 5 || moduleIndex === 6) {
-        // Módulos 5 y 6 se desbloquean cuando PC3 está completado
-        isLocked = !isCheckpointCompleted('PC3', 'nivel1');
-      } else if (moduleIndex === 7 || moduleIndex === 8) {
-        // Módulos 7 y 8 se desbloquean cuando PC4 está completado
-        isLocked = !isCheckpointCompleted('PC4', 'nivel2');
-      }
-    }
-    
-    // Si es un punto de control del nivel 2
-    if (module.level === 'nivel2' && module.id.startsWith('PC')) {
-      const checkpointNumber = parseInt(module.id.replace('PC', ''));
-      
-      if (courseType === 'practical') {
-        // Para contenido práctico, lógica específica
-        if (checkpointNumber === 4) {
+      if (courseType === 'theoretical') {
+        // Lógica para puntos de control teóricos
+        if (checkpointNumber === 1) {
+          // PC1 siempre está desbloqueado
+          isLocked = false;
+        } else if (checkpointNumber === 2) {
+          // PC2 se desbloquea cuando PC1 está completado
+          isLocked = !isCheckpointCompleted('PC1', 'nivel1');
+        } else if (checkpointNumber === 3) {
+          // PC3 se desbloquea cuando PC2 está completado
+          isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+        } else if (checkpointNumber === 4) {
+          // PC4 se desbloquea cuando PC3 está completado
+          isLocked = !isCheckpointCompleted('PC3', 'nivel2');
+        }
+      } else {
+        // Lógica para puntos de control prácticos
+        if (checkpointNumber === 1) {
+          // PC1 siempre está desbloqueado
+          isLocked = false;
+        } else if (checkpointNumber === 2) {
+          // PC2 se desbloquea cuando PC1 está completado
+          isLocked = !isCheckpointCompleted('PC1', 'nivel1');
+        } else if (checkpointNumber === 3) {
+          // PC3 se desbloquea cuando PC2 está completado
+          isLocked = !isCheckpointCompleted('PC2', 'nivel1');
+        } else if (checkpointNumber === 4) {
           // PC4 se desbloquea cuando PC3 está completado
           isLocked = !isCheckpointCompleted('PC3', 'nivel1');
         } else if (checkpointNumber === 5) {
           // PC5 se desbloquea cuando PC4 está completado
           isLocked = !isCheckpointCompleted('PC4', 'nivel2');
         }
-              } else {
-          // Para contenido teórico, mantener lógica original
-          // Verificar si todos los checkpoints del nivel 1 están completados
-          const allNivel1Completed = nivel1Checkpoints.every(checkpoint => 
-            isCheckpointCompleted(checkpoint.id, 'nivel1')
-          );
-          
-          if (!allNivel1Completed) {
-            // Si no están todos los checkpoints del nivel 1 completados, bloquear
-            isLocked = true;
-          } else {
-            if (checkpointNumber === 3) {
-              // PC3 se desbloquea cuando PC2 está completado
-              isLocked = !isCheckpointCompleted('PC2', 'nivel1');
-            } else if (checkpointNumber === 4) {
-              // PC4 se desbloquea cuando PC3 está completado
-              isLocked = !isCheckpointCompleted('PC3', 'nivel1');
-            } else if (checkpointNumber === 5) {
-              // PC5 se desbloquea cuando PC4 está completado
-              isLocked = !isCheckpointCompleted('PC4', 'nivel2');
-            }
-          }
-        }
+      }
     }
     
     return {
@@ -595,7 +583,6 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
       isLocked
     };
   });
-}
 
 export default function IniciadoDashboard() {
   const { userData } = useSafeAuth();
