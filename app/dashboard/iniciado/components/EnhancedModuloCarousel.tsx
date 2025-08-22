@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Play, Check } from 'lucide-react';
 
 interface Module {
   id: string;
@@ -12,6 +12,8 @@ interface Module {
   isCompleted?: boolean;
   isLocked?: boolean;
   level: 'nivel1' | 'nivel2';
+  type: 'content' | 'checkpoint';
+  moduleNumber: number;
 }
 
 interface EnhancedModuloCarouselProps {
@@ -271,7 +273,7 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
               {modules.map((module) => (
                 <div
                   key={module.id}
-                  className="module-card flex-shrink-0 w-80 bg-[#0f0f0f] border border-[#232323] rounded-lg p-4 transition-all duration-200 hover:border-[#ec4d58]/50 hover:shadow-lg hover:shadow-[#ec4d58]/10 flex flex-col"
+                  className="module-card flex-shrink-0 w-80 bg-[#0f0f0f] border border-[#232323] rounded-lg p-4 transition-all duration-200 hover:border-[#ec4d58]/50 hover:shadow-lg hover:shadow-[#ec4d58]/10 flex flex-col hover:border-t-[#ec4d58]/50"
                   style={{ minHeight: '220px' }}
                 >
                   {/* Module Header */}
@@ -298,16 +300,30 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
                     {module.isLocked ? (
                       <button
                         disabled
-                        className="w-full px-4 py-2 bg-gray-700 text-gray-400 rounded-lg cursor-not-allowed text-sm font-medium"
+                        className="w-full px-4 py-2 bg-gray-700 text-gray-400 rounded-lg cursor-not-allowed text-sm font-medium flex items-center justify-center space-x-2"
                       >
-                        Bloqueado
+                        <span>Bloqueado</span>
                       </button>
                     ) : (
                       <Link
                         href={module.path}
-                        className="block w-full px-4 py-2 bg-[#ec4d58] hover:bg-[#d43d48] text-white rounded-lg text-sm font-medium text-center transition-colors duration-200"
+                        className={`block w-full px-4 py-2 text-white rounded-lg text-sm font-medium text-center transition-colors duration-200 flex items-center justify-center space-x-2 ${
+                          module.type === 'checkpoint' 
+                            ? 'bg-[#FFD447] hover:bg-[#FFC437] text-gray-900' 
+                            : 'bg-[#ec4d58] hover:bg-[#d43d48]'
+                        }`}
                       >
-                        {module.isCompleted ? 'Revisar' : 'Comenzar'}
+                        {module.type === 'checkpoint' ? (
+                          <>
+                            <Check className="w-4 h-4" />
+                            <span>Punto de Control</span>
+                          </>
+                        ) : (
+                          <>
+                            <Play className="w-4 h-4" />
+                            <span>{module.isCompleted ? 'Revisar' : 'Comenzar'}</span>
+                          </>
+                        )}
                       </Link>
                     )}
                   </div>

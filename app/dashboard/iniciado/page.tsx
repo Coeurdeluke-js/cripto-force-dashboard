@@ -45,6 +45,8 @@ interface Module {
   isCompleted?: boolean;
   isLocked?: boolean;
   level: 'nivel1' | 'nivel2';
+  type: 'content' | 'checkpoint';
+  moduleNumber: number;
 }
 
 interface Objective {
@@ -64,7 +66,9 @@ const theoreticalModulesBase: Module[] = [
     icon: <BookOpen />,
     description: 'Fundamentos de la economía y su aplicación en los mercados',
     isLocked: false,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 1
   },
   {
     id: '2',
@@ -73,7 +77,9 @@ const theoreticalModulesBase: Module[] = [
     icon: <TrendingUp />,
     description: 'Oferta, demanda y las fuerzas que mueven los mercados',
     isLocked: false,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 2
   },
   {
     id: 'PC1',
@@ -82,7 +88,9 @@ const theoreticalModulesBase: Module[] = [
     icon: <CheckCircle />,
     description: 'Punto de control: Evalúa los módulos "Introducción a la Lógica Económica" y "Fuerzas del Mercado"',
     isLocked: false,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: 1
   },
   {
     id: '3',
@@ -91,7 +99,9 @@ const theoreticalModulesBase: Module[] = [
     icon: <Cog />,
     description: 'Cómo las políticas gubernamentales afectan los mercados',
     isLocked: false,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 3
   },
   {
     id: '4',
@@ -100,7 +110,9 @@ const theoreticalModulesBase: Module[] = [
     icon: <Target />,
     description: 'Análisis de mercados en competencia perfecta',
     isLocked: false,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 4
   },
   {
     id: 'PC2',
@@ -109,7 +121,9 @@ const theoreticalModulesBase: Module[] = [
     icon: <CheckCircle />,
     description: 'Punto de control: Evalúa los módulos "Acción del Gobierno en los Mercados" y "Competencia Perfecta"',
     isLocked: false,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: 2
   }
 ];
 
@@ -122,7 +136,9 @@ const theoreticalModulesNivel2: Module[] = [
     icon: <Crown />,
     description: 'Análisis de mercados con poder de mercado concentrado',
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel2',
+    type: 'content',
+    moduleNumber: 5
   },
   {
     id: '6',
@@ -131,7 +147,9 @@ const theoreticalModulesNivel2: Module[] = [
     icon: <Network />,
     description: 'Fundamentos de la tecnología blockchain y criptomonedas',
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel2',
+    type: 'content',
+    moduleNumber: 6
   },
   {
     id: 'PC3',
@@ -140,7 +158,9 @@ const theoreticalModulesNivel2: Module[] = [
     icon: <CheckCircle />,
     description: 'Punto de control: Evalúa los módulos "Monopolio y Oligopolio" y "Tecnología Blockchain"',
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel2',
+    type: 'checkpoint',
+    moduleNumber: 3
   },
   {
     id: '7',
@@ -149,7 +169,9 @@ const theoreticalModulesNivel2: Module[] = [
     icon: <DollarSign />,
     description: 'Análisis fundamental de criptomonedas y tokens',
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel2',
+    type: 'content',
+    moduleNumber: 7
   },
   {
     id: '8',
@@ -158,7 +180,9 @@ const theoreticalModulesNivel2: Module[] = [
     icon: <Wrench />,
     description: 'Técnicas avanzadas de trading en criptomonedas',
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel2',
+    type: 'content',
+    moduleNumber: 8
   },
   {
     id: 'PC4',
@@ -167,7 +191,9 @@ const theoreticalModulesNivel2: Module[] = [
     icon: <CheckCircle />,
     description: 'Punto de control: Evalúa los módulos "Criptomonedas" y "Operaciones con Criptomonedas"',
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel2',
+    type: 'checkpoint',
+    moduleNumber: 4
   }
 ];
 
@@ -180,7 +206,9 @@ const practicalModulesBase: Module[] = [
     icon: <Play />,
     description: 'Fundamentos del trading y mentalidad correcta',
     isLocked: false,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 1
   },
   {
     id: '2',
@@ -189,7 +217,9 @@ const practicalModulesBase: Module[] = [
     icon: <TrendingUp />,
     description: 'Herramientas básicas del análisis técnico',
     isLocked: false,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 2
   },
   {
     id: '3',
@@ -198,7 +228,9 @@ const practicalModulesBase: Module[] = [
     icon: <BookOpen />,
     description: 'Patrones de velas japonesas y su interpretación',
     isLocked: false,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 3
   },
   {
     id: '4',
@@ -207,7 +239,9 @@ const practicalModulesBase: Module[] = [
     icon: <Target />,
     description: 'Niveles de Fibonacci y medias móviles',
     isLocked: false,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 4
   },
   {
     id: '5',
@@ -216,7 +250,9 @@ const practicalModulesBase: Module[] = [
     icon: <Wrench />,
     description: 'Osciladores y confirmación de señales',
     isLocked: true,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 5
   },
   {
     id: '6',
@@ -225,7 +261,9 @@ const practicalModulesBase: Module[] = [
     icon: <Cog />,
     description: 'Indicadores de sobrecompra y sobreventa',
     isLocked: true,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 6
   },
   {
     id: '7',
@@ -234,7 +272,9 @@ const practicalModulesBase: Module[] = [
     icon: <Brain />,
     description: 'Análisis fundamental y factores que mueven el mercado',
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel2',
+    type: 'content',
+    moduleNumber: 7
   },
   {
     id: '8',
@@ -243,7 +283,9 @@ const practicalModulesBase: Module[] = [
     icon: <Network />,
     description: 'Análisis fundamental avanzado',
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel2',
+    type: 'content',
+    moduleNumber: 8
   },
   {
     id: '9',
@@ -252,7 +294,9 @@ const practicalModulesBase: Module[] = [
     icon: <Shield />,
     description: 'Estrategias de gestión de riesgo y protección de capital',
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel2',
+    type: 'content',
+    moduleNumber: 9
   },
   {
     id: '10',
@@ -261,7 +305,9 @@ const practicalModulesBase: Module[] = [
     icon: <BarChart3 />,
     description: 'Desarrollo de un plan de trading personalizado',
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel2',
+    type: 'content',
+    moduleNumber: 10
   }
 ];
 
@@ -284,7 +330,9 @@ function buildPracticalModulesWithCheckpoints() {
         icon: <CheckCircle />,
     description: `Punto de control: Evalúa los módulos "${practicalModulesBase[0].title}" y "${practicalModulesBase[1].title}"`,
     isLocked: false,
-        level: 'nivel1'
+        level: 'nivel1',
+        type: 'checkpoint',
+        moduleNumber: pcCount
       });
       pcCount++;
   
@@ -302,7 +350,9 @@ function buildPracticalModulesWithCheckpoints() {
         icon: <CheckCircle />,
     description: `Punto de control: Evalúa los módulos "${practicalModulesBase[2].title}" y "${practicalModulesBase[3].title}"`,
     isLocked: true,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: pcCount
   });
   pcCount++;
   
@@ -320,7 +370,9 @@ function buildPracticalModulesWithCheckpoints() {
     icon: <CheckCircle />,
     description: `Punto de control: Evalúa los módulos "${practicalModulesBase[4].title}" y "${practicalModulesBase[5].title}"`,
     isLocked: true,
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: pcCount
   });
   pcCount++;
   
@@ -338,7 +390,9 @@ function buildPracticalModulesWithCheckpoints() {
     icon: <CheckCircle />,
     description: `Punto de control: Evalúa los módulos "${practicalModulesBase[6].title}" y "${practicalModulesBase[7].title}"`,
         isLocked: true,
-        level: 'nivel2'
+        level: 'nivel2',
+        type: 'checkpoint',
+        moduleNumber: pcCount
       });
       pcCount++;
   
@@ -356,7 +410,9 @@ function buildPracticalModulesWithCheckpoints() {
     icon: <CheckCircle />,
     description: `Punto de control: Evalúa los módulos "${practicalModulesBase[8].title}" y "${practicalModulesBase[9].title}"`,
     isLocked: true,
-    level: 'nivel2'
+    level: 'nivel2',
+    type: 'checkpoint',
+    moduleNumber: pcCount
   });
   
   return result;
@@ -914,7 +970,9 @@ export default function IniciadoDashboard() {
               description: module.description,
               isCompleted: isModuleCompleted(module.id),
               isLocked: module.isLocked || false,
-              level: module.id.startsWith('PC') ? 'nivel2' : 'nivel1'
+              level: module.level,
+              type: module.type,
+              moduleNumber: module.moduleNumber
             }))}
             title={activeTab === 'theoretical' ? 'Módulos Teóricos' : 'Módulos Prácticos'}
           />
