@@ -25,6 +25,7 @@ import Sidebar from '@/components/sidebar/Sidebar';
 import { useSidebar } from '@/components/sidebar/SidebarContext';
 import { useProgress } from '@/context/ProgressContext';
 import ModuleCard from '../components/ModuleCard';
+import EnhancedModuloCarousel from '../components/EnhancedModuloCarousel';
 
 // Estilos CSS personalizados para line-clamp
 const lineClampStyles = `
@@ -427,27 +428,31 @@ export default function CursosPage() {
           </div>
 
           {/* Content Sections */}
-          <div className="space-y-6">
-            {/* Nivel 1 Section */}
+          <div className="space-y-8">
+            {/* Nivel 1 Section - Carrusel Optimizado */}
             <div>
               <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
                 <span className="w-6 h-6 bg-white text-black rounded-full flex items-center justify-center text-xs font-bold mr-2">1</span>
                 Nivel 1 - Fundamentos
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {nivel1Modules.map(renderModuleCard)}
-              </div>
+              <EnhancedModuloCarousel 
+                modules={nivel1Modules}
+                title=""
+                className="mb-0"
+              />
             </div>
 
-            {/* Nivel 2 Section */}
+            {/* Nivel 2 Section - Carrusel Optimizado */}
             <div>
               <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
                 <span className="w-6 h-6 bg-[#FFD447] text-black rounded-full flex items-center justify-center text-xs font-bold mr-2">2</span>
                 Nivel 2 - Avanzado
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {nivel2Modules.map(renderModuleCard)}
-              </div>
+              <EnhancedModuloCarousel 
+                modules={nivel2Modules}
+                title=""
+                className="mb-0"
+              />
             </div>
           </div>
 

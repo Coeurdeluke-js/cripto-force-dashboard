@@ -29,11 +29,12 @@ import {
   LogOut, 
   Star
 } from 'lucide-react';
-import Carousel from './components/Carousel';
+import EnhancedCarousel from './components/EnhancedCarousel';
 import ProgressRuler from './components/ProgressRuler';
 import { useProgress } from '@/context/ProgressContext';
-import { useScrollPosition, useCarouselPosition } from '@/hooks/useScrollPosition';
+import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { useSafeAuth } from '@/context/AuthContext';
+import EnhancedModuloCarousel from './components/EnhancedModuloCarousel';
 
 interface Module {
   id: string;
@@ -538,7 +539,6 @@ function calculateUnlockedModules(modules: Module[], progress: any, courseType: 
 export default function IniciadoDashboard() {
   const { userData } = useSafeAuth();
   const scrollRef = useScrollPosition();
-  const carouselRef = useCarouselPosition();
   
   // Estado persistente para el tab activo
   const [activeTab, setActiveTab] = useState<'theoretical' | 'practical'>(() => {
@@ -549,54 +549,9 @@ export default function IniciadoDashboard() {
     return 'theoretical';
   });
   
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
   const { progress } = useProgress();
 
-  // Event listener simplificado con timeout para asegurar que el DOM esté listo
-  useEffect(() => {
-    const setupWheelListener = () => {
-      const carousel = carouselRef.current;
-      if (!carousel) {
-        console.log('❌ No se encontró referencia del carrousel');
-        return;
-      }
-
-      console.log('✅ Configurando wheel listener...');
-
-      const handleWheel = (e: WheelEvent) => {
-        console.log('🎡 WHEEL EVENT:', e.deltaY);
-        
-        // Forzar preventDefault
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // Scroll simple y directo
-        const scrollAmount = e.deltaY;
-        carousel.scrollLeft += scrollAmount;
-        
-        console.log('📍 Scroll aplicado:', carousel.scrollLeft);
-      };
-
-      // Agregar con passive: false
-      carousel.addEventListener('wheel', handleWheel, { passive: false });
-      console.log('✅ Listener agregado');
-
-      return () => {
-        carousel.removeEventListener('wheel', handleWheel);
-      };
-    };
-
-    // Dar tiempo para que el DOM se renderice completamente
-    const timeoutId = setTimeout(setupWheelListener, 100);
-    
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [activeTab, carouselRef]); // Dependencias para recrear cuando cambien
-
-// Objetivos a lograr
+  // Objetivos a lograr
   const objectives: Objective[] = [
   { id: 'obj1', title: 'Completar Nivel 1 Teórico', type: 'nivel1', category: 'theoretical', completed: false },
   { id: 'obj2', title: 'Completar Nivel 1 Práctico', type: 'nivel1', category: 'practical', completed: false },
@@ -785,28 +740,6 @@ export default function IniciadoDashboard() {
 
   // Actualizar objetivos basado en el progreso
 
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartX(e.pageX - (carouselRef.current?.offsetLeft || 0));
-    setScrollLeft(carouselRef.current?.scrollLeft || 0);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - (carouselRef.current?.offsetLeft || 0);
-    const walk = (x - startX) * 2;
-    if (carouselRef.current) {
-      carouselRef.current.scrollLeft = scrollLeft - walk;
-    }
-  };
-
-  const handleMouseUpOrLeave = () => setIsDragging(false);
-
-
-
-
   return (
     <div 
       ref={scrollRef}
@@ -874,90 +807,6 @@ export default function IniciadoDashboard() {
         .objectives-grid > div:nth-child(4) { animation-delay: 0.4s; }
         .objectives-grid > div:nth-child(5) { animation-delay: 0.5s; }
         .objectives-grid > div:nth-child(6) { animation-delay: 0.6s; }
-        
-        .carousel-container {
-          scroll-behavior: smooth;
-        }
-        
-        .carousel-track {
-          transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .carousel-card {
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          transform: translateZ(0);
-          animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-          animation-fill-mode: both;
-        }
-        
-        .carousel-card:hover {
-          transform: translateY(-4px) scale(1.02);
-          box-shadow: 0 20px 40px rgba(236, 77, 88, 0.15);
-        }
-        
-        .module-card {
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .module-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        .custom-scrollbar::-webkit-scrollbar {
-          height: 8px;
-        }
-        
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(35, 35, 35, 0.3);
-          border-radius: 4px;
-        }
-        
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(236, 77, 88, 0.5);
-          border-radius: 4px;
-          transition: background 0.3s ease;
-        }
-        
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(236, 77, 88, 0.8);
-        }
-        
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-          .carousel-container {
-            margin: 0 -16px;
-            padding: 0 16px;
-          }
-          
-          .carousel-track {
-            gap: 12px;
-          }
-          
-          .module-card {
-            min-height: 260px;
-          }
-          
-          .custom-scrollbar::-webkit-scrollbar {
-            height: 4px;
-          }
-        }
-        
-        /* Hide scrollbar on mobile for cleaner look */
-        @media (max-width: 640px) {
-          .custom-scrollbar::-webkit-scrollbar {
-            display: none;
-          }
-        }
-        
-        .carousel-card:nth-child(1) { animation-delay: 0.1s; }
-        .carousel-card:nth-child(2) { animation-delay: 0.2s; }
-        .carousel-card:nth-child(3) { animation-delay: 0.3s; }
-        .carousel-card:nth-child(4) { animation-delay: 0.4s; }
-        .carousel-card:nth-child(5) { animation-delay: 0.5s; }
-        .carousel-card:nth-child(6) { animation-delay: 0.6s; }
-        .carousel-card:nth-child(7) { animation-delay: 0.7s; }
-        .carousel-card:nth-child(8) { animation-delay: 0.8s; }
       `}</style>
       <div className="container mx-auto px-2 sm:px-4 py-4 md:py-8 pb-24 md:pb-8 transition-all duration-300">
         {/* Welcome Message */}
@@ -973,7 +822,7 @@ export default function IniciadoDashboard() {
         </div>
 
         {/* Carousel Component */}
-        <Carousel content={carouselContent} />
+        <EnhancedCarousel content={carouselContent} />
 
         {/* Video introductorio */}
         <div className="w-full flex justify-center mb-8 px-2 md:px-0">
@@ -1054,226 +903,21 @@ export default function IniciadoDashboard() {
           </div>
         </div>
 
-        {/* Course Carousel */}
+        {/* Course Carousel - Carrusel Optimizado */}
         <div className="mb-8 md:mb-12 px-2 md:px-0">
-          <div className="flex items-center justify-between mb-4 md:mb-6 px-4 md:px-0">
-            <h2 className="text-xl md:text-2xl font-bold">
-              {activeTab === 'theoretical' ? 'Módulos Teóricos' : 'Módulos Prácticos'}
-            </h2>
-          </div>
-
-          {/* Botones de test temporales */}
-          <div className="flex justify-center gap-4 mb-4">
-            <button 
-              onClick={() => {
-                const carousel = carouselRef.current;
-                if (carousel) {
-                  console.log('🔧 TEST: Scroll izquierda');
-                  carousel.scrollLeft -= 200;
-                }
-              }}
-              className="px-4 py-2 bg-blue-600 text-white rounded"
-            >
-              ← Test Izq
-            </button>
-            <button 
-              onClick={() => {
-                const carousel = carouselRef.current;
-                if (carousel) {
-                  console.log('🔧 TEST: Scroll derecha');
-                  carousel.scrollLeft += 200;
-                }
-              }}
-              className="px-4 py-2 bg-blue-600 text-white rounded"
-            >
-              Test Der →
-            </button>
-            <button 
-              onClick={() => {
-                const carousel = carouselRef.current;
-                if (carousel) {
-                  const debugInfo = {
-                    scrollWidth: carousel.scrollWidth,
-                    clientWidth: carousel.clientWidth,
-                    scrollLeft: carousel.scrollLeft,
-                    canScroll: carousel.scrollWidth > carousel.clientWidth,
-                    children: carousel.children.length,
-                    firstChildWidth: carousel.children[0]?.clientWidth || 0,
-                    totalCalculatedWidth: Array.from(carousel.children).reduce((sum, child) => sum + child.clientWidth, 0)
-                  };
-                  console.log('📊 DEBUG INFO:', debugInfo);
-                  alert(JSON.stringify(debugInfo, null, 2));
-                }
-              }}
-              className="px-4 py-2 bg-green-600 text-white rounded"
-            >
-              📊 Debug
-            </button>
-            <button 
-              onClick={() => {
-                const carousel = carouselRef.current;
-                if (carousel) {
-                  // Agregar elementos dummy para test
-                  const track = carousel.querySelector('.carousel-track');
-                  if (track) {
-                    for (let i = 0; i < 5; i++) {
-                      const dummyCard = document.createElement('div');
-                      dummyCard.style.cssText = 'min-width: 320px; width: 320px; height: 280px; background: #ec4d58; flex-shrink: 0; margin-right: 16px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;';
-                      dummyCard.textContent = `Test ${i + 1}`;
-                      track.appendChild(dummyCard);
-                    }
-                    console.log('✅ Elementos dummy agregados');
-                  }
-                }
-              }}
-              className="px-4 py-2 bg-purple-600 text-white rounded"
-            >
-              🧪 Add Test Cards
-            </button>
-          </div>
-
-          {/* Carrusel mejorado con transiciones suaves */}
-          <div className="relative carousel-container px-2 md:px-0">
-            <div
-              ref={carouselRef}
-              className="w-full overflow-x-auto cursor-grab active:cursor-grabbing scroll-smooth custom-scrollbar"
-              style={{ 
-                scrollbarWidth: 'thin',
-                scrollbarColor: 'rgba(236, 77, 88, 0.6) rgba(26, 26, 26, 0.3)',
-                minWidth: '100%',
-                scrollSnapType: 'x mandatory',
-                scrollPadding: '0 16px',
-                WebkitOverflowScrolling: 'touch',
-                scrollBehavior: 'smooth'
-              }}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUpOrLeave}
-              onMouseLeave={handleMouseUpOrLeave}
-              onTouchStart={e => {
-                // Remover preventDefault para evitar el error
-                setIsDragging(true);
-                setStartX(e.touches[0].pageX - (carouselRef.current?.offsetLeft || 0));
-                setScrollLeft(carouselRef.current?.scrollLeft || 0);
-              }}
-              onTouchMove={e => {
-                if (!isDragging) return;
-                // Remover preventDefault para evitar el error
-                const x = e.touches[0].pageX - (carouselRef.current?.offsetLeft || 0);
-                const walk = (x - startX) * 1.5;
-                if (carouselRef.current) {
-                  carouselRef.current.scrollLeft = scrollLeft - walk;
-                }
-              }}
-              onTouchEnd={handleMouseUpOrLeave}
-            >
-              <div 
-                className="carousel-track p-2 flex gap-3 md:gap-4 select-none" 
-                style={{ 
-                  minWidth: '150%', // Forzar que sea más ancho que el contenedor
-                  width: 'max-content',
-                  display: 'flex',
-                  flexShrink: 0
-                }}
-              >
-                {allModules.map((module, index) => {
-                  const isControlPoint = module.id.startsWith('PC');
-                  const isLocked = module.isLocked || false;
-                  const isCompleted = isModuleCompleted(module.id);
-                  
-                  return (
-                    <div 
-                      key={`${activeTab}-${module.id}-${index}`} 
-                      className="carousel-card flex-shrink-0"
-                      style={{
-                        minWidth: '320px', // Ancho mínimo fijo
-                        width: '320px',    // Ancho fijo
-                        flexShrink: 0,
-                        scrollSnapAlign: 'start'
-                      }}
-                    >
-                      {/* Card */}
-                      <div className="relative p-4 md:p-6 rounded-xl border transition-all duration-300 group flex flex-col h-[280px] md:h-[320px] module-card bg-[#1a1a1a] border-[#232323] hover:bg-[#2a2a2a] hover:border-[#ec4d58]/30 select-none">
-                        {/* Tooltip para módulos bloqueados */}
-                        {isLocked && (
-                          <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-                            <div className="bg-[#1a1a1a] border border-[#ec4d58] rounded-lg p-4 max-w-[200px] text-center">
-                              <div className="text-[#ec4d58] mb-2">
-                                <Lock className="w-6 h-6 mx-auto" />
-                              </div>
-                              <p className="text-sm text-gray-300">
-                                Completa el módulo anterior para desbloquear este contenido
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                        
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-all duration-300 ease-out transform hover:scale-110 ${
-                          isCompleted ? 'bg-green-500 text-white shadow-lg' : 
-                          isLocked ? 'bg-[#2a2a2a] text-gray-400' : 
-                          'bg-[#ec4d58] text-white shadow-lg hover:shadow-xl'
-                        }`}>
-                          {isLocked ? <Lock /> : isCompleted ? <CheckCircle /> : module.icon}
-                        </div>
-                        
-                        <div className="absolute top-4 right-4">
-                          <span 
-                            className={`text-xs font-bold px-2 py-1 rounded-full transition-all duration-300 ease-out transform hover:scale-105 ${
-                              isCompleted ? 'bg-green-500 text-white shadow-md' : 
-                              isLocked ? 'bg-[#2a2a2a] text-gray-300' : 
-                              'bg-[#ec4d58] text-white shadow-md hover:shadow-lg'
-                            }`}
-                            title={isControlPoint ? "Punto de Control" : ""}
-                          >
-                            {module.id}
-                          </span>
-                        </div>
-                        
-                        <h3 className="text-lg font-bold mb-2 line-clamp-2 select-none">{module.title}</h3>
-                        <p className="text-sm text-gray-400 mb-4 line-clamp-3 flex-1 select-none">{module.description}</p>
-                        
-                        <div className="mt-auto">
-                          <Link
-                            href={isLocked ? '#' : module.path}
-                            className={`inline-flex items-center px-3 py-2 rounded-lg transition-all duration-300 font-medium w-full justify-center text-xs whitespace-nowrap ${
-                              isLocked ? 'bg-[#2a2a2a] text-gray-400 cursor-not-allowed' :
-                              isControlPoint ? 'bg-[#FFD447] hover:bg-[#e6c040] text-black shadow-lg hover:shadow-xl' :
-                              isCompleted ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl' :
-                              'bg-[#ec4d58] hover:bg-[#d63d47] text-white shadow-lg hover:shadow-xl'
-                            }`}
-                            onClick={e => isLocked && e.preventDefault()}
-                          >
-                            {isLocked ? (
-                              <>
-                                <Lock className="mr-1 w-3 h-3" />
-                                Bloqueado
-                              </>
-                            ) : isControlPoint ? (
-                              <>
-                                <CheckCircle className="mr-1 w-3 h-3" />
-                                Tomar Evaluación
-                              </>
-                            ) : isCompleted ? (
-                              <>
-                                <CheckCircle className="mr-1 w-3 h-3" />
-                                Completado
-                              </>
-                            ) : (
-                              <>
-                                <Play className="mr-1 w-3 h-3" />
-                                Acceder al Módulo
-                              </>
-                            )}
-
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+          <EnhancedModuloCarousel 
+            modules={allModules.map(module => ({
+              id: module.id,
+              title: module.title,
+              path: module.path,
+              icon: module.icon,
+              description: module.description,
+              isCompleted: isModuleCompleted(module.id),
+              isLocked: module.isLocked || false,
+              level: module.id.startsWith('PC') ? 'nivel2' : 'nivel1'
+            }))}
+            title={activeTab === 'theoretical' ? 'Módulos Teóricos' : 'Módulos Prácticos'}
+          />
         </div>
 
         {/* Quick Actions */}

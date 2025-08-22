@@ -387,6 +387,35 @@ html, body {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* Estilos globales para line-clamp */
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 /* Scrollbar general */
@@ -786,5 +815,54 @@ body {
   .blocked-tooltip::after {
     font-size: 10px;
     padding: 6px 8px;
+  }
+}
+
+/* Estilos para carruseles optimizados */
+@layer components {
+  .carousel-container {
+    scrollbar-width: thin;
+    scrollbar-color: #ec4d58 #1a1a1a;
+  }
+  
+  .carousel-container::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .carousel-container::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+  }
+  
+  .carousel-container::-webkit-scrollbar-thumb {
+    background: #ec4d58;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+  
+  .carousel-container::-webkit-scrollbar-thumb:hover {
+    background: #d43d48;
+  }
+  
+  /* Ocultar scrollbar en móviles */
+  @media (max-width: 767px) {
+    .carousel-container::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+/* Mejoras de accesibilidad */
+@layer base {
+  * {
+    scroll-behavior: smooth;
+  }
+  
+  /* Prevenir selección de texto durante el drag */
+  .dragging {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
 }
