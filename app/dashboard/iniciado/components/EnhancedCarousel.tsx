@@ -183,7 +183,20 @@ export default function EnhancedCarousel({ content, className = '' }: EnhancedCa
           <ChevronRight className="w-5 h-5" />
         </button>
 
-        <div className="relative h-64 group">
+        <div 
+          className="relative h-64 group"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {/* Indicador de estado pausado */}
+          {isPaused && (
+            <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-30">
+              <div className="bg-[#232323]/90 text-[#fafafa] px-4 py-2 rounded-lg text-sm font-medium">
+                ⏸️ Pausado
+              </div>
+            </div>
+          )}
+          
           <div 
             key={currentSlide}
             className="absolute inset-0 animate-fade-in"
@@ -191,16 +204,18 @@ export default function EnhancedCarousel({ content, className = '' }: EnhancedCa
             {renderSlide(content[currentSlide])}
           </div>
           
-          {/* Play/Pause Icon */}
-          <div className="absolute top-4 right-4 z-10">
-            <div className="bg-[#232323]/80 rounded-full p-2">
-              {isPaused ? (
-                <div className="w-4 h-4 bg-[#fafafa] rounded-sm" />
-              ) : (
-                <div className="w-0 h-0 border-l-[8px] border-l-[#fafafa] border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent ml-1" />
-              )}
-            </div>
-          </div>
+          {/* Play/Pause Icon - Clickeable */}
+          <button
+            onClick={() => setIsPaused(!isPaused)}
+            className="absolute top-4 right-4 z-10 bg-[#232323]/80 hover:bg-[#232323] rounded-full p-2 transition-all duration-200 hover:scale-110 cursor-pointer"
+            aria-label={isPaused ? "Reanudar presentación" : "Pausar presentación"}
+          >
+            {isPaused ? (
+              <div className="w-4 h-4 bg-[#fafafa] rounded-sm" />
+            ) : (
+              <div className="w-0 h-0 border-l-[8px] border-l-[#fafafa] border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent ml-1" />
+            )}
+          </button>
           
           {/* Progress dots */}
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
