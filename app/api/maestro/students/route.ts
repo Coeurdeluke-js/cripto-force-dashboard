@@ -43,24 +43,57 @@ export async function GET() {
 
     console.log('✅ Usuario es maestro, procediendo a obtener usuarios...');
 
-    // Obtener todos los usuarios del sistema (simplificado)
+    // Obtener todos los usuarios del sistema con todos los campos necesarios
     const { data: users, error: usersError } = await supabase
       .from('users')
       .select(`
         id,
+        nombre,
+        apellido,
         email,
         nickname,
+        movil,
+        exchange,
         user_level,
-        created_at
+        referral_code,
+        referred_by,
+        total_referrals,
+        created_at,
+        updated_at
       `)
       .order('created_at', { ascending: false });
 
     if (usersError) {
       console.error('❌ Error obteniendo usuarios:', usersError);
-      return NextResponse.json({ error: 'Error obteniendo usuarios: ' + usersError.message }, { status: 500 });
+      console.error('❌ Detalles del error:', {
+        message: usersError.message,
+        details: usersError.details,
+        hint: usersError.hint,
+        code: usersError.code
+      });
+      return NextResponse.json({ 
+        error: 'Error obteniendo usuarios: ' + usersError.message,
+        details: usersError.details,
+        hint: usersError.hint,
+        code: usersError.code
+      }, { status: 500 });
     }
 
     console.log('✅ Usuarios obtenidos:', users?.length || 0);
+    
+    // Log de los primeros usuarios para debugging
+    if (users && users.length > 0) {
+      console.log('🔍 Primer usuario como ejemplo:', {
+        id: users[0].id,
+        email: users[0].email,
+        nickname: users[0].nickname,
+        nombre: users[0].nombre,
+        apellido: users[0].apellido,
+        user_level: users[0].user_level,
+        has_movil: !!users[0].movil,
+        has_exchange: !!users[0].exchange
+      });
+    }
 
     // Respuesta simplificada
     return NextResponse.json({

@@ -29,8 +29,8 @@ interface User {
   referral_code?: string;
   referred_by?: string;
   total_referrals?: number;
- 
   created_at: string;
+  updated_at?: string;
   uid?: string;
 }
 
@@ -668,6 +668,7 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                 <tr className="border-b border-[#3a3a3a]">
                   <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm">USUARIO</th>
                   <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm hidden sm:table-cell">EMAIL</th>
+                  <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm hidden lg:table-cell">INFO ADICIONAL</th>
                   <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm">NIVEL</th>
                   <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm hidden sm:table-cell">REFERIDOS</th>
                   <th className="text-left py-2 sm:py-3 px-2 sm:px-4 text-gray-400 font-medium text-xs sm:text-sm">ACCIONES</th>
@@ -683,10 +684,10 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="text-white font-medium text-sm sm:text-base truncate">
-                            {user.nombre} {user.apellido}
+                            {user.nombre && user.apellido ? `${user.nombre} ${user.apellido}` : user.nickname || 'Usuario'}
                           </div>
                           <div className="text-gray-400 text-xs sm:text-sm truncate">
-                            @{user.nickname}
+                            @{user.nickname || 'sin_nickname'}
                           </div>
                         </div>
                       </div>
@@ -694,6 +695,26 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                     <td className="py-2 sm:py-3 px-2 sm:px-4 text-gray-300 text-xs sm:text-sm hidden sm:table-cell">
                       <div className="truncate max-w-[200px]" title={user.email}>
                         {user.email}
+                      </div>
+                    </td>
+                    <td className="py-2 sm:py-3 px-2 sm:px-4 text-gray-300 text-xs sm:text-sm hidden lg:table-cell">
+                      <div className="flex flex-col gap-1">
+                        {user.movil ? (
+                          <div className="flex items-center gap-1 text-gray-400 text-xs">
+                            <Phone className="w-3 h-3" />
+                            <span className="truncate max-w-[120px]" title={user.movil}>{user.movil}</span>
+                          </div>
+                        ) : (
+                          <div className="text-gray-600 text-xs">Sin móvil</div>
+                        )}
+                        {user.exchange ? (
+                          <div className="flex items-center gap-1 text-gray-400 text-xs">
+                            <Building className="w-3 h-3" />
+                            <span className="truncate max-w-[120px]" title={user.exchange}>{user.exchange}</span>
+                          </div>
+                        ) : (
+                          <div className="text-gray-600 text-xs">Sin exchange</div>
+                        )}
                       </div>
                     </td>
                     <td className="py-2 sm:py-3 px-2 sm:px-4">
@@ -781,6 +802,27 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
           </div>
         </div>
       )}
+
+      {/* Información de Debug de la API */}
+      <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+        <h4 className="text-sm font-medium text-blue-300 mb-2 sm:mb-3">Debug de Datos de la API</h4>
+        <div className="space-y-2 text-xs">
+          <div className="text-blue-200">
+            <strong>Total de usuarios cargados:</strong> {allUsers.length}
+          </div>
+          <div className="text-blue-200">
+            <strong>Usuarios filtrados:</strong> {filteredUsers.length}
+          </div>
+          {allUsers.length > 0 && (
+            <div className="text-blue-200">
+              <strong>Primer usuario (ejemplo):</strong>
+              <pre className="text-white overflow-x-auto text-xs mt-1 bg-black/20 p-2 rounded">
+                {JSON.stringify(allUsers[0], null, 2)}
+              </pre>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Modal de detalles del usuario */}
       {showUserModal && selectedUser && (
