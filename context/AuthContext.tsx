@@ -224,11 +224,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             
             if (fallbackProfile) {
               console.log('✅ Consulta mínima exitosa:', fallbackProfile);
-              setUserData((prev: any) => ({
-                ...prev,
+              updateUserData({
                 user_level: fallbackProfile.user_level,
                 nickname: fallbackProfile.nickname
-              }));
+              });
             }
           } catch (finalError) {
             console.error('❌ Error final en consulta mínima:', finalError);
