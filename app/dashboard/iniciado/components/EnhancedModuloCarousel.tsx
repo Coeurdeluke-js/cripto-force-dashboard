@@ -3,18 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Play, Check } from 'lucide-react';
-
-interface Module {
-  id: string;
-  title: string;
-  path: string;
-  description: string;
-  isCompleted?: boolean;
-  isLocked?: boolean;
-  level: 'nivel1' | 'nivel2';
-  type: 'content' | 'checkpoint';
-  moduleNumber: number;
-}
+import { Module } from '@/types/module';
 
 interface EnhancedModuloCarouselProps {
   modules: Module[];

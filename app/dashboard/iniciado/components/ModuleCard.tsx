@@ -2,17 +2,10 @@
 
 import Link from 'next/link';
 import { CheckCircle, Play, Lock } from 'lucide-react';
+import { Module } from '@/types/module';
 
 interface ModuleCardProps {
-  module: {
-    id: string;
-    title: string;
-    path: string;
-    icon: React.JSX.Element;
-    description: string;
-    level: 'nivel1' | 'nivel2';
-    requiredCheckpoint?: string;
-  };
+  module: Module;
   isControlPoint: boolean;
   isLocked: boolean;
   isCompleted: boolean;
@@ -35,7 +28,7 @@ export default function ModuleCard({
           isLocked ? 'bg-[#2a2a2a] text-gray-400' : 
           'bg-[#ec4d58] text-white group-hover:bg-[#d63d47]'
         }`}>
-          {isLocked ? <Lock className="w-3.5 h-3.5" /> : isCompleted ? <CheckCircle className="w-3.5 h-3.5" /> : module.icon}
+          {isLocked ? <Lock className="w-3.5 h-3.5" /> : isCompleted ? <CheckCircle className="w-3.5 h-3.5" /> : (module.icon || <Play className="w-3.5 h-3.5" />)}
         </div>
       </div>
       

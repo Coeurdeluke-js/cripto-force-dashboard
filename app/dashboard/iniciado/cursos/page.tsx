@@ -26,6 +26,7 @@ import { useSidebar } from '@/components/sidebar/SidebarContext';
 import { useProgress } from '@/context/ProgressContext';
 import ModuleCard from '../components/ModuleCard';
 import EnhancedModuloCarousel from '../components/EnhancedModuloCarousel';
+import { Module } from '@/types/module';
 
 // Estilos CSS personalizados para line-clamp
 const lineClampStyles = `
@@ -51,18 +52,6 @@ const lineClampStyles = `
   }
 `;
 
-interface Module {
-  id: string;
-  title: string;
-  path: string;
-  icon: React.JSX.Element;
-  description: string;
-  isCompleted?: boolean;
-  isLocked?: boolean;
-  level: 'nivel1' | 'nivel2';
-  requiredCheckpoint?: string; // ID del punto de control requerido
-}
-
 // Módulos teóricos
 const theoreticalModules: Module[] = [
   {
@@ -71,7 +60,9 @@ const theoreticalModules: Module[] = [
     path: '/dashboard/iniciado/Teorico/1-introduccion-a-la-logica-economica',
     icon: <BookOpen className="w-6 h-6" />,
     description: 'Fundamentos de la economía y conceptos básicos de la lógica económica.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 1
   },
   {
     id: '2',
@@ -79,7 +70,9 @@ const theoreticalModules: Module[] = [
     path: '/dashboard/iniciado/Teorico/2-fuerzas-del-mercado',
     icon: <TrendingUp className="w-6 h-6" />,
     description: 'Análisis de la oferta, demanda y equilibrio de mercado.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 2
   },
   {
     id: 'PC1',
@@ -87,7 +80,9 @@ const theoreticalModules: Module[] = [
     path: '/dashboard/iniciado/puntos-de-control/teorico/pc1',
     icon: <CheckCircle className="w-6 h-6" />,
     description: 'Evaluación: Introducción a la Lógica Económica y Fuerzas del Mercado.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: 1
   },
   {
     id: '3',
@@ -95,7 +90,9 @@ const theoreticalModules: Module[] = [
     path: '/dashboard/iniciado/Teorico/3-accion-del-gobierno-en-los-mercados',
     icon: <Shield className="w-6 h-6" />,
     description: 'Intervención estatal, políticas públicas y regulación económica.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 3
   },
   {
     id: '4',
@@ -103,7 +100,9 @@ const theoreticalModules: Module[] = [
     path: '/dashboard/iniciado/Teorico/4-competencia-perfecta',
     icon: <Target className="w-6 h-6" />,
     description: 'Modelo de competencia perfecta y eficiencia de mercado.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 4
   },
   {
     id: 'PC2',
@@ -111,7 +110,9 @@ const theoreticalModules: Module[] = [
     path: '/dashboard/iniciado/puntos-de-control/teorico/pc2',
     icon: <CheckCircle className="w-6 h-6" />,
     description: 'Evaluación: Acción del Gobierno y Competencia Perfecta.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: 2
   },
   // Nivel 2 - Requieren PC1 completado
   {
@@ -121,6 +122,8 @@ const theoreticalModules: Module[] = [
     icon: <Crown className="w-6 h-6" />,
     description: 'Estructuras de mercado imperfectas y poder de mercado.',
     level: 'nivel2',
+    type: 'content',
+    moduleNumber: 5,
     requiredCheckpoint: 'PC1'
   },
   {
@@ -130,6 +133,8 @@ const theoreticalModules: Module[] = [
     icon: <LinkIcon className="w-6 h-6" />,
     description: 'Fundamentos de blockchain y su aplicación en economía.',
     level: 'nivel2',
+    type: 'content',
+    moduleNumber: 6,
     requiredCheckpoint: 'PC1'
   },
   {
@@ -139,6 +144,8 @@ const theoreticalModules: Module[] = [
     icon: <CheckCircle className="w-6 h-6" />,
     description: 'Evaluación: Monopolio, Oligopolio y Tecnología Blockchain.',
     level: 'nivel2',
+    type: 'checkpoint',
+    moduleNumber: 3,
     requiredCheckpoint: 'PC2'
   },
   {
@@ -148,25 +155,9 @@ const theoreticalModules: Module[] = [
     icon: <Zap className="w-6 h-6" />,
     description: 'Contenido avanzado de economía y trading.',
     level: 'nivel2',
+    type: 'content',
+    moduleNumber: 7,
     requiredCheckpoint: 'PC2'
-  },
-  {
-    id: '8',
-    title: 'Módulo Avanzado 2',
-    path: '/dashboard/iniciado/Teorico/8-modulo-avanzado-2',
-    icon: <Zap className="w-6 h-6" />,
-    description: 'Contenido avanzado de economía y trading.',
-    level: 'nivel2',
-    requiredCheckpoint: 'PC2'
-  },
-  {
-    id: 'PC4',
-    title: 'Punto de Control 4',
-    path: '/dashboard/iniciado/puntos-de-control/teorico/pc4',
-    icon: <CheckCircle className="w-6 h-6" />,
-    description: 'Evaluación final del nivel 2.',
-    level: 'nivel2',
-    requiredCheckpoint: 'PC3'
   }
 ];
 
@@ -178,7 +169,9 @@ const practicalModules: Module[] = [
     path: '/dashboard/iniciado/Practico/1-modulo-practico-1',
     icon: <TrendingUp className="w-6 h-6" />,
     description: 'Fundamentos prácticos de trading y análisis técnico.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 1
   },
   {
     id: 'P2',
@@ -186,7 +179,9 @@ const practicalModules: Module[] = [
     path: '/dashboard/iniciado/Practico/2-modulo-practico-2',
     icon: <Target className="w-6 h-6" />,
     description: 'Estrategias de entrada y salida en mercados.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 2
   },
   {
     id: 'PC1',
@@ -194,7 +189,9 @@ const practicalModules: Module[] = [
     path: '/dashboard/iniciado/puntos-de-control/practico/pc1',
     icon: <CheckCircle className="w-6 h-6" />,
     description: 'Evaluación: Módulos Prácticos 1 y 2.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: 1
   },
   {
     id: 'P3',
@@ -202,7 +199,9 @@ const practicalModules: Module[] = [
     path: '/dashboard/iniciado/Practico/3-modulo-practico-3',
     icon: <Shield className="w-6 h-6" />,
     description: 'Gestión de riesgo y psicología del trading.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 3
   },
   {
     id: 'P4',
@@ -210,7 +209,9 @@ const practicalModules: Module[] = [
     path: '/dashboard/iniciado/Practico/4-modulo-practico-4',
     icon: <Users className="w-6 h-6" />,
     description: 'Análisis fundamental y noticias del mercado.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 4
   },
   {
     id: 'PC2',
@@ -218,7 +219,9 @@ const practicalModules: Module[] = [
     path: '/dashboard/iniciado/puntos-de-control/practico/pc2',
     icon: <CheckCircle className="w-6 h-6" />,
     description: 'Evaluación: Módulos Prácticos 3 y 4.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: 2
   },
   {
     id: 'P5',
@@ -226,7 +229,9 @@ const practicalModules: Module[] = [
     path: '/dashboard/iniciado/Practico/5-modulo-practico-5',
     icon: <Building2 className="w-6 h-6" />,
     description: 'Plataformas de trading y herramientas avanzadas.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'content',
+    moduleNumber: 5
   },
   {
     id: 'PC3',
@@ -234,7 +239,9 @@ const practicalModules: Module[] = [
     path: '/dashboard/iniciado/puntos-de-control/practico/pc3',
     icon: <CheckCircle className="w-6 h-6" />,
     description: 'Evaluación: Módulo Práctico 5.',
-    level: 'nivel1'
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: 3
   },
   // Nivel 2 - Requieren PC1 completado
   {
@@ -244,6 +251,8 @@ const practicalModules: Module[] = [
     icon: <Network className="w-6 h-6" />,
     description: 'Trading algorítmico y automatización.',
     level: 'nivel2',
+    type: 'content',
+    moduleNumber: 6,
     requiredCheckpoint: 'PC1'
   },
   {
@@ -253,6 +262,8 @@ const practicalModules: Module[] = [
     icon: <BarChart3 className="w-6 h-6" />,
     description: 'Análisis técnico avanzado y patrones complejos.',
     level: 'nivel2',
+    type: 'content',
+    moduleNumber: 7,
     requiredCheckpoint: 'PC1'
   },
   {
@@ -262,6 +273,8 @@ const practicalModules: Module[] = [
     icon: <CheckCircle className="w-6 h-6" />,
     description: 'Evaluación: Módulos Prácticos 6 y 7.',
     level: 'nivel2',
+    type: 'checkpoint',
+    moduleNumber: 4,
     requiredCheckpoint: 'PC2'
   },
   {
@@ -359,9 +372,9 @@ export default function CursosPage() {
     );
   };
 
-  const currentModules = activeTab === 'theoretical' ? theoreticalModules : practicalModules;
-  const nivel1Modules = currentModules.filter(m => m.level === 'nivel1');
-  const nivel2Modules = currentModules.filter(m => m.level === 'nivel2');
+  const currentModules: Module[] = activeTab === 'theoretical' ? theoreticalModules : practicalModules;
+  const nivel1Modules: Module[] = currentModules.filter(m => m.level === 'nivel1');
+  const nivel2Modules: Module[] = currentModules.filter(m => m.level === 'nivel2');
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0f0f0f]">
