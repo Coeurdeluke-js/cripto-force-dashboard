@@ -224,7 +224,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             
             if (fallbackProfile) {
               console.log('✅ Consulta mínima exitosa:', fallbackProfile);
-              setUserData(prev => ({
+              setUserData((prev: any) => ({
                 ...prev,
                 user_level: fallbackProfile.user_level,
                 nickname: fallbackProfile.nickname
