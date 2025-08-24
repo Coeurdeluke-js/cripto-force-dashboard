@@ -13,7 +13,7 @@ import { useSafeAuth } from '@/context/AuthContext';
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setUserData, isReady } = useSafeAuth();
+  const { isReady } = useSafeAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [referralInfo, setReferralInfo] = useState<{nickname?: string; valid?: boolean} | null>(null);
@@ -173,21 +173,7 @@ function RegisterForm() {
         throw new Error(result.error || 'Error al crear cuenta');
       }
 
-      // Éxito - Guardar datos del usuario
-      const newUserData = {
-        nombre: formData.nombre.trim(),
-        apellido: formData.apellido.trim(),
-        nickname: formData.nickname.trim(),
-        email: formData.email.toLowerCase().trim(),
-        movil: formData.numeroMovil.trim() !== '+54 ' ? formData.numeroMovil.trim() : undefined,
-        exchange: formData.exchange || undefined,
-        uid: formData.uid || undefined,
-        codigo_referido: formData.codigoReferido || undefined,
-        id: result.userId,
-        joinDate: new Date().toISOString().split('T')[0] // Fecha de registro
-      };
-      
-      setUserData(newUserData);
+      // Éxito - Usuario registrado correctamente
       setErrors({ submit: '¡Cuenta creada exitosamente! Redirigiendo...' });
       
       // Limpiar formulario

@@ -68,16 +68,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       // Intentar consulta simple a Supabase
       const { data, error } = await supabase
-        .from('users')
+          .from('users')
         .select('*')
-        .eq('email', user.email)
-        .single();
-
-      if (error) {
+          .eq('email', user.email)
+          .single();
+        
+        if (error) {
         console.log('⚠️ Supabase error, usando fallback:', error.message);
-        throw error;
-      }
-
+          throw error;
+        }
+        
       if (data) {
         console.log('✅ Datos obtenidos de Supabase:', data);
         setUserData(data);
@@ -261,7 +261,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log('✅ Usuario autenticado:', session.user.email);
         setUser(session.user);
         await fetchUserData(session.user);
-      } else {
+        } else {
         console.log('ℹ️ No hay sesión activa');
         setUser(null);
         setUserData(null);
