@@ -17,52 +17,46 @@ export async function GET() {
     
     console.log('✅ Usuario autenticado:', user.email);
     
-    // Obtener perfil del usuario
-    const { data: userProfile, error: profileError } = await supabase
-      .from('users')
-      .select('id, nickname, user_level, referral_code, total_referrals')
-      .eq('email', user.email)
-      .single();
+    // Usar la función SQL get_user_referral_stats que está disponible en la base de datos
+    const { data: referralStats, error: statsError } = await supabase
+      .rpc('get_user_referral_stats', { user_email_input: user.email });
 
-    if (profileError) {
-      console.error('❌ Error obteniendo perfil:', profileError);
-      return NextResponse.json({ error: 'Perfil de usuario no encontrado' }, { status: 404 });
+    if (statsError) {
+      console.error('❌ Error obteniendo estadísticas de referidos:', statsError);
+      
+      // Fallback: obtener datos básicos del perfil
+      const { data: userProfile, error: profileError } = await supabase
+        .from('users')
+        .select('id, nickname, user_level, referral_code, total_referrals')
+        .eq('email', user.email)
+        .single();
+
+      if (profileError) {
+        console.error('❌ Error obteniendo perfil de fallback:', profileError);
+        return NextResponse.json({ error: 'Perfil de usuario no encontrado' }, { status: 404 });
+      }
+
+      // Preparar respuesta básica
+      const basicStats = {
+        referral_code: userProfile.referral_code || 'NO_CODE',
+        total_referrals: userProfile.total_referrals || 0,
+        total_earnings: 0,
+        user_level: userProfile.user_level || 1,
+        recent_referrals: []
+      };
+
+      console.log('✅ Estadísticas básicas obtenidas:', basicStats);
+      return NextResponse.json(basicStats);
     }
 
-    if (!userProfile) {
-      console.error('❌ Perfil de usuario no encontrado');
-      return NextResponse.json({ error: 'Perfil de usuario no encontrado' }, { status: 404 });
+    if (!referralStats) {
+      console.error('❌ No se obtuvieron estadísticas de referidos');
+      return NextResponse.json({ error: 'No se pudieron obtener estadísticas' }, { status: 500 });
     }
 
-    console.log('✅ Perfil obtenido:', userProfile);
+    console.log('✅ Estadísticas completas obtenidas:', referralStats);
 
-    // Obtener referidos recientes del usuario
-    const { data: recentReferrals, error: referralsError } = await supabase
-      .from('users')
-      .select('nickname, created_at, user_level')
-      .eq('referred_by', userProfile.referral_code)
-      .order('created_at', { ascending: false })
-      .limit(5);
-
-    if (referralsError) {
-      console.error('❌ Error obteniendo referidos:', referralsError);
-      // No fallar si no se pueden obtener referidos, continuar con datos básicos
-    }
-
-    // Calcular ganancias totales (placeholder por ahora)
-    const totalEarnings = 0; // TODO: Implementar cálculo real de ganancias
-
-    // Preparar respuesta
-    const referralStats = {
-      referral_code: userProfile.referral_code || 'NO_CODE',
-      total_referrals: userProfile.total_referrals || 0,
-      total_earnings: totalEarnings,
-      user_level: userProfile.user_level || 1,
-      recent_referrals: recentReferrals || []
-    };
-
-    console.log('✅ Estadísticas preparadas:', referralStats);
-
+    // La función SQL devuelve los datos en el formato correcto
     return NextResponse.json(referralStats);
 
   } catch (error) {

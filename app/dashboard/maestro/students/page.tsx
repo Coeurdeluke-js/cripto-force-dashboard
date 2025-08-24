@@ -200,18 +200,24 @@ export default function StudentsPage() {
   };
 
   const handleEditUser = (user: User) => {
-    setEditingUser({
+    console.log('handleEditUser: User data received:', user);
+    console.log('handleEditUser: user.user_level:', user.user_level, 'Type:', typeof user.user_level);
+    
+    const editData = {
       nombre: user.nombre || '',
       apellido: user.apellido || '',
       nickname: user.nickname || '',
       email: user.email || '',
       movil: user.movil || '',
       exchange: user.exchange || '',
-      user_level: user.user_level || 1,
+      user_level: user.user_level !== undefined ? user.user_level : 1,
       referral_code: user.referral_code || '',
       referred_by: user.referred_by || '',
       total_referrals: user.total_referrals || 0
-    });
+    };
+    
+    console.log('handleEditUser: Setting editingUser to:', editData);
+    setEditingUser(editData);
     setSelectedUser(user);
     setShowEditModal(true);
     setError(null);
@@ -504,19 +510,21 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
     const numLevel = typeof level === 'string' ? parseInt(level) : level;
     switch (numLevel) {
       case 0:
-        return 'Maestro';
+        return '🎯 Fundador';
       case 1:
-        return 'Iniciado';
+        return '👤 Iniciado';
       case 2:
-        return 'Acólito';
+        return '🔮 Acólito';
       case 3:
-        return 'Warrior';
+        return '⚔️ Warrior';
       case 4:
-        return 'Lord';
+        return '👑 Lord';
       case 5:
-        return 'Darth';
+        return '💀 Darth';
+      case 6:
+        return '👨‍🏫 Maestro';
       default:
-        return 'Iniciado';
+        return '👤 Iniciado';
     }
   };
 
@@ -524,7 +532,7 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
     const numLevel = typeof level === 'string' ? parseInt(level) : level;
     switch (numLevel) {
       case 0:
-        return 'bg-[#8A8A8A] text-white'; // Maestro - Gris
+        return 'bg-[#8A8A8A] text-white'; // Fundador - Gris
       case 1:
         return 'bg-yellow-900 text-yellow-200'; // Iniciado - Amarillo
       case 2:
@@ -535,8 +543,10 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
         return 'bg-green-900 text-green-200'; // Lord - Verde
       case 5:
         return 'bg-red-900 text-red-200'; // Darth - Rojo
+      case 6:
+        return 'bg-indigo-900 text-indigo-200'; // Maestro - Índigo
       default:
-        return 'bg-gray-700 text-gray-200';
+        return 'bg-yellow-900 text-yellow-200'; // Por defecto Iniciado
     }
   };
 
@@ -1011,17 +1021,23 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                   
                   <div>
                     <label className="block text-sm text-gray-400 mb-1 sm:mb-2">Nivel de Usuario</label>
+                    {editingUser && (
+                      <div className="text-xs text-gray-500 mb-1">
+                        Debug: user_level = {editingUser.user_level} (Type: {typeof editingUser.user_level})
+                      </div>
+                    )}
                     <select
-                      value={editingUser.user_level}
+                      value={editingUser?.user_level ?? 1}
                       onChange={(e) => handleInputChange('user_level', parseInt(e.target.value))}
                       className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
                     >
-                      <option value={0}>Maestro</option>
-                      <option value={1}>Iniciado</option>
-                      <option value={2}>Acólito</option>
-                      <option value={3}>Warrior</option>
-                      <option value={4}>Lord</option>
-                      <option value={5}>Darth</option>
+                      <option value={0}>🎯 Fundador</option>
+                      <option value={1}>👤 Iniciado</option>
+                      <option value={2}>🔮 Acólito</option>
+                      <option value={3}>⚔️ Warrior</option>
+                      <option value={4}>👑 Lord</option>
+                      <option value={5}>💀 Darth</option>
+                      <option value={6}>👨‍🏫 Maestro</option>
                     </select>
                   </div>
                   

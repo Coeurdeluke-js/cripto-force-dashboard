@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react';
 import { useSafeAuth } from '@/context/AuthContext';
 
 interface ReferralStats {
-  referralCode: string;
-  totalReferrals: number;
-  totalEarnings: number;
-  userLevel: number;
-  recentReferrals: Array<{
+  referral_code: string;
+  total_referrals: number;
+  user_level: number;
+  recent_referrals: Array<{
     email: string;
     date: string;
-    commission: number;
   }>;
 }
 
@@ -36,17 +34,21 @@ export function useReferralData(): UseReferralDataReturn {
       setError(null);
 
       const response = await fetch('/api/referrals/stats', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: userData.email })
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const result = await response.json();
 
-      if (result.success) {
-        setStats(result.stats);
+      if (result.error) {
+        setError(result.error);
       } else {
-        setError(result.error || 'Error cargando estadísticas');
+        // Los datos ya vienen limpios de la función SQL
+        setStats(result);
       }
     } catch (error) {
       console.error('Error fetching referral stats:', error);

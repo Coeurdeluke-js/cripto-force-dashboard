@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Copy, Share2, ExternalLink, UserPlus, Crown, Users } from 'lucide-react';
+import { Copy, Share2, ExternalLink, UserPlus, Crown, Users, RefreshCw } from 'lucide-react';
 import { useSafeAuth } from '@/context/AuthContext';
+import { useReferralData } from '@/hooks/useReferralData';
 
 interface ReferralCodeDisplayProps {
   userLevel: number;
@@ -10,18 +11,22 @@ interface ReferralCodeDisplayProps {
 
 export default function ReferralCodeDisplay({ userLevel, className = "" }: ReferralCodeDisplayProps) {
   const { userData } = useSafeAuth();
+  const { stats, loading, error, refetch } = useReferralData();
   const [success, setSuccess] = useState<string | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [referralCode, setReferralCode] = useState<string>("");
-  const [totalReferrals, setTotalReferrals] = useState<number>(0);
+
+  // Usar datos reales de Supabase si están disponibles, sino usar datos del contexto
+  const referralCode = stats?.referral_code || userData?.referral_code || "";
+  const totalReferrals = stats?.total_referrals || userData?.total_referrals || 0;
+  const userLevelFromStats = stats?.user_level || userData?.user_level || userLevel;
+  const recentReferrals = stats?.recent_referrals || [];
 
   useEffect(() => {
-    if (userData?.nickname) {
-      // Generar código de referido basado en el nickname del usuario
-      const code = `CRYPTOFORCE_${userData.nickname.toUpperCase().replace(/\s+/g, '_')}`;
-      setReferralCode(code);
+    // Refetch data cuando el componente se monta
+    if (userData?.email) {
+      refetch();
     }
-  }, [userData]);
+  }, [userData?.email, refetch]);
 
   const copyToClipboard = async (text: string, field: string) => {
     try {
@@ -45,39 +50,70 @@ export default function ReferralCodeDisplay({ userLevel, className = "" }: Refer
   };
 
   const generateRegistrationLink = () => {
+    if (!referralCode) return "";
     return `https://cripto-force-dashboard.vercel.app/login/register?ref=${referralCode}`;
   };
 
-  // Función de compartir eliminada - solo mantenemos copiar
-
   const getLevelDisplay = (level: number) => {
     switch (level) {
-      case 0: return 'Maestro';
-      case 1: return 'Iniciado';
-      case 2: return 'Acólito';
-      case 3: return 'Warrior';
-      case 4: return 'Lord';
-      case 5: return 'Darth';
-      default: return 'Iniciado';
+      case 0: return '🎯 Fundador';
+      case 1: return '👤 Iniciado';
+      case 2: return '🔮 Acólito';
+      case 3: return '⚔️ Warrior';
+      case 4: return '👑 Lord';
+      case 5: return '💀 Darth';
+      case 6: return '👨‍🏫 Maestro';
+      default: return '👤 Iniciado';
     }
   };
 
   const getLevelColor = (level: number) => {
     switch (level) {
-      case 0: return '#8A8A8A'; // Maestro - Gris
+      case 0: return '#8A8A8A'; // Fundador - Gris
       case 1: return '#fafafa'; // Iniciado - Blanco
       case 2: return '#8B5CF6'; // Acólito - Púrpura
       case 3: return '#3B82F6'; // Warrior - Azul
       case 4: return '#10B981'; // Lord - Verde
       case 5: return '#EF4444'; // Darth - Rojo
+      case 6: return '#6366F1'; // Maestro - Índigo
       default: return '#fafafa'; // Iniciado por defecto
     }
   };
 
-  if (!referralCode) {
+  // Mostrar loading mientras se cargan los datos
+  if (loading && !referralCode) {
     return (
       <div className="min-h-screen bg-[#121212] text-white p-8 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#8A8A8A]"></div>
+      </div>
+    );
+  }
+
+  // Mostrar error si no se pueden cargar los datos
+  if (error && !referralCode) {
+    return (
+      <div className="min-h-screen bg-[#121212] text-white p-8 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 mb-4">Error cargando datos de referidos</p>
+          <button 
+            onClick={refetch}
+            className="px-4 py-2 bg-[#8A8A8A] hover:bg-[#7a7a7a] text-white rounded-lg transition-colors"
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay código de referido, mostrar mensaje
+  if (!referralCode) {
+    return (
+      <div className="min-h-screen bg-[#121212] text-white p-8 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-400 mb-4">No se encontró código de referido</p>
+          <p className="text-sm text-gray-500">Contacta al administrador</p>
+        </div>
       </div>
     );
   }
@@ -187,25 +223,72 @@ export default function ReferralCodeDisplay({ userLevel, className = "" }: Refer
 
           <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6">
             <div className="flex items-center gap-3 mb-3">
-              <Crown className="w-6 h-6" style={{ color: getLevelColor(userLevel) }} />
+              <Crown className="w-6 h-6" style={{ color: getLevelColor(userLevelFromStats) }} />
               <h3 className="text-lg font-semibold text-white">Tu Nivel</h3>
             </div>
-            <p className="text-3xl font-bold" style={{ color: getLevelColor(userLevel) }}>{getLevelDisplay(userLevel)}</p>
+            <p className="text-3xl font-bold" style={{ color: getLevelColor(userLevelFromStats) }}>{getLevelDisplay(userLevelFromStats)}</p>
             <p className="text-sm text-gray-400">nivel actual</p>
           </div>
         </div>
 
-        {/* Referidos Recientes - Por ahora vacío */}
+        {/* Referidos Recientes */}
         <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-xl border border-[#3a3a3a] p-6">
           <div className="flex items-center gap-3 mb-4">
             <Users className="w-6 h-6 text-[#8A8A8A]" />
             <h2 className="text-xl font-semibold text-white">Referidos Recientes</h2>
           </div>
           
-          <div className="text-center py-8">
-            <p className="text-gray-400 mb-2">Aún no tienes referidos</p>
-            <p className="text-sm text-gray-500">Comparte tu código para empezar a construir tu red</p>
-          </div>
+          {recentReferrals.length > 0 ? (
+            <div className="space-y-3">
+              {recentReferrals.map((referral, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-[#0a0a0a] rounded-lg border border-[#3a3a3a]">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-[#8A8A8A] rounded-full flex items-center justify-center">
+                      <span className="text-xs font-bold text-white">
+                        {referral.email?.charAt(0).toUpperCase() || 'U'}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">{referral.email}</p>
+                      <p className="text-sm text-gray-400">
+                        {new Date(referral.date).toLocaleDateString('es-ES')}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[#3ED598] font-bold">Referido</p>
+                    <p className="text-xs text-gray-400">activo</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-400 mb-2">Aún no tienes referidos</p>
+              <p className="text-sm text-gray-500">Comparte tu código para empezar a construir tu red</p>
+            </div>
+          )}
+        </div>
+
+        {/* Botón de actualizar datos */}
+        <div className="text-center mt-8">
+          <button 
+            onClick={refetch}
+            disabled={loading}
+            className="px-6 py-3 bg-[#3a3a3a] hover:bg-[#4a4a4a] disabled:opacity-50 text-white rounded-lg transition-colors flex items-center gap-2 mx-auto"
+          >
+            {loading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Actualizando...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="w-4 h-4" />
+                Actualizar Datos
+              </>
+            )}
+          </button>
         </div>
       </div>
     </div>

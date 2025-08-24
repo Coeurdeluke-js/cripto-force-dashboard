@@ -1,7 +1,13 @@
 "use client";
 import React from 'react';
 import ReferralCodeDisplay from '@/components/ReferralCodeDisplay';
+import { useSafeAuth } from '@/context/AuthContext';
 
 export default function ReferralCodePage() {
-  return <ReferralCodeDisplay userLevel={0} />;
+  const { userData } = useSafeAuth();
+  
+  // Usar el nivel real del usuario desde la base de datos
+  const userLevel = userData?.userLevel || 1;
+  
+  return <ReferralCodeDisplay userLevel={userLevel} />;
 }
