@@ -7,7 +7,7 @@ export default function ReferralCodePage() {
   const { userData } = useSafeAuth();
   
   // Usar el nivel real del usuario desde la base de datos
-  const userLevel = userData?.userLevel || 1;
+  const userLevel = userData?.user_level || 1;
   
   return <ReferralCodeDisplay userLevel={userLevel} />;
 }

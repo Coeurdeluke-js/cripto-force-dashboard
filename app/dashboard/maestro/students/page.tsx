@@ -203,6 +203,32 @@ export default function StudentsPage() {
     console.log('handleEditUser: User data received:', user);
     console.log('handleEditUser: user.user_level:', user.user_level, 'Type:', typeof user.user_level);
     
+    // PROTECCIÓN: Los fundadores no pueden editarse mutuamente
+    // Obtener el usuario actual desde el token o localStorage
+    const getCurrentUserEmail = () => {
+      try {
+        // Intentar obtener el email del usuario actual desde localStorage
+        const userData = localStorage.getItem('supabase.auth.token');
+        if (userData) {
+          const parsed = JSON.parse(userData);
+          return parsed?.currentSession?.user?.email;
+        }
+      } catch (error) {
+        console.log('No se pudo obtener email del usuario actual');
+      }
+      return null;
+    };
+    
+    const currentUserEmail = getCurrentUserEmail();
+    
+    if (user.user_level === 0) {
+      // Si el usuario a editar es fundador, verificar que sea el mismo usuario
+      if (currentUserEmail && currentUserEmail !== user.email) {
+        setError('❌ ACCESO DENEGADO: Los fundadores no pueden editar datos de otros fundadores');
+        return;
+      }
+    }
+    
     const editData = {
       nombre: user.nombre || '',
       apellido: user.apellido || '',
@@ -1026,10 +1052,21 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                         Debug: user_level = {editingUser.user_level} (Type: {typeof editingUser.user_level})
                       </div>
                     )}
+                    
+                    {/* PROTECCIÓN: Los fundadores no pueden cambiar su nivel */}
+                    {editingUser?.user_level === 0 && (
+                      <div className="text-xs text-yellow-400 mb-2 p-2 bg-yellow-900/20 border border-yellow-500/30 rounded">
+                        ⚠️ El nivel de Fundador no puede ser modificado
+                      </div>
+                    )}
+                    
                     <select
                       value={editingUser?.user_level ?? 1}
                       onChange={(e) => handleInputChange('user_level', parseInt(e.target.value))}
-                      className="w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm"
+                      disabled={editingUser?.user_level === 0} // Deshabilitar si es fundador
+                      className={`w-full px-3 py-2 bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8A8A8A] text-sm ${
+                        editingUser?.user_level === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
                     >
                       <option value={0}>🎯 Fundador</option>
                       <option value={1}>👤 Iniciado</option>
