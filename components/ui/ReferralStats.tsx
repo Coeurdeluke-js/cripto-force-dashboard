@@ -186,7 +186,7 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
           <h3 className="text-xl font-semibold text-white mb-2">
             Sistema de Referidos
           </h3>
-          {stats && getLevelBadge(stats.userLevel)}
+          {stats && getLevelBadge(stats.user_level)}
         </div>
         <button
           onClick={handleRefresh}
@@ -254,10 +254,7 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
             <div className="text-2xl font-bold text-white">{stats.total_referrals}</div>
             <div className="text-sm text-gray-400">Referidos</div>
           </div>
-          <div className="text-center p-4 bg-[#2a2a2a] rounded-lg">
-            <div className="text-2xl font-bold text-green-400">${stats.total_earnings.toFixed(2)}</div>
-            <div className="text-sm text-gray-400">Ganancias</div>
-          </div>
+          
         </div>
       )}
 

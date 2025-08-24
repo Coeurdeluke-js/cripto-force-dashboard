@@ -30,7 +30,7 @@ interface UserData {
   referred_by?: string;
   user_level?: number;
   total_referrals?: number;
-  total_earnings?: number;
+
 }
 
 interface AuthContextType {
@@ -163,7 +163,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Consulta optimizada con solo los campos necesarios
         const { data: profile, error } = await supabase
           .from('users')
-          .select('id, nombre, apellido, nickname, email, movil, exchange, uid, codigo_referido, created_at, referral_code, referred_by, user_level, total_referrals, total_earnings')
+          .select('id, nombre, apellido, nickname, email, movil, exchange, uid, codigo_referido, created_at, referral_code, referred_by, user_level, total_referrals')
           .eq('email', user.email)
           .single();
         
@@ -200,7 +200,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             referred_by: profile.referred_by,
             user_level: profile.user_level,
             total_referrals: profile.total_referrals,
-            total_earnings: profile.total_earnings
+
           };
           
           setUserData(userData);

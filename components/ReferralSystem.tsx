@@ -8,12 +8,10 @@ interface ReferralStats {
   referral_code: string;
   registration_link: string;
   total_referrals: number;
-  total_earnings: number;
   user_level: number;
   recent_referrals: Array<{
     email: string;
     date: string;
-    commission: number;
   }>;
 }
 
@@ -241,14 +239,7 @@ export default function ReferralSystem({ userEmail }: ReferralSystemProps) {
           </div>
         </div>
         
-        <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-green-600 mb-2">
-              ${stats.total_earnings.toFixed(2)}
-            </div>
-            <div className="text-gray-600">Ganancias Totales</div>
-          </div>
-        </div>
+
         
         <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
           <div className="text-center">
@@ -274,7 +265,7 @@ export default function ReferralSystem({ userEmail }: ReferralSystemProps) {
                   </div>
                 </div>
                 <div className="text-green-600 font-semibold">
-                  +${referral.commission.toFixed(2)}
+                  Referido activo
                 </div>
               </div>
             ))}
