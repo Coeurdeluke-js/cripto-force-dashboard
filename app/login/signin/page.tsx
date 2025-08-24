@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { useSafeAuth } from '@/context/AuthContext';
-import { useRememberMe } from '@/hooks/useRememberMe';
 import { supabase } from '@/lib/supabaseClient';
 
 interface FormData {
@@ -29,18 +28,11 @@ interface FormErrors {
 
 export default function SignInPage() {
   const router = useRouter();
-  const { setUserData, isReady } = useSafeAuth();
-  const { 
-    rememberMe, 
-    hasSavedCredentials, 
-    saveCredentials, 
-    clearSavedCredentials, 
-    getSavedCredentials, 
-    updateRememberMe 
-  } = useRememberMe();
+  const { userData, loading, isReady } = useSafeAuth();
   
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: ''
@@ -52,40 +44,119 @@ export default function SignInPage() {
 
   // Cargar credenciales guardadas al montar el componente
   useEffect(() => {
-    const savedCredentials = getSavedCredentials();
+    const savedCredentials = localStorage.getItem('rememberedCredentials');
     if (savedCredentials) {
-      setFormData({
-        email: savedCredentials.email,
-        password: savedCredentials.password
-      });
+      try {
+        const credentials = JSON.parse(savedCredentials);
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        
+        if (new Date(credentials.timestamp) > thirtyDaysAgo) {
+          setFormData({
+            email: credentials.email,
+            password: credentials.password
+          });
+          setRememberMe(true);
+        } else {
+          localStorage.removeItem('rememberedCredentials');
+        }
+      } catch (error) {
+        console.error('Error loading saved credentials:', error);
+        localStorage.removeItem('rememberedCredentials');
+      }
     }
-  }, [getSavedCredentials]);
+  }, []);
+
+  // Debug: Mostrar estado del contexto
+  useEffect(() => {
+    console.log('🔍 SignInPage - Estado del contexto:', {
+      loading,
+      isReady,
+      userData: userData ? 'Presente' : 'No presente'
+    });
+  }, [loading, isReady, userData]);
+
+  // Si ya hay usuario autenticado, redirigir
+  useEffect(() => {
+    if (userData && !loading) {
+      console.log('✅ SignInPage - Usuario ya autenticado, redirigiendo...');
+      router.push('/login/dashboard-selection');
+    }
+  }, [userData, loading, router]);
 
   // Mostrar loading mientras no esté listo
   if (!isReady) {
+    console.log('⏳ SignInPage - Mostrando loading, isReady:', isReady);
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f] flex items-center justify-center">
-        <LoadingSpinner />
+        <div className="text-center">
+          <LoadingSpinner />
+          <p className="text-white mt-4">Cargando contexto de autenticación...</p>
+          <p className="text-white/60 text-sm">loading: {loading.toString()}</p>
+          <p className="text-white/60 text-sm">isReady: {isReady.toString()}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si ya hay usuario autenticado, mostrar loading mientras redirige
+  if (userData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f] flex items-center justify-center">
+        <div className="text-center">
+          <LoadingSpinner />
+          <p className="text-white mt-4">Redirigiendo...</p>
+        </div>
       </div>
     );
   }
 
   // Función para manejar cambios en "Recordarme"
   const handleRememberMeChange = (checked: boolean) => {
-    updateRememberMe(checked);
+    setRememberMe(checked);
     
     // Si se desmarca "Recordarme", limpiar credenciales guardadas
     if (!checked) {
-      clearSavedCredentials();
+      localStorage.removeItem('rememberedCredentials');
       console.log('Casilla "Recordarme" desmarcada - credenciales eliminadas');
     }
   };
 
   // Función para limpiar credenciales guardadas manualmente
   const handleClearCredentials = () => {
-    clearSavedCredentials();
+    localStorage.removeItem('rememberedCredentials');
     setFormData({ email: '', password: '' });
+    setRememberMe(false);
     console.log('Credenciales guardadas limpiadas manualmente');
+  };
+
+  // Función para guardar credenciales
+  const saveCredentials = (email: string, password: string, shouldRemember: boolean) => {
+    if (shouldRemember) {
+      const credentials = {
+        email,
+        password,
+        rememberMe: true,
+        timestamp: new Date().toISOString()
+      };
+      
+      try {
+        localStorage.setItem('rememberedCredentials', JSON.stringify(credentials));
+        console.log('Credenciales guardadas para recordar');
+        return true;
+      } catch (error) {
+        console.error('Error saving credentials:', error);
+        return false;
+      }
+    } else {
+      localStorage.removeItem('rememberedCredentials');
+      return true;
+    }
+  };
+
+  // Función para verificar si hay credenciales guardadas
+  const hasSavedCredentials = () => {
+    return localStorage.getItem('rememberedCredentials') !== null;
   };
 
   // Función para manejar login con Google
@@ -189,67 +260,56 @@ export default function SignInPage() {
     setIsSubmitting(true);
 
     try {
-      // AUTENTICACIÓN REAL CON SUPABASE
-      const response = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        }),
+      console.log('🔐 Iniciando autenticación con Supabase...');
+      
+      // AUTENTICACIÓN DIRECTA CON SUPABASE
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password
       });
 
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        setErrors({ general: result.error || 'Email o contraseña incorrectos' });
+      if (error) {
+        console.error('❌ Error de autenticación:', error);
+        setErrors({ general: error.message || 'Email o contraseña incorrectos' });
+        
+        // Incrementar contador de intentos fallidos
+        const newAttemptCount = attemptCount + 1;
+        setAttemptCount(newAttemptCount);
+        
+        // Bloquear después de 3 intentos fallidos
+        if (newAttemptCount >= 3) {
+          setIsBlocked(true);
+          setTimeout(() => {
+            setIsBlocked(false);
+            setAttemptCount(0);
+          }, 15 * 60 * 1000); // 15 minutos
+        }
+        
         return;
       }
 
-      // Si la autenticación es exitosa, manejar "Recordarme"
-      if (rememberMe) {
-        // Guardar credenciales en localStorage
-        saveCredentials(formData.email, formData.password, true);
-        console.log('Credenciales guardadas para recordar');
-      } else {
-        // Limpiar credenciales guardadas si no se marca "Recordarme"
-        clearSavedCredentials();
-        console.log('Credenciales guardadas eliminadas');
-      }
-
-      // Si la autenticación es exitosa, obtener datos del usuario
-      const userData = result.userData;
-      
-      // Guardar datos del usuario en el contexto
-      setUserData(userData);
-      
-      console.log('Inicio de sesión exitoso para:', formData.email);
-      
-      // Redirigir al selector de dashboard después del login exitoso
-      router.push('/login/dashboard-selection');
-    } catch (error) {
-      console.error('Error en el login:', error);
-      // Mostrar mensaje limpio al usuario (sin stack trace)
-      setErrors({ general: 'Error al iniciar sesión. Verifica tus credenciales e inténtalo de nuevo.' });
-      
-      // Incrementar contador de intentos fallidos
-      const newAttemptCount = attemptCount + 1;
-      setAttemptCount(newAttemptCount);
-      
-      // Bloquear después de 3 intentos fallidos
-      if (newAttemptCount >= 3) {
-        setIsBlocked(true);
-        setErrors({ general: 'Demasiados intentos fallidos. Cuenta bloqueada por 15 minutos por seguridad.' });
+      if (data.user) {
+        console.log('✅ Usuario autenticado exitosamente:', data.user.email);
         
-        // Desbloquear después de 15 minutos
-        setTimeout(() => {
-          setIsBlocked(false);
-          setAttemptCount(0);
-          setErrors({});
-        }, 15 * 60 * 1000); // 15 minutos
+        // Si la autenticación es exitosa, manejar "Recordarme"
+        if (rememberMe) {
+          // Guardar credenciales en localStorage
+          saveCredentials(formData.email, formData.password, true);
+          console.log('Credenciales guardadas para recordar');
+        } else {
+          // Limpiar credenciales guardadas si no se marca "Recordarme"
+          localStorage.removeItem('rememberedCredentials');
+          console.log('Credenciales guardadas eliminadas');
+        }
+        
+        // Redirigir al selector de dashboard después del login exitoso
+        console.log('🚀 Redirigiendo a selección de dashboard...');
+        router.push('/login/dashboard-selection');
       }
+      
+    } catch (error) {
+      console.error('❌ Error inesperado en el login:', error);
+      setErrors({ general: 'Error inesperado al iniciar sesión. Inténtalo de nuevo.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -364,7 +424,7 @@ export default function SignInPage() {
                 <label className="flex items-center gap-2 text-sm text-[#8a8a8a]">
                   <input 
                     type="checkbox" 
-                    checked={rememberMe} 
+                    checked={rememberMe}
                     onChange={(e) => handleRememberMeChange(e.target.checked)} 
                     className="rounded border-[#3a3a3a] bg-[#2a2a2a] text-[#4a4a4a] focus:ring-[#4a4a4a] focus:ring-offset-2 focus:ring-offset-[#1e1e1e]" 
                   />
@@ -372,23 +432,21 @@ export default function SignInPage() {
                 </label>
                 
                 {/* Estado de credenciales guardadas - CORREGIDO: Una sola línea */}
-                {hasSavedCredentials && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-md border border-emerald-500/20 flex items-center gap-1">
-                      <span>✓</span>
-                      <span>Guardado</span>
-                    </span>
-                    {rememberMe && (
-                      <button
-                        type="button"
-                        onClick={handleClearCredentials}
-                        className="text-xs text-[#6a6a6a] hover:text-[#8a8a8a] transition-colors px-2 py-1 rounded-md hover:bg-[#3a3a3a]"
-                        title="Limpiar credenciales guardadas"
-                      >
-                        Limpiar
-                      </button>
-                    )}
-                  </div>
+                {hasSavedCredentials() && (
+                  <span className="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-md border border-emerald-500/20 flex items-center gap-1">
+                    <span>✓</span>
+                    <span>Guardado</span>
+                  </span>
+                )}
+                {rememberMe && (
+                  <button
+                    type="button"
+                    onClick={handleClearCredentials}
+                    className="text-xs text-[#6a6a6a] hover:text-[#8a8a8a] transition-colors px-2 py-1 rounded-md hover:bg-[#3a3a3a]"
+                    title="Limpiar credenciales guardadas"
+                  >
+                    Limpiar
+                  </button>
                 )}
               </div>
               
@@ -405,7 +463,7 @@ export default function SignInPage() {
               <div className="p-3 bg-[#2a2a2a]/50 border border-[#3a3a3a] rounded-lg">
                 <p className="text-[#8a8a8a] text-xs leading-relaxed">
                   <span className="font-medium text-[#a0a0a0]">Recordarme activado:</span> Tus credenciales se guardarán en este dispositivo para futuros inicios de sesión.
-                  {hasSavedCredentials && (
+                  {hasSavedCredentials() && (
                     <span className="block mt-1 text-emerald-400">
                       ✓ Credenciales actualmente guardadas en este dispositivo.
                     </span>
@@ -415,7 +473,7 @@ export default function SignInPage() {
             )}
 
             {/* Advertencia de seguridad */}
-            {hasSavedCredentials && (
+            {hasSavedCredentials() && (
               <div className="p-3 bg-[#2a2a2a]/50 border border-[#3a3a3a] rounded-lg">
                 <p className="text-[#8a8a8a] text-xs leading-relaxed">
                   <span className="font-medium text-[#a0a0a0]">Seguridad:</span> Las credenciales están guardadas en este dispositivo. 
@@ -428,21 +486,26 @@ export default function SignInPage() {
             <div className="pt-4">
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className={`w-full py-3 px-6 rounded-lg font-medium text-base transition-all duration-200 ${
-                  isSubmitting
-                    ? 'bg-[#3a3a3a] cursor-not-allowed text-[#6a6a6a]'
-                  : 'bg-[#ec4d58] hover:bg-[#d43d48] text-white shadow-sm hover:shadow-md'
+                disabled={isSubmitting || isBlocked}
+                className={`w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-300 ${
+                  isSubmitting || isBlocked
+                    ? 'bg-gray-600 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-[#ec4d58] to-[#d93c47] hover:from-[#d93c47] hover:to-[#ec4d58] text-white hover:shadow-lg hover:shadow-[#ec4d58]/25'
                 }`}
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-[#6a6a6a] border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     Iniciando sesión...
+                  </div>
+                ) : isBlocked ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <Lock size={20} />
+                    Cuenta bloqueada
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-2">
-                    <LogIn size={18} />
+                    <LogIn size={20} />
                     Iniciar Sesión
                   </div>
                 )}

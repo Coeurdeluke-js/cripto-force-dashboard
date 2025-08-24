@@ -12,7 +12,7 @@ import {
   AlertCircle,
   Shield
 } from 'lucide-react';
-import { createClient } from '@/utils/supabase/client';
+import { supabase } from '@/lib/supabaseClient';
 
 interface FormData {
   password: string;
@@ -102,8 +102,6 @@ function ResetPasswordContent() {
     setIsSubmitting(true);
 
     try {
-      const supabase = createClient();
-      
       // Usar el código de reset para cambiar la contraseña
       const { data, error } = await supabase.auth.verifyOtp({
         token_hash: resetCode,

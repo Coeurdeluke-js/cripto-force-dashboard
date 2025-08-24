@@ -28,8 +28,37 @@ export default function Sidebar() {
   const items = isAcolito ? sidebarItemsAcolito : sidebarItems;
   const [userData, setUserData] = useState({ avatar: '/images/default-avatar.png' });
   
-  // Verificar si el usuario es Maestro (solo en el cliente)
-  const isMaestro = isClient && authUserData?.user_level === 0;
+  // Verificar si el usuario puede navegar a dashboards inferiores (solo en el cliente)
+  const canNavigateDashboards = isClient && authUserData && authUserData.user_level !== undefined;
+  
+  // Determinar el nivel del dashboard actual basado en la ruta
+  const getCurrentDashboardLevel = () => {
+    if (pathname?.startsWith('/dashboard/iniciado')) return 1;
+    if (pathname?.startsWith('/dashboard/acolito')) return 2;
+    if (pathname?.startsWith('/dashboard/warrior')) return 3;
+    if (pathname?.startsWith('/dashboard/lord')) return 4;
+    if (pathname?.startsWith('/dashboard/darth')) return 5;
+    if (pathname?.startsWith('/dashboard/maestro')) return 6;
+    return 1; // Por defecto
+  };
+  
+  const currentDashboardLevel = getCurrentDashboardLevel();
+  const userLevel = authUserData?.user_level || 1;
+  
+  // Mostrar ícono compass si el usuario tiene un rol superior al dashboard actual
+  // Fundador (0) siempre puede navegar, Maestro (6) puede navegar a niveles inferiores
+  const shouldShowCompass = userLevel === 0 || userLevel > currentDashboardLevel;
+  
+  // Debug: Log detallado para entender por qué no aparece el ícono
+  console.log('🔍 Sidebar - Compass Logic Debug:', {
+    pathname,
+    currentDashboardLevel,
+    userLevel,
+    shouldShowCompass,
+    isFundador: userLevel === 0,
+    isMaestro: userLevel === 6,
+    userEmail: authUserData?.email
+  });
   
   // Debug logs
   useEffect(() => {
@@ -38,9 +67,17 @@ export default function Sidebar() {
       console.log('🔍 Sidebar - UserData del contexto:', authUserData);
       console.log('🔍 Sidebar - ¿Es cliente?:', isClient);
       console.log('🔍 Sidebar - user_level específico:', authUserData?.user_level);
-      console.log('🔍 Sidebar - ¿Es Maestro?:', isMaestro);
+      console.log('🔍 Sidebar - ¿Puede navegar dashboards?:', canNavigateDashboards);
+      console.log('🔍 Sidebar - Condición completa:', {
+        isClient,
+        hasUserData: !!authUserData,
+        userLevel: authUserData?.user_level,
+        canNavigate: canNavigateDashboards,
+        currentDashboardLevel,
+        shouldShowCompass
+      });
     }
-  }, [isClient, authContext, authUserData, isMaestro]);
+  }, [isClient, authContext, authUserData, canNavigateDashboards, currentDashboardLevel, userLevel, shouldShowCompass]);
 
   // Get user data from profile
   useEffect(() => {
@@ -140,8 +177,8 @@ export default function Sidebar() {
         <ul className="space-y-1">
 
           
-          {/* Enlace de retorno al dashboard de Maestro - solo visible para Maestros */}
-                    {!loading && isMaestro && (
+          {/* Enlace de selección de dashboard - visible para usuarios con roles superiores */}
+                    {!loading && (shouldShowCompass || authUserData?.user_level === 0) && (
             <li>
               <Link
                 href="/dashboard/maestro/dashboard-selection"
@@ -202,7 +239,7 @@ export default function Sidebar() {
                         isActive 
                           ? 'text-white' 
                           : 'text-gray-300 group-hover:text-[#ec4d58]'
-                      } ${isExpanded ? 'visible' : ''} delayed-${Math.min(index + (isMaestro ? 2 : 1), 6)}`}
+                      } ${isExpanded ? 'visible' : ''} delayed-${Math.min(index + 1, 6)}`}
                     >
                       {item.label}
                     </span>
@@ -212,25 +249,7 @@ export default function Sidebar() {
             );
           })}
 
-          {/* Navegar por Dashboards - Solo para Maestros */}
-          {isMaestro && (
-            <li>
-              <Link
-                href="/dashboard/maestro/dashboard-selection"
-                className="group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
-                title={!isExpanded ? "Navegar por Dashboards" : undefined}
-              >
-                <span className="flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-[#ec4d58] group-hover:text-[#d43d48]">
-                  <Compass size={20} />
-                </span>
-                {isExpanded && (
-                  <span className="font-medium text-gray-300 group-hover:text-[#ec4d58] sidebar-text visible delayed-6">
-                    Navegar por Dashboards
-                  </span>
-                )}
-              </Link>
-            </li>
-          )}
+
         </ul>
       </nav>
 

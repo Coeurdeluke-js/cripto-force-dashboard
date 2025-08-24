@@ -37,6 +37,14 @@ export default function DashboardSelectionPage() {
   const { userData, isReady } = useSafeAuth();
   const [hoveredRole, setHoveredRole] = useState<string | null>(null);
 
+  // Debug del router
+  useEffect(() => {
+    console.log('🔄 Router state:', {
+      pathname: window.location.pathname,
+      router: router
+    });
+  }, [router]);
+
   const dashboardOptions: DashboardOption[] = [
     {
       id: 'iniciado',
@@ -158,19 +166,82 @@ export default function DashboardSelectionPage() {
   const getUserLevel = () => {
     if (!userData) return 1;
     
-    // Verificar si el usuario tiene permisos de Maestro
+    // Para usuarios fundadores, asignar nivel 6 (Maestro) pero permitir acceso total
     if (userData.email && MAESTRO_AUTHORIZED_EMAILS.includes(userData.email.toLowerCase().trim())) {
-      return 6; // Nivel de Maestro
+      return 6; // Nivel de Maestro (pero se mostrará como "Fundador")
     }
     
     return userData.user_level || 1;
   };
 
+  // Función para obtener el texto del rol a mostrar
+  const getRoleDisplayText = () => {
+    if (!userData) return 'Iniciado';
+    
+    // Para usuarios fundadores específicos, mostrar "Fundador"
+    if (userData.email && MAESTRO_AUTHORIZED_EMAILS.includes(userData.email.toLowerCase().trim())) {
+      return 'Fundador';
+    }
+    
+    // Para otros usuarios, usar el nivel normal
+    const level = userData.user_level || 1;
+    const option = dashboardOptions.find(o => o.level === level);
+    return option ? option.title : 'Iniciado';
+  };
+
   const userLevel = getUserLevel();
+  const roleDisplayText = getRoleDisplayText();
+
+  // Debug: Mostrar información del usuario
+  useEffect(() => {
+    if (userData) {
+      console.log('🔍 Dashboard Selection - Debug:', {
+        userEmail: userData.email,
+        userLevel: userData.user_level,
+        calculatedLevel: userLevel,
+        roleDisplayText: roleDisplayText,
+        isFundador: MAESTRO_AUTHORIZED_EMAILS.includes(userData.email?.toLowerCase().trim() || ''),
+        canAccessAll: userLevel === 6 && MAESTRO_AUTHORIZED_EMAILS.includes(userData.email?.toLowerCase().trim() || ''),
+        totalOptions: dashboardOptions.length
+      });
+      
+      // Debug adicional para verificar acceso a cada dashboard
+      dashboardOptions.forEach(option => {
+        const canAccess = canAccessRole(option.level);
+        console.log(`🔓 Acceso a ${option.title} (nivel ${option.level}): ${canAccess ? '✅' : '❌'}`);
+      });
+      
+      // Debug para verificar redirección
+      console.log('📍 Estado de redirección:', {
+        currentPath: window.location.pathname,
+        targetPath: '/dashboard/maestro',
+        userLevel,
+        isFundador: MAESTRO_AUTHORIZED_EMAILS.includes(userData.email?.toLowerCase().trim() || '')
+      });
+    }
+  }, [userData, userLevel, roleDisplayText]);
 
   // Verificar si el usuario puede acceder a cada rol
   const canAccessRole = (roleLevel: number) => {
-    return roleLevel <= userLevel;
+    // Debug de la función
+    console.log(`🔍 canAccessRole(${roleLevel}):`, {
+      userLevel,
+      userEmail: userData?.email,
+      isFundador: MAESTRO_AUTHORIZED_EMAILS.includes(userData?.email?.toLowerCase().trim() || ''),
+      shouldHaveAccess: userLevel === 6 && MAESTRO_AUTHORIZED_EMAILS.includes(userData?.email?.toLowerCase().trim() || ''),
+      MAESTRO_AUTHORIZED_EMAILS
+    });
+    
+    // Fundadores (nivel 6) tienen acceso a todos los dashboards
+    if (userLevel === 6 && MAESTRO_AUTHORIZED_EMAILS.includes(userData?.email?.toLowerCase().trim() || '')) {
+      console.log('👑 Usuario fundador detectado, acceso total permitido');
+      return true;
+    }
+    
+    // Otros usuarios solo pueden acceder a su nivel y niveles inferiores
+    const hasAccess = roleLevel <= userLevel;
+    console.log(`📊 Usuario normal: nivel ${userLevel}, acceso a nivel ${roleLevel}: ${hasAccess ? '✅' : '❌'}`);
+    return hasAccess;
   };
 
   // Mostrar loading mientras no esté listo
@@ -217,7 +288,7 @@ export default function DashboardSelectionPage() {
                 <div className="text-center">
                   <h3 className="text-white text-xl font-semibold">{userData.nickname}</h3>
                   <p className="text-[#8a8a8a]">
-                    Nivel {userLevel}: {dashboardOptions.find(o => o.level === userLevel)?.title}
+                    Tu rol: <span className="text-[#FF8C42] font-semibold">{roleDisplayText}</span>
                   </p>
                 </div>
               </div>
@@ -232,10 +303,38 @@ export default function DashboardSelectionPage() {
       {/* Grid de roles */}
       <div className="relative z-10 px-4 pb-8">
         <div className="max-w-7xl mx-auto">
+          {/* Botón de prueba temporal */}
+          <div className="text-center mt-8 mb-4">
+            <button
+              onClick={() => {
+                console.log('🧪 Botón de prueba clickeado');
+                console.log('📍 Intentando navegar a /dashboard/maestro');
+                console.log('🧭 Router antes de navegar:', router);
+                
+                try {
+                  router.push('/dashboard/maestro');
+                  console.log('✅ Router.push ejecutado exitosamente para prueba');
+                } catch (error) {
+                  console.error('❌ Error en router.push de prueba:', error);
+                }
+              }}
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium"
+            >
+              🧪 PRUEBA: Ir a Dashboard Maestro
+            </button>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {dashboardOptions.map((option) => {
               const isAccessible = canAccessRole(option.level);
               const isCurrentLevel = option.level === userLevel;
+              
+              // Debug del renderizado de cada opción
+              console.log(`🎨 Renderizando ${option.title}:`, {
+                isAccessible,
+                isCurrentLevel,
+                level: option.level,
+                path: option.path
+              });
               
               return (
                 <div
@@ -247,7 +346,14 @@ export default function DashboardSelectionPage() {
                       ? 'border-[#2a2a2a] hover:border-[#3a3a3a]'
                       : 'border-[#1a1a1a] opacity-60'
                   } ${isAccessible ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-                  onClick={() => isAccessible && router.push(option.path)}
+                  onClick={() => {
+                    if (isAccessible) {
+                      console.log(`🚀 Intentando acceder a ${option.title} (${option.path})`);
+                      router.push(option.path);
+                    } else {
+                      console.log(`❌ Acceso denegado a ${option.title} (nivel ${option.level})`);
+                    }
+                  }}
                   onMouseEnter={() => setHoveredRole(option.id)}
                   onMouseLeave={() => setHoveredRole(null)}
                 >
@@ -268,7 +374,23 @@ export default function DashboardSelectionPage() {
                           width={48}
                           height={48}
                           className="w-full h-full object-contain"
+                          onLoad={() => console.log(`✅ Imagen cargada exitosamente: ${option.image}`)}
+                          onError={(e) => {
+                            console.error(`❌ Error cargando imagen: ${option.image}`);
+                            // Fallback a un emoji si la imagen falla
+                            const target = e.currentTarget as HTMLImageElement;
+                            target.style.display = 'none';
+                            const fallback = target.nextElementSibling as HTMLElement;
+                            if (fallback) fallback.style.display = 'flex';
+                          }}
                         />
+                        {/* Fallback emoji si la imagen falla */}
+                        <div 
+                          className="w-full h-full flex items-center justify-center text-2xl hidden"
+                          style={{ display: 'none' }}
+                        >
+                          {option.emblem}
+                        </div>
                       </div>
                       <div className="flex items-center gap-2">
                         {isCurrentLevel && (
@@ -319,6 +441,36 @@ export default function DashboardSelectionPage() {
                     {/* Botón de acceso */}
                     {isAccessible ? (
                       <button
+                        onClick={() => {
+                          console.log(`🚀 Botón clickeado: ${option.title} -> ${option.path}`);
+                          console.log('📍 Datos del botón:', {
+                            title: option.title,
+                            path: option.path,
+                            level: option.level,
+                            isAccessible,
+                            isCurrentLevel
+                          });
+                          console.log('🧭 Router antes de navegar:', router);
+                          console.log('🧭 Intentando navegar a:', option.path);
+                          
+                          // Debug adicional
+                          console.log('🔍 URL actual antes de navegar:', window.location.href);
+                          console.log('🔍 Pathname actual:', window.location.pathname);
+                          
+                          try {
+                            router.push(option.path);
+                            console.log('✅ Router.push ejecutado exitosamente');
+                            
+                            // Verificar si la URL cambió después de un breve delay
+                            setTimeout(() => {
+                              console.log('🔍 URL después de navegar:', window.location.href);
+                              console.log('🔍 Pathname después de navegar:', window.location.pathname);
+                            }, 100);
+                            
+                          } catch (error) {
+                            console.error('❌ Error en router.push:', error);
+                          }
+                        }}
                         className={`w-full py-2 px-4 rounded-lg font-medium text-sm transition-all duration-300 ${
                           isCurrentLevel
                             ? 'text-white'

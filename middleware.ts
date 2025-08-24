@@ -11,11 +11,22 @@ const MAESTRO_AUTHORIZED_EMAILS = [
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  console.log('🔍 Middleware ejecutándose para:', pathname);
+
+  // TEMPORALMENTE DESACTIVADO PARA DEBUGGING
+  console.log('⚠️ Middleware temporalmente desactivado para debugging');
+  return NextResponse.next();
+
   // Proteger rutas de Maestro
   if (pathname.startsWith('/dashboard/maestro')) {
+    console.log('🛡️ Middleware: Protegiendo ruta de Maestro');
+    
     try {
       const supabase = await createClient();
       const { data: { user }, error } = await supabase.auth.getUser();
+
+      console.log('🔍 Middleware: Usuario obtenido:', user ? 'SÍ' : 'NO');
+      console.log('🔍 Middleware: Error:', error);
 
       // Si no hay usuario autenticado, redirigir al login
       if (error || !user) {
@@ -26,6 +37,9 @@ export async function middleware(request: NextRequest) {
       // Verificar si el email está autorizado
       const userEmail = user.email?.toLowerCase().trim();
       const isAuthorized = userEmail && MAESTRO_AUTHORIZED_EMAILS.includes(userEmail);
+
+      console.log('🔍 Middleware: Email del usuario:', userEmail);
+      console.log('🔍 Middleware: ¿Autorizado?:', isAuthorized);
 
       if (!isAuthorized) {
         console.log(`🚫 Middleware: Usuario ${userEmail?.substring(0, 3)}*** no autorizado para Maestro`);

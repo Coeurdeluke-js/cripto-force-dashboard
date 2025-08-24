@@ -44,9 +44,10 @@ function MaestroLayoutContent({
         console.log('🔍 MAESTRO LAYOUT: Email procesado:', userEmail);
         console.log('✅ MAESTRO LAYOUT: ¿Autorizado por lista?:', clientAuthorized);
 
+        // Verificar autorización real para producción
         if (!clientAuthorized) {
           console.log('🚫 MAESTRO LAYOUT: Acceso denegado - Email no autorizado para maestro');
-          router.replace('/dashboard/iniciado');
+          router.replace('/login/dashboard-selection');
           return;
         }
 
