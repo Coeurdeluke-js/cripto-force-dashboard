@@ -10,14 +10,13 @@ interface ReferralStatsProps {
 }
 
 interface ReferralData {
-  referralCode: string;
-  totalReferrals: number;
-  totalEarnings: number;
-  userLevel: number;
-  recentReferrals: Array<{
+  referral_code: string;
+  total_referrals: number;
+  total_earnings: number;
+  user_level: number;
+  recent_referrals: Array<{
     email: string;
     date: string;
-    commission: number;
   }>;
 }
 
@@ -71,7 +70,7 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
   }, [userEmail, fetchReferralStats]);
 
   const handleCopyCode = async () => {
-    const codeToUse = stats?.referralCode || generateReferralCode();
+    const codeToUse = stats?.referral_code || generateReferralCode();
     
     try {
       await navigator.clipboard.writeText(codeToUse);
@@ -83,7 +82,7 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
   };
 
   const handleCopyLink = async () => {
-    const codeToUse = stats?.referralCode;
+    const codeToUse = stats?.referral_code;
     if (!codeToUse) return;
 
     const referralLink = `${window.location.origin}/login?ref=${codeToUse}`;
@@ -98,7 +97,7 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
   };
 
   const handleShare = async () => {
-    const codeToUse = stats?.referralCode;
+    const codeToUse = stats?.referral_code;
     if (!codeToUse) return;
 
     const referralLink = `${window.location.origin}/login?ref=${codeToUse}`;
@@ -176,7 +175,7 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
     );
   }
 
-  const codeToUse = stats?.referralCode || generateReferralCode();
+      const codeToUse = stats?.referral_code || generateReferralCode();
   const referralLink = `${window.location.origin}/login?ref=${codeToUse}`;
 
   return (
@@ -252,24 +251,24 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
       {stats && (
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="text-center p-4 bg-[#2a2a2a] rounded-lg">
-            <div className="text-2xl font-bold text-white">{stats.totalReferrals}</div>
+            <div className="text-2xl font-bold text-white">{stats.total_referrals}</div>
             <div className="text-sm text-gray-400">Referidos</div>
           </div>
           <div className="text-center p-4 bg-[#2a2a2a] rounded-lg">
-            <div className="text-2xl font-bold text-green-400">${stats.totalEarnings.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-green-400">${stats.total_earnings.toFixed(2)}</div>
             <div className="text-sm text-gray-400">Ganancias</div>
           </div>
         </div>
       )}
 
       {/* Referidos recientes */}
-      {stats && stats.recentReferrals.length > 0 && (
+      {stats && stats.recent_referrals.length > 0 && (
         <div>
           <h4 className="text-sm font-medium text-gray-400 mb-3">
             Referidos Recientes
           </h4>
           <div className="space-y-2">
-            {stats.recentReferrals.map((referral, index) => (
+            {stats.recent_referrals.map((referral, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-[#2a2a2a] rounded-lg">
                 <div className="flex-1">
                   <div className="text-white text-sm font-medium">
@@ -280,7 +279,7 @@ export default function ReferralStats({ userEmail, className = '' }: ReferralSta
                   </div>
                 </div>
                 <div className="text-green-400 font-medium">
-                  +${referral.commission.toFixed(2)}
+                  Referido activo
                 </div>
               </div>
             ))}

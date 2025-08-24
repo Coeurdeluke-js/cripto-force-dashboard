@@ -99,7 +99,7 @@ export async function GET() {
       user.total_referrals && user.total_referrals > 0
     ).length || 0;
 
-    const totalReferrals = users?.reduce((sum, user) => 
+    const total_referrals = users?.reduce((sum, user) => 
       sum + (user.total_referrals || 0), 0
     ) || 0;
 
@@ -119,7 +119,7 @@ export async function GET() {
         registrationsToday,
         registrationsYesterday,
         usersWithReferrals,
-        totalReferrals,
+        total_referrals,
         referredUsers,
         referralConversionRate,
         systemStatus: 'Operativo',

@@ -70,9 +70,9 @@ export default function ProfilePage() {
         exchange: userData.exchange || '',
         uid: userData.uid || '',
         role: 'iniciado', // Por defecto iniciado
-        referralCode: referralStats?.referralCode || userData.codigo_referido || userData.nickname.toUpperCase() + '2025',
-        referrals: referralStats?.totalReferrals || 0,
-        earnings: referralStats?.totalEarnings || 0,
+        referralCode: referralStats?.referral_code || userData.codigo_referido || userData.nickname.toUpperCase() + '2025',
+        referrals: referralStats?.total_referrals || 0,
+        earnings: referralStats?.total_earnings || 0,
         joinDate: userData.joinDate || new Date().toISOString().split('T')[0] // Fecha de registro o actual
       });
     } else {

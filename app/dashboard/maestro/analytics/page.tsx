@@ -19,7 +19,7 @@ export default function AnalyticsPage() {
     registrationsToday: 0,
     registrationsYesterday: 0,
     usersWithReferrals: 0,
-    totalReferrals: 0,
+    total_referrals: 0,
     referredUsers: 0,
     referralConversionRate: 0,
     systemStatus: 'Operativo',
@@ -199,7 +199,7 @@ export default function AnalyticsPage() {
           <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center justify-between p-2 sm:p-3 bg-[#2a2a2a] rounded-lg">
               <span className="text-gray-400 text-sm sm:text-base">Total Referidos</span>
-              <span className="text-white font-medium text-sm sm:text-base">{realMetrics.totalReferrals}</span>
+                              <span className="text-white font-medium text-sm sm:text-base">{realMetrics.total_referrals}</span>
             </div>
             <div className="flex items-center justify-between p-2 sm:p-3 bg-[#2a2a2a] rounded-lg">
               <span className="text-gray-400 text-sm sm:text-base">Usuarios Referidos</span>
@@ -251,7 +251,7 @@ export default function AnalyticsPage() {
           </div>
           <div className="text-center p-3 sm:p-4 bg-[#2a2a2a] rounded-lg">
             <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-purple-400 mb-1">
-              {realMetrics.totalReferrals}
+                              {realMetrics.total_referrals}
             </div>
             <div className="text-xs sm:text-sm text-gray-400">Total Referidos</div>
           </div>
