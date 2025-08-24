@@ -33,7 +33,6 @@ interface UserProfile {
   role: string;
   referralCode: string;
   referrals: number;
-  earnings: number;
   joinDate: string;
 }
 
@@ -54,7 +53,6 @@ export default function ProfilePage() {
     role: 'iniciado',
     referralCode: '',
     referrals: 0,
-    earnings: 0,
     joinDate: new Date().toISOString().split('T')[0]
   });
 
@@ -72,7 +70,7 @@ export default function ProfilePage() {
         role: 'iniciado', // Por defecto iniciado
         referralCode: referralStats?.referral_code || userData.codigo_referido || userData.nickname.toUpperCase() + '2025',
         referrals: referralStats?.total_referrals || 0,
-        earnings: referralStats?.total_earnings || 0,
+
         joinDate: userData.joinDate || new Date().toISOString().split('T')[0] // Fecha de registro o actual
       });
     } else {
@@ -129,12 +127,13 @@ export default function ProfilePage() {
 
   const getRoleInfo = (role: string) => {
     const roles = {
-      iniciado: { name: 'INICIADO', color: '#FAFAFA', icon: Shield },
+      iniciado: { name: 'INICIADO', color: '#fafafa', icon: Shield },
       acolito: { name: 'ACÓLITO', color: '#FFD447', icon: Shield },
       warrior: { name: 'WARRIOR', color: '#3ED598', icon: Crown },
       lord: { name: 'LORD', color: '#4671D5', icon: Crown },
-      darth: { name: 'DARTH', color: '#8B5CF6', icon: Crown },
-      maestro: { name: 'MAESTRO', color: '#EC4D58', icon: Crown }
+      darth: { name: 'DARTH', color: '#ec4d58', icon: Crown },
+      maestro: { name: 'MAESTRO', color: '#8a8a8a', icon: Crown },
+      fundador: { name: 'FUNDADOR', color: '#FF8C42', icon: Crown } // Naranja coherente
     };
     return roles[role as keyof typeof roles] || roles.iniciado;
   };
@@ -388,14 +387,10 @@ export default function ProfilePage() {
                   <span className="text-white/70">Rol actual</span>
                   <span className="text-white font-medium">{roleInfo.name}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-white/70">Referidos</span>
-                  <span className="text-[#FFD447] font-bold">{profile.referrals}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-white/70">Ganancias</span>
-                  <span className="text-[#FFD447] font-bold">${profile.earnings}</span>
-                </div>
+                                 <div className="flex justify-between items-center">
+                   <span className="text-white/70">Referidos</span>
+                   <span className="text-[#FFD447] font-bold">{profile.referrals}</span>
+                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-white/70">Miembro desde</span>
                   <span className="text-white/80 text-sm">

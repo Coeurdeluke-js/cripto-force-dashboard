@@ -56,26 +56,26 @@ export default function ReferralCodeDisplay({ userLevel, className = "" }: Refer
 
   const getLevelDisplay = (level: number) => {
     switch (level) {
-      case 0: return '🎯 Fundador';
-      case 1: return '👤 Iniciado';
-      case 2: return '🔮 Acólito';
-      case 3: return '⚔️ Warrior';
-      case 4: return '👑 Lord';
-      case 5: return '💀 Darth';
-      case 6: return '👨‍🏫 Maestro';
-      default: return '👤 Iniciado';
+      case 0: return 'Fundador';
+      case 1: return 'Iniciado';
+      case 2: return 'Acólito';
+      case 3: return 'Warrior';
+      case 4: return 'Lord';
+      case 5: return 'Darth';
+      case 6: return 'Maestro';
+      default: return 'Iniciado';
     }
   };
 
   const getLevelColor = (level: number) => {
     switch (level) {
-      case 0: return '#8A8A8A'; // Fundador - Gris
+      case 0: return '#FF8C42'; // Fundador - Naranja
       case 1: return '#fafafa'; // Iniciado - Blanco
-      case 2: return '#8B5CF6'; // Acólito - Púrpura
-      case 3: return '#3B82F6'; // Warrior - Azul
-      case 4: return '#10B981'; // Lord - Verde
-      case 5: return '#EF4444'; // Darth - Rojo
-      case 6: return '#6366F1'; // Maestro - Índigo
+      case 2: return '#FFD447'; // Acólito - Amarillo
+      case 3: return '#3ED598'; // Warrior - Verde
+      case 4: return '#4671D5'; // Lord - Azul
+      case 5: return '#ec4d58'; // Darth - Rojo
+      case 6: return '#8a8a8a'; // Maestro - Gris
       default: return '#fafafa'; // Iniciado por defecto
     }
   };

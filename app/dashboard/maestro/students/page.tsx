@@ -536,21 +536,21 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
     const numLevel = typeof level === 'string' ? parseInt(level) : level;
     switch (numLevel) {
       case 0:
-        return '🎯 Fundador';
+        return 'Fundador';
       case 1:
-        return '👤 Iniciado';
+        return 'Iniciado';
       case 2:
-        return '🔮 Acólito';
+        return 'Acólito';
       case 3:
-        return '⚔️ Warrior';
+        return 'Warrior';
       case 4:
-        return '👑 Lord';
+        return 'Lord';
       case 5:
-        return '💀 Darth';
+        return 'Darth';
       case 6:
-        return '👨‍🏫 Maestro';
+        return 'Maestro';
       default:
-        return '👤 Iniciado';
+        return 'Iniciado';
     }
   };
 
@@ -558,21 +558,21 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
     const numLevel = typeof level === 'string' ? parseInt(level) : level;
     switch (numLevel) {
       case 0:
-        return 'bg-[#8A8A8A] text-white'; // Fundador - Gris
+        return 'bg-orange-600 text-white'; // Fundador - Naranja
       case 1:
-        return 'bg-yellow-900 text-yellow-200'; // Iniciado - Amarillo
+        return 'bg-gray-100 text-gray-800'; // Iniciado - Blanco/Gris
       case 2:
-        return 'bg-purple-900 text-purple-200'; // Acólito - Púrpura
+        return 'bg-yellow-500 text-yellow-900'; // Acólito - Amarillo
       case 3:
-        return 'bg-blue-900 text-blue-200'; // Warrior - Azul
+        return 'bg-green-500 text-green-900'; // Warrior - Verde
       case 4:
-        return 'bg-green-900 text-green-200'; // Lord - Verde
+        return 'bg-blue-500 text-blue-900'; // Lord - Azul
       case 5:
-        return 'bg-red-900 text-red-200'; // Darth - Rojo
+        return 'bg-red-500 text-red-900'; // Darth - Rojo
       case 6:
-        return 'bg-indigo-900 text-indigo-200'; // Maestro - Índigo
+        return 'bg-gray-500 text-gray-900'; // Maestro - Gris
       default:
-        return 'bg-yellow-900 text-yellow-200'; // Por defecto Iniciado
+        return 'bg-gray-100 text-gray-800'; // Por defecto Iniciado
     }
   };
 
@@ -1068,13 +1068,13 @@ ${diagnosis.recommendations.map((rec: string) => `• ${rec}`).join('\n')}
                         editingUser?.user_level === 0 ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                     >
-                      <option value={0}>🎯 Fundador</option>
-                      <option value={1}>👤 Iniciado</option>
-                      <option value={2}>🔮 Acólito</option>
-                      <option value={3}>⚔️ Warrior</option>
-                      <option value={4}>👑 Lord</option>
-                      <option value={5}>💀 Darth</option>
-                      <option value={6}>👨‍🏫 Maestro</option>
+                      <option value={0}>Fundador</option>
+                      <option value={1}>Iniciado</option>
+                      <option value={2}>Acólito</option>
+                      <option value={3}>Warrior</option>
+                      <option value={4}>Lord</option>
+                      <option value={5}>Darth</option>
+                      <option value={6}>Maestro</option>
                     </select>
                   </div>
                   
