@@ -71,7 +71,7 @@ export default function ProfilePage() {
         referralCode: referralStats?.referral_code || userData.codigo_referido || userData.nickname.toUpperCase() + '2025',
         referrals: referralStats?.total_referrals || 0,
 
-        joinDate: userData.joinDate || new Date().toISOString().split('T')[0] // Fecha de registro o actual
+        joinDate: userData.created_at ? new Date(userData.created_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0] // Fecha de registro o actual
       });
     } else {
       // Si no hay datos del usuario, redirigir al login
