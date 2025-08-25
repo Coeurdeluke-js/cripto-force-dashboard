@@ -280,7 +280,7 @@ export default function DashboardSelectionPage() {
                   <Image
                     src={
                       userData.email && MAESTRO_AUTHORIZED_EMAILS.includes(userData.email.toLowerCase().trim())
-                        ? '/images/insignias/7-founder.png'
+                        ? '/images/insignias/6-founder.png'
                         : dashboardOptions.find(o => o.level === userLevel)?.image || ''
                     }
                     alt="Tu insignia actual"
