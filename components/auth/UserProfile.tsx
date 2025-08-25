@@ -1,20 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useSafeAuth } from '@/context/AuthContext';
 import Button from '@/components/ui/Button';
 
 export default function UserProfile() {
-  const { user, signOut } = useAuth();
+  const { user, userData, signOut } = useSafeAuth();
   const [displayName, setDisplayName] = useState('');
 
   useEffect(() => {
-    if (user?.user_metadata?.display_name) {
-      setDisplayName(user.user_metadata.display_name);
+    if (userData?.nickname) {
+      setDisplayName(userData.nickname);
     }
-  }, [user]);
+  }, [userData]);
 
-  if (!user) {
+  if (!user || !userData) {
     return <div>Debes iniciar sesión para ver tu perfil</div>;
   }
 
