@@ -130,7 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user_level: 6, // Maestro (pero se mostrará como "Fundador")
         total_referrals: 12
       };
-    } else if (user.email === 'maestro@example.com' || user.email.includes('maestro')) {
+    } else if (user.email && (user.email === 'maestro@example.com' || user.email.includes('maestro'))) {
       // Datos para usuarios Maestro
       fallbackData = {
         id: 'local-maestro',
@@ -148,7 +148,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user_level: 6, // Maestro
         total_referrals: 8
       };
-    } else if (user.email === 'darth@example.com' || user.email.includes('darth')) {
+    } else if (user.email && (user.email === 'darth@example.com' || user.email.includes('darth'))) {
       // Datos para usuarios Darth
       fallbackData = {
         id: 'local-darth',
@@ -166,7 +166,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user_level: 5, // Darth
         total_referrals: 6
       };
-    } else if (user.email === 'lord@example.com' || user.email.includes('lord')) {
+    } else if (user.email && (user.email === 'lord@example.com' || user.email.includes('lord'))) {
       // Datos para usuarios Lord
       fallbackData = {
         id: 'local-lord',
@@ -184,7 +184,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user_level: 4, // Lord
         total_referrals: 4
       };
-    } else if (user.email === 'warrior@example.com' || user.email.includes('warrior')) {
+    } else if (user.email && (user.email === 'warrior@example.com' || user.email.includes('warrior'))) {
       // Datos para usuarios Warrior
       fallbackData = {
         id: 'local-warrior',
@@ -202,7 +202,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user_level: 3, // Warrior
         total_referrals: 3
       };
-    } else if (user.email === 'acolito@example.com' || user.email.includes('acolito')) {
+    } else if (user.email && (user.email === 'acolito@example.com' || user.email.includes('acolito'))) {
       // Datos para usuarios Acólito
       fallbackData = {
         id: 'local-acolito',
@@ -227,7 +227,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         nombre: 'Usuario',
         apellido: 'Temporal',
         nickname: 'Usuario Temporal',
-        email: user.email,
+        email: user.email || 'usuario@temporal.com',
         movil: '',
         exchange: '',
         uid: user.id || 'unknown',
