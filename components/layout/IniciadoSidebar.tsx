@@ -32,9 +32,6 @@ export default function IniciadoSidebar() {
   // Mostrar compass si el usuario es Fundador (0) o de nivel superior (2-6)
   const shouldShowCompass = userData?.user_level === 0 || (userData?.user_level && userData.user_level > 1);
 
-  // Mostrar compass si el usuario es Fundador (0) o de nivel superior (2-6)
-  const shouldShowCompass = userData?.user_level === 0 || (userData?.user_level && userData.user_level > 1);
-
   return (
     <>
       {/* Botón móvil para abrir sidebar */}
@@ -108,19 +105,6 @@ export default function IniciadoSidebar() {
               );
             })}
           </ul>
-
-          {/* Botón Cambiar Dashboard - solo visible si el usuario puede navegar */}
-          {shouldShowCompass && (
-            <div className="mt-6 pt-4 border-t border-[#2a2a2a]">
-              <button
-                onClick={() => setShowDashboardSelector(true)}
-                className="w-full flex items-center gap-3 px-4 py-3 text-[#ec4d58] hover:text-white hover:bg-[#2a2a2a] rounded-lg transition-colors group"
-              >
-                <Compass className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                <span>Cambiar Dashboard</span>
-              </button>
-            </div>
-          )}
 
           {/* Botón Cambiar Dashboard - solo visible si el usuario puede navegar */}
           {shouldShowCompass && (
