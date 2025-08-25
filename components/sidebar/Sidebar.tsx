@@ -148,8 +148,22 @@ export default function Sidebar() {
       <div className="flex-shrink-0 h-16 flex items-center justify-center border-b border-gray-800/30 bg-transparent px-4 rounded-t-xl">
         <div className="w-12 h-12 rounded-full overflow-hidden">
           <Image
-            src="/images/insignias/1-iniciados.png"
-            alt="Iniciado"
+            src={`/images/insignias/${currentDashboardLevel}-${
+              currentDashboardLevel === 1 ? 'iniciados' :
+              currentDashboardLevel === 2 ? 'acolitos' :
+              currentDashboardLevel === 3 ? 'warriors' :
+              currentDashboardLevel === 4 ? 'lords' :
+              currentDashboardLevel === 5 ? 'darths' :
+              currentDashboardLevel === 6 ? 'maestros' : 'iniciados'
+            }.png`}
+            alt={
+              currentDashboardLevel === 1 ? 'Iniciado' :
+              currentDashboardLevel === 2 ? 'Acólito' :
+              currentDashboardLevel === 3 ? 'Warrior' :
+              currentDashboardLevel === 4 ? 'Lord' :
+              currentDashboardLevel === 5 ? 'Darth' :
+              currentDashboardLevel === 6 ? 'Maestro' : 'Iniciado'
+            }
             width={48}
             height={48}
             className="w-full h-full object-cover"
@@ -166,7 +180,7 @@ export default function Sidebar() {
           className="group relative flex items-center py-3 px-3 text-gray-400 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full justify-center"
           title={isExpanded ? "Contraer" : "Expandir"}
         >
-          <span className="flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-gray-400 group-hover:text-[#ec4d58]">
+          <span className="flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-gray-400 group-hover:text-[#FFD447]">
             <Menu size={20} />
           </span>
         </button>
@@ -182,18 +196,30 @@ export default function Sidebar() {
             <li>
               <Link
                 href="/dashboard/maestro/dashboard-selection"
-                className="group relative flex items-center py-3 px-3 text-[#ec4d58] hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full border border-[#ec4d58]/30 hover:border-[#ec4d58]/60"
+                className={`group relative flex items-center py-3 px-3 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-out w-full border ${
+                  currentDashboardLevel === 2 
+                    ? 'text-[#FFD447] border-[#FFD447]/30 hover:border-[#FFD447]/60' 
+                    : 'text-[#ec4d58] border-[#ec4d58]/30 hover:border-[#ec4d58]/60'
+                }`}
                                       title={!isExpanded ? "Selección de Dashboard" : undefined}
               >
                                       <span
-                        className="flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-[#ec4d58] group-hover:text-[#ec4d58]"
+                        className={`flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 ${
+                          currentDashboardLevel === 2 
+                            ? 'text-[#FFD447] group-hover:text-[#FFD447]' 
+                            : 'text-[#ec4d58] group-hover:text-[#ec4d58]'
+                        }`}
                       >
                         <Compass size={20} />
                       </span>
                 
                 {isExpanded && (
                                           <span
-                          className="font-medium whitespace-nowrap sidebar-text text-[#ec4d58] group-hover:text-[#ec4d58] visible delayed-1"
+                          className={`font-medium whitespace-nowrap sidebar-text visible delayed-1 ${
+                            currentDashboardLevel === 2 
+                              ? 'text-[#FFD447] group-hover:text-[#FFD447]' 
+                              : 'text-[#ec4d58] group-hover:text-[#ec4d58]'
+                          }`}
                         >
                           Selección de Dashboard
                         </span>
@@ -215,19 +241,21 @@ export default function Sidebar() {
                   href={item.href}
                   className={`group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full ${
                     isExpanded ? 'justify-start text-left gap-x-3' : 'justify-center'
-                  } ${isActive ? 'bg-[#ec4d58] text-white' : ''}`}
+                  } ${isActive ? (currentDashboardLevel === 2 ? 'bg-[#FFD447] text-gray-900' : 'bg-[#ec4d58] text-white') : ''}`}
                   title={!isExpanded ? item.label : undefined}
                 >
                   {/* Active indicator - línea roja como antes */}
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#ec4d58] rounded-r-full"></div>
+                    <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-r-full ${
+                      currentDashboardLevel === 2 ? 'bg-[#FFD447]' : 'bg-[#ec4d58]'
+                    }`}></div>
                   )}
                   
                   <span
                     className={`flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 ${
                       isActive 
-                        ? 'text-white' 
-                        : 'text-gray-400 group-hover:text-[#ec4d58]'
+                        ? 'text-gray-900' 
+                        : `text-gray-400 group-hover:${currentDashboardLevel === 2 ? 'text-[#FFD447]' : 'text-[#ec4d58]'}`
                     } ${isExpanded ? 'mr-3' : ''}`}
                   >
                     {typeof item.icon === 'string' ? item.icon : React.createElement(item.icon)}
@@ -237,8 +265,8 @@ export default function Sidebar() {
                     <span 
                       className={`font-medium whitespace-nowrap sidebar-text ${
                         isActive 
-                          ? 'text-white' 
-                          : 'text-gray-300 group-hover:text-[#ec4d58]'
+                          ? 'text-gray-900' 
+                          : `text-gray-300 group-hover:${currentDashboardLevel === 2 ? 'text-[#FFD447]' : 'text-[#ec4d58]'}`
                       } ${isExpanded ? 'visible' : ''} delayed-${Math.min(index + 1, 6)}`}
                     >
                       {item.label}
@@ -262,7 +290,9 @@ export default function Sidebar() {
               className="group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
               title={!isExpanded ? "Perfil" : undefined}
             >
-              <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-gray-400 group-hover:text-[#ec4d58] ${isExpanded ? 'mr-3' : ''}`}>
+              <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-gray-400 ${
+                currentDashboardLevel === 2 ? 'group-hover:text-[#FFD447]' : 'group-hover:text-[#ec4d58]'
+              } ${isExpanded ? 'mr-3' : ''}`}>
                 <Image
                   src={userData.avatar}
                   alt="Perfil"
@@ -273,7 +303,9 @@ export default function Sidebar() {
               </span>
               {isExpanded && (
                 <span 
-                  className={`font-medium text-gray-300 group-hover:text-[#ec4d58] sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-1`}
+                  className={`font-medium text-gray-300 ${
+                    currentDashboardLevel === 2 ? 'group-hover:text-[#FFD447]' : 'group-hover:text-[#ec4d58]'
+                  } sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-1`}
                 >
                   Perfil
                 </span>
@@ -285,12 +317,16 @@ export default function Sidebar() {
               className="group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
               title={!isExpanded ? "Salir" : undefined}
             >
-              <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-gray-400 group-hover:text-[#ec4d58] ${isExpanded ? 'mr-3' : ''}`}>
+              <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-gray-400 ${
+                currentDashboardLevel === 2 ? 'group-hover:text-[#FFD447]' : 'group-hover:text-[#ec4d58]'
+              } ${isExpanded ? 'mr-3' : ''}`}>
                 <LogOut size={20} />
               </span>
               {isExpanded && (
                 <span 
-                  className={`font-medium text-gray-300 group-hover:text-[#ec4d58] sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-2`}
+                  className={`font-medium text-gray-300 ${
+                    currentDashboardLevel === 2 ? 'group-hover:text-[#FFD447]' : 'group-hover:text-[#ec4d58]'
+                  } sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-2`}
                 >
                   Salir
                 </span>

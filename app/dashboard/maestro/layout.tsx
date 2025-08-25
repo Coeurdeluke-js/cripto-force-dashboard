@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { useSafeAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import MaestroSidebar from '@/components/layout/MaestroSidebar';
-import MaestroDownbar from '@/components/layout/MaestroDownbar';
+import MaestroDownbar from './MaestroDownbar';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
-import { MaestroSidebarProvider, useMaestroSidebar } from '@/components/layout/MaestroSidebarContext';
+import { MaestroSidebarProvider, useMaestroSidebar } from './MaestroSidebarContext';
 
 // Lista de emails autorizados para acceder a la dashboard de Maestro
 const MAESTRO_AUTHORIZED_EMAILS = [
@@ -19,7 +19,6 @@ function MaestroLayoutContent({
 }: {
   children: React.ReactNode;
 }) {
-  const { isExpanded } = useMaestroSidebar();
   const { userData, isReady } = useSafeAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -90,9 +89,7 @@ function MaestroLayoutContent({
         </div>
         
         {/* Main Content Area - Completamente visible y responsive */}
-        <div className={`flex-1 transition-all duration-300 ${
-          isExpanded ? 'md:ml-0' : 'md:ml-0'
-        }`}>
+        <div className="flex-1 transition-all duration-300">
           <main className="min-h-screen p-3 sm:p-4 md:p-6 lg:p-8 pb-20 md:pb-6 w-full max-w-none">
             {children}
           </main>

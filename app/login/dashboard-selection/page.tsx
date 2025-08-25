@@ -278,7 +278,11 @@ export default function DashboardSelectionPage() {
               <div className="flex items-center justify-center gap-4 mb-4">
                 <div className="w-16 h-16 relative">
                   <Image
-                    src={dashboardOptions.find(o => o.level === userLevel)?.image || ''}
+                    src={
+                      userData.email && MAESTRO_AUTHORIZED_EMAILS.includes(userData.email.toLowerCase().trim())
+                        ? '/images/insignias/7-founder.png'
+                        : dashboardOptions.find(o => o.level === userLevel)?.image || ''
+                    }
                     alt="Tu insignia actual"
                     width={64}
                     height={64}

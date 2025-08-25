@@ -71,10 +71,10 @@ export default function SidebarAcolito({ isCollapsed = false }: SidebarAcolitoPr
         {/* Logo */}
         <div className="flex items-center justify-center h-16 border-b border-gray-700">
           {!isCollapsed && (
-            <span className="text-xl font-bold text-yellow-400">CF</span>
+            <span className="text-xl font-bold text-[#FFD447]">CF</span>
           )}
           {isCollapsed && (
-            <span className="text-xl font-bold text-yellow-400">A</span>
+            <span className="text-xl font-bold text-[#FFD447]">A</span>
           )}
         </div>
 
@@ -89,8 +89,8 @@ export default function SidebarAcolito({ isCollapsed = false }: SidebarAcolitoPr
                     href={item.href}
                     className={`flex items-center px-4 py-3 text-sm font-medium rounded-md transition-colors ${
                       isActive
-                        ? 'bg-yellow-500 text-gray-900'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                        ? 'bg-[#FFD447] text-gray-900 shadow-lg shadow-[#FFD447]/25'
+                        : 'text-gray-300 hover:bg-[#FFD447]/10 hover:text-[#FFD447] hover:border-l-2 hover:border-l-[#FFD447]/50'
                     }`}
                   >
                     <item.icon className="h-5 w-5 mr-3" />
@@ -107,12 +107,12 @@ export default function SidebarAcolito({ isCollapsed = false }: SidebarAcolitoPr
           <div className="mt-auto mb-8 px-4">
             <button
               onClick={handleCompassClick}
-              className="flex items-center w-full px-4 py-3 text-sm font-medium text-white bg-transparent hover:bg-gray-700 rounded-md transition-colors group"
+              className="flex items-center w-full px-4 py-3 text-sm font-medium text-white bg-transparent hover:bg-[#FFD447]/10 rounded-md transition-colors group border border-[#FFD447]/30 hover:border-[#FFD447]/60"
               title="Seleccionar Dashboard"
             >
-              <MapIcon className="h-5 w-5 mr-3 text-red-500 group-hover:text-red-400" />
+              <MapIcon className="h-5 w-5 mr-3 text-[#FFD447] group-hover:text-[#FFD447]" />
               {!isCollapsed && (
-                <span className="text-gray-300 group-hover:text-white">
+                <span className="text-gray-300 group-hover:text-[#FFD447]">
                   Cambiar Dashboard
                 </span>
               )}
@@ -124,7 +124,7 @@ export default function SidebarAcolito({ isCollapsed = false }: SidebarAcolitoPr
         <div className="mt-auto p-4 border-t border-gray-700">
           {!isCollapsed && userData && (
             <div className="text-center">
-              <div className="w-8 h-8 bg-yellow-500 rounded-full mx-auto mb-2 flex items-center justify-center">
+              <div className="w-8 h-8 bg-[#FFD447] rounded-full mx-auto mb-2 flex items-center justify-center">
                 <span className="text-xs font-bold text-gray-900">
                   {userData.nickname?.charAt(0) || 'U'}
                 </span>
@@ -139,7 +139,7 @@ export default function SidebarAcolito({ isCollapsed = false }: SidebarAcolitoPr
           )}
           {isCollapsed && userData && (
             <div className="text-center">
-              <div className="w-8 h-8 bg-yellow-500 rounded-full mx-auto mb-2 flex items-center justify-center">
+              <div className="w-8 h-8 bg-[#FFD447] rounded-full mx-auto mb-2 flex items-center justify-center">
                 <span className="text-xs font-bold text-gray-900">
                   {userData.nickname?.charAt(0) || 'U'}
                 </span>

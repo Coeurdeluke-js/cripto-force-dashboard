@@ -2,8 +2,17 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { useSafeAuth } from '@/context/AuthContext';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { 
+  Crown,
+  Shield,
+  Sword,
+  Eye,
+  Flame,
+  Star,
+  Zap,
+  Lock,
+  Unlock
+} from 'lucide-react';
 
 interface DashboardSelectorModalProps {
   isOpen: boolean;
@@ -12,11 +21,17 @@ interface DashboardSelectorModalProps {
 }
 
 interface DashboardOption {
-  id: number;
-  name: string;
+  id: string;
+  title: string;
   description: string;
   color: string;
-  href: string;
+  icon: React.ReactNode;
+  path: string;
+  level: number;
+  emblem: string;
+  philosophy: string;
+  requirements: string;
+  benefits: string[];
 }
 
 export default function DashboardSelectorModal({ 
@@ -25,188 +40,249 @@ export default function DashboardSelectorModal({
   currentDashboardLevel 
 }: DashboardSelectorModalProps) {
   const router = useRouter();
-  const { userData } = useSafeAuth();
-
-  if (!isOpen) return null;
 
   const dashboardOptions: DashboardOption[] = [
     {
-      id: 0,
-      name: 'Fundador',
-      description: 'Dashboard exclusivo para fundadores del sistema',
-      color: '#FF8C42',
-      href: '/dashboard/fundador'
+      id: 'iniciado',
+      title: 'Iniciado',
+      description: 'El primer paso en tu viaje hacia el dominio del trading',
+      color: 'from-[#fafafa] to-[#e5e5e5]',
+      icon: <Shield className="w-6 h-6 text-[#1a1a1a]" />,
+      path: '/dashboard/iniciado',
+      level: 1,
+      emblem: 'I',
+      philosophy: 'Fundamentos sólidos, mente clara',
+      requirements: 'Nivel 1 o superior',
+      benefits: [
+        'Acceso a cursos básicos',
+        'Comunidad de iniciados',
+        'Herramientas fundamentales'
+      ]
     },
     {
-      id: 1,
-      name: 'Iniciado',
-      description: 'Dashboard para usuarios nuevos en el sistema',
-      color: '#fafafa',
-      href: '/dashboard/iniciado'
+      id: 'acolito',
+      title: 'Acólito',
+      description: 'Desarrolla tu comprensión y habilidades avanzadas',
+      color: 'from-[#ffd447] to-[#ffb347]',
+      icon: <Eye className="w-6 h-6 text-[#1a1a1a]" />,
+      path: '/dashboard/acolito',
+      level: 2,
+      emblem: 'A',
+      philosophy: 'Observación aguda, análisis profundo',
+      requirements: 'Nivel 2 o superior',
+      benefits: [
+        'Cursos intermedios',
+        'Análisis técnico avanzado',
+        'Mentoría personalizada'
+      ]
     },
     {
-      id: 2,
-      name: 'Acólito',
-      description: 'Dashboard para usuarios con experiencia básica',
-      color: '#FFD447',
-      href: '/dashboard/acolito'
+      id: 'warrior',
+      title: 'Warrior',
+      description: 'Combate en los mercados con estrategias probadas',
+      color: 'from-[#4671d5] to-[#2d5bb8]',
+      icon: <Sword className="w-6 h-6 text-white" />,
+      path: '/dashboard/warrior',
+      level: 3,
+      emblem: 'W',
+      philosophy: 'Disciplina férrea, ejecución perfecta',
+      requirements: 'Nivel 3 o superior',
+      benefits: [
+        'Estrategias de trading',
+        'Gestión de riesgo',
+        'Análisis fundamental'
+      ]
     },
     {
-      id: 3,
-      name: 'Warrior',
-      description: 'Dashboard para usuarios intermedios',
-      color: '#3ED598',
-      href: '/dashboard/warrior'
+      id: 'lord',
+      title: 'Lord',
+      description: 'Domina los mercados con sabiduría ancestral',
+      color: 'from-[#8b5cf6] to-[#7c3aed]',
+      icon: <Crown className="w-6 h-6 text-white" />,
+      path: '/dashboard/lord',
+      level: 4,
+      emblem: 'L',
+      philosophy: 'Sabiduría milenaria, poder supremo',
+      requirements: 'Nivel 4 o superior',
+      benefits: [
+        'Estrategias avanzadas',
+        'Análisis macroeconómico',
+        'Mentoría exclusiva'
+      ]
     },
     {
-      id: 4,
-      name: 'Lord',
-      description: 'Dashboard para usuarios avanzados',
-      color: '#4671D5',
-      href: '/dashboard/lord'
+      id: 'darth',
+      title: 'Darth',
+      description: 'El lado oscuro del trading te hace más poderoso',
+      color: 'from-[#ec4d58] to-[#dc2626]',
+      icon: <Flame className="w-6 h-6 text-white" />,
+      path: '/dashboard/darth',
+      level: 5,
+      emblem: 'D',
+      philosophy: 'Poder absoluto, control total',
+      requirements: 'Nivel 5 o superior',
+      benefits: [
+        'Estrategias oscuras',
+        'Técnicas prohibidas',
+        'Poder ilimitado'
+      ]
     },
     {
-      id: 5,
-      name: 'Darth',
-      description: 'Dashboard para usuarios expertos',
-      color: '#ec4d58',
-      href: '/dashboard/darth'
-    },
-    {
-      id: 6,
-      name: 'Maestro',
-      description: 'Dashboard para maestros del sistema',
-      color: '#8a8a8a',
-      href: '/dashboard/maestro'
+      id: 'maestro',
+      title: 'Maestro',
+      description: 'La cúspide del conocimiento y poder en trading',
+      color: 'from-[#f59e0b] to-[#d97706]',
+      icon: <Star className="w-6 h-6 text-white" />,
+      path: '/dashboard/maestro',
+      level: 6,
+      emblem: 'M',
+      philosophy: 'Maestría total, iluminación completa',
+      requirements: 'Nivel 6 o superior',
+      benefits: [
+        'Conocimiento supremo',
+        'Acceso total',
+        'Maestría absoluta'
+      ]
     }
   ];
 
-  const getUserAccessibleDashboards = () => {
-    if (!userData || userData.user_level === undefined) {
-      return dashboardOptions.filter(option => option.id === 1); // Solo Iniciado por defecto
-    }
-
-    const userLevel = userData.user_level;
-    
-    // Fundador (0) puede acceder a todas las dashboards
-    if (userLevel === 0) {
-      return dashboardOptions;
-    }
-    
-    // Otros usuarios pueden acceder a su nivel y niveles inferiores
-    return dashboardOptions.filter(option => option.id <= userLevel);
-  };
-
-  const accessibleDashboards = getUserAccessibleDashboards();
-
-  const handleDashboardSelect = (href: string) => {
-    router.push(href);
+  const handleDashboardSelect = (path: string) => {
+    router.push(path);
     onClose();
   };
 
-  const getLevelDisplay = (level: number) => {
-    const option = dashboardOptions.find(opt => opt.id === level);
-    return option ? option.name : 'Desconocido';
-  };
-
-  const getLevelColor = (level: number) => {
-    const option = dashboardOptions.find(opt => opt.id === level);
-    return option ? option.color : '#6b7280';
-  };
+  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-[#1a1a1a] rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">
+        <div className="p-6 border-b border-[#2a2a2a]">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-white">
               Seleccionar Dashboard
             </h2>
-            <p className="text-gray-600 mt-1">
-              Actualmente en: <span 
-                className="font-semibold" 
-                style={{ color: getLevelColor(currentDashboardLevel) }}
-              >
-                {getLevelDisplay(currentDashboardLevel)}
-              </span>
-            </p>
-            {userData && (
-              <p className="text-sm text-gray-500 mt-1">
-                Tu nivel: <span 
-                  className="font-semibold" 
-                  style={{ color: getLevelColor(userData.user_level || 1) }}
-                >
-                  {getLevelDisplay(userData.user_level || 1)}
-                </span>
-              </p>
-            )}
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <XMarkIcon className="h-6 w-6" />
-          </button>
+          <p className="text-gray-400 mt-2">
+            Elige el dashboard que mejor se adapte a tu nivel actual
+          </p>
         </div>
 
-        {/* Dashboard Options */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {accessibleDashboards.map((option) => {
-            const isCurrent = option.id === currentDashboardLevel;
-            const isAccessible = option.id <= (userData?.user_level || 1);
-            
-            return (
-              <div
-                key={option.id}
-                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                  isCurrent
-                    ? 'border-blue-500 bg-blue-50'
-                    : isAccessible
-                    ? 'border-gray-200 hover:border-gray-300 hover:shadow-md'
-                    : 'border-gray-200 bg-gray-100 opacity-50 cursor-not-allowed'
-                }`}
-                onClick={() => isAccessible && handleDashboardSelect(option.href)}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div
-                    className="w-4 h-4 rounded-full"
-                    style={{ backgroundColor: option.color }}
-                  ></div>
-                  {isCurrent && (
-                    <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">
-                      Actual
-                    </span>
-                  )}
+        {/* Dashboard Grid */}
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {dashboardOptions.map((option) => {
+              const isAccessible = option.level <= currentDashboardLevel;
+              const isCurrent = option.level === currentDashboardLevel;
+              
+              return (
+                <div
+                  key={option.id}
+                  className={`relative rounded-lg p-6 transition-all duration-300 ${
+                    isAccessible 
+                      ? 'cursor-pointer hover:scale-105 hover:shadow-2xl' 
+                      : 'cursor-not-allowed opacity-50'
+                  } ${
+                    isCurrent 
+                      ? 'ring-2 ring-yellow-500 ring-opacity-50' 
+                      : ''
+                  }`}
+                  onClick={() => isAccessible && handleDashboardSelect(option.path)}
+                >
+                  {/* Background Gradient */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${option.color} rounded-lg opacity-10`} />
+                  
+                  {/* Content */}
+                  <div className="relative z-10">
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${option.color} flex items-center justify-center`}>
+                        {option.icon}
+                      </div>
+                      <div className="text-right">
+                        <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${option.color} flex items-center justify-center text-sm font-bold text-white`}>
+                          {option.emblem}
+                        </div>
+                        <span className="text-xs text-gray-400">Nivel {option.level}</span>
+                      </div>
+                    </div>
+
+                    {/* Title & Description */}
+                    <h3 className="text-xl font-bold text-white mb-2">{option.title}</h3>
+                    <p className="text-gray-400 text-sm mb-4">{option.description}</p>
+
+                    {/* Philosophy */}
+                    <div className="mb-4">
+                      <p className="text-xs text-gray-500 mb-1">Filosofía</p>
+                      <p className="text-sm text-gray-300 italic">"{option.philosophy}"</p>
+                    </div>
+
+                    {/* Requirements */}
+                    <div className="mb-4">
+                      <p className="text-xs text-gray-500 mb-1">Requisitos</p>
+                      <p className="text-sm text-gray-300">{option.requirements}</p>
+                    </div>
+
+                    {/* Benefits */}
+                    <div className="mb-4">
+                      <p className="text-xs text-gray-500 mb-1">Beneficios</p>
+                      <ul className="text-sm text-gray-300">
+                        {option.benefits.map((benefit, index) => (
+                          <li key={index} className="flex items-center">
+                            <span className="text-yellow-500 mr-2">•</span>
+                            {benefit}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Status */}
+                    <div className="flex items-center justify-between">
+                      {isCurrent ? (
+                        <span className="text-yellow-500 text-sm font-medium flex items-center">
+                          <Zap className="w-4 h-4 mr-1" />
+                          Dashboard Actual
+                        </span>
+                      ) : isAccessible ? (
+                        <span className="text-green-500 text-sm font-medium flex items-center">
+                          <Unlock className="w-4 h-4 mr-1" />
+                          Accesible
+                        </span>
+                      ) : (
+                        <span className="text-red-500 text-sm font-medium flex items-center">
+                          <Lock className="w-4 h-4 mr-1" />
+                          Bloqueado
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1">
-                  {option.name}
-                </h3>
-                <p className="text-sm text-gray-600">
-                  {option.description}
-                </p>
-                {!isAccessible && (
-                  <p className="text-xs text-red-500 mt-2">
-                    Nivel insuficiente para acceder
-                  </p>
-                )}
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
 
         {/* Footer */}
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <div className="flex justify-end space-x-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-            >
-              Cancelar
-            </button>
+        <div className="p-6 border-t border-[#2a2a2a] bg-[#0f0f0f]">
+          <div className="text-center">
+            <p className="text-gray-400 text-sm">
+              Tu nivel actual: <span className="text-yellow-500 font-medium">{currentDashboardLevel}</span>
+            </p>
+            <p className="text-gray-500 text-xs mt-1">
+              Desbloquea nuevos dashboards subiendo de nivel
+            </p>
           </div>
         </div>
       </div>
     </div>
   );
 }
+

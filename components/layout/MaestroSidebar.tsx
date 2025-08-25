@@ -25,8 +25,8 @@ import {
   Compass
 } from 'lucide-react';
 import { useSafeAuth } from '@/context/AuthContext';
-import { useMaestroSidebar } from './MaestroSidebarContext';
-import DashboardSelectorModal from '@/components/DashboardSelectorModal';
+import { useMaestroSidebar } from '@/app/dashboard/maestro/MaestroSidebarContext';
+
 
 interface MenuItem {
   href: string;
@@ -82,19 +82,35 @@ export default function MaestroSidebar() {
   const pathname = usePathname();
   const { signOut, userData } = useSafeAuth();
   const [userProfile, setUserProfile] = useState({ avatar: '/images/default-avatar.png' });
-  const [showDashboardSelector, setShowDashboardSelector] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Get user data from profile
+  // Get user data from profile - only after mounting to prevent hydration mismatch
   useEffect(() => {
+    setMounted(true);
+    
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('simple_profile');
       if (saved) {
-        const profileData = JSON.parse(saved);
-        setUserProfile(profileData);
+        try {
+          const profileData = JSON.parse(saved);
+          setUserProfile(profileData);
+        } catch (error) {
+          console.error('Error parsing profile data:', error);
+        }
       }
     }
   }, []);
 
+  // Don't render until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <aside className="h-full bg-gradient-to-b from-[#121212] to-[#0a0a0a] shadow-2xl flex flex-col border-r border-gray-800/50 transition-all duration-300 ease-in-out rounded-r-xl w-16">
+        <div className="flex-shrink-0 h-16 flex items-center justify-center border-b border-gray-800/30 bg-transparent px-4 rounded-t-xl">
+          <div className="w-12 h-12 rounded-full bg-gray-700 animate-pulse"></div>
+        </div>
+      </aside>
+    );
+  }
 
 
   const handleSignOut = async () => {
@@ -232,23 +248,7 @@ export default function MaestroSidebar() {
           })}
         </ul>
 
-        {/* Botón Cambiar Dashboard - siempre visible para Maestro */}
-        <div className="mt-6 pt-4 border-t border-gray-800/30">
-          <button
-            onClick={() => setShowDashboardSelector(true)}
-            className="group relative flex items-center py-3 px-3 text-[#ec4d58] hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
-            title={!isExpanded ? "Cambiar Dashboard" : undefined}
-          >
-            <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-[#ec4d58] group-hover:text-white ${isExpanded ? 'mr-3' : ''}`}>
-              <Compass size={20} />
-            </span>
-            {isExpanded && (
-              <span className="font-medium text-[#ec4d58] group-hover:text-white sidebar-text visible">
-                Cambiar Dashboard
-              </span>
-            )}
-          </button>
-        </div>
+
       </nav>
 
       {/* Footer - estilo WhatsApp */}
@@ -297,12 +297,7 @@ export default function MaestroSidebar() {
       </div>
     </aside>
 
-    {/* Modal de selección de dashboard */}
-    <DashboardSelectorModal
-      isOpen={showDashboardSelector}
-      onClose={() => setShowDashboardSelector(false)}
-      currentDashboardLevel={6}
-    />
+
     </>
   );
 }

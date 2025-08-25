@@ -197,6 +197,8 @@ export default function MaestroDashboardSelectionPage() {
     'coeurdeluke.js@gmail.com'
   ];
 
+
+
   // Funciones helper para obtener información del nivel
   const getLevelName = (level: number): string => {
     // Para usuarios fundadores específicos, mostrar "Fundador" aunque tengan nivel 6
@@ -284,12 +286,17 @@ export default function MaestroDashboardSelectionPage() {
             <div className="flex items-center justify-center gap-4 mb-4">
               <div className="w-16 h-16 relative">
                 <Image
-                  src={`/images/insignias/${userData.user_level || 1}-${getLevelName(userData.user_level || 1).toLowerCase()}s.png`}
+                  src={
+                    userData.email && MAESTRO_AUTHORIZED_EMAILS.includes(userData.email.toLowerCase().trim())
+                      ? '/images/insignias/6-founder.png'
+                      : `/images/insignias/${userData.user_level || 1}-${getLevelName(userData.user_level || 1).toLowerCase()}s.png`
+                  }
                   alt={`Insignia de ${getLevelName(userData.user_level || 1)}`}
                   width={64}
                   height={64}
                   className="w-full h-full object-contain"
                 />
+
               </div>
               <div className="text-center">
                 <h3 className={`text-xl font-semibold ${
