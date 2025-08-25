@@ -38,7 +38,7 @@ interface UserProfile {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { userData, isReady, updateUserData } = useSafeAuth();
+  const { userData, isReady } = useSafeAuth();
   const { stats: referralStats, loading: referralLoading } = useReferralData();
   const [isEditing, setIsEditing] = useState(false);
   
@@ -98,17 +98,8 @@ export default function ProfilePage() {
   const handleSave = () => {
     setProfile(editData);
     
-    // Sincronizar cambios con el contexto global
-    updateUserData({
-      nombre: editData.nombre,
-      apellido: editData.apellido,
-      nickname: editData.nickname,
-      email: editData.email,
-      movil: editData.numeroMovil,
-      exchange: editData.exchange,
-      uid: editData.uid,
-      codigo_referido: editData.referralCode
-    });
+    // Mostrar mensaje de éxito
+    console.log('✅ Perfil actualizado localmente');
     
     setIsEditing(false);
   };
