@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
       }
 
       // Verificar si el email está autorizado
-      const userEmail = user.email?.toLowerCase().trim();
+      const userEmail = user?.email?.toLowerCase().trim();
       const isAuthorized = userEmail && MAESTRO_AUTHORIZED_EMAILS.includes(userEmail);
 
       console.log('🔍 Middleware: Email del usuario:', userEmail);
