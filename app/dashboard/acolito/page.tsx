@@ -205,7 +205,7 @@ export default function AcolitoDashboard() {
   const objectives: Objective[] = [
     { id: 'obj1', title: 'Completar Nivel 2 Teórico', type: 'nivel2', category: 'theoretical', completed: false },
     { id: 'obj2', title: 'Completar Nivel 2 Práctico', type: 'nivel2', category: 'practical', completed: false },
-    { id: 'obj3', title: 'Superar Puntos de Control', type: 'checkpoints', category: 'all', completed: false },
+    { id: 'obj3', title: 'Superar Puntos de Control', type: 'checkpoints', category: 'general', completed: false },
     { id: 'obj4', title: 'Alcanzar 75% del curso completo', type: 'progress', category: 'general', completed: false },
     { id: 'obj5', title: 'Dominar Análisis Técnico Avanzado', type: 'nivel2', category: 'theoretical', completed: false },
     { id: 'obj6', title: 'Implementar Estrategias Avanzadas', type: 'nivel2', category: 'practical', completed: false }
@@ -481,7 +481,7 @@ export default function AcolitoDashboard() {
                     }`}>
                       {objective.category === 'theoretical' ? 'Teórico' : 
                        objective.category === 'practical' ? 'Práctico' : 
-                       objective.category === 'checkpoints' ? 'Puntos de Control' : 'General'}
+                       objective.category === 'general' ? 'General' : 'Otros'}
                     </p>
                   </div>
                 </div>
