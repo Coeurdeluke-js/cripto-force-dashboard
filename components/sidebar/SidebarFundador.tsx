@@ -4,14 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useSafeAuth } from '@/context/AuthContext';
 import { 
-  HomeIcon, 
-  ChartBarIcon, 
-  UserGroupIcon, 
-  BookOpenIcon, 
-  ChartPieIcon, 
-  CogIcon,
-  CompassIcon
-} from '@heroicons/react/24/outline';
+  Home, 
+  BarChart3, 
+  Users, 
+  BookOpen, 
+  PieChart, 
+  Settings,
+  Compass
+} from 'lucide-react';
+import DashboardSelectorModal from '@/components/DashboardSelectorModal';
 
 interface SidebarFundadorProps {
   isCollapsed?: boolean;
@@ -22,6 +23,7 @@ export default function SidebarFundador({ isCollapsed = false }: SidebarFundador
   const pathname = usePathname();
   const { userData, loading } = useSafeAuth();
   const [showCompass, setShowCompass] = useState(false);
+  const [showDashboardSelector, setShowDashboardSelector] = useState(false);
 
   // Mostrar compass siempre para Fundador
   useEffect(() => {
@@ -41,16 +43,16 @@ export default function SidebarFundador({ isCollapsed = false }: SidebarFundador
   }, [userData, loading]);
 
   const navigationItems = [
-    { name: 'Panel General', href: '/dashboard/fundador', icon: HomeIcon },
-    { name: 'Análisis', href: '/dashboard/fundador/analytics', icon: ChartBarIcon },
-    { name: 'Estudiantes', href: '/dashboard/fundador/students', icon: UserGroupIcon },
-    { name: 'Cursos', href: '/dashboard/fundador/courses', icon: BookOpenIcon },
-    { name: 'Trading', href: '/dashboard/fundador/trading', icon: ChartPieIcon },
-    { name: 'Configuración', href: '/dashboard/fundador/settings', icon: CogIcon },
+    { name: 'Panel General', href: '/dashboard/fundador', icon: Home },
+    { name: 'Análisis', href: '/dashboard/fundador/analytics', icon: BarChart3 },
+    { name: 'Estudiantes', href: '/dashboard/fundador/students', icon: Users },
+    { name: 'Cursos', href: '/dashboard/fundador/courses', icon: BookOpen },
+    { name: 'Trading', href: '/dashboard/fundador/trading', icon: PieChart },
+    { name: 'Configuración', href: '/dashboard/fundador/settings', icon: Settings },
   ];
 
   const handleCompassClick = () => {
-    setIsModalOpen(true);
+    setShowDashboardSelector(true);
   };
 
   if (loading) {
@@ -107,7 +109,7 @@ export default function SidebarFundador({ isCollapsed = false }: SidebarFundador
             className="flex items-center w-full px-4 py-3 text-sm font-medium text-white bg-transparent hover:bg-gray-700 rounded-md transition-colors group"
             title="Seleccionar Dashboard"
           >
-            <CompassIcon className="h-5 w-5 mr-3 text-red-500 group-hover:text-red-400" />
+            <Compass className="h-5 w-5 mr-3 text-orange-400 group-hover:text-orange-300" />
             {!isCollapsed && (
               <span className="text-gray-300 group-hover:text-white">
                 Cambiar Dashboard
@@ -144,6 +146,13 @@ export default function SidebarFundador({ isCollapsed = false }: SidebarFundador
           </div>
         )}
       </div>
+
+      {/* Modal de selección de dashboard */}
+      <DashboardSelectorModal
+        isOpen={showDashboardSelector}
+        onClose={() => setShowDashboardSelector(false)}
+        currentDashboardLevel={0}
+      />
     </div>
   );
 }
