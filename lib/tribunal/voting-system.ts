@@ -142,17 +142,17 @@ export class TribunalVotingSystem {
     if (VOTING_CONFIG.REQUIRE_UNANIMOUS_APPROVAL) {
       // Todos deben aprobar
       if (approveVotes === requiredVotes) {
-        return 'approved';
+        return ProposalStatus.APPROVED;
       }
       
       // Si hay al menos un rechazo, se rechaza
       if (rejectVotes > 0) {
-        return 'rejected';
+        return ProposalStatus.REJECTED;
       }
       
       // Si hay abstenciones y no se permiten, se mantiene pendiente
       if (abstainVotes > 0 && !VOTING_CONFIG.ALLOW_ABSTENTION) {
-        return 'pending';
+        return ProposalStatus.PENDING;
       }
     }
     
@@ -160,14 +160,14 @@ export class TribunalVotingSystem {
     const approvalThreshold = Math.ceil(requiredVotes * 0.75); // 75% de aprobación
     
     if (approveVotes >= approvalThreshold) {
-      return 'approved';
+      return ProposalStatus.APPROVED;
     }
     
     if (rejectVotes > (requiredVotes - approvalThreshold)) {
-      return 'rejected';
+      return ProposalStatus.REJECTED;
     }
     
-    return 'pending';
+    return ProposalStatus.PENDING;
   }
   
   /**
