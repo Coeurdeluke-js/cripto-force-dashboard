@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { sidebarItems, sidebarItemsAcolito } from "./sidebarItems";
+import { sidebarItems, sidebarItemsAcolito, sidebarItemsDarth, sidebarItemsMaestro } from "./sidebarItems";
 import SidebarToggle from "./SidebarToggle";
 import { useSidebar } from "./SidebarContext";
 import { usePathname } from "next/navigation";
@@ -25,7 +25,19 @@ export default function Sidebar() {
 
   
   const isAcolito = pathname.startsWith("/dashboard/acolito");
-  const items = isAcolito ? sidebarItemsAcolito : sidebarItems;
+  const isDarth = pathname.startsWith("/dashboard/darth");
+  const isMaestro = pathname.startsWith("/dashboard/maestro");
+  
+  // Seleccionar items según el nivel del usuario
+  let items = sidebarItems; // Por defecto
+  if (isAcolito) {
+    items = sidebarItemsAcolito;
+  } else if (isDarth) {
+    items = sidebarItemsDarth;
+  } else if (isMaestro) {
+    items = sidebarItemsMaestro;
+  }
+  
   const [userData, setUserData] = useState({ avatar: '/images/default-avatar.png' });
   
   // Verificar si el usuario puede navegar a dashboards inferiores (solo en el cliente)
@@ -99,102 +111,62 @@ export default function Sidebar() {
         isExpanded ? "w-72" : "w-20"
       }`}
     >
-      <style jsx>{`
-        .sidebar-text {
-          transition: all 0.3s ease-in-out;
-          opacity: 0;
-          transform: translateX(-10px);
-        }
-        
-        .sidebar-text.visible {
-          opacity: 1;
-          transform: translateX(0);
-        }
-        
-        .sidebar-text.delayed-1 {
-          transition-delay: 0.05s;
-        }
-        
-        .sidebar-text.delayed-2 {
-          transition-delay: 0.1s;
-        }
-        
-        .sidebar-text.delayed-3 {
-          transition-delay: 0.15s;
-        }
-        
-        .sidebar-text.delayed-4 {
-          transition-delay: 0.2s;
-        }
-        
-        .sidebar-text.delayed-5 {
-          transition-delay: 0.25s;
-        }
-        
-        .sidebar-text.delayed-6 {
-          transition-delay: 0.3s;
-        }
-        
-        .sidebar-text.delayed-footer-1 {
-          transition-delay: 0.35s;
-        }
-        
-        .sidebar-text.delayed-footer-2 {
-          transition-delay: 0.4s;
-        }
-      `}</style>
-      
-      {/* Header con imagen circular */}
-      <div className="flex-shrink-0 h-16 flex items-center justify-center border-b border-gray-800/30 bg-transparent px-4 rounded-t-xl">
-        <div className="w-12 h-12 rounded-full overflow-hidden">
-          <Image
-            src={`/images/insignias/${currentDashboardLevel}-${
-              currentDashboardLevel === 1 ? 'iniciados' :
-              currentDashboardLevel === 2 ? 'acolitos' :
-              currentDashboardLevel === 3 ? 'warriors' :
-              currentDashboardLevel === 4 ? 'lords' :
-              currentDashboardLevel === 5 ? 'darths' :
-              currentDashboardLevel === 6 ? 'maestros' : 'iniciados'
-            }.png`}
-            alt={
-              currentDashboardLevel === 1 ? 'Iniciado' :
-              currentDashboardLevel === 2 ? 'Acólito' :
-              currentDashboardLevel === 3 ? 'Warrior' :
-              currentDashboardLevel === 4 ? 'Lord' :
-              currentDashboardLevel === 5 ? 'Darth' :
-              currentDashboardLevel === 6 ? 'Maestro' : 'Iniciado'
-            }
-            width={48}
-            height={48}
-            className="w-full h-full object-cover"
-            style={{ width: 'auto', height: 'auto' }}
-            priority
-          />
+      {/* Header del sidebar */}
+      <div className="flex-shrink-0 p-4 border-b border-gray-800/30">
+        {/* Logo y nombre */}
+        <div className="flex flex-col items-center space-y-3">
+          <div className="relative w-10 h-10">
+            <Image
+              src={`/images/insignias/${currentDashboardLevel}-${
+                currentDashboardLevel === 1 ? 'iniciados' :
+                currentDashboardLevel === 2 ? 'acolitos' :
+                currentDashboardLevel === 3 ? 'warriors' :
+                currentDashboardLevel === 4 ? 'lords' :
+                currentDashboardLevel === 5 ? 'darths' :
+                currentDashboardLevel === 6 ? 'maestros' : 'iniciados'
+              }.png`}
+              alt={`Insignia ${currentDashboardLevel}`}
+              width={40}
+              height={40}
+              className="rounded-lg"
+            />
+          </div>
+          {isExpanded && (
+            <div className="flex flex-col items-center">
+              <span className={`text-xl font-bold ${
+                currentDashboardLevel === 2 ? 'text-[#FFD447]' : 'text-[#ec4d58]'
+              }`}>CF</span>
+              <span className="text-xs text-gray-400">
+                {currentDashboardLevel === 1 ? 'Iniciado' :
+                 currentDashboardLevel === 2 ? 'Acólito' :
+                 currentDashboardLevel === 3 ? 'Warrior' :
+                 currentDashboardLevel === 4 ? 'Lord' :
+                 currentDashboardLevel === 5 ? 'Darth' :
+                 currentDashboardLevel === 6 ? 'Maestro' : 'Iniciado'}
+              </span>
+            </div>
+          )}
+          
+          {/* Botón de toggle */}
+          <button
+            onClick={toggleSidebar}
+            className="group p-2 rounded-lg hover:bg-[#232323] transition-all duration-200"
+            title={isExpanded ? "Contraer sidebar" : "Expandir sidebar"}
+          >
+            <span className={`flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-gray-400 ${
+              currentDashboardLevel === 2 ? 'group-hover:text-[#FFD447]' : 'group-hover:text-[#ec4d58]'
+            }`}>
+              <Menu size={20} />
+            </span>
+          </button>
         </div>
       </div>
 
-      {/* Toggle button separado arriba */}
-      <div className="flex-shrink-0 p-3 border-b border-gray-800/30">
-        <button
-          onClick={toggleSidebar}
-          className="group relative flex items-center py-3 px-3 text-gray-400 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full justify-center"
-          title={isExpanded ? "Contraer" : "Expandir"}
-        >
-          <span className={`flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-gray-400 ${
-            currentDashboardLevel === 2 ? 'group-hover:text-[#FFD447]' : 'group-hover:text-[#ec4d58]'
-          }`}>
-            <Menu size={20} />
-          </span>
-        </button>
-      </div>
-
-      {/* Navigation - estilo WhatsApp */}
-      <nav className="flex-1 py-4 px-3">
-        <ul className="space-y-1">
-
-          
-          {/* Enlace de selección de dashboard - visible para usuarios con roles superiores */}
-                    {!loading && (shouldShowCompass || authUserData?.user_level === 0) && (
+      {/* Navegación principal */}
+      <nav className="flex-1 overflow-y-auto py-4">
+        <ul className="space-y-2 px-3">
+          {/* Botón de selección de dashboard (solo si el usuario puede navegar) */}
+          {shouldShowCompass && (
             <li>
               <Link
                 href="/dashboard/maestro/dashboard-selection"
@@ -300,40 +272,37 @@ export default function Sidebar() {
                   alt="Perfil"
                   width={24}
                   height={24}
-                  className="w-6 h-6 rounded-full object-cover"
+                  className="rounded-full"
                 />
               </span>
               {isExpanded && (
-                <span 
-                  className={`font-medium text-gray-300 ${
-                    currentDashboardLevel === 2 ? 'group-hover:text-[#FFD447]' : 'group-hover:text-[#ec4d58]'
-                  } sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-1`}
-                >
+                <span className="font-medium text-gray-300 group-hover:text-white transition-colors">
                   Perfil
                 </span>
               )}
             </Link>
             
-            <Link 
-              href="/logout" 
+            <button 
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  localStorage.removeItem('simple_profile');
+                  window.location.href = '/login';
+                }
+              }}
               className="group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
               title={!isExpanded ? "Salir" : undefined}
             >
               <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-gray-400 ${
                 currentDashboardLevel === 2 ? 'group-hover:text-[#FFD447]' : 'group-hover:text-[#ec4d58]'
               } ${isExpanded ? 'mr-3' : ''}`}>
-                <LogOut size={20} />
+                <LogOut size={24} />
               </span>
               {isExpanded && (
-                <span 
-                  className={`font-medium text-gray-300 ${
-                    currentDashboardLevel === 2 ? 'group-hover:text-[#FFD447]' : 'group-hover:text-[#ec4d58]'
-                  } sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-2`}
-                >
+                <span className="font-medium text-gray-300 group-hover:text-white transition-colors">
                   Salir
                 </span>
               )}
-            </Link>
+            </button>
           </div>
         </div>
       )}

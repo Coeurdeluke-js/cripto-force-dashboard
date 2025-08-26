@@ -109,9 +109,8 @@ const levels: Level[] = [
   }
 ];
 
-// Módulos de Iniciados (8 teóricos + 10 prácticos + 9 puntos de control)
+// Módulos de ejemplo para Iniciados
 const iniciadosModules: Module[] = [
-  // Módulos Teóricos (8)
   {
     id: 't1',
     title: 'Introducción a la Lógica Económica',
@@ -124,63 +123,6 @@ const iniciadosModules: Module[] = [
     level: 'iniciados'
   },
   {
-    id: 't2',
-    title: 'Fuerzas del Mercado',
-    type: 'theoretical',
-    description: 'Oferta, demanda y equilibrio de mercado',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: FileText,
-    level: 'iniciados'
-  },
-  {
-    id: 't3',
-    title: 'Acción del Gobierno en los Mercados',
-    type: 'theoretical',
-    description: 'Intervención gubernamental y regulaciones',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: BarChart3,
-    level: 'iniciados'
-  },
-  {
-    id: 't4',
-    title: 'Competencia Perfecta',
-    type: 'theoretical',
-    description: 'Modelos de competencia y estructura de mercado',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: Award,
-    level: 'iniciados'
-  },
-  {
-    id: 't5',
-    title: 'Teoría de Juegos',
-    type: 'theoretical',
-    description: 'Estrategias y toma de decisiones en mercados',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: Users,
-    level: 'iniciados'
-  },
-  {
-    id: 't6',
-    title: 'Economía del Comportamiento',
-    type: 'theoretical',
-    description: 'Psicología y sesgos en la toma de decisiones',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: Brain,
-    level: 'iniciados'
-  },
-
-  // Módulos Prácticos (10) - Solo estos, NO incluir puntos de control
-  {
     id: 'p1',
     title: 'Introducción al Trading',
     type: 'practical',
@@ -190,166 +132,10 @@ const iniciadosModules: Module[] = [
     status: 'active',
     icon: Target,
     level: 'iniciados'
-  },
-  {
-    id: 'p2',
-    title: 'Análisis Técnico Básico',
-    type: 'practical',
-    description: 'Gráficos y patrones básicos',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: BarChart3,
-    level: 'iniciados'
-  },
-  {
-    id: 'p3',
-    title: 'Indicadores Técnicos',
-    type: 'practical',
-    description: 'RSI, MACD y otros indicadores',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: TrendingUp,
-    level: 'iniciados'
-  },
-  {
-    id: 'p4',
-    title: 'Gestión de Riesgo',
-    type: 'practical',
-    description: 'Stop loss y position sizing',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: Shield,
-    level: 'iniciados'
-  },
-  {
-    id: 'p5',
-    title: 'Psicología del Trading',
-    type: 'practical',
-    description: 'Control emocional y disciplina',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: Users,
-    level: 'iniciados'
-  },
-  {
-    id: 'p6',
-    title: 'Análisis Fundamental 1',
-    type: 'practical',
-    description: 'Análisis de empresas y sectores',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: FileText,
-    level: 'iniciados'
-  },
-  {
-    id: 'p7',
-    title: 'Análisis Fundamental 2',
-    type: 'practical',
-    description: 'Ratios financieros y valuación',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: FileText,
-    level: 'iniciados'
-  },
-  {
-    id: 'p8',
-    title: 'Gestión de Riesgo Avanzada',
-    type: 'practical',
-    description: 'Hedging y diversificación',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: Shield,
-    level: 'iniciados'
-  },
-  {
-    id: 'p9',
-    title: 'Plan de Trading',
-    type: 'practical',
-    description: 'Desarrollo de estrategias personalizadas',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: Target,
-    level: 'iniciados'
-  },
-  {
-    id: 'p10',
-    title: 'Trading en Diferentes Mercados',
-    type: 'practical',
-    description: 'Forex, acciones, commodities',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: BarChart3,
-    level: 'iniciados'
-  },
-  // Puntos de Control (9 total: 4 teóricos + 5 prácticos)
-  {
-    id: 'pc1',
-    title: 'Punto de Control 1: Fundamentos Económicos',
-    type: 'theoretical',
-    description: 'Evaluación de conceptos básicos de economía',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: CheckCircle,
-    level: 'iniciados'
-  },
-  {
-    id: 'pc2',
-    title: 'Punto de Control 2: Mercados y Competencia',
-    type: 'theoretical',
-    description: 'Evaluación de estructura de mercados',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: CheckCircle,
-    level: 'iniciados'
-  },
-  {
-    id: 'pc3',
-    title: 'Punto de Control 3: Teoría de Juegos',
-    type: 'theoretical',
-    description: 'Evaluación de estrategias de decisión',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: CheckCircle,
-    level: 'iniciados'
-  },
-  {
-    id: 'pc4',
-    title: 'Punto de Control 4: Economía del Comportamiento',
-    type: 'theoretical',
-    description: 'Evaluación de sesgos psicológicos',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: CheckCircle,
-    level: 'iniciados'
-  },
-  {
-    id: 'pc5',
-    title: 'Punto de Control 5: Análisis Técnico Básico',
-    type: 'practical',
-    description: 'Evaluación de habilidades técnicas básicas',
-    duration: '',
-    checkpoints: 1,
-    status: 'active',
-    icon: CheckCircle,
-    level: 'iniciados'
-  },
-
+  }
 ];
 
-export default function CoursesPage() {
+export default function DarthCoursesPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>('iniciados');
   const [activeTab, setActiveTab] = useState<'overview' | 'theoretical' | 'practical' | 'checkpoints'>('overview');
 
@@ -365,9 +151,9 @@ export default function CoursesPage() {
   // Asignar módulos de Iniciados al nivel correspondiente
   levels[0].modules = iniciadosModules;
   
-  // Para otros niveles, crear módulos básicos (esto se puede expandir después)
+  // Para otros niveles, crear módulos básicos
   levels.forEach((level, index) => {
-    if (index > 0) { // No es iniciados
+    if (index > 0) {
       level.modules = [
         {
           id: 'placeholder',
@@ -427,7 +213,7 @@ export default function CoursesPage() {
         <button
           onClick={() => {
             // Redirigir al TRIBUNAL IMPERIAL
-            window.location.href = '/dashboard/maestro/courses/tribunal-imperial';
+            window.location.href = '/dashboard/darth/courses/tribunal-imperial';
           }}
           className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#FFD700] to-[#FFA500] hover:from-[#FFA500] hover:to-[#FF8C00] text-[#1a1a1a] font-semibold rounded-lg transition-all duration-300 hover:scale-105 shadow-lg"
         >
@@ -654,7 +440,7 @@ export default function CoursesPage() {
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4">
               {practicalModules.map((module) => (
                 <div key={module.id} className="flex items-start gap-3 p-3 sm:p-4 bg-[#2a2a2a] rounded-lg">
-                  <module.icon className="w-5 h-5 sm:w-6 sm:h-6 text-green-400 flex-shrink-0 mt-1" />
+                  <module.icon className="w-5 h-5 sm:w-6 sm:h-5 text-green-400 flex-shrink-0 mt-1" />
                   <div className="flex-1 min-w-0">
                     <div className="text-white text-sm sm:text-base font-medium mb-1">{module.title}</div>
                     <div className="text-gray-400 text-xs sm:text-sm mb-2">{module.description}</div>
