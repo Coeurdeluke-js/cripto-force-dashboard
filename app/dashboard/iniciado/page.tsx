@@ -423,6 +423,93 @@ function buildPracticalModulesWithCheckpoints() {
   return result;
 }
 
+// Generar módulos teóricos con puntos de control intercalados
+function buildTheoreticalModulesWithCheckpoints() {
+  const result: Module[] = [];
+  let pcCount = 1;
+  
+  // 1. Introducción a la Lógica Económica
+  result.push(theoreticalModulesBase[0]);
+  
+  // 2. Fuerzas del Mercado
+  result.push(theoreticalModulesBase[1]);
+  
+  // 3. Punto de Control 1
+  result.push({
+    id: `PC${pcCount}`,
+    title: `Evaluación: ${theoreticalModulesBase[0].title} y ${theoreticalModulesBase[1].title}`,
+    path: `/dashboard/iniciado/puntos-de-control/teorico/pc${pcCount}`,
+    icon: <CheckCircle />,
+    description: `Punto de control: Evalúa los módulos "${theoreticalModulesBase[0].title}" y "${theoreticalModulesBase[1].title}"`,
+    isLocked: false,
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: pcCount
+  });
+  pcCount++;
+  
+  // 4. Acción del Gobierno en los Mercados
+  result.push(theoreticalModulesBase[2]);
+  
+  // 5. Competencia Perfecta
+  result.push(theoreticalModulesBase[3]);
+  
+  // 6. Punto de Control 2
+  result.push({
+    id: `PC${pcCount}`,
+    title: `Evaluación: ${theoreticalModulesBase[2].title} y ${theoreticalModulesBase[3].title}`,
+    path: `/dashboard/iniciado/puntos-de-control/teorico/pc${pcCount}`,
+    icon: <CheckCircle />,
+    description: `Punto de control: Evalúa los módulos "${theoreticalModulesBase[2].title}" y "${theoreticalModulesBase[3].title}"`,
+    isLocked: true,
+    level: 'nivel1',
+    type: 'checkpoint',
+    moduleNumber: pcCount
+  });
+  pcCount++;
+  
+  // 7. Monopolio y Oligopolio
+  result.push(theoreticalModulesNivel2[0]);
+  
+  // 8. Tecnología Blockchain
+  result.push(theoreticalModulesNivel2[1]);
+  
+  // 9. Punto de Control 3
+  result.push({
+    id: `PC${pcCount}`,
+    title: `Evaluación: ${theoreticalModulesNivel2[0].title} y ${theoreticalModulesNivel2[1].title}`,
+    path: `/dashboard/iniciado/puntos-de-control/teorico/pc${pcCount}`,
+    icon: <CheckCircle />,
+    description: `Punto de control: Evalúa los módulos "${theoreticalModulesNivel2[0].title}" y "${theoreticalModulesNivel2[1].title}"`,
+    isLocked: true,
+    level: 'nivel2',
+    type: 'checkpoint',
+    moduleNumber: pcCount
+  });
+  pcCount++;
+  
+  // 10. Criptomonedas
+  result.push(theoreticalModulesNivel2[2]);
+  
+  // 11. Operaciones con Criptomonedas
+  result.push(theoreticalModulesNivel2[3]);
+  
+  // 12. Punto de Control 4
+  result.push({
+    id: `PC${pcCount}`,
+    title: `Evaluación: ${theoreticalModulesNivel2[2].title} y ${theoreticalModulesNivel2[3].title}`,
+    path: `/dashboard/iniciado/puntos-de-control/teorico/pc${pcCount}`,
+    icon: <CheckCircle />,
+    description: `Punto de control: Evalúa los módulos "${theoreticalModulesNivel2[2].title}" y "${theoreticalModulesNivel2[3].title}"`,
+    isLocked: true,
+    level: 'nivel2',
+    type: 'checkpoint',
+    moduleNumber: pcCount
+  });
+  
+  return result;
+}
+
 const practicalModules = buildPracticalModulesWithCheckpoints();
 
 // Función para calcular progreso unificado
@@ -760,7 +847,7 @@ export default function IniciadoDashboard() {
   // Obtener todos los módulos según el tab activo
   const getAllModules = () => {
     if (activeTab === 'theoretical') {
-      const allTheoreticalModules = [...theoreticalModulesBase, ...theoreticalModulesNivel2, ...theoreticalCheckpoints];
+      const allTheoreticalModules = buildTheoreticalModulesWithCheckpoints();
       return calculateUnlockedModules(allTheoreticalModules, progress, 'theoretical');
     } else if (activeTab === 'practical') {
       return calculateUnlockedModules(practicalModules, progress, 'practical');

@@ -180,7 +180,9 @@ export default function Sidebar() {
           className="group relative flex items-center py-3 px-3 text-gray-400 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full justify-center"
           title={isExpanded ? "Contraer" : "Expandir"}
         >
-          <span className="flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-gray-400 group-hover:text-[#FFD447]">
+          <span className={`flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-gray-400 ${
+            currentDashboardLevel === 2 ? 'group-hover:text-[#FFD447]' : 'group-hover:text-[#ec4d58]'
+          }`}>
             <Menu size={20} />
           </span>
         </button>

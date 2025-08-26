@@ -173,7 +173,7 @@ const carouselContent = [
     description: 'Has despertado de la sombra interior. Ahora comienza tu verdadero viaje hacia el poder.',
     icon: <Eye className="w-12 h-12 text-[#FFD447]" />,
     color: 'from-[#FFD447]/20 to-[#FFD447]/30',
-    borderColor: 'border-[#FFD447]/30'
+    borderColor: 'border border-[#232323] hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447]'
   },
   {
     id: 2,
@@ -181,7 +181,7 @@ const carouselContent = [
     description: 'Descubre las técnicas avanzadas que solo los acólitos pueden dominar.',
     icon: <Zap className="w-12 h-12 text-[#FFD447]" />,
     color: 'from-[#FFD447]/20 to-[#FFD447]/30',
-    borderColor: 'border-[#FFD447]/30'
+    borderColor: 'border border-[#232323] hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447]'
   },
   {
     id: 3,
@@ -189,7 +189,7 @@ const carouselContent = [
     description: 'Tu sed de conocimiento te llevará a niveles que nunca imaginaste alcanzar.',
     icon: <Flame className="w-12 h-12 text-[#FFD447]" />,
     color: 'from-[#FFD447]/20 to-[#FFD447]/30',
-    borderColor: 'border-[#FFD447]/30'
+    borderColor: 'border border-[#232323] hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447]'
   }
 ];
 
@@ -280,6 +280,23 @@ export default function AcolitoDashboard() {
         .objectives-grid > div:nth-child(4) { animation-delay: 0.4s; }
         .objectives-grid > div:nth-child(5) { animation-delay: 0.5s; }
         .objectives-grid > div:nth-child(6) { animation-delay: 0.6s; }
+        
+        /* Ensure hover effects are not clipped */
+        .hover\:scale-105:hover {
+          z-index: 10;
+          position: relative;
+        }
+        
+        /* Ensure borders are visible on hover */
+        .group:hover {
+          z-index: 5;
+          position: relative;
+        }
+        
+        /* Ensure module cards have proper spacing for hover effects */
+        .grid > div {
+          position: relative;
+        }
       `}</style>
       
       <div className="container mx-auto px-2 sm:px-4 py-4 md:py-8 pb-24 md:pb-8 transition-all duration-300">
@@ -295,13 +312,34 @@ export default function AcolitoDashboard() {
           </h2>
         </div>
 
+        {/* Indicadores de Progreso */}
+        <div className="w-full max-w-4xl mx-auto mb-8 px-4 md:px-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 text-center hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
+              <div className="w-12 h-12 bg-[#FFD447]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Shield className="w-6 h-6 text-[#FFD447]" />
+              </div>
+              <h4 className="text-lg font-semibold text-white mb-2">Alcanzar 75% del curso completo</h4>
+              <p className="text-gray-400 text-sm">Progreso hacia la maestría</p>
+            </div>
+            
+            <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 text-center hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
+              <div className="w-12 h-12 bg-[#FFD447]/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Target className="w-6 h-6 text-[#FFD447]" />
+              </div>
+              <h4 className="text-lg font-semibold text-white mb-2">Completar Nivel 2 Teórico</h4>
+              <p className="text-gray-400 text-sm">Fundamentos avanzados</p>
+            </div>
+          </div>
+        </div>
+
         {/* Carrusel de Bienvenida */}
         <div className="w-full max-w-6xl mx-auto mb-8 px-2 md:px-0">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
             {carouselContent.map((item, index) => (
               <div
                 key={item.id}
-                className={`bg-gradient-to-br ${item.color} border ${item.borderColor} rounded-2xl p-6 text-center transform transition-all duration-300 hover:scale-105 animate-slide-in-up`}
+                className={`bg-gradient-to-br ${item.color} ${item.borderColor} rounded-2xl p-6 text-center transform transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#FFD447]/20 animate-slide-in-up`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="flex justify-center mb-4">
@@ -317,12 +355,12 @@ export default function AcolitoDashboard() {
         {/* Video introductorio del acólito */}
         <div className="w-full flex justify-center mb-8 px-2 md:px-0">
           <div className="w-full max-w-4xl">
-            <div className="bg-gradient-to-r from-[#FFD447]/10 to-[#FFD447]/20 border border-[#FFD447]/20 rounded-xl p-6 text-center">
+            <div className="bg-gradient-to-r from-[#FFD447]/10 to-[#FFD447]/20 border border-[#232323] rounded-xl p-6 text-center hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
               <h3 className="text-xl font-semibold text-[#FFD447] mb-4">Video de Bienvenida del Acólito</h3>
               <p className="text-gray-300 mb-4">
                 Prepárate para descubrir las técnicas avanzadas que solo los acólitos pueden dominar.
               </p>
-              <div className="bg-gray-800 rounded-lg p-8 border border-[#FFD447]/20">
+              <div className="bg-gray-800 rounded-lg p-8 border border-[#232323] hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
                 <Eye className="w-16 h-16 text-[#FFD447] mx-auto mb-4" />
                 <p className="text-gray-400">Video introductorio del acólito</p>
               </div>
@@ -332,7 +370,7 @@ export default function AcolitoDashboard() {
 
         {/* Navegación por Pestañas */}
         <div className="flex justify-center mb-8 px-2 md:px-0">
-          <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-1 md:p-2 w-full max-w-md">
+          <div className="bg-[#1a1a1a] border border-[#232323] rounded-2xl p-1 md:p-2 w-full max-w-md hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
             <button
               onClick={() => handleTabChange('theoretical')}
               className={`px-3 md:px-6 py-2 md:py-3 rounded-xl transition-all duration-300 ease-out transform hover:scale-105 active:scale-95 text-sm md:text-base w-1/2 ${
@@ -362,14 +400,14 @@ export default function AcolitoDashboard() {
 
         {/* Módulos del Acólito */}
         <div className="w-full max-w-6xl mx-auto mb-8 px-2 md:px-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
             {getModulesForTab().map((module, index) => (
               <div
                 key={module.id}
-                className={`group relative overflow-hidden rounded-xl border transition-all duration-300 transform hover:scale-105 cursor-pointer ${
+                className={`group relative rounded-xl border border-[#232323] transition-all duration-300 transform hover:scale-105 cursor-pointer ${
                   module.isLocked 
                     ? 'border-gray-700 bg-gray-800/50' 
-                    : 'border-[#FFD447]/30 bg-[#1a1a1a] hover:border-[#FFD447]/50'
+                    : 'bg-[#1a1a1a] hover:border-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 hover:border-t-2 hover:border-t-[#FFD447]'
                 }`}
                 onMouseEnter={() => setHoveredModule(module.id)}
                 onMouseLeave={() => setHoveredModule(null)}
@@ -434,14 +472,17 @@ export default function AcolitoDashboard() {
                   </button>
                 </div>
 
-                {/* Borde de color sutil */}
-                <div 
-                  className={`absolute bottom-0 left-0 right-0 h-1 transition-all duration-300 ${
-                    module.isLocked ? 'bg-gray-600' : 'bg-[#FFD447]'
-                  }`}
-                />
+                {/* Borde de color sutil - removido ya que ahora tenemos borde completo */}
               </div>
             ))}
+          </div>
+          
+          {/* Texto de navegación */}
+          <div className="text-center mt-6">
+            <p className="text-gray-400 text-sm flex items-center justify-center gap-2">
+              <span>Usa la rueda del mouse o arrastra para navegar</span>
+              <span className="text-[#FFD447]">→</span>
+            </p>
           </div>
         </div>
 
@@ -450,14 +491,14 @@ export default function AcolitoDashboard() {
           <h3 className="text-2xl font-bold text-center mb-6 text-[#FFD447]">
             Objetivos del Acólito
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 objectives-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 objectives-grid py-4">
             {objectives.map((objective, index) => (
               <div
                 key={objective.id}
-                className={`p-4 rounded-xl border transition-all duration-300 ${
+                className={`p-4 rounded-xl border border-[#232323] transition-all duration-300 hover:scale-105 ${
                   objective.completed
-                    ? 'bg-[#FFD447]/20 border-[#FFD447]/30'
-                    : 'bg-[#1a1a1a] border-[#2a2a2a]'
+                    ? 'bg-[#FFD447]/20 border-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20'
+                    : 'bg-[#1a1a1a] hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447]'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -490,13 +531,38 @@ export default function AcolitoDashboard() {
           </div>
         </div>
 
+        {/* Información Adicional */}
+        <div className="w-full max-w-6xl mx-auto mb-8 px-2 md:px-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
+            <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
+              <div className="flex items-center gap-3 mb-4">
+                <TrendingUp className="w-6 h-6 text-[#FFD447]" />
+                <h4 className="text-lg font-semibold text-white">Próximos Pasos</h4>
+              </div>
+              <p className="text-gray-300 text-sm">
+                Continúa tu aprendizaje con los módulos disponibles. Cada módulo te acerca más a convertirte en un trader profesional.
+              </p>
+            </div>
+            
+            <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
+              <div className="flex items-center gap-3 mb-4">
+                <AlertTriangle className="w-6 h-6 text-[#FFD447]" />
+                <div className="text-lg font-semibold text-white">▲ Puntos de Control</div>
+              </div>
+              <p className="text-gray-300 text-sm">
+                Cada 2 módulos encontrarás un punto de control para evaluar tu progreso y consolidar tu aprendizaje.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Estadísticas del Acólito */}
         <div className="w-full max-w-6xl mx-auto px-2 md:px-0">
           <h3 className="text-2xl font-bold text-center mb-6 text-[#FFD447]">
             Tu Progreso como Acólito
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#1a1a1a] border border-[#FFD447]/30 rounded-xl p-6 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-4">
+            <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 text-center hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
               <div className="w-16 h-16 bg-[#FFD447]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <BookOpen className="w-8 h-8 text-[#FFD447]" />
               </div>
@@ -505,16 +571,16 @@ export default function AcolitoDashboard() {
               <p className="text-gray-400 text-sm">Disponibles para el acólito</p>
             </div>
             
-            <div className="bg-[#1a1a1a] border border-[#FFD447]/30 rounded-xl p-6 text-center">
+            <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 text-center hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
               <div className="w-16 h-16 bg-[#FFD447]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Play className="w-8 h-8 text-[#FFD447]" />
               </div>
               <h4 className="text-lg font-semibold text-white mb-2">Módulos Prácticos</h4>
-              <p className="text-2xl font-bold text-[#FFD447]">5</p>
+              <p className="text-2xl font-bold text-[#FFD447]">2</p>
               <p className="text-gray-400 text-sm">Para dominar las técnicas</p>
             </div>
             
-            <div className="bg-[#1a1a1a] border border-[#FFD447]/30 rounded-xl p-6 text-center">
+            <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 text-center hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
               <div className="w-16 h-16 bg-[#FFD447]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Target className="w-8 h-8 text-[#FFD447]" />
               </div>

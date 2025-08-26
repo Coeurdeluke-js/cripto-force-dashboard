@@ -206,6 +206,18 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
+        
+        /* Ensure hover effects are not clipped */
+        .module-card:hover {
+          z-index: 10;
+          position: relative;
+        }
+        
+        /* Ensure top border is visible on hover */
+        .hover\:border-t-2:hover {
+          border-top-width: 2px !important;
+          border-top-color: #ec4d58 !important;
+        }
       `}</style>
 
       <h3 className="text-xl font-semibold text-[#fafafa] mb-4 flex items-center">
@@ -239,7 +251,7 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
 
         <div 
           ref={containerRef}
-          className="relative overflow-hidden"
+          className="relative"
         >
           <div
             ref={carouselRef}
@@ -260,7 +272,7 @@ export default function EnhancedModuloCarousel({ modules, title, className = '' 
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <div className="flex space-x-4 pb-4">
+            <div className="flex space-x-4 pb-4 pt-4">
               {modules.map((module) => (
                 <div
                   key={module.id}
