@@ -46,7 +46,7 @@ export interface CustomModule {
 export interface TribunalProposal {
   id: string;
   module: CustomModule;
-  status: 'pending' | 'approved' | 'rejected' | 'under_review';
+  status: ProposalStatus;
   submittedAt: Date;
   reviewedAt?: Date;
   votes: TribunalVote[];
@@ -64,7 +64,7 @@ export interface TribunalVote {
   maestrosId: string;
   maestrosName: string;
   maestrosLevel: number;
-  vote: 'approve' | 'reject' | 'abstain';
+  vote: VoteType;
   comment?: string;
   votedAt: Date;
 }

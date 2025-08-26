@@ -51,7 +51,7 @@ export class TribunalVotingSystem {
     }
     
     // Verificar que la propuesta esté pendiente
-    if (proposal.status !== 'pending') {
+    if (proposal.status !== ProposalStatus.PENDING) {
       return {
         success: false,
         newStatus: proposal.status,
@@ -105,12 +105,12 @@ export class TribunalVotingSystem {
       votes: updatedVotes,
       totalVotes,
       status: newStatus,
-      reviewedAt: newStatus !== 'pending' ? new Date() : undefined,
-      unanimousApproval: newStatus === 'approved',
-      rejectionReason: newStatus === 'rejected' ? comment : undefined,
-      rejectionAuthorId: newStatus === 'rejected' ? maestrosId : undefined,
-      rejectionAuthorName: newStatus === 'rejected' ? maestrosName : undefined,
-      rejectionDate: newStatus === 'rejected' ? new Date() : undefined
+      reviewedAt: newStatus !== ProposalStatus.PENDING ? new Date() : undefined,
+      unanimousApproval: newStatus === ProposalStatus.APPROVED,
+      rejectionReason: newStatus === ProposalStatus.REJECTED ? comment : undefined,
+      rejectionAuthorId: newStatus === ProposalStatus.REJECTED ? maestrosId : undefined,
+      rejectionAuthorName: newStatus === ProposalStatus.REJECTED ? maestrosName : undefined,
+      rejectionDate: newStatus === ProposalStatus.REJECTED ? new Date() : undefined
     };
     
     return {
@@ -130,7 +130,7 @@ export class TribunalVotingSystem {
   ): ProposalStatus {
     
     if (votes.length < requiredVotes) {
-      return 'pending';
+      return ProposalStatus.PENDING;
     }
     
     // Contar votos por tipo
@@ -175,14 +175,14 @@ export class TribunalVotingSystem {
    */
   private static getVoteResultMessage(status: ProposalStatus, vote: VoteType): string {
     switch (status) {
-      case 'approved':
+      case ProposalStatus.APPROVED:
         return '¡Propuesta aprobada por unanimidad del Tribunal Imperial!';
-      case 'rejected':
+      case ProposalStatus.REJECTED:
         if (vote === VoteType.REJECT) {
           return 'Tu voto de rechazo ha sido registrado. La propuesta ha sido rechazada.';
         }
         return 'La propuesta ha sido rechazada por otro Maestro del Tribunal.';
-      case 'pending':
+      case ProposalStatus.PENDING:
         return 'Tu voto ha sido registrado. La propuesta sigue pendiente de más votos.';
       default:
         return 'Tu voto ha sido procesado.';
@@ -207,7 +207,7 @@ export class TribunalVotingSystem {
   static expireProposal(proposal: TribunalProposal): TribunalProposal {
     return {
       ...proposal,
-      status: 'expired',
+      status: ProposalStatus.EXPIRED,
       reviewedAt: new Date()
     };
   }
@@ -221,7 +221,7 @@ export class TribunalVotingSystem {
   ): TribunalProposal[] {
     return proposals.filter(proposal => {
       // Solo propuestas pendientes
-      if (proposal.status !== 'pending') return false;
+      if (proposal.status !== ProposalStatus.PENDING) return false;
       
       // Verificar que no haya votado ya
       const hasVoted = proposal.votes.some(v => v.maestrosId === maestrosId);
@@ -258,9 +258,9 @@ export class TribunalVotingSystem {
     const votedProposals = this.getProposalsVotedBy(proposals, maestrosId);
     
     const totalVotes = votedProposals.length;
-    const approvedVotes = votedProposals.filter(p => p.status === 'approved').length;
-    const rejectedVotes = votedProposals.filter(p => p.status === 'rejected').length;
-    const pendingVotes = votedProposals.filter(p => p.status === 'pending').length;
+    const approvedVotes = votedProposals.filter(p => p.status === ProposalStatus.APPROVED).length;
+    const rejectedVotes = votedProposals.filter(p => p.status === ProposalStatus.REJECTED).length;
+    const pendingVotes = votedProposals.filter(p => p.status === ProposalStatus.PENDING).length;
     
     const approvalRate = totalVotes > 0 ? (approvedVotes / totalVotes) * 100 : 0;
     
@@ -349,7 +349,7 @@ export class TribunalVotingSystem {
       return false;
     }
     
-    if (proposal.status !== 'rejected') {
+    if (proposal.status !== ProposalStatus.REJECTED) {
       return false;
     }
     
@@ -382,16 +382,16 @@ export class TribunalVotingSystem {
     unanimousApprovals: number;
   } {
     const totalProposals = proposals.length;
-    const pendingProposals = proposals.filter(p => p.status === 'pending').length;
-    const approvedProposals = proposals.filter(p => p.status === 'approved').length;
-    const rejectedProposals = proposals.filter(p => p.status === 'rejected').length;
-    const expiredProposals = proposals.filter(p => p.status === 'expired').length;
+    const pendingProposals = proposals.filter(p => p.status === ProposalStatus.PENDING).length;
+    const approvedProposals = proposals.filter(p => p.status === ProposalStatus.APPROVED).length;
+    const rejectedProposals = proposals.filter(p => p.status === ProposalStatus.REJECTED).length;
+          const expiredProposals = proposals.filter(p => p.status === ProposalStatus.EXPIRED).length;
     
     const totalVotes = proposals.reduce((sum, p) => sum + p.totalVotes, 0);
     const unanimousApprovals = proposals.filter(p => p.unanimousApproval).length;
     
     // Calcular tiempo promedio de votación
-    const completedProposals = proposals.filter(p => p.status !== 'pending');
+    const completedProposals = proposals.filter(p => p.status !== ProposalStatus.PENDING);
     const totalVotingTime = completedProposals.reduce((sum, p) => {
       if (p.reviewedAt) {
         return sum + this.getDaysDifference(p.submittedAt, p.reviewedAt);
