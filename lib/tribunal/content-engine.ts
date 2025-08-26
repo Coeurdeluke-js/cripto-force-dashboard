@@ -1,7 +1,7 @@
 // Motor de Generación de Carrousels del TRIBUNAL IMPERIAL
 // Este motor genera automáticamente carrousels basados en el patrón de Iniciado
 
-import { CustomModule, ContentBlock, ContentCategory } from './types';
+import { CustomModule, ContentBlock } from './types';
 
 // Interfaz para el carrousel generado
 export interface GeneratedCarrousel {
@@ -9,7 +9,7 @@ export interface GeneratedCarrousel {
   title: string;
   description: string;
   modules: CarrouselModule[];
-  category: ContentCategory;
+  category: 'theoretical' | 'practical' | 'mixed';
   targetLevels: number[];
   totalModules: number;
   totalCheckpoints: number;
@@ -28,7 +28,7 @@ export interface CarrouselModule {
   icon: any;
   path: string;
   metadata: {
-    difficulty: string;
+    difficulty: 'beginner' | 'intermediate' | 'advanced';
     duration: number;
     tags: string[];
     prerequisites: string[];
@@ -199,9 +199,9 @@ export class ContentCarrouselEngine {
    * Genera el título de un módulo basado en su contenido
    */
   private static generateModuleTitle(block: ContentBlock, moduleNumber: number): string {
-    if (block.type === 'text' && block.content.text) {
+    if (block.type === 'text' && typeof block.content === 'string') {
       // Extraer título del primer párrafo o usar número de módulo
-      const firstLine = block.content.text.split('\n')[0];
+      const firstLine = block.content.split('\n')[0];
       if (firstLine.length > 0 && firstLine.length < 100) {
         return firstLine;
       }
@@ -214,9 +214,9 @@ export class ContentCarrouselEngine {
    * Genera la descripción de un módulo
    */
   private static generateModuleDescription(block: ContentBlock): string {
-    if (block.type === 'text' && block.content.text) {
+    if (block.type === 'text' && typeof block.content === 'string') {
       // Usar los primeros 150 caracteres como descripción
-      const text = block.content.text.replace(/\n/g, ' ');
+      const text = block.content.replace(/\n/g, ' ');
       return text.length > 150 ? text.substring(0, 150) + '...' : text;
     }
     
@@ -226,7 +226,7 @@ export class ContentCarrouselEngine {
   /**
    * Determina si un módulo debe estar bloqueado
    */
-  private static shouldModuleBeLocked(moduleIndex: number, difficulty: string): boolean {
+  private static shouldModuleBeLocked(moduleIndex: number, difficulty: 'beginner' | 'intermediate' | 'advanced'): boolean {
     // Los primeros módulos están desbloqueados
     if (moduleIndex < 2) return false;
     
@@ -240,7 +240,7 @@ export class ContentCarrouselEngine {
   /**
    * Determina si un checkpoint debe estar bloqueado
    */
-  private static shouldCheckpointBeLocked(checkpointIndex: number, difficulty: string): boolean {
+  private static shouldCheckpointBeLocked(checkpointIndex: number, difficulty: 'beginner' | 'intermediate' | 'advanced'): boolean {
     // El primer checkpoint siempre está desbloqueado
     if (checkpointIndex === 1) return false;
     
@@ -254,7 +254,7 @@ export class ContentCarrouselEngine {
   /**
    * Obtiene el nivel de un módulo
    */
-  private static getModuleLevel(moduleIndex: number, difficulty: string): string {
+  private static getModuleLevel(moduleIndex: number, difficulty: 'beginner' | 'intermediate' | 'advanced'): string {
     if (moduleIndex < 4) return 'nivel1';
     if (moduleIndex < 8) return 'nivel2';
     return 'nivel3';
@@ -263,7 +263,7 @@ export class ContentCarrouselEngine {
   /**
    * Obtiene el nivel de un checkpoint
    */
-  private static getCheckpointLevel(checkpointIndex: number, difficulty: string): string {
+  private static getCheckpointLevel(checkpointIndex: number, difficulty: 'beginner' | 'intermediate' | 'advanced'): string {
     if (checkpointIndex <= 2) return 'nivel1';
     if (checkpointIndex <= 4) return 'nivel2';
     return 'nivel3';
@@ -272,7 +272,7 @@ export class ContentCarrouselEngine {
   /**
    * Obtiene el icono de un módulo
    */
-  private static getModuleIcon(blockType: string): any {
+  private static getModuleIcon(blockType: ContentBlock['type']): any {
     // Aquí puedes importar y retornar iconos específicos
     // Por ahora retornamos un icono genérico
     return '📚';
@@ -291,7 +291,7 @@ export class ContentCarrouselEngine {
   private static estimateModuleDuration(block: ContentBlock): number {
     switch (block.type) {
       case 'text':
-        return Math.max(15, Math.ceil(block.content.text?.length / 1000) * 10);
+        return Math.max(15, Math.ceil((typeof block.content === 'string' ? block.content.length : 0) / 1000) * 10);
       case 'image':
         return 10;
       case 'video':
