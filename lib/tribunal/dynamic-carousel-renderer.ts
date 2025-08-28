@@ -191,7 +191,7 @@ export class DynamicCarouselRenderer {
    * Aplica estilos según el nivel del dashboard
    */
   private static applyDashboardStyling(container: HTMLElement, dashboardLevel: number): void {
-    const levelStyles = {
+    const levelStyles: Record<number, string> = {
       1: 'border-red-500 bg-gradient-to-r from-red-50 to-red-100', // Iniciado
       2: 'border-yellow-500 bg-gradient-to-r from-yellow-50 to-yellow-100', // Acólito
       3: 'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100', // Warrior
