@@ -257,7 +257,7 @@ export class TribunalIntegrationSystem {
    */
   private static async getExistingCarousel(
     dashboardLevel: number,
-    category: string
+    category: 'theoretical' | 'practical' | 'mixed'
   ): Promise<IntegratedCarousel | null> {
     
     // Aquí implementaríamos la lógica para obtener el carrusel existente
