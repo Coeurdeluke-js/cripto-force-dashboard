@@ -118,7 +118,7 @@ export class CarouselIntegrationEngine {
    */
   private static findOptimalPosition(
     modules: IntegratedModule[],
-    newModule: IntegratedModule
+    newModule: CompiledModule
   ): number {
     
     // Si es el primer módulo, insertar al principio
