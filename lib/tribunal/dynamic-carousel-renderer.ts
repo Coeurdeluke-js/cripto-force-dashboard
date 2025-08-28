@@ -511,7 +511,7 @@ export class DynamicCarouselRenderer {
    * Obtiene el nombre de visualización de una categoría
    */
   private static getCategoryDisplayName(category: string): string {
-    const categoryNames = {
+    const categoryNames: Record<string, string> = {
       'theoretical': 'Teórico',
       'practical': 'Práctico',
       'mixed': 'Mixto'
@@ -524,7 +524,7 @@ export class DynamicCarouselRenderer {
    * Obtiene el color CSS para una dificultad
    */
   private static getDifficultyColor(difficulty: string): string {
-    const difficultyColors = {
+    const difficultyColors: Record<string, string> = {
       'beginner': 'bg-green-100 text-green-800',
       'intermediate': 'bg-yellow-100 text-yellow-800',
       'advanced': 'bg-red-100 text-red-800'
