@@ -76,7 +76,17 @@ export async function checkTribunalSystemHealth(): Promise<{
   };
   errors: string[];
 }> {
-  const health = {
+  const health: {
+    isHealthy: boolean;
+    components: {
+      integration: boolean;
+      compiler: boolean;
+      carousel: boolean;
+      renderer: boolean;
+      voting: boolean;
+    };
+    errors: string[];
+  } = {
     isHealthy: true,
     components: {
       integration: false,
