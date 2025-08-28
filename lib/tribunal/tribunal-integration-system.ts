@@ -193,12 +193,12 @@ export class TribunalIntegrationSystem {
       }
     } else {
       // Procesar todos los módulos secuencialmente
-      for (const module of approvedModules) {
-        const result = await this.processApprovedModule(module, targetDashboardLevel);
+      for (const moduleItem of approvedModules) {
+        const result = await this.processApprovedModule(moduleItem, targetDashboardLevel);
         if (result.success) {
           results.push(result);
         } else {
-          errors.push(`Módulo ${module.title}: ${result.message}`);
+          errors.push(`Módulo ${moduleItem.title}: ${result.message}`);
         }
       }
     }
@@ -293,7 +293,7 @@ export class TribunalIntegrationSystem {
   /**
    * Valida un módulo compilado antes de la integración
    */
-  private static validateCompiledModule(module: CompiledModule): {
+  private static validateCompiledModule(moduleItem: CompiledModule): {
     isValid: boolean;
     errors: string[];
     warnings: string[];
@@ -303,34 +303,34 @@ export class TribunalIntegrationSystem {
     const warnings: string[] = [];
     
     // Validaciones básicas
-    if (!module.title || module.title.trim().length === 0) {
+    if (!moduleItem.title || moduleItem.title.trim().length === 0) {
       errors.push('El título del módulo es obligatorio');
     }
     
-    if (!module.description || module.description.trim().length === 0) {
+    if (!moduleItem.description || moduleItem.description.trim().length === 0) {
       errors.push('La descripción del módulo es obligatoria');
     }
     
-    if (!module.content || module.content.length === 0) {
+    if (!moduleItem.content || moduleItem.content.length === 0) {
       errors.push('El contenido del módulo no puede estar vacío');
     }
     
     // Validaciones de rendimiento
-    if (module.estimatedDuration > 480) { // 8 horas
+    if (moduleItem.estimatedDuration > 480) { // 8 horas
       warnings.push('La duración estimada es muy alta, considere dividir el módulo');
     }
     
-    if (module.content.length > 100) {
+    if (moduleItem.content.length > 100) {
       warnings.push('El módulo tiene muchos bloques de contenido, considere optimizarlo');
     }
     
     // Validaciones estrictas si están habilitadas
     if (INTEGRATION_SYSTEM_CONFIG.VALIDATION_STRICT) {
-      if (!module.thumbnail) {
+      if (!moduleItem.thumbnail) {
         warnings.push('Se recomienda añadir una imagen de portada');
       }
       
-      if (module.tags.length === 0) {
+      if (moduleItem.tags.length === 0) {
         warnings.push('Se recomienda añadir etiquetas para mejor categorización');
       }
     }
