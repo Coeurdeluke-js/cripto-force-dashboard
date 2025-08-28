@@ -1,8 +1,6 @@
 'use client';
 
-import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
 import { 
   BookOpen, 
   TrendingUp, 
@@ -36,6 +34,8 @@ import {
 import { useProgress } from '@/context/ProgressContext';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { useSafeAuth } from '@/context/AuthContext';
+import DynamicTribunalCarousel from './components/DynamicTribunalCarousel';
+import { useTribunalModules } from './hooks/useTribunalModules';
 
 interface Module {
   id: string;
@@ -215,17 +215,14 @@ export default function AcolitoDashboard() {
     setActiveTab(tab);
   };
 
+  // Hook para obtener módulos del Tribunal Imperial
+  const { theoreticalModules, practicalModules, isLoading, error } = useTribunalModules();
+
   const getModulesForTab = () => {
-    return activeTab === 'theoretical' ? theoreticalModulesAcolito : practicalModulesAcolito;
+    return activeTab === 'theoretical' ? theoreticalModules : practicalModules;
   };
 
-  const getTabIcon = () => {
-    return activeTab === 'theoretical' ? <BookOpen className="w-5 h-5" /> : <Play className="w-5 h-5" />;
-  };
 
-  const getTabColor = () => {
-    return activeTab === 'theoretical' ? 'text-[#FFD447]' : 'text-[#FFD447]';
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#121212] via-[#1a1a1a] to-[#0f0f0f] text-white">
@@ -395,96 +392,70 @@ export default function AcolitoDashboard() {
               <span className="hidden sm:inline">Práctico</span>
               <span className="sm:hidden">Práctico</span>
             </button>
-          </div>
+        </div>
       </div>
 
-        {/* Módulos del Acólito */}
+        {/* Módulos del Tribunal Imperial - Sistema Dinámico */}
         <div className="w-full max-w-6xl mx-auto mb-8 px-2 md:px-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
-            {getModulesForTab().map((module, index) => (
-              <div
-                key={module.id}
-                className={`group relative rounded-xl border border-[#232323] transition-all duration-300 transform hover:scale-105 cursor-pointer ${
-                  module.isLocked 
-                    ? 'border-gray-700 bg-gray-800/50' 
-                    : 'bg-[#1a1a1a] hover:border-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 hover:border-t-2 hover:border-t-[#FFD447]'
-                }`}
-                onMouseEnter={() => setHoveredModule(module.id)}
-                onMouseLeave={() => setHoveredModule(null)}
-                onClick={() => !module.isLocked && (window.location.href = module.path)}
-              >
-                {/* Fondo con gradiente amarillo */}
-                <div 
-                  className={`absolute inset-0 opacity-10 transition-opacity duration-300 group-hover:opacity-20 ${
-                    module.isLocked ? 'bg-gray-600' : 'bg-gradient-to-br from-[#FFD447]/20 to-[#FFD447]/30'
-                  }`}
-                />
-                
-                {/* Contenido */}
-                <div className="relative p-6">
-                  {/* Header del módulo */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                      module.isLocked ? 'bg-gray-600' : 'bg-[#FFD447]/20'
-                    }`}>
-                      <div className={`${module.isLocked ? 'text-gray-400' : 'text-[#FFD447]'}`}>
-                        {module.icon}
-          </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {module.isLocked ? (
-                        <Lock className="w-5 h-5 text-gray-500" />
-                      ) : (
-                        <CheckCircle className="w-5 h-5 text-[#FFD447]" />
-                      )}
-                    </div>
-                  </div>
+          {/* Estado de carga */}
+          {isLoading && (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FFD447] mx-auto mb-4"></div>
+              <p className="text-gray-400">Cargando módulos del Tribunal Imperial...</p>
+            </div>
+          )}
 
-                  {/* Título y descripción */}
-                  <h3 className={`text-lg font-semibold mb-2 ${
-                    module.isLocked ? 'text-gray-400' : 'text-white'
-                  }`}>
-                    {module.title}
-                  </h3>
-                  <p className={`text-sm mb-4 ${
-                    module.isLocked ? 'text-gray-500' : 'text-gray-300'
-                  }`}>
-                    {module.description}
-                  </p>
-
-                  {/* Nivel del módulo */}
-                  <div className="bg-[#2a2a2a]/50 rounded-lg p-3 border border-[#3a3a3a] mb-4">
-                    <p className="text-[#FFD447] text-xs font-medium">
-                      Nivel {module.level === 'nivel2' ? '2' : '3'} - {module.type === 'content' ? 'Contenido' : 'Punto de Control'}
-                    </p>
-                  </div>
-
-                  {/* Botón de acceso */}
-                  <button
-                    className={`w-full py-2 px-4 rounded-lg font-medium text-sm transition-all duration-300 ${
-                      module.isLocked
-                        ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                        : 'bg-[#FFD447]/20 text-[#FFD447] hover:bg-[#FFD447]/30 border border-[#FFD447]/30 hover:border-[#FFD447]/50'
-                    }`}
-                    disabled={module.isLocked}
-                  >
-                    {module.isLocked ? 'Bloqueado' : 'Acceder al Módulo'}
-                  </button>
-                </div>
-
-                {/* Borde de color sutil - removido ya que ahora tenemos borde completo */}
+          {/* Estado de error */}
+          {error && (
+            <div className="text-center py-12">
+              <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-6">
+                <p className="text-red-400 mb-2">Error al cargar módulos</p>
+                <p className="text-gray-400 text-sm">{error}</p>
               </div>
-            ))}
-          </div>
-          
-          {/* Texto de navegación */}
-          <div className="text-center mt-6">
-            <p className="text-gray-400 text-sm flex items-center justify-center gap-2">
-              <span>Usa la rueda del mouse o arrastra para navegar</span>
-              <span className="text-[#FFD447]">→</span>
-            </p>
-          </div>
-                    </div>
+            </div>
+          )}
+
+          {/* Carousel dinámico según categoría seleccionada */}
+          {!isLoading && !error && (
+            <>
+              {activeTab === 'theoretical' && (
+                <DynamicTribunalCarousel
+                  modules={theoreticalModules}
+                  title="Módulos Teóricos del Acólito"
+                  category="theoretical"
+                  className="mb-8"
+                />
+              )}
+              
+              {activeTab === 'practical' && (
+                <DynamicTribunalCarousel
+                  modules={practicalModules}
+                  title="Módulos Prácticos del Acólito"
+                  category="practical"
+                  className="mb-8"
+                />
+              )}
+            </>
+          )}
+
+          {/* Mensaje cuando no hay módulos */}
+          {!isLoading && !error && theoreticalModules.length === 0 && practicalModules.length === 0 && (
+            <div className="text-center py-12">
+              <div className="bg-[#1a1a1a] border border-[#232323] rounded-lg p-8">
+                <BookOpen className="w-16 h-16 text-[#FFD447] mx-auto mb-4 opacity-50" />
+                <h3 className="text-xl font-semibold text-[#FFD447] mb-2">
+                  No hay módulos disponibles aún
+                </h3>
+                <p className="text-gray-400 mb-4">
+                  Los módulos aparecerán aquí una vez que sean aprobados por el Tribunal Imperial
+                </p>
+                <p className="text-gray-500 text-sm">
+                  Los Darths y Maestros pueden crear contenido que será revisado y aprobado por el sistema de votación
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Objetivos del Acólito */}
         <div className="w-full max-w-6xl mx-auto mb-8 px-2 md:px-0">

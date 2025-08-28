@@ -739,14 +739,14 @@ export default function TribunalImperialPage() {
               <h2 className="text-2xl font-bold text-[#FFD700]">Crear Nueva Propuesta</h2>
             </div>
             
-                         <ContentEditor
+            <ContentEditor
                onSave={handleSaveProposal}
                onPreview={handlePreviewContent}
                onProposalCreated={handleProposalCreated}
                authorId={userData?.id || 'default'}
                authorName={userData?.email || 'Usuario'}
                authorLevel={userData?.user_level || 6}
-             />
+            />
           </div>
         )}
 
@@ -768,7 +768,7 @@ export default function TribunalImperialPage() {
         {activeTab === 'aprobados' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-[#FFD700]">Contenido Aprobado</h2>
+            <h2 className="text-2xl font-bold text-[#FFD700]">Contenido Aprobado</h2>
               <div className="text-sm text-gray-400">
                 Propuestas que han sido aprobadas por unanimidad
               </div>
@@ -782,7 +782,7 @@ export default function TribunalImperialPage() {
         {activeTab === 'rechazados' && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-[#FFD700]">Contenido Rechazado</h2>
+            <h2 className="text-2xl font-bold text-[#FFD700]">Contenido Rechazado</h2>
               <div className="text-sm text-gray-400">
                 Propuestas que han sido rechazadas por al menos un Maestro
               </div>
