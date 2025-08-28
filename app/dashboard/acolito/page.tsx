@@ -321,8 +321,8 @@ export default function AcolitoDashboard() {
               </div>
               <h4 className="text-lg font-semibold text-white mb-2">Alcanzar 75% del curso completo</h4>
               <p className="text-gray-400 text-sm">Progreso hacia la maestría</p>
-            </div>
-            
+      </div>
+
             <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 text-center hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
               <div className="w-12 h-12 bg-[#FFD447]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Target className="w-6 h-6 text-[#FFD447]" />
@@ -396,7 +396,7 @@ export default function AcolitoDashboard() {
               <span className="sm:hidden">Práctico</span>
             </button>
           </div>
-        </div>
+      </div>
 
         {/* Módulos del Acólito */}
         <div className="w-full max-w-6xl mx-auto mb-8 px-2 md:px-0">
@@ -429,7 +429,7 @@ export default function AcolitoDashboard() {
                     }`}>
                       <div className={`${module.isLocked ? 'text-gray-400' : 'text-[#FFD447]'}`}>
                         {module.icon}
-                      </div>
+          </div>
                     </div>
                     <div className="flex items-center gap-2">
                       {module.isLocked ? (
@@ -484,7 +484,7 @@ export default function AcolitoDashboard() {
               <span className="text-[#FFD447]">→</span>
             </p>
           </div>
-        </div>
+                    </div>
 
         {/* Objetivos del Acólito */}
         <div className="w-full max-w-6xl mx-auto mb-8 px-2 md:px-0">
@@ -529,7 +529,7 @@ export default function AcolitoDashboard() {
               </div>
             ))}
           </div>
-        </div>
+                  </div>
 
         {/* Información Adicional */}
         <div className="w-full max-w-6xl mx-auto mb-8 px-2 md:px-0">
@@ -542,7 +542,7 @@ export default function AcolitoDashboard() {
               <p className="text-gray-300 text-sm">
                 Continúa tu aprendizaje con los módulos disponibles. Cada módulo te acerca más a convertirte en un trader profesional.
               </p>
-            </div>
+                  </div>
             
             <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
               <div className="flex items-center gap-3 mb-4">
@@ -554,7 +554,7 @@ export default function AcolitoDashboard() {
               </p>
             </div>
           </div>
-        </div>
+                  </div>
 
         {/* Estadísticas del Acólito */}
         <div className="w-full max-w-6xl mx-auto px-2 md:px-0">
@@ -565,11 +565,11 @@ export default function AcolitoDashboard() {
             <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 text-center hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
               <div className="w-16 h-16 bg-[#FFD447]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <BookOpen className="w-8 h-8 text-[#FFD447]" />
-              </div>
+                  </div>
               <h4 className="text-lg font-semibold text-white mb-2">Módulos Teóricos</h4>
               <p className="text-2xl font-bold text-[#FFD447]">4</p>
               <p className="text-gray-400 text-sm">Disponibles para el acólito</p>
-            </div>
+                  </div>
             
             <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 text-center hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
               <div className="w-16 h-16 bg-[#FFD447]/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -578,7 +578,7 @@ export default function AcolitoDashboard() {
               <h4 className="text-lg font-semibold text-white mb-2">Módulos Prácticos</h4>
               <p className="text-2xl font-bold text-[#FFD447]">2</p>
               <p className="text-gray-400 text-sm">Para dominar las técnicas</p>
-            </div>
+                </div>
             
             <div className="bg-[#1a1a1a] border border-[#232323] rounded-xl p-6 text-center hover:border-[#FFD447] hover:border-t-2 hover:border-t-[#FFD447] hover:shadow-lg hover:shadow-[#FFD447]/20 transition-all duration-300">
               <div className="w-16 h-16 bg-[#FFD447]/20 rounded-full flex items-center justify-center mx-auto mb-4">

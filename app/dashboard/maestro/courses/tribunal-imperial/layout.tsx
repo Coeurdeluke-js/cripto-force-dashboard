@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { canUserAccessTribunal } from '@/lib/tribunal/permissions';
 
-
 export default function TribunalImperialLayout({
   children,
 }: {
@@ -47,15 +46,7 @@ export default function TribunalImperialLayout({
     return null;
   }
 
-  return (
-    <div className="flex h-screen bg-[#0f0f0f]">
-      {/* Debug temporal */}
-      
-      
-      {/* Contenido principal - sin sidebar personalizada */}
-      <div className="flex-1 overflow-auto">
-        {children}
-      </div>
-    </div>
-  );
+  // Renderizar solo el contenido, sin contenedor adicional
+  // El layout principal del Maestro se encargará de la sidebar y el contenedor
+  return <>{children}</>;
 }

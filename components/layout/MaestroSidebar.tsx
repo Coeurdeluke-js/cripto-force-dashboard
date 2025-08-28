@@ -66,7 +66,7 @@ const menuItems: MenuItem[] = [
     icon: UserPlus
   },
   {
-    label: 'Navegar por Dashboards',
+    label: 'Dashboards',
     href: '/dashboard/maestro/dashboard-selection',
     icon: Compass
   },

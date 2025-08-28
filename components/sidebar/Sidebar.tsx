@@ -116,7 +116,7 @@ export default function Sidebar() {
         {/* Logo y nombre */}
         <div className="flex flex-col items-center space-y-3">
           <div className="relative w-10 h-10">
-            <Image
+          <Image
               src={`/images/insignias/${currentDashboardLevel}-${
                 currentDashboardLevel === 1 ? 'iniciados' :
                 currentDashboardLevel === 2 ? 'acolitos' :
@@ -129,8 +129,8 @@ export default function Sidebar() {
               width={40}
               height={40}
               className="rounded-lg"
-            />
-          </div>
+          />
+        </div>
           {isExpanded && (
             <div className="flex flex-col items-center">
               <span className={`text-xl font-bold ${
@@ -144,22 +144,22 @@ export default function Sidebar() {
                  currentDashboardLevel === 5 ? 'Darth' :
                  currentDashboardLevel === 6 ? 'Maestro' : 'Iniciado'}
               </span>
-            </div>
+      </div>
           )}
-          
+
           {/* Botón de toggle */}
-          <button
-            onClick={toggleSidebar}
+        <button
+          onClick={toggleSidebar}
             className="group p-2 rounded-lg hover:bg-[#232323] transition-all duration-200"
             title={isExpanded ? "Contraer sidebar" : "Expandir sidebar"}
-          >
+        >
             <span className={`flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-gray-400 ${
               currentDashboardLevel === 2 ? 'group-hover:text-[#FFD447]' : 'group-hover:text-[#ec4d58]'
             }`}>
-              <Menu size={20} />
-            </span>
-          </button>
-        </div>
+            <Menu size={20} />
+          </span>
+        </button>
+      </div>
       </div>
 
       {/* Navegación principal */}

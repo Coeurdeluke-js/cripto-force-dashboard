@@ -1,12 +1,17 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import { Plus, X, Eye, Save, FileText, Image as ImageIcon, Video, Link, Code, Quote, Minus, CheckSquare, Upload, Bold, Italic, Underline, Type, Move, Maximize2 } from 'lucide-react';
+import { Plus, X, Eye, Save, FileText, Image as ImageIcon, Video, Link, Code, Quote, Minus, CheckSquare, Upload, Bold, Italic, Underline, Type, Move, Maximize2, ArrowLeft } from 'lucide-react';
 import { ContentBlock } from '@/lib/tribunal/types';
+import { useProposals, TribunalProposal } from '@/lib/tribunal/hooks/useProposals';
 
 interface ContentEditorProps {
-  onSave: (content: ContentBlock[]) => void;
-  onPreview: (content: ContentBlock[]) => void;
+  onSave?: (content: ContentBlock[]) => void;
+  onPreview?: (content: ContentBlock[]) => void;
+  onProposalCreated?: (proposal: any) => void;
+  authorId?: string;
+  authorName?: string;
+  authorLevel?: number;
 }
 
 // Nueva paleta de colores basada en la identidad visual de Crypto Force
@@ -30,7 +35,14 @@ const TEXT_SIZES = [
   { value: 'text-3xl', label: 'Título Principal' }
 ];
 
-export default function ContentEditor({ onSave, onPreview }: ContentEditorProps) {
+export default function ContentEditor({ 
+  onSave, 
+  onPreview, 
+  onProposalCreated,
+  authorId = 'default_author',
+  authorName = 'Autor',
+  authorLevel = 6
+}: ContentEditorProps) {
   const [blocks, setBlocks] = useState<ContentBlock[]>([]);
   const [moduleTitle, setModuleTitle] = useState('');
   const [moduleDescription, setModuleDescription] = useState('');
@@ -40,6 +52,9 @@ export default function ContentEditor({ onSave, onPreview }: ContentEditorProps)
   const [draggedBlock, setDraggedBlock] = useState<string | null>(null);
   const [dragOverBlock, setDragOverBlock] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Hook para gestionar propuestas
+  const { createProposal } = useProposals();
 
   const addBlock = (type: ContentBlock['type']) => {
     const newBlock: ContentBlock = {
@@ -56,12 +71,27 @@ export default function ContentEditor({ onSave, onPreview }: ContentEditorProps)
         height: type === 'image' ? 'auto' : undefined
       }
     };
+    
+    // Si es el primer bloque y no hay título, establecer uno por defecto
+    if (blocks.length === 0 && !moduleTitle.trim()) {
+      setModuleTitle('Nuevo Módulo');
+    }
+    
+    // Si es el primer bloque y no hay descripción, establecer una por defecto
+    if (blocks.length === 0 && !moduleDescription.trim()) {
+      setModuleDescription('Descripción del módulo');
+    }
+    
     setBlocks([...blocks, newBlock]);
   };
 
   const updateBlock = (id: string, content: string, metadata?: any) => {
     setBlocks(blocks.map(block => 
-      block.id === id ? { ...block, content, ...(metadata && { metadata: { ...block.metadata, ...metadata } }) } : block
+      block.id === id ? { 
+        ...block, 
+        content: content.trim() === '' ? ' ' : content, // Evitar contenido completamente vacío
+        ...(metadata && { metadata: { ...block.metadata, ...metadata } }) 
+      } : block
     ));
   };
 
@@ -184,10 +214,19 @@ export default function ContentEditor({ onSave, onPreview }: ContentEditorProps)
             width: '100%',
             height: 'auto'
           });
+          console.log(`✅ Imagen cargada exitosamente para el bloque ${blockId}:`, file.name);
+        } else {
+          console.error('❌ Error al cargar la imagen: resultado vacío');
         }
+      };
+      reader.onerror = () => {
+        console.error('❌ Error al leer el archivo de imagen');
+        alert('Error al cargar la imagen. Por favor, intenta de nuevo.');
       };
       reader.readAsDataURL(file);
     }
+    // Limpiar el input para permitir cargar la misma imagen nuevamente
+    event.target.value = '';
   };
 
   const triggerImageUpload = (blockId: string) => {
@@ -198,8 +237,15 @@ export default function ContentEditor({ onSave, onPreview }: ContentEditorProps)
   };
 
   const handlePreview = () => {
+    if (blocks.length === 0) {
+      alert('Por favor, agrega al menos un bloque de contenido antes de ver la vista previa');
+      return;
+    }
+    
     setShowPreview(true);
-    onPreview(blocks);
+    if (onPreview) {
+      onPreview(blocks);
+    }
   };
 
   const handleSave = () => {
@@ -207,7 +253,55 @@ export default function ContentEditor({ onSave, onPreview }: ContentEditorProps)
       alert('Por favor, ingresa un título para el módulo');
       return;
     }
-    onSave(blocks);
+    
+    if (blocks.length === 0) {
+      alert('Por favor, agrega al menos un bloque de contenido antes de guardar');
+      return;
+    }
+    
+
+    
+    try {
+      // Crear la propuesta usando el hook
+      const proposal = createProposal({
+        title: moduleTitle,
+        description: moduleDescription,
+        category: moduleCategory,
+        targetHierarchy,
+        content: blocks,
+        authorId,
+        authorName,
+        authorLevel,
+        status: 'draft',
+        votes: {
+          maestros: [],
+          approvals: [],
+          rejections: []
+        }
+      });
+      
+      // Llamar al callback si existe
+      if (onProposalCreated) {
+        onProposalCreated(proposal);
+      }
+      
+      // Llamar al callback original si existe
+      if (onSave) {
+        onSave(blocks);
+      }
+      
+            // Mostrar confirmación
+      alert('Propuesta guardada exitosamente en localStorage');
+      
+      // Opcional: limpiar el editor después de guardar
+      // setBlocks([]);
+      // setModuleTitle('');
+      // setModuleDescription('');
+      
+    } catch (error) {
+      console.error('Error al guardar la propuesta:', error);
+      alert('Error al guardar la propuesta. Por favor, intenta de nuevo.');
+    }
   };
 
   const getCurrentHierarchy = () => {
@@ -313,50 +407,219 @@ export default function ContentEditor({ onSave, onPreview }: ContentEditorProps)
               />
             </div>
             
-            {/* Vista previa de la imagen con controles de redimensionamiento */}
-            {block.content && (
-              <div className="mt-3">
-                <div className="relative inline-block">
-                  <img 
-                    src={block.content} 
-                    alt="Vista previa" 
-                    className="max-w-full rounded-lg border border-[#444]"
-                    style={{
-                      width: block.metadata?.width || '100%',
-                      height: block.metadata?.height || 'auto'
-                    }}
-                  />
-                  <div className="absolute bottom-2 right-2 bg-[#1a1a1a] rounded-lg p-2 border border-[#444]">
-                    <div className="flex items-center space-x-2 text-white text-xs">
-                      <Maximize2 size={14} />
-                      <span>Redimensionar</span>
-                    </div>
-                  </div>
-                </div>
+                             {/* Vista previa de la imagen con botón de redimensionamiento */}
+                 {block.content && (
+                   <div className="mt-3">
+                     <div className="relative inline-block">
+                       <img 
+                         src={block.content} 
+                         alt="Vista previa" 
+                         className="max-w-full rounded-lg border border-[#444]"
+                         style={{
+                           width: block.metadata?.width || '100%',
+                           height: block.metadata?.height || 'auto'
+                         }}
+                       />
+                       <button
+                         onClick={() => updateBlock(block.id, block.content, { 
+                           ...block.metadata, 
+                           showResizeMenu: !block.metadata?.showResizeMenu 
+                         })}
+                         className="absolute bottom-2 right-2 bg-[#1a1a1a] hover:bg-[#2a2a2a] rounded-lg p-2 border border-[#444] transition-colors"
+                         title="Redimensionar imagen"
+                       >
+                         <div className="flex items-center space-x-2 text-white text-xs">
+                           <Maximize2 size={14} />
+                           <span>Redimensionar</span>
+                         </div>
+                       </button>
+                     </div>
                 
-                {/* Controles de redimensionamiento */}
-                <div className="mt-3 grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm text-gray-300 mb-1">Ancho</label>
-                    <input
-                      type="text"
-                      value={block.metadata?.width || '100%'}
-                      onChange={(e) => updateBlock(block.id, block.content, { ...block.metadata, width: e.target.value })}
-                      placeholder="100% o 300px"
-                      className="w-full p-2 bg-[#2a2a2a] border border-[#444] rounded text-white text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-gray-300 mb-1">Alto</label>
-                    <input
-                      type="text"
-                      value={block.metadata?.height || 'auto'}
-                      onChange={(e) => updateBlock(block.id, block.content, { ...block.metadata, height: e.target.value })}
-                      placeholder="auto o 200px"
-                      className="w-full p-2 bg-[#2a2a2a] border border-[#444] rounded text-white text-sm"
-                    />
-                  </div>
-                </div>
+                                 {/* Menú desplegable de redimensionamiento */}
+                 {block.metadata?.showResizeMenu && (
+                   <div className="mt-3 bg-[#1a1a1a] border border-[#444] rounded-lg p-4 shadow-lg">
+                     <div className="flex items-center justify-between mb-4">
+                       <h4 className="text-sm font-semibold text-[#FFD447]">Configuración de Imagen</h4>
+                       <button
+                         onClick={() => updateBlock(block.id, block.content, { ...block.metadata, showResizeMenu: false })}
+                         className="text-gray-400 hover:text-white"
+                       >
+                         <X size={16} />
+                       </button>
+                     </div>
+                     
+                     <div className="space-y-4">
+                       {/* Posicionamiento */}
+                       <div>
+                         <label className="block text-sm text-gray-300 mb-2">Posicionamiento</label>
+                         <div className="flex items-center space-x-2">
+                           <button
+                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, alignment: 'left' })}
+                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                               block.metadata?.alignment === 'left' 
+                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
+                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
+                             }`}
+                           >
+                             ← Izquierda
+                           </button>
+                           <button
+                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, alignment: 'center' })}
+                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                               block.metadata?.alignment === 'center' 
+                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
+                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
+                             }`}
+                           >
+                             ↕ Centro
+                           </button>
+                           <button
+                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, alignment: 'right' })}
+                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                               block.metadata?.alignment === 'right' 
+                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
+                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
+                             }`}
+                           >
+                             → Derecha
+                           </button>
+                         </div>
+                       </div>
+                       
+                       {/* Redimensionamiento */}
+                       <div>
+                         <label className="block text-sm text-gray-300 mb-2">Redimensionamiento</label>
+                         <div className="grid grid-cols-2 gap-3">
+                           <div>
+                             <label className="block text-xs text-gray-400 mb-1">Ancho</label>
+                             <div className="flex items-center space-x-2">
+                               <button
+                                 onClick={() => {
+                                   const currentWidth = block.metadata?.width || '100%';
+                                   const numericWidth = currentWidth === '100%' ? 100 : parseInt(currentWidth);
+                                   if (!isNaN(numericWidth)) {
+                                     const newWidth = Math.max(10, numericWidth - 10);
+                                     updateBlock(block.id, block.content, { ...block.metadata, width: `${newWidth}%` });
+                                   }
+                                 }}
+                                 className="p-1 bg-[#333] text-gray-300 hover:text-white rounded text-sm"
+                                 title="Reducir ancho 10%"
+                               >
+                                 <Minus size={14} />
+                               </button>
+                               <input
+                                 type="text"
+                                 value={block.metadata?.width || '100%'}
+                                 onChange={(e) => updateBlock(block.id, block.content, { ...block.metadata, width: e.target.value })}
+                                 placeholder="100%"
+                                 className="flex-1 p-2 bg-[#2a2a2a] border border-[#444] rounded text-white text-sm text-center"
+                               />
+                               <button
+                                 onClick={() => {
+                                   const currentWidth = block.metadata?.width || '100%';
+                                   const numericWidth = currentWidth === '100%' ? 100 : parseInt(currentWidth);
+                                   if (!isNaN(numericWidth)) {
+                                     const newWidth = Math.min(200, numericWidth + 10);
+                                     updateBlock(block.id, block.content, { ...block.metadata, width: `${newWidth}%` });
+                                   }
+                                 }}
+                                 className="p-1 bg-[#333] text-gray-300 hover:text-white rounded text-sm"
+                                 title="Aumentar ancho 10%"
+                               >
+                                 <Plus size={14} />
+                               </button>
+                             </div>
+                           </div>
+                           <div>
+                             <label className="block text-xs text-gray-400 mb-1">Alto</label>
+                             <div className="flex items-center space-x-2">
+                               <button
+                                 onClick={() => {
+                                   const currentHeight = block.metadata?.height || 'auto';
+                                   if (currentHeight === 'auto') {
+                                     updateBlock(block.id, block.content, { ...block.metadata, height: '200px' });
+                                   } else {
+                                     const numericHeight = parseInt(currentHeight);
+                                     if (!isNaN(numericHeight)) {
+                                       const newHeight = Math.max(50, numericHeight - 20);
+                                       updateBlock(block.id, block.content, { ...block.metadata, height: `${newHeight}px` });
+                                     }
+                                   }
+                                 }}
+                                 className="p-1 bg-[#333] text-gray-300 hover:text-white rounded text-sm"
+                                 title="Reducir alto 20px"
+                               >
+                                 <Minus size={14} />
+                               </button>
+                                                                <input
+                                   type="text"
+                                   value={block.metadata?.height || 'auto'}
+                                   onChange={(e) => updateBlock(block.id, block.content, { ...block.metadata, height: e.target.value })}
+                                   placeholder="auto o 200px"
+                                   className="flex-1 p-2 bg-[#2a2a2a] border border-[#444] rounded text-white text-sm text-center"
+                                 />
+                                 <button
+                                 onClick={() => {
+                                   const currentHeight = block.metadata?.height || 'auto';
+                                   if (currentHeight === 'auto') {
+                                     updateBlock(block.id, block.content, { ...block.metadata, height: '200px' });
+                                   } else {
+                                     const numericHeight = parseInt(currentHeight);
+                                     if (!isNaN(numericHeight)) {
+                                       const newHeight = Math.min(800, numericHeight + 20);
+                                       updateBlock(block.id, block.content, { ...block.metadata, height: `${newHeight}px` });
+                                     }
+                                   }
+                                 }}
+                                 className="p-1 bg-[#333] text-gray-300 hover:text-white rounded text-sm"
+                                 title="Aumentar alto 20px"
+                               >
+                                 <Plus size={14} />
+                               </button>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       
+                       {/* Texto alrededor */}
+                       <div>
+                         <label className="block text-sm text-gray-300 mb-2">Texto alrededor de la imagen</label>
+                         <div className="flex items-center space-x-2">
+                           <button
+                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, textWrap: 'left' })}
+                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                               block.metadata?.textWrap === 'left' 
+                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
+                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
+                             }`}
+                           >
+                             📝 Texto a la derecha
+                           </button>
+                           <button
+                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, textWrap: 'right' })}
+                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                               block.metadata?.textWrap === 'right' 
+                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
+                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
+                             }`}
+                           >
+                             📝 Texto a la izquierda
+                           </button>
+                           <button
+                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, textWrap: 'none' })}
+                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                               block.metadata?.textWrap === 'none' 
+                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
+                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
+                             }`}
+                           >
+                             🚫 Sin texto alrededor
+                           </button>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 )}
               </div>
             )}
             
@@ -477,35 +740,51 @@ export default function ContentEditor({ onSave, onPreview }: ContentEditorProps)
             </p>
           </div>
         );
-      case 'image':
-        return (
-          <div className="my-4">
-            {block.content ? (
-              <>
-                <img 
-                  src={block.content} 
-                  alt={block.metadata?.alt || 'Imagen'} 
-                  className="max-w-full rounded-lg border border-[#444]"
-                  style={{
-                    width: block.metadata?.width || '100%',
-                    height: block.metadata?.height || 'auto'
-                  }}
-                  onError={(e) => {
-                    e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbiBubyBlbmNvbnRyYWRhPC90ZXh0Pjwvc3ZnPg==';
-                  }}
-                />
-                {block.metadata?.alt && (
-                  <p className="text-sm text-gray-400 mt-2 italic">{block.metadata.alt}</p>
-                )}
-              </>
-            ) : (
-              <div className="bg-[#2a2a2a] border border-[#444] rounded-lg p-8 text-center">
-                <ImageIcon size={48} className="text-gray-500 mx-auto mb-2" />
-                <p className="text-gray-400">Sin imagen</p>
-              </div>
-            )}
-          </div>
-        );
+             case 'image':
+         return (
+           <div className="my-4">
+             {block.content ? (
+               <div 
+                 className={`${
+                   block.metadata?.textWrap === 'left' ? 'float-right ml-4 mb-2' :
+                   block.metadata?.textWrap === 'right' ? 'float-left mr-4 mb-2' :
+                   'block'
+                 }`}
+                 style={{
+                   textAlign: block.metadata?.alignment || 'left',
+                   width: block.metadata?.width || '100%',
+                   maxWidth: block.metadata?.width === '100%' ? '100%' : 'auto'
+                 }}
+               >
+                 <img 
+                   src={block.content} 
+                   alt={block.metadata?.alt || 'Imagen'} 
+                   className="max-w-full rounded-lg border border-[#444]"
+                   style={{
+                     width: block.metadata?.width || '100%',
+                     height: block.metadata?.height || 'auto',
+                     display: 'block',
+                     float: block.metadata?.textWrap === 'left' ? 'left' : 
+                            block.metadata?.textWrap === 'right' ? 'right' : 'none',
+                     margin: block.metadata?.textWrap === 'left' ? '0 1rem 0.5rem 0' :
+                             block.metadata?.textWrap === 'right' ? '0 0 0.5rem 1rem' : '0'
+                   }}
+                   onError={(e) => {
+                     e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbiBubyBlbmNvbnRyYWRhPC90ZXh0Pjwvc3ZnPg==';
+                   }}
+                 />
+                 {block.metadata?.alt && (
+                   <p className="text-sm text-gray-400 mt-2 italic">{block.metadata.alt}</p>
+                 )}
+               </div>
+             ) : (
+               <div className="bg-[#2a2a2a] border border-[#444] rounded-lg p-8 text-center">
+                 <ImageIcon size={48} className="text-gray-500 mx-auto mb-2" />
+                 <p className="text-gray-400">Sin imagen</p>
+               </div>
+             )}
+           </div>
+         );
       case 'video':
         return (
           <div className="my-4">
@@ -664,23 +943,57 @@ export default function ContentEditor({ onSave, onPreview }: ContentEditorProps)
 
       {/* Editor de Contenido */}
       <div className="bg-[#1a1a1a] border border-[#333] rounded-lg p-6">
+        {/* Barra de estado de la propuesta */}
+        <div className="mb-4 p-3 bg-[#2a2a2a] border border-[#444] rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <span className={`w-2 h-2 rounded-full ${moduleTitle.trim() ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                <span className="text-sm text-gray-400">
+                  {moduleTitle.trim() ? 'Título ✓' : 'Título requerido'}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className={`w-2 h-2 rounded-full ${blocks.length > 0 ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                <span className="text-sm text-gray-400">
+                  {blocks.length > 0 ? `${blocks.length} bloque${blocks.length !== 1 ? 's' : ''} ✓` : 'Sin contenido'}
+                </span>
+              </div>
+            </div>
+            <div className="text-sm text-gray-500">
+              {moduleTitle.trim() && blocks.length > 0 ? '✅ Listo para guardar' : '⚠️ Completar propuesta'}
+            </div>
+          </div>
+        </div>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-[#FFD447]">Contenido del Módulo</h3>
-          <div className="flex space-x-2">
-            <button
-              onClick={handlePreview}
-              className="flex items-center space-x-2 px-4 py-2 bg-[#333] text-white rounded-lg hover:bg-[#444] transition-colors"
-            >
-              <Eye size={16} />
-              <span>Vista Previa</span>
-            </button>
-            <button
-              onClick={handleSave}
-              className="flex items-center space-x-2 px-4 py-2 bg-[#FFD447] text-[#1a1a1a] rounded-lg hover:bg-[#FFA500] transition-colors"
-            >
-              <Save size={16} />
-              <span>Guardar Propuesta</span>
-            </button>
+          <div className="flex items-center space-x-4">
+            {/* Indicador de estado */}
+            <div className="flex items-center space-x-2 text-sm">
+              <span className={`w-3 h-3 rounded-full ${blocks.length > 0 ? 'bg-green-500' : 'bg-red-500'}`}></span>
+              <span className="text-gray-400">
+                {blocks.length > 0 ? `${blocks.length} bloque${blocks.length !== 1 ? 's' : ''}` : 'Sin bloques'}
+              </span>
+            </div>
+            
+            <div className="flex space-x-2">
+              <button
+                onClick={handlePreview}
+                disabled={blocks.length === 0}
+                className="flex items-center space-x-2 px-4 py-2 bg-[#333] text-white rounded-lg hover:bg-[#444] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Eye size={16} />
+                <span>Vista Previa</span>
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={blocks.length === 0}
+                className="flex items-center space-x-2 px-4 py-2 bg-[#FFD447] text-[#1a1a1a] rounded-lg hover:bg-[#FFA500] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Save size={16} />
+                <span>Guardar Propuesta</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -837,9 +1150,13 @@ export default function ContentEditor({ onSave, onPreview }: ContentEditorProps)
                 <FileText size={64} className="mx-auto mb-4 text-[#FFD447]" />
                 <h3 className="text-xl font-semibold text-[#FFD447] mb-2">¡Comienza a crear contenido!</h3>
                 <p className="text-gray-300 mb-4">No hay bloques de contenido aún. Usa los botones de arriba para agregar tu primer elemento.</p>
-                <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
+                <div className="flex items-center justify-center space-x-2 text-sm text-gray-400 mb-4">
                   <span>💡</span>
                   <span>Usa los botones de arriba para agregar contenido</span>
+                </div>
+                <div className="text-xs text-gray-500 bg-[#1a1a1a] p-3 rounded-lg border border-[#333]">
+                  <p><strong>💾 Para guardar:</strong> Agrega al menos un bloque de contenido</p>
+                  <p><strong>👁️ Para vista previa:</strong> Agrega al menos un bloque de contenido</p>
                 </div>
               </div>
             </div>
@@ -867,12 +1184,21 @@ export default function ContentEditor({ onSave, onPreview }: ContentEditorProps)
           <div className="bg-[#1a1a1a] border border-[#333] rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-[#1a1a1a] border-b border-[#333] p-4 flex items-center justify-between">
               <h3 className="text-xl font-semibold text-[#FFD700]">Vista Previa del Módulo</h3>
-              <button
-                onClick={() => setShowPreview(false)}
-                className="p-2 text-gray-400 hover:text-white hover:bg-[#333] rounded-lg transition-colors"
-              >
-                <X size={20} />
-              </button>
+                             <div className="flex items-center space-x-2">
+                 <button
+                   onClick={() => setShowPreview(false)}
+                   className="flex items-center space-x-2 px-4 py-2 bg-[#4671D5] text-white rounded-lg hover:bg-[#5a7de0] transition-colors"
+                 >
+                   <ArrowLeft size={16} />
+                   <span>Volver</span>
+                 </button>
+                 <button
+                   onClick={() => setShowPreview(false)}
+                   className="p-2 text-gray-400 hover:text-white hover:bg-[#333] rounded-lg transition-colors"
+                 >
+                   <X size={20} />
+                 </button>
+               </div>
             </div>
             <div className="p-6">
               {/* Header del módulo */}
@@ -882,42 +1208,49 @@ export default function ContentEditor({ onSave, onPreview }: ContentEditorProps)
                   <p className="text-lg text-gray-300 mb-4">{moduleDescription}</p>
                 )}
                 <div className="flex items-center justify-center space-x-4 text-sm text-gray-400">
-                  <span className="px-3 py-1 bg-[#333] rounded-full">
+                  <span className="px-4 py-2 bg-[#333] rounded-full font-medium min-w-[100px] text-center">
                     {moduleCategory === 'theoretical' ? 'Teórico' : 'Práctico'}
                   </span>
-                  <div className="flex items-center space-x-2">
-                    <img 
-                      src={currentHierarchy.insignia} 
-                      alt={currentHierarchy.name}
-                      className="w-6 h-6 object-contain"
-                    />
-                    <span 
-                      className="px-3 py-1 rounded-full font-medium"
-                      style={{ 
-                        backgroundColor: currentHierarchy.bgColor.replace('bg-', '').replace('/20', ''),
-                        color: currentHierarchy.color 
-                      }}
-                    >
-                      {currentHierarchy.name}
-                    </span>
-                  </div>
+                  <span 
+                    className="px-4 py-2 rounded-full font-medium border-2 min-w-[100px] text-center"
+                    style={{ 
+                      backgroundColor: currentHierarchy.bgColor.replace('bg-', '').replace('/20', ''),
+                      color: currentHierarchy.color,
+                      borderColor: currentHierarchy.color
+                    }}
+                  >
+                    {currentHierarchy.name}
+                  </span>
                 </div>
               </div>
 
-              {/* Contenido renderizado */}
-              <div className="space-y-6">
-                {blocks.map((block) => (
-                  <div key={block.id}>
-                    {renderPreviewBlock(block)}
-                  </div>
-                ))}
-                {blocks.length === 0 && (
-                  <div className="text-center py-12 text-gray-400">
-                    <FileText size={48} className="mx-auto mb-4" />
-                    <p>No hay contenido para mostrar en la vista previa.</p>
-                  </div>
-                )}
-              </div>
+                             {/* Contenido renderizado */}
+               <div className="space-y-6">
+                 {blocks.map((block) => (
+                   <div key={block.id}>
+                     {renderPreviewBlock(block)}
+                     {/* Agregar texto de ejemplo alrededor de imágenes para demostrar el wrapping */}
+                     {block.type === 'image' && block.metadata?.textWrap && block.metadata.textWrap !== 'none' && (
+                       <div className="mt-4 text-gray-400 text-sm">
+                         <p>
+                           Este es un texto de ejemplo que demuestra cómo se ve el contenido cuando se coloca alrededor de una imagen. 
+                           El texto se ajusta automáticamente al espacio disponible y fluye de manera natural alrededor del elemento visual.
+                         </p>
+                         <p className="mt-2">
+                           Puedes agregar más párrafos aquí para ver cómo se comporta el texto con diferentes longitudes y estilos.
+                           El sistema de wrapping de texto funciona tanto con contenido corto como con contenido extenso.
+                         </p>
+                       </div>
+                     )}
+                   </div>
+                 ))}
+                 {blocks.length === 0 && (
+                   <div className="text-center py-12 text-gray-400">
+                     <FileText size={48} className="mx-auto mb-4" />
+                     <p>No hay contenido para mostrar en la vista previa.</p>
+                   </div>
+                 )}
+               </div>
             </div>
           </div>
         </div>

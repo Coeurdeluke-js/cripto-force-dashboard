@@ -9,6 +9,7 @@ export interface ContentBlock {
     width?: string;
     height?: string;
     alignment?: 'left' | 'center' | 'right';
+    textWrap?: 'left' | 'right' | 'none';
     caption?: string;
     alt?: string;
     url?: string;
@@ -21,6 +22,7 @@ export interface ContentBlock {
     isBold?: boolean;
     isItalic?: boolean;
     isUnderlined?: boolean;
+    showResizeMenu?: boolean;
   };
 }
 

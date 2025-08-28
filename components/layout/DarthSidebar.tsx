@@ -1,150 +1,298 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { 
   Home, 
-  BookOpen, 
-  Target, 
+  BarChart3, 
   Users, 
-  Settings,
+  BookOpen, 
+  Settings, 
+  LogOut,
   Menu,
-  X,
-  Flame,
+  User,
+  TrendingUp,
+  Activity,
+  Database,
+  CheckCircle,
+  Clock,
+  Target,
+  Award,
+  Calendar,
+  LineChart,
+  UserPlus,
   Compass
 } from 'lucide-react';
 import { useSafeAuth } from '@/context/AuthContext';
-import DashboardSelectorModal from '@/components/DashboardSelectorModal';
+import { useDarthSidebar } from '@/app/dashboard/darth/DarthSidebarContext';
+
+interface MenuItem {
+  href: string;
+  icon: React.ComponentType<{ size?: number }>;
+  label: string;
+}
+
+const menuItems: MenuItem[] = [
+  {
+    label: 'Panel General',
+    href: '/dashboard/darth',
+    icon: Home
+  },
+  {
+    label: 'Analytics',
+    href: '/dashboard/darth/analytics',
+    icon: TrendingUp
+  },
+  {
+    label: 'Estudiantes',
+    href: '/dashboard/darth/students',
+    icon: Users
+  },
+  {
+    label: 'Cursos',
+    href: '/dashboard/darth/courses',
+    icon: BookOpen
+  },
+  {
+    label: 'TradingView',
+    href: '/dashboard/darth/trading',
+    icon: LineChart
+  },
+  {
+    label: 'Mi Código de Referido',
+    href: '/dashboard/darth/referral-code',
+    icon: UserPlus
+  },
+  {
+    label: 'Dashboards',
+    href: '/dashboard/darth/dashboard-selection',
+    icon: Compass
+  },
+  {
+    label: 'Configuración',
+    href: '/dashboard/darth/settings',
+    icon: Settings
+  }
+];
 
 export default function DarthSidebar() {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [showDashboardSelector, setShowDashboardSelector] = useState(false);
-  const { userData } = useSafeAuth();
+  const { isExpanded, toggleSidebar } = useDarthSidebar();
+  const pathname = usePathname();
+  const { signOut, userData } = useSafeAuth();
+  const [userProfile, setUserProfile] = useState({ avatar: '/images/default-avatar.png' });
+  const [mounted, setMounted] = useState(false);
 
-  const navigationItems = [
-    { name: 'Dashboard', href: '/dashboard/darth', icon: Home },
-    { name: 'Cursos', href: '/dashboard/darth/courses', icon: BookOpen },
-    { name: 'Prácticas', href: '/dashboard/darth/practices', icon: Target },
-    { name: 'Comunidad', href: '/dashboard/darth/community', icon: Users },
-    { name: 'Configuración', href: '/dashboard/darth/settings', icon: Settings },
-  ];
+  // Get user data from profile - only after mounting to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+    
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('simple_profile');
+      if (saved) {
+        try {
+          const profileData = JSON.parse(saved);
+          setUserProfile(profileData);
+        } catch (error) {
+          console.error('Error parsing profile data:', error);
+        }
+      }
+    }
+  }, []);
 
-  // Mostrar compass si el usuario es Fundador (0) o de nivel superior (6)
-  const shouldShowCompass = userData?.user_level === 0 || (userData?.user_level && userData.user_level > 5);
+  // Don't render until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <aside className="h-full bg-gradient-to-b from-[#121212] to-[#0a0a0a] shadow-2xl flex flex-col border-r border-gray-800/50 transition-all duration-300 ease-in-out rounded-r-xl w-16">
+        <div className="flex-shrink-0 h-16 flex items-center justify-center border-b border-gray-800/30 bg-transparent px-4 rounded-t-xl">
+          <div className="w-12 h-12 rounded-full bg-gray-700 animate-pulse"></div>
+        </div>
+      </aside>
+    );
+  }
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   return (
     <>
-      {/* Botón móvil para abrir sidebar */}
-      <button
-        onClick={() => setIsExpanded(true)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg"
-      >
-        <Menu className="w-5 h-5 text-white" />
-      </button>
-
-      {/* Overlay móvil */}
-      {isExpanded && (
-        <div 
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={() => setIsExpanded(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <div className={`
-        fixed md:static inset-y-0 left-0 z-50
-        transform ${isExpanded ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0
-        transition-transform duration-300 ease-in-out
-        w-64 bg-[#1a1a1a] border-r border-[#2a2a2a]
-        flex flex-col
-      `}>
+      <aside
+      className={`h-full bg-gradient-to-b from-[#121212] to-[#0a0a0a] shadow-2xl flex flex-col border-r border-gray-800/50 transition-all duration-300 ease-in-out rounded-r-xl ${
+        isExpanded ? "w-64" : "w-16"
+      }`}
+    >
+      <style jsx>{`
+        .sidebar-text {
+          transition: all 0.3s ease-in-out;
+          opacity: 0;
+          transform: translateX(-10px);
+        }
         
-        {/* Header con insignia */}
-        <div className="p-6 border-b border-[#2a2a2a]">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 relative">
-              <Image
-                src="/images/insignias/5-darths.png"
-                alt="Insignia de Darth"
-                width={48}
-                height={48}
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <div>
-              <h2 className="text-white font-semibold text-lg">DARTH</h2>
-              <p className="text-[#8a8a8a] text-sm">Transmutación de la sombra en poder</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Botón cerrar móvil */}
-        <button
-          onClick={() => setIsExpanded(false)}
-          className="md:hidden absolute top-4 right-4 p-2 text-[#8a8a8a] hover:text-white"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        {/* Navegación */}
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {navigationItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="flex items-center gap-3 px-4 py-3 text-[#8a8a8a] hover:text-white hover:bg-[#2a2a2a] rounded-lg transition-colors"
-                    onClick={() => setIsExpanded(false)}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span>{item.name}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-
-          {/* Botón Cambiar Dashboard - solo visible si el usuario puede navegar */}
-          {shouldShowCompass && (
-            <div className="mt-6 pt-4 border-t border-[#2a2a2a]">
-              <button
-                onClick={() => setShowDashboardSelector(true)}
-                className="w-full flex items-center gap-3 px-4 py-3 text-[#ec4d58] hover:text-white hover:bg-[#2a2a2a] rounded-lg transition-colors group"
-              >
-                <Compass className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                <span>Cambiar Dashboard</span>
-              </button>
-            </div>
-          )}
-        </nav>
-
-        {/* Footer con información del usuario */}
-        <div className="p-4 border-t border-[#2a2a2a]">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#ec4d58] rounded-full flex items-center justify-center">
-              <Flame className="w-4 h-4 text-white" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-medium truncate">
-                {userData?.nickname || userData?.nombre || 'Usuario'}
-              </p>
-              <p className="text-[#8a8a8a] text-xs truncate">
-                Nivel {userData?.user_level || 5}
-              </p>
-            </div>
-          </div>
+        .sidebar-text.visible {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        
+        .sidebar-text.delayed-1 {
+          transition-delay: 0.05s;
+        }
+        
+        .sidebar-text.delayed-2 {
+          transition-delay: 0.1s;
+        }
+        
+        .sidebar-text.delayed-3 {
+          transition-delay: 0.15s;
+        }
+        
+        .sidebar-text.delayed-4 {
+          transition-delay: 0.2s;
+        }
+        
+        .sidebar-text.delayed-5 {
+          transition-delay: 0.25s;
+        }
+        
+        .sidebar-text.delayed-6 {
+          transition-delay: 0.3s;
+        }
+        
+        .sidebar-text.delayed-footer-1 {
+          transition-delay: 0.35s;
+        }
+        
+        .sidebar-text.delayed-footer-2 {
+          transition-delay: 0.4s;
+        }
+      `}</style>
+      
+      {/* Header con imagen circular de Darth */}
+      <div className="flex-shrink-0 h-16 flex items-center justify-center border-b border-gray-800/30 bg-transparent px-4 rounded-t-xl">
+        <div className="w-12 h-12 rounded-full overflow-hidden">
+          <Image
+            src="/images/insignias/5-darths.png"
+            alt="Darth"
+            width={48}
+            height={48}
+            className="w-full h-full object-cover"
+            style={{ width: 'auto', height: 'auto' }}
+            priority
+          />
         </div>
       </div>
 
-      {/* Modal de selección de dashboard */}
-      <DashboardSelectorModal
-        isOpen={showDashboardSelector}
-        onClose={() => setShowDashboardSelector(false)}
-        currentDashboardLevel={5}
-      />
+      {/* Toggle button separado arriba */}
+      <div className="flex-shrink-0 p-3 border-b border-gray-800/30">
+        <button
+          onClick={toggleSidebar}
+          className="group relative flex items-center py-3 px-3 text-gray-400 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full justify-center"
+          title={isExpanded ? "Contraer" : "Expandir"}
+        >
+          <span className="flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 text-gray-400 group-hover:text-[#8A8A8A]">
+            <Menu size={20} />
+          </span>
+        </button>
+      </div>
+
+      {/* Navigation - estilo WhatsApp */}
+      <nav className="flex-1 py-4 px-3">
+        <ul className="space-y-1">
+          {/* Elementos de navegación */}
+          {menuItems.map((item, index) => {
+            const isActive = pathname === item.href;
+            return (
+              <li key={item.label}>
+                <Link
+                  href={item.href}
+                  className={`group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full ${
+                    isExpanded ? 'justify-start text-left gap-x-3' : 'justify-center'
+                  } ${isActive ? 'bg-[#8A8A8A] text-white' : ''}`}
+                  title={!isExpanded ? item.label : undefined}
+                >
+                  {/* Active indicator - línea gris como Darth */}
+                  {isActive && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#8A8A8A] rounded-r-full"></div>
+                  )}
+                  
+                  <span
+                    className={`flex items-center justify-center text-xl w-6 h-6 transition-all duration-200 ${
+                      isActive 
+                        ? 'text-white' 
+                        : 'text-gray-400 group-hover:text-[#8A8A8A]'
+                    } ${isExpanded ? 'mr-3' : ''}`}
+                  >
+                    <item.icon size={20} />
+                  </span>
+                  
+                  {isExpanded && (
+                    <span 
+                      className={`font-medium whitespace-nowrap sidebar-text ${
+                        isActive 
+                          ? 'text-white' 
+                          : 'text-gray-300 group-hover:text-[#8A8A8A]'
+                      } ${isExpanded ? 'visible' : ''} delayed-${Math.min(index + 1, 6)}`}
+                    >
+                      {item.label}
+                    </span>
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      {/* Footer - estilo WhatsApp */}
+      <div className="flex-shrink-0 p-3 border-t border-gray-800/30 rounded-b-xl">
+        <div className="space-y-1">
+          <Link 
+            href="/dashboard/perfil" 
+            className="group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
+            title={!isExpanded ? "Perfil" : undefined}
+          >
+            <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-gray-400 group-hover:text-[#8A8A8A] ${isExpanded ? 'mr-3' : ''}`}>
+              <Image
+                src={userProfile.avatar}
+                alt="Perfil"
+                width={24}
+                height={24}
+                className="w-6 h-6 rounded-full object-cover"
+              />
+            </span>
+            {isExpanded && (
+              <span 
+                className={`font-medium text-gray-300 group-hover:text-[#8A8A8A] sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-1`}
+              >
+                Perfil
+              </span>
+            )}
+          </Link>
+          
+          <button 
+            onClick={handleSignOut}
+            className="group relative flex items-center py-3 px-3 text-gray-300 hover:bg-[#232323] rounded-lg transition-all duration-200 ease-in-out w-full"
+            title={!isExpanded ? "Salir" : undefined}
+          >
+            <span className={`text-xl w-6 h-6 flex items-center justify-center transition-all duration-200 text-gray-400 group-hover:text-[#8A8A8A] ${isExpanded ? 'mr-3' : ''}`}>
+              <LogOut size={20} />
+            </span>
+            {isExpanded && (
+              <span 
+                className={`font-medium text-gray-300 group-hover:text-[#8A8A8A] sidebar-text ${isExpanded ? 'visible' : ''} delayed-footer-2`}
+              >
+                Salir
+              </span>
+            )}
+          </button>
+        </div>
+      </div>
+    </aside>
     </>
   );
 }

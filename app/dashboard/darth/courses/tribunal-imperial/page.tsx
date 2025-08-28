@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Crown, FileText, CheckCircle, XCircle, Clock, Users, BarChart3, Plus, Eye, Save } from 'lucide-react';
+import { Crown, FileText, CheckCircle, XCircle, Clock, Users, BarChart3, Plus, Eye, Save, ArrowLeft } from 'lucide-react';
 import { useSafeAuth } from '@/context/AuthContext';
 import { canUserAccessTribunal } from '@/lib/tribunal/permissions';
 import ContentEditor from '@/components/tribunal/ContentEditor';
@@ -65,7 +65,7 @@ export default function TribunalImperialPage() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-[#FFD700]">TRIBUNAL IMPERIAL</h1>
-              <p className="text-gray-300">Sistema de Aprobación de Contenido Educativo</p>
+              <p className="text-gray-300">Sistema de Creación y Aprobación de Contenido Educativo</p>
               <p className="text-sm text-gray-400 mt-1">
                 Accediendo como: {userData.user_level === 5 ? 'Darth' : 'Maestro'} - {userData.email}
               </p>
@@ -75,9 +75,9 @@ export default function TribunalImperialPage() {
           {/* Botón Volver a Courses */}
           <a
             href="/dashboard/darth/courses"
-            className="flex items-center space-x-2 px-4 py-2 bg-[#333] text-white rounded-lg hover:bg-[#444] transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
-            <span>⬅️</span>
+            <ArrowLeft size={20} />
             <span>Volver a Courses</span>
           </a>
         </div>
