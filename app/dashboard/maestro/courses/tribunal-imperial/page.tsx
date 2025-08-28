@@ -518,7 +518,7 @@ export default function TribunalImperialPage() {
       propuestasPendientes: pendingCount,
       propuestasAprobadas: approvedCount,
       propuestasRechazadas: rejectedCount,
-      maestrosActivos: 5 // Por ahora hardcodeado, pero se puede conectar con la base de datos
+              maestrosActivos: 2 // Solo Darth Luke y Darth Nihilus son Maestros
     });
   }, [userData, isReady, proposals]);
 
@@ -639,10 +639,10 @@ export default function TribunalImperialPage() {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-[#8B5CF6] to-[#7C3AED] p-6 rounded-lg text-white">
+              <div className="bg-gradient-to-br from-[#8a8a8a] to-[#6a6a6a] p-6 rounded-lg text-white">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium opacity-80">Maestros Activos</p>
+                    <p className="text-sm font-medium opacity-90">Maestros Activos</p>
                     <p className="text-3xl font-bold">{stats.maestrosActivos}</p>
                   </div>
                   <Users size={32} />

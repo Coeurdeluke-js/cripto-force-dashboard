@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { Plus, X, Eye, Save, FileText, Image as ImageIcon, Video, Link, Code, Quote, Minus, CheckSquare, Upload, Bold, Italic, Underline, Type, Move, Maximize2, ArrowLeft } from 'lucide-react';
 import { ContentBlock } from '@/lib/tribunal/types';
 import { useProposals, TribunalProposal } from '@/lib/tribunal/hooks/useProposals';
@@ -46,15 +46,46 @@ export default function ContentEditor({
   const [blocks, setBlocks] = useState<ContentBlock[]>([]);
   const [moduleTitle, setModuleTitle] = useState('');
   const [moduleDescription, setModuleDescription] = useState('');
-  const [moduleCategory, setModuleCategory] = useState<'theoretical' | 'practical'>('theoretical');
+  const [moduleCategory, setModuleCategory] = useState<'theoretical' | 'practical' | 'checkpoint'>('theoretical');
   const [targetHierarchy, setTargetHierarchy] = useState<number>(1);
   const [showPreview, setShowPreview] = useState(false);
   const [draggedBlock, setDraggedBlock] = useState<string | null>(null);
   const [dragOverBlock, setDragOverBlock] = useState<string | null>(null);
+  const [textWrapMode, setTextWrapMode] = useState<'left' | 'right' | 'none'>('none');
+  const [checkpointModules, setCheckpointModules] = useState<{ module1: string; module2: string }>({ module1: '', module2: '' });
+  const [availableModules, setAvailableModules] = useState<Array<{ id: string; title: string; category: string }>>([]);
+  const [draggedTextBlock, setDraggedTextBlock] = useState<string | null>(null);
+  const [dropZoneHighlight, setDropZoneHighlight] = useState<'left' | 'right' | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Hook para gestionar propuestas
   const { createProposal } = useProposals();
+
+  // Cargar módulos disponibles para Puntos de Control
+  useEffect(() => {
+    if (moduleCategory === 'checkpoint') {
+      const loadAvailableModules = () => {
+        try {
+          const stored = localStorage.getItem('tribunal_proposals');
+          if (stored) {
+            const allProposals = JSON.parse(stored);
+            const approvedModules = allProposals
+              .filter((proposal: any) => proposal.status === 'approved')
+              .map((proposal: any) => ({
+                id: proposal.id,
+                title: proposal.title,
+                category: proposal.category
+              }));
+            setAvailableModules(approvedModules);
+          }
+        } catch (error) {
+          console.error('Error loading available modules:', error);
+        }
+      };
+      
+      loadAvailableModules();
+    }
+  }, [moduleCategory]);
 
   const addBlock = (type: ContentBlock['type']) => {
     const newBlock: ContentBlock = {
@@ -236,6 +267,8 @@ export default function ContentEditor({
     }
   };
 
+
+
   const handlePreview = () => {
     if (blocks.length === 0) {
       alert('Por favor, agrega al menos un bloque de contenido antes de ver la vista previa');
@@ -259,9 +292,10 @@ export default function ContentEditor({
       return;
     }
     
-
-    
     try {
+      console.log('Guardando propuesta con bloques:', blocks);
+      console.log('Tipos de bloques:', blocks.map(b => ({ id: b.id, type: b.type, content: b.content.substring(0, 100) })));
+      
       // Crear la propuesta usando el hook
       const proposal = createProposal({
         title: moduleTitle,
@@ -280,6 +314,9 @@ export default function ContentEditor({
         }
       });
       
+      console.log('Propuesta creada exitosamente:', proposal);
+      console.log('Contenido guardado:', proposal.content);
+      
       // Llamar al callback si existe
       if (onProposalCreated) {
         onProposalCreated(proposal);
@@ -290,7 +327,7 @@ export default function ContentEditor({
         onSave(blocks);
       }
       
-            // Mostrar confirmación
+      // Mostrar confirmación
       alert('Propuesta guardada exitosamente en localStorage');
       
       // Opcional: limpiar el editor después de guardar
@@ -449,49 +486,76 @@ export default function ContentEditor({
                      </div>
                      
                      <div className="space-y-4">
-                       {/* Posicionamiento */}
+                       {/* Posicionamiento Intuitivo */}
                        <div>
-                         <label className="block text-sm text-gray-300 mb-2">Posicionamiento</label>
-                         <div className="flex items-center space-x-2">
+                         <label className="block text-sm text-gray-300 mb-2">Posicionamiento de la Imagen</label>
+                         <div className="grid grid-cols-3 gap-2">
                            <button
-                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, alignment: 'left' })}
-                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, alignment: 'left', textWrap: 'right' })}
+                             className={`p-3 rounded-lg text-sm font-medium transition-all duration-200 border-2 ${
                                block.metadata?.alignment === 'left' 
-                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
-                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
+                                 ? 'bg-[#FFD447] text-[#1a1a1a] border-[#FFD447] shadow-lg' 
+                                 : 'bg-[#333] text-gray-300 hover:bg-[#444] border-[#444] hover:border-[#FFD447]/50'
                              }`}
                            >
-                             ← Izquierda
+                             <div className="text-center">
+                               <div className="text-lg mb-1">📝</div>
+                               <div>Imagen</div>
+                               <div className="font-bold">Izquierda</div>
+                               <div className="text-xs opacity-75">Texto a la derecha</div>
+                             </div>
                            </button>
                            <button
-                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, alignment: 'center' })}
-                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, alignment: 'center', textWrap: 'none' })}
+                             className={`p-3 rounded-lg text-sm font-medium transition-all duration-200 border-2 ${
                                block.metadata?.alignment === 'center' 
-                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
-                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
+                                 ? 'bg-[#FFD447] text-[#1a1a1a] border-[#FFD447] shadow-lg' 
+                                 : 'bg-[#333] text-gray-300 hover:bg-[#444] border-[#444] hover:border-[#FFD447]/50'
                              }`}
                            >
-                             ↕ Centro
+                             <div className="text-center">
+                               <div className="text-lg mb-1">🖼️</div>
+                               <div>Imagen</div>
+                               <div className="font-bold">Centrada</div>
+                               <div className="text-xs opacity-75">Sin texto alrededor</div>
+                             </div>
                            </button>
                            <button
-                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, alignment: 'right' })}
-                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, alignment: 'right', textWrap: 'left' })}
+                             className={`p-3 rounded-lg text-sm font-medium transition-all duration-200 border-2 ${
                                block.metadata?.alignment === 'right' 
-                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
-                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
+                                 ? 'bg-[#FFD447] text-[#1a1a1a] border-[#FFD447] shadow-lg' 
+                                 : 'bg-[#333] text-gray-300 hover:bg-[#444] border-[#444] hover:border-[#FFD447]/50'
                              }`}
                            >
-                             → Derecha
+                             <div className="text-center">
+                               <div className="text-lg mb-1">📝</div>
+                               <div>Imagen</div>
+                               <div className="font-bold">Derecha</div>
+                               <div className="text-xs opacity-75">Texto a la izquierda</div>
+                             </div>
                            </button>
+                         </div>
+                         
+                         {/* Instrucciones de Drag & Drop */}
+                         <div className="mt-3 p-3 bg-[#2a2a2a] rounded-lg border border-[#444]">
+                           <div className="text-xs text-[#FFD447] font-medium mb-2">🎯 Cómo usar el Drag & Drop:</div>
+                           <div className="text-xs text-gray-400 space-y-1">
+                             <div>• Selecciona el posicionamiento deseado arriba</div>
+                             <div>• Arrastra bloques de texto desde la lista de bloques</div>
+                             <div>• Suéltalos en la zona de vista previa donde quieras que aparezcan</div>
+                             <div>• El texto se ajustará automáticamente alrededor de la imagen</div>
+                           </div>
                          </div>
                        </div>
                        
-                       {/* Redimensionamiento */}
+                                              {/* Redimensionamiento Unificado */}
                        <div>
-                         <label className="block text-sm text-gray-300 mb-2">Redimensionamiento</label>
-                         <div className="grid grid-cols-2 gap-3">
+                         <label className="block text-sm text-gray-300 mb-2">Redimensionamiento de la Imagen</label>
+                         <div className="space-y-3">
+                           {/* Ancho */}
                            <div>
-                             <label className="block text-xs text-gray-400 mb-1">Ancho</label>
+                             <label className="block text-xs text-gray-400 mb-2">Ancho (en incrementos de 10%)</label>
                              <div className="flex items-center space-x-2">
                                <button
                                  onClick={() => {
@@ -502,18 +566,14 @@ export default function ContentEditor({
                                      updateBlock(block.id, block.content, { ...block.metadata, width: `${newWidth}%` });
                                    }
                                  }}
-                                 className="p-1 bg-[#333] text-gray-300 hover:text-white rounded text-sm"
+                                 className="p-2 bg-[#333] text-gray-300 hover:text-white rounded-lg transition-colors hover:bg-[#444]"
                                  title="Reducir ancho 10%"
                                >
-                                 <Minus size={14} />
+                                 <Minus size={16} />
                                </button>
-                               <input
-                                 type="text"
-                                 value={block.metadata?.width || '100%'}
-                                 onChange={(e) => updateBlock(block.id, block.content, { ...block.metadata, width: e.target.value })}
-                                 placeholder="100%"
-                                 className="flex-1 p-2 bg-[#2a2a2a] border border-[#444] rounded text-white text-sm text-center"
-                               />
+                               <div className="flex-1 bg-[#2a2a2a] border border-[#444] rounded-lg p-3 text-center">
+                                 <span className="text-white font-mono text-lg">{block.metadata?.width || '100%'}</span>
+                               </div>
                                <button
                                  onClick={() => {
                                    const currentWidth = block.metadata?.width || '100%';
@@ -523,15 +583,20 @@ export default function ContentEditor({
                                      updateBlock(block.id, block.content, { ...block.metadata, width: `${newWidth}%` });
                                    }
                                  }}
-                                 className="p-1 bg-[#333] text-gray-300 hover:text-white rounded text-sm"
+                                 className="p-2 bg-[#333] text-gray-300 hover:text-white rounded-lg transition-colors hover:bg-[#444]"
                                  title="Aumentar ancho 10%"
                                >
-                                 <Plus size={14} />
+                                 <Plus size={16} />
                                </button>
                              </div>
+                             <div className="text-xs text-gray-400 mt-1 text-center">
+                               💡 Usa los botones + y - para ajustar en incrementos de 10%
+                             </div>
                            </div>
+                           
+                           {/* Alto */}
                            <div>
-                             <label className="block text-xs text-gray-400 mb-1">Alto</label>
+                             <label className="block text-xs text-gray-400 mb-2">Alto (en incrementos de 20px)</label>
                              <div className="flex items-center space-x-2">
                                <button
                                  onClick={() => {
@@ -546,19 +611,15 @@ export default function ContentEditor({
                                      }
                                    }
                                  }}
-                                 className="p-1 bg-[#333] text-gray-300 hover:text-white rounded text-sm"
+                                 className="p-2 bg-[#333] text-gray-300 hover:text-white rounded-lg transition-colors hover:bg-[#444]"
                                  title="Reducir alto 20px"
                                >
-                                 <Minus size={14} />
+                                 <Minus size={16} />
                                </button>
-                                                                <input
-                                   type="text"
-                                   value={block.metadata?.height || 'auto'}
-                                   onChange={(e) => updateBlock(block.id, block.content, { ...block.metadata, height: e.target.value })}
-                                   placeholder="auto o 200px"
-                                   className="flex-1 p-2 bg-[#2a2a2a] border border-[#444] rounded text-white text-sm text-center"
-                                 />
-                                 <button
+                               <div className="flex-1 bg-[#2a2a2a] border border-[#444] rounded-lg p-3 text-center">
+                                 <span className="text-white font-mono text-lg">{block.metadata?.height || 'auto'}</span>
+                                 </div>
+                               <button
                                  onClick={() => {
                                    const currentHeight = block.metadata?.height || 'auto';
                                    if (currentHeight === 'auto') {
@@ -571,52 +632,53 @@ export default function ContentEditor({
                                      }
                                    }
                                  }}
-                                 className="p-1 bg-[#333] text-gray-300 hover:text-white rounded text-sm"
+                                 className="p-2 bg-[#333] text-gray-300 hover:text-white rounded-lg transition-colors hover:bg-[#444]"
                                  title="Aumentar alto 20px"
                                >
-                                 <Plus size={14} />
+                                 <Plus size={16} />
                                </button>
                              </div>
+                             <div className="text-xs text-gray-400 mt-1 text-center">
+                               💡 Usa los botones + y - para ajustar en incrementos de 20px
+                             </div>
+                           </div>
+                           
+                           {/* Input manual opcional - Menú desplegable sutil */}
+                           <div className="pt-2 border-t border-[#444]">
+                             <button
+                               onClick={() => updateBlock(block.id, block.content, { ...block.metadata, showCustomValues: !block.metadata?.showCustomValues })}
+                               className="flex items-center space-x-2 text-xs text-gray-400 hover:text-[#FFD447] transition-colors"
+                             >
+                               <span className="text-[#FFD447]">⚙️</span>
+                               <span>Valores personalizados</span>
+                               <span className={`transition-transform ${block.metadata?.showCustomValues ? 'rotate-90' : ''}`}>▶</span>
+                             </button>
+                             
+                             {block.metadata?.showCustomValues && (
+                               <div className="mt-2 p-2 bg-[#2a2a2a] rounded border border-[#555]">
+                                 <div className="grid grid-cols-2 gap-2">
+                                   <input
+                                     type="text"
+                                     value={block.metadata?.width || '100%'}
+                                     onChange={(e) => updateBlock(block.id, block.content, { ...block.metadata, width: e.target.value })}
+                                     placeholder="100%"
+                                     className="p-2 bg-[#1a1a1a] border border-[#555] rounded text-white text-xs text-center"
+                                   />
+                                   <input
+                                     type="text"
+                                     value={block.metadata?.height || 'auto'}
+                                     onChange={(e) => updateBlock(block.id, block.content, { ...block.metadata, height: e.target.value })}
+                                     placeholder="auto"
+                                     className="p-2 bg-[#1a1a1a] border border-[#555] rounded text-white text-xs text-center"
+                                   />
+                                 </div>
+                               </div>
+                             )}
                            </div>
                          </div>
                        </div>
                        
-                       {/* Texto alrededor */}
-                       <div>
-                         <label className="block text-sm text-gray-300 mb-2">Texto alrededor de la imagen</label>
-                         <div className="flex items-center space-x-2">
-                           <button
-                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, textWrap: 'left' })}
-                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
-                               block.metadata?.textWrap === 'left' 
-                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
-                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
-                             }`}
-                           >
-                             📝 Texto a la derecha
-                           </button>
-                           <button
-                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, textWrap: 'right' })}
-                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
-                               block.metadata?.textWrap === 'right' 
-                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
-                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
-                             }`}
-                           >
-                             📝 Texto a la izquierda
-                           </button>
-                           <button
-                             onClick={() => updateBlock(block.id, block.content, { ...block.metadata, textWrap: 'none' })}
-                             className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
-                               block.metadata?.textWrap === 'none' 
-                                 ? 'bg-[#FFD447] text-[#1a1a1a]' 
-                                 : 'bg-[#333] text-gray-300 hover:bg-[#444]'
-                             }`}
-                           >
-                             🚫 Sin texto alrededor
-                           </button>
-                         </div>
-                       </div>
+
                      </div>
                    </div>
                  )}
@@ -634,13 +696,27 @@ export default function ContentEditor({
         );
       case 'video':
         return (
-          <input
-            type="text"
-            value={block.content}
-            onChange={(e) => updateBlock(block.id, e.target.value)}
-            placeholder="URL del video (YouTube, Vimeo, etc.)..."
-            className="w-full p-3 bg-[#2a2a2a] border border-[#444] rounded-lg text-white placeholder-gray-400"
-          />
+          <div className="space-y-2">
+            <input
+              type="text"
+              value={block.content}
+              onChange={(e) => updateBlock(block.id, e.target.value)}
+              placeholder="URL del video (YouTube, Vimeo, etc.)..."
+              className="w-full p-3 bg-[#2a2a2a] border border-[#444] rounded-lg text-white placeholder-gray-400"
+            />
+            <input
+              type="text"
+              value={block.metadata?.caption || ''}
+              onChange={(e) => updateBlock(block.id, block.content, { ...block.metadata, caption: e.target.value })}
+              placeholder="Descripción del video (opcional)..."
+              className="w-full p-3 bg-[#2a2a2a] border border-[#444] rounded-lg text-white placeholder-gray-400"
+            />
+            {block.content && (
+              <div className="text-xs text-gray-400">
+                💡 Para YouTube: pega la URL completa del video (ej: https://www.youtube.com/watch?v=...)
+              </div>
+            )}
+          </div>
         );
       case 'link':
         return (
@@ -664,20 +740,23 @@ export default function ContentEditor({
       case 'code':
         return (
           <div className="space-y-2">
-            <input
-              type="text"
-              value={block.metadata?.language || ''}
-              onChange={(e) => updateBlock(block.id, block.content, { ...block.metadata, language: e.target.value })}
-              placeholder="Lenguaje (JavaScript, Python, etc.)..."
-              className="w-full p-3 bg-[#2a2a2a] border border-[#444] rounded-lg text-white placeholder-gray-400"
-            />
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-[#FFD447] font-medium">💻 Editor de Código</span>
+              <div className="flex space-x-2">
+                <span className="text-xs bg-[#FFD447]/20 text-[#FFD447] px-2 py-1 rounded">HTML</span>
+                <span className="text-xs bg-[#FFD447]/20 text-[#FFD447] px-2 py-1 rounded">CSS</span>
+              </div>
+            </div>
             <textarea
               value={block.content}
               onChange={(e) => updateBlock(block.id, e.target.value)}
-              placeholder="Código..."
-              className="w-full p-3 bg-[#2a2a2a] border border-[#444] rounded-lg text-white placeholder-gray-400 font-mono resize-none"
-              rows={6}
+              placeholder="Escribe tu código HTML o CSS aquí..."
+              className="w-full p-3 bg-[#1a1a1a] border border-[#444] rounded-lg text-white placeholder-gray-400 font-mono resize-none"
+              rows={8}
             />
+            <div className="text-xs text-gray-400">
+              💡 El código se renderizará en tiempo real en la vista previa
+            </div>
           </div>
         );
       case 'quote':
@@ -744,6 +823,65 @@ export default function ContentEditor({
          return (
            <div className="my-4">
              {block.content ? (
+                                         <div className="relative">
+               {/* Zona de drop izquierda */}
+               {block.metadata?.textWrap === 'left' && (
+                 <div
+                   className={`absolute left-0 top-0 w-1/2 h-full transition-all duration-200 ${
+                     dropZoneHighlight === 'left' 
+                       ? 'bg-[#FFD447]/20 border-2 border-[#FFD447] border-dashed' 
+                       : 'bg-transparent'
+                   }`}
+                   onDragOver={(e) => {
+                     e.preventDefault();
+                     setDropZoneHighlight('left');
+                   }}
+                   onDragLeave={() => setDropZoneHighlight(null)}
+                   onDrop={(e) => {
+                     e.preventDefault();
+                     setDropZoneHighlight(null);
+                     // Aquí se procesaría el drop del texto
+                   }}
+                 >
+                   <div className="h-full flex items-center justify-center">
+                     {dropZoneHighlight === 'left' && (
+                       <div className="text-[#FFD447] text-sm font-medium">
+                         📝 Suelta el texto aquí
+                       </div>
+                     )}
+                   </div>
+                 </div>
+               )}
+
+               {/* Zona de drop derecha */}
+               {block.metadata?.textWrap === 'right' && (
+                 <div
+                   className={`absolute right-0 top-0 w-1/2 h-full transition-all duration-200 ${
+                     dropZoneHighlight === 'right' 
+                       ? 'bg-[#FFD447]/20 border-2 border-[#FFD447] border-dashed' 
+                       : 'bg-transparent'
+                   }`}
+                   onDragOver={(e) => {
+                     e.preventDefault();
+                     setDropZoneHighlight('right');
+                   }}
+                   onDragLeave={() => setDropZoneHighlight(null)}
+                   onDrop={(e) => {
+                     e.preventDefault();
+                     setDropZoneHighlight(null);
+                     // Aquí se procesaría el drop del texto
+                   }}
+                 >
+                   <div className="h-full flex items-center justify-center">
+                     {dropZoneHighlight === 'right' && (
+                       <div className="text-[#FFD447] text-sm font-medium">
+                         📝 Suelta el texto aquí
+                       </div>
+                     )}
+                   </div>
+                 </div>
+               )}
+
                <div 
                  className={`${
                    block.metadata?.textWrap === 'left' ? 'float-right ml-4 mb-2' :
@@ -753,7 +891,8 @@ export default function ContentEditor({
                  style={{
                    textAlign: block.metadata?.alignment || 'left',
                    width: block.metadata?.width || '100%',
-                   maxWidth: block.metadata?.width === '100%' ? '100%' : 'auto'
+                   maxWidth: block.metadata?.width === '100%' ? '100%' : 'auto',
+                   height: block.metadata?.height || 'auto'
                  }}
                >
                  <img 
@@ -777,6 +916,7 @@ export default function ContentEditor({
                    <p className="text-sm text-gray-400 mt-2 italic">{block.metadata.alt}</p>
                  )}
                </div>
+             </div>
              ) : (
                <div className="bg-[#2a2a2a] border border-[#444] rounded-lg p-8 text-center">
                  <ImageIcon size={48} className="text-gray-500 mx-auto mb-2" />
@@ -788,12 +928,36 @@ export default function ContentEditor({
       case 'video':
         return (
           <div className="my-4">
-            <div className="aspect-video bg-[#2a2a2a] rounded-lg border border-[#444] flex items-center justify-center">
-              <div className="text-center">
-                <Video size={48} className="text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-400 text-sm">Video: {block.content}</p>
+            {block.content ? (
+              <div className="bg-[#1a1a1a] border border-[#444] rounded-lg p-4">
+                {block.content.includes('youtube.com') || block.content.includes('youtu.be') ? (
+                  <div className="aspect-video bg-[#2a2a2a] rounded-lg border border-[#444] flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span className="text-white text-2xl">▶</span>
+                      </div>
+                      <p className="text-white text-sm font-medium">Video de YouTube</p>
+                      <p className="text-gray-400 text-xs mt-1">Se reproducirá en el módulo</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="aspect-video bg-[#2a2a2a] rounded-lg border border-[#444] flex items-center justify-center">
+                    <div className="text-center">
+                      <Video size={48} className="text-gray-400 mx-auto mb-2" />
+                      <p className="text-gray-400 text-sm">Video: {block.content}</p>
+                    </div>
+                  </div>
+                )}
+                {block.metadata?.caption && (
+                  <p className="text-sm text-gray-400 mt-2 italic text-center">{block.metadata.caption}</p>
+                )}
               </div>
-            </div>
+            ) : (
+              <div className="bg-[#2a2a2a] border border-[#444] rounded-lg p-8 text-center">
+                <Video size={48} className="text-gray-400 mx-auto mb-2" />
+                <p className="text-gray-400">Sin video</p>
+              </div>
+            )}
           </div>
         );
       case 'link':
@@ -813,14 +977,56 @@ export default function ContentEditor({
         return (
           <div className="my-4">
             <div className="bg-[#1a1a1a] border border-[#444] rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400 font-mono">
-                  {block.metadata?.language || 'text'}
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm text-[#FFD447] font-mono font-medium">
+                  💻 Código
                 </span>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => {
+                      const newWindow = window.open('', '_blank');
+                      if (newWindow) {
+                        newWindow.document.write(`
+                          <!DOCTYPE html>
+                          <html>
+                          <head>
+                            <title>Preview - Código HTML</title>
+                            <style>
+                              body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f5f5f5; }
+                            </style>
+                          </head>
+                          <body>
+                            ${block.content}
+                          </body>
+                          </html>
+                        `);
+                        newWindow.document.close();
+                      }
+                    }}
+                    className="text-xs bg-[#FFD447] text-gray-900 px-2 py-1 rounded hover:bg-[#FFC437] transition-colors"
+                  >
+                    🚀 Ver Preview
+                  </button>
+                </div>
               </div>
-              <pre className="text-sm text-white font-mono overflow-x-auto">
+              
+              {/* Código fuente */}
+              <pre className="text-sm text-white font-mono overflow-x-auto bg-[#2a2a2a] p-3 rounded border border-[#555] mb-4">
                 <code>{block.content}</code>
               </pre>
+              
+              {/* Renderizado en vivo para HTML */}
+              {block.content && (
+                <div className="pt-4 border-t border-[#444]">
+                  <div className="text-xs text-[#FFD447] font-medium mb-3 flex items-center">
+                    👁️ Vista Previa del Código:
+                  </div>
+                  <div 
+                    className="bg-white text-black p-4 rounded border shadow-lg"
+                    dangerouslySetInnerHTML={{ __html: block.content }}
+                  />
+                </div>
+              )}
             </div>
           </div>
         );
@@ -893,13 +1099,60 @@ export default function ContentEditor({
             <label className="block text-sm font-medium text-gray-300 mb-2">Categoría</label>
             <select
               value={moduleCategory}
-              onChange={(e) => setModuleCategory(e.target.value as 'theoretical' | 'practical')}
+              onChange={(e) => setModuleCategory(e.target.value as 'theoretical' | 'practical' | 'checkpoint')}
               className="w-full p-3 bg-[#2a2a2a] border border-[#444] rounded-lg text-white"
             >
               <option value="theoretical">Teórico</option>
               <option value="practical">Práctico</option>
+              <option value="checkpoint">Punto de Control</option>
             </select>
           </div>
+          
+          {/* Submenú para Puntos de Control */}
+          {moduleCategory === 'checkpoint' && (
+            <div className="col-span-2 bg-[#2a2a2a] border border-[#444] rounded-lg p-4">
+              <label className="block text-sm font-medium text-[#FFD447] mb-3">
+                🎯 Selecciona los módulos que este Punto de Control evaluará:
+              </label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs text-gray-400 mb-2">Módulo 1 (Origen)</label>
+                  <select
+                    value={checkpointModules?.module1 || ''}
+                    onChange={(e) => setCheckpointModules(prev => ({ ...prev, module1: e.target.value }))}
+                    className="w-full p-2 bg-[#1a1a1a] border border-[#555] rounded text-white text-sm"
+                  >
+                    <option value="">Selecciona un módulo...</option>
+                    {availableModules.map(module => (
+                      <option key={module.id} value={module.id}>
+                        {module.title} ({module.category === 'theoretical' ? 'Teórico' : 'Práctico'})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-400 mb-2">Módulo 2 (Complementario)</label>
+                  <select
+                    value={checkpointModules?.module2 || ''}
+                    onChange={(e) => setCheckpointModules(prev => ({ ...prev, module2: e.target.value }))}
+                    className="w-full p-2 bg-[#1a1a1a] border border-[#555] rounded text-white text-sm"
+                  >
+                    <option value="">Selecciona un módulo...</option>
+                    {availableModules.map(module => (
+                      <option key={module.id} value={module.id}>
+                        {module.title} ({module.category === 'theoretical' ? 'Teórico' : 'Práctico'})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="mt-3 p-2 bg-[#FFD447]/10 border border-[#FFD447]/20 rounded">
+                <p className="text-xs text-[#FFD447]">
+                  💡 Los Puntos de Control evalúan la comprensión de los módulos seleccionados
+                </p>
+              </div>
+            </div>
+          )}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">Nivel Objetivo</label>
             <div className="flex items-center space-x-3">
@@ -1187,7 +1440,7 @@ export default function ContentEditor({
                              <div className="flex items-center space-x-2">
                  <button
                    onClick={() => setShowPreview(false)}
-                   className="flex items-center space-x-2 px-4 py-2 bg-[#4671D5] text-white rounded-lg hover:bg-[#5a7de0] transition-colors"
+                   className="flex items-center space-x-2 px-4 py-2 bg-[#6B7280] text-white rounded-lg hover:bg-[#4B5563] transition-colors"
                  >
                    <ArrowLeft size={16} />
                    <span>Volver</span>
@@ -1229,19 +1482,6 @@ export default function ContentEditor({
                  {blocks.map((block) => (
                    <div key={block.id}>
                      {renderPreviewBlock(block)}
-                     {/* Agregar texto de ejemplo alrededor de imágenes para demostrar el wrapping */}
-                     {block.type === 'image' && block.metadata?.textWrap && block.metadata.textWrap !== 'none' && (
-                       <div className="mt-4 text-gray-400 text-sm">
-                         <p>
-                           Este es un texto de ejemplo que demuestra cómo se ve el contenido cuando se coloca alrededor de una imagen. 
-                           El texto se ajusta automáticamente al espacio disponible y fluye de manera natural alrededor del elemento visual.
-                         </p>
-                         <p className="mt-2">
-                           Puedes agregar más párrafos aquí para ver cómo se comporta el texto con diferentes longitudes y estilos.
-                           El sistema de wrapping de texto funciona tanto con contenido corto como con contenido extenso.
-                         </p>
-                       </div>
-                     )}
                    </div>
                  ))}
                  {blocks.length === 0 && (

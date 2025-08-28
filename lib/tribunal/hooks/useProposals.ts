@@ -8,7 +8,7 @@ export interface TribunalProposal {
   id: string;
   title: string;
   description: string;
-  category: 'theoretical' | 'practical';
+  category: 'theoretical' | 'practical' | 'checkpoint';
   targetHierarchy: number;
   content: ContentBlock[];
   authorId: string;
@@ -25,6 +25,10 @@ export interface TribunalProposal {
     maestros: string[];
     approvals: string[];
     rejections: string[];
+  };
+  checkpointModules?: {
+    module1: string;
+    module2: string;
   };
 }
 

@@ -125,14 +125,27 @@ export default function ModuloPage() {
          return (
            <div key={index} className="mb-6">
              <div className="bg-[#1a1a1a] border border-[#232323] rounded-lg p-4">
-               <video 
-                 controls 
-                 className="w-full rounded-lg"
-                 src={block.content}
-                 poster={block.metadata?.poster}
-               >
-                 Tu navegador no soporta el elemento de video.
-               </video>
+               {block.content.includes('youtube.com') || block.content.includes('youtu.be') ? (
+                 <div className="aspect-video bg-[#2a2a2a] rounded-lg border border-[#444] flex items-center justify-center">
+                   <iframe
+                     src={block.content.replace('watch?v=', 'embed/')}
+                     title="Video de YouTube"
+                     className="w-full h-full rounded-lg"
+                     frameBorder="0"
+                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                     allowFullScreen
+                   />
+                 </div>
+               ) : (
+                 <video 
+                   controls 
+                   className="w-full rounded-lg"
+                   src={block.content}
+                   poster={block.metadata?.poster}
+                 >
+                   Tu navegador no soporta el elemento de video.
+                 </video>
+               )}
                {block.metadata?.caption && (
                  <p className="text-sm text-gray-400 mt-2 text-center italic">{block.metadata.caption}</p>
                )}

@@ -34,7 +34,7 @@ export default function TribunalImperialPage() {
       propuestasPendientes: 3,
       propuestasAprobadas: 12,
       propuestasRechazadas: 2,
-      maestrosActivos: 5
+              maestrosActivos: 2
     });
   }, [userData, isReady]);
 
@@ -149,10 +149,10 @@ export default function TribunalImperialPage() {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-[#8B5CF6] to-[#7C3AED] p-6 rounded-lg text-white">
+              <div className="bg-gradient-to-br from-[#8a8a8a] to-[#6a6a6a] p-6 rounded-lg text-white">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium opacity-80">Maestros Activos</p>
+                    <p className="text-sm font-medium opacity-90">Maestros Activos</p>
                     <p className="text-3xl font-bold">{stats.maestrosActivos}</p>
                   </div>
                   <Users size={32} />

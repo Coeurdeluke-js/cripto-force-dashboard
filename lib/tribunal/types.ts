@@ -23,6 +23,7 @@ export interface ContentBlock {
     isItalic?: boolean;
     isUnderlined?: boolean;
     showResizeMenu?: boolean;
+    showCustomValues?: boolean;
   };
 }
 
