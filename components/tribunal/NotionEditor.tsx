@@ -302,17 +302,19 @@ export default function NotionEditor({
     }
   }, []);
 
-  // Extraer título y descripción automáticamente de los bloques
+  // Solo sugerir título y descripción si están vacíos
   useEffect(() => {
-    const titleBlock = blocks.find(b => b.type === 'heading');
-    const textBlock = blocks.find(b => b.type === 'text');
-    
-    setProposalMetadata(prev => ({
-      ...prev,
-      title: titleBlock?.content || '',
-      description: textBlock?.content || '',
-    }));
-  }, [blocks]);
+    if (!proposalMetadata.title && !proposalMetadata.description) {
+      const titleBlock = blocks.find(b => b.type === 'heading');
+      const textBlock = blocks.find(b => b.type === 'text');
+      
+      setProposalMetadata(prev => ({
+        ...prev,
+        title: titleBlock?.content || '',
+        description: textBlock?.content || '',
+      }));
+    }
+  }, [blocks, proposalMetadata.title, proposalMetadata.description]);
 
   return (
     <div className="min-h-screen bg-[#121212] text-white">
@@ -510,32 +512,38 @@ export default function NotionEditor({
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-[#1a1a1a] border border-[#444] rounded-lg shadow-2xl max-w-md w-full mx-4">
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-white mb-4">Configurar Propuesta</h3>
-                
-                <div className="space-y-4">
-                  {/* Título */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Título de la Propuesta</label>
-                    <input
-                      type="text"
-                      value={proposalMetadata.title}
-                      onChange={(e) => setProposalMetadata(prev => ({ ...prev, title: e.target.value }))}
-                      className="w-full bg-[#2a2a2a] border border-[#444] rounded px-3 py-2 text-white"
-                      placeholder="Título de la propuesta..."
-                    />
-                  </div>
+                                 <h3 className="text-xl font-semibold text-white mb-4">Configurar Propuesta</h3>
+                 
+                 <div className="space-y-4">
+                   {/* Título */}
+                   <div>
+                     <label className="block text-sm font-medium text-gray-300 mb-2">
+                       Título de la Propuesta 
+                       <span className="text-xs text-gray-500 ml-2">(Independiente del contenido)</span>
+                     </label>
+                     <input
+                       type="text"
+                       value={proposalMetadata.title}
+                       onChange={(e) => setProposalMetadata(prev => ({ ...prev, title: e.target.value }))}
+                       className="w-full bg-[#2a2a2a] border border-[#444] rounded px-3 py-2 text-white"
+                       placeholder="Título único para la propuesta..."
+                     />
+                   </div>
 
-                  {/* Descripción */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Descripción</label>
-                    <textarea
-                      value={proposalMetadata.description}
-                      onChange={(e) => setProposalMetadata(prev => ({ ...prev, description: e.target.value }))}
-                      className="w-full bg-[#2a2a2a] border border-[#444] rounded px-3 py-2 text-white resize-none"
-                      rows={3}
-                      placeholder="Descripción de la propuesta..."
-                    />
-                  </div>
+                   {/* Descripción */}
+                   <div>
+                     <label className="block text-sm font-medium text-gray-300 mb-2">
+                       Descripción de la Propuesta
+                       <span className="text-xs text-gray-500 ml-2">(Independiente del contenido)</span>
+                     </label>
+                     <textarea
+                       value={proposalMetadata.description}
+                       onChange={(e) => setProposalMetadata(prev => ({ ...prev, description: e.target.value }))}
+                       className="w-full bg-[#2a2a2a] border border-[#444] rounded px-3 py-2 text-white resize-none"
+                       rows={3}
+                       placeholder="Descripción única de la propuesta..."
+                     />
+                   </div>
 
                   {/* Categoría */}
                   <div>

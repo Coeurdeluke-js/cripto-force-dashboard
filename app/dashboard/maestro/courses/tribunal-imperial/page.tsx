@@ -779,6 +779,11 @@ export default function TribunalImperialPage() {
                     authorName: userData?.email || 'Usuario',
                     authorLevel: userData?.user_level || 6,
                     status: 'draft',
+                    votes: {
+                      maestros: [],
+                      approvals: [],
+                      rejections: [],
+                    },
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString()
                   };
