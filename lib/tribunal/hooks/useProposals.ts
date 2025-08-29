@@ -43,7 +43,7 @@ export function useProposals() {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        // Convertir las fechas de string a Date
+        // Convertir las fechas de string a Date y asegurar estructura de votos
         const proposalsWithDates = parsed.map((proposal: any) => ({
           ...proposal,
           createdAt: new Date(proposal.createdAt),
@@ -51,6 +51,11 @@ export function useProposals() {
           submittedAt: proposal.submittedAt ? new Date(proposal.submittedAt) : undefined,
           approvedAt: proposal.approvedAt ? new Date(proposal.approvedAt) : undefined,
           rejectedAt: proposal.rejectedAt ? new Date(proposal.rejectedAt) : undefined,
+          votes: proposal.votes || {
+            maestros: [],
+            approvals: [],
+            rejections: [],
+          },
         }));
         setProposals(proposalsWithDates);
       }
@@ -80,6 +85,11 @@ export function useProposals() {
       id: Date.now().toString(),
       createdAt: new Date(),
       updatedAt: new Date(),
+      votes: {
+        maestros: [],
+        approvals: [],
+        rejections: [],
+      },
     };
     
     const updatedProposals = [...proposals, newProposal];
@@ -108,6 +118,12 @@ export function useProposals() {
     saveProposals(updatedProposals);
   };
 
+  // Limpiar todas las propuestas (para empezar de cero)
+  const clearAllProposals = () => {
+    setProposals([]);
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
   // Obtener propuestas por estado
   const getProposalsByStatus = (status: TribunalProposal['status']) => {
     return proposals.filter(proposal => proposal.status === status);
@@ -131,10 +147,17 @@ export function useProposals() {
     const proposal = proposals.find(p => p.id === id);
     if (!proposal) return;
 
+    // Asegurar que la estructura de votos esté inicializada
+    const currentVotes = proposal.votes || {
+      maestros: [],
+      approvals: [],
+      rejections: [],
+    };
+
     const updatedVotes = {
-      ...proposal.votes,
-      maestros: [...proposal.votes.maestros, maestrosId],
-      approvals: [...proposal.votes.approvals, maestrosId],
+      ...currentVotes,
+      maestros: [...(currentVotes.maestros || []), maestrosId],
+      approvals: [...(currentVotes.approvals || []), maestrosId],
     };
 
     updateProposal(id, {
@@ -149,10 +172,17 @@ export function useProposals() {
     const proposal = proposals.find(p => p.id === id);
     if (!proposal) return;
 
+    // Asegurar que la estructura de votos esté inicializada
+    const currentVotes = proposal.votes || {
+      maestros: [],
+      approvals: [],
+      rejections: [],
+    };
+
     const updatedVotes = {
-      ...proposal.votes,
-      maestros: [...proposal.votes.maestros, maestrosId],
-      rejections: [...proposal.votes.rejections, maestrosId],
+      ...currentVotes,
+      maestros: [...(currentVotes.maestros || []), maestrosId],
+      rejections: [...(currentVotes.rejections || []), maestrosId],
     };
 
     updateProposal(id, {
@@ -174,5 +204,6 @@ export function useProposals() {
     getProposalsByStatus,
     getProposalsByAuthor,
     loadProposals,
+    clearAllProposals,
   };
 }
