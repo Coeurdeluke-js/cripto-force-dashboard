@@ -83,7 +83,8 @@ export default function NotionBlock({
   const [editContent, setEditContent] = useState(content);
   const [showMenu, setShowMenu] = useState(false);
   const [showTypeMenu, setShowTypeMenu] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -150,7 +151,7 @@ export default function NotionBlock({
           <div className="text-3xl font-bold text-white">
             {isEditing ? (
               <input
-                ref={contentRef}
+                ref={inputRef}
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
                 onBlur={handleSave}
@@ -172,7 +173,7 @@ export default function NotionBlock({
           <div className="text-xl font-semibold text-white">
             {isEditing ? (
               <input
-                ref={contentRef}
+                ref={inputRef}
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
                 onBlur={handleSave}
@@ -196,7 +197,7 @@ export default function NotionBlock({
             <div className="flex-1">
               {isEditing ? (
                 <input
-                  ref={contentRef}
+                  ref={inputRef}
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
                   onBlur={handleSave}
@@ -225,7 +226,7 @@ export default function NotionBlock({
             <div className="flex-1">
               {isEditing ? (
                 <input
-                  ref={contentRef}
+                  ref={inputRef}
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
                   onBlur={handleSave}
@@ -263,7 +264,7 @@ export default function NotionBlock({
                 <div>
                   <label className="block text-xs text-gray-400 mb-1">URL de imagen:</label>
                   <input
-                    ref={contentRef}
+                    ref={inputRef}
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
                     onBlur={handleBlur}
@@ -331,17 +332,17 @@ export default function NotionBlock({
           <div className="text-white">
             {isEditing ? (
               <div className="space-y-2">
-                <textarea
-                  ref={contentRef}
-                  value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                  onBlur={handleBlur}
-                  onKeyDown={handleKeyDown}
-                  className="w-full bg-[#1a1a1a] border border-[#444] rounded p-3 text-white font-mono resize-none"
-                  placeholder="Escribe tu código HTML o CSS aquí..."
-                  rows={Math.max(3, editContent.split('\n').length)}
-                  autoFocus
-                />
+                                 <textarea
+                   ref={textareaRef}
+                   value={editContent}
+                   onChange={(e) => setEditContent(e.target.value)}
+                   onBlur={handleBlur}
+                   onKeyDown={handleKeyDown}
+                   className="w-full bg-[#1a1a1a] border border-[#444] rounded p-3 text-white font-mono resize-none"
+                   placeholder="Escribe tu código HTML o CSS aquí..."
+                   rows={Math.max(3, editContent.split('\n').length)}
+                   autoFocus
+                 />
                 <div className="text-xs text-gray-400">
                   💡 El código se renderizará automáticamente en tiempo real
                 </div>
@@ -383,7 +384,7 @@ export default function NotionBlock({
                 <div>
                   <label className="block text-xs text-gray-400 mb-1">URL del video (YouTube, Vimeo, etc.):</label>
                   <input
-                    ref={contentRef}
+                    ref={inputRef}
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
                     onBlur={handleBlur}
@@ -441,7 +442,7 @@ export default function NotionBlock({
             {isEditing ? (
               <div className="space-y-2">
                 <input
-                  ref={contentRef}
+                  ref={inputRef}
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
                   onBlur={handleBlur}
@@ -478,17 +479,17 @@ export default function NotionBlock({
           <div className="text-white">
             {isEditing ? (
               <div className="space-y-2">
-                <textarea
-                  ref={contentRef}
-                  value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                  onBlur={handleBlur}
-                  onKeyDown={handleKeyDown}
-                  className="w-full bg-[#2a2a2a] border-l-4 border-[#FFD447] rounded px-3 py-2 text-white resize-none"
-                  placeholder="Escribe tu cita aquí..."
-                  rows={Math.max(2, editContent.split('\n').length)}
-                  autoFocus
-                />
+                                 <textarea
+                   ref={textareaRef}
+                   value={editContent}
+                   onChange={(e) => setEditContent(e.target.value)}
+                   onBlur={handleBlur}
+                   onKeyDown={handleKeyDown}
+                   className="w-full bg-[#2a2a2a] border-l-4 border-[#FFD447] rounded px-3 py-2 text-white resize-none"
+                   placeholder="Escribe tu cita aquí..."
+                   rows={Math.max(2, editContent.split('\n').length)}
+                   autoFocus
+                 />
                 <div className="text-xs text-gray-400">
                   💡 Las citas se mostrarán con un borde dorado especial
                 </div>
@@ -511,17 +512,17 @@ export default function NotionBlock({
         return (
           <div className="text-white">
             {isEditing ? (
-              <textarea
-                ref={contentRef}
-                value={editContent}
-                onChange={(e) => setEditContent(e.target.value)}
-                onBlur={handleBlur}
-                onKeyDown={handleKeyDown}
-                className="w-full bg-transparent border-none outline-none text-white resize-none min-h-[24px]"
-                placeholder="Escribe aquí..."
-                rows={Math.max(1, editContent.split('\n').length)}
-                autoFocus
-              />
+                             <textarea
+                 ref={textareaRef}
+                 value={editContent}
+                 onChange={(e) => setEditContent(e.target.value)}
+                 onBlur={handleBlur}
+                 onKeyDown={handleKeyDown}
+                 className="w-full bg-transparent border-none outline-none text-white resize-none min-h-[24px]"
+                 placeholder="Escribe aquí..."
+                 rows={Math.max(1, editContent.split('\n').length)}
+                 autoFocus
+               />
             ) : (
               <div 
                 onClick={handleClick}

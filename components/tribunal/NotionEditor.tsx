@@ -30,10 +30,90 @@ interface Block {
   order: number;
 }
 
+// Función para convertir bloques del NotionEditor a ContentBlock del sistema
+const convertBlockToContentBlock = (block: Block): any => {
+  const baseBlock = {
+    id: block.id,
+    order: block.order,
+    metadata: block.metadata || {}
+  };
+
+  switch (block.type) {
+    case 'heading':
+    case 'subheading':
+      return {
+        ...baseBlock,
+        type: 'text',
+        content: {
+          text: block.content,
+          isHeading: block.type === 'heading',
+          isSubheading: block.type === 'subheading'
+        }
+      };
+    case 'list':
+      return {
+        ...baseBlock,
+        type: 'text',
+        content: {
+          text: block.content,
+          isList: true
+        }
+      };
+    case 'checklist':
+      return {
+        ...baseBlock,
+        type: 'checklist',
+        content: block.content
+      };
+    case 'image':
+      return {
+        ...baseBlock,
+        type: 'image',
+        content: block.content
+      };
+    case 'video':
+      return {
+        ...baseBlock,
+        type: 'video',
+        content: block.content
+      };
+    case 'link':
+      return {
+        ...baseBlock,
+        type: 'link',
+        content: block.content
+      };
+    case 'code':
+      return {
+        ...baseBlock,
+        type: 'code',
+        content: block.content
+      };
+    case 'quote':
+      return {
+        ...baseBlock,
+        type: 'quote',
+        content: block.content
+      };
+    case 'divider':
+      return {
+        ...baseBlock,
+        type: 'divider',
+        content: block.content
+      };
+    default:
+      return {
+        ...baseBlock,
+        type: 'text',
+        content: block.content
+      };
+  }
+};
+
 interface NotionEditorProps {
   initialBlocks?: Block[];
   onBlocksChange?: (blocks: Block[]) => void;
-  onSave?: (blocks: Block[], metadata: ProposalMetadata) => void;
+  onSave?: (blocks: any[], metadata: ProposalMetadata) => void;
   readOnly?: boolean;
 }
 
@@ -585,14 +665,16 @@ export default function NotionEditor({
                     Cancelar
                   </button>
                   <button
-                    onClick={() => {
-                      if (proposalMetadata.title.trim() && proposalMetadata.description.trim()) {
-                        onSave?.(blocks, proposalMetadata);
-                        setShowConfigModal(false);
-                      } else {
-                        alert('Por favor completa el título y la descripción antes de guardar.');
-                      }
-                    }}
+                                         onClick={() => {
+                       if (proposalMetadata.title.trim() && proposalMetadata.description.trim()) {
+                         // Convertir bloques al formato del sistema
+                         const convertedBlocks = blocks.map(convertBlockToContentBlock);
+                         onSave?.(convertedBlocks, proposalMetadata);
+                         setShowConfigModal(false);
+                       } else {
+                         alert('Por favor completa el título y la descripción antes de guardar.');
+                       }
+                     }}
                     className="px-4 py-2 bg-[#FFD447] text-[#1a1a1a] rounded hover:bg-[#FFC437] transition-colors font-medium"
                   >
                     Guardar Propuesta

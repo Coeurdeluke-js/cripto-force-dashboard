@@ -778,7 +778,7 @@ export default function TribunalImperialPage() {
                     authorId: userData?.id || 'default',
                     authorName: userData?.email || 'Usuario',
                     authorLevel: userData?.user_level || 6,
-                    status: 'draft',
+                    status: 'pending' as const,
                     votes: {
                       maestros: [],
                       approvals: [],
