@@ -81,193 +81,215 @@ export default function ModuloPage() {
 
   const renderContentBlock = (block: any, index: number) => {
     switch (block.type) {
-             case 'text':
-         return (
-           <div key={index} className="mb-6">
-             <div 
-               className="text-white leading-relaxed text-lg"
-               style={{
-                 fontSize: block.metadata?.fontSize || '1.125rem',
-                 fontWeight: block.metadata?.isBold ? 'bold' : 'normal',
-                 fontStyle: block.metadata?.isItalic ? 'italic' : 'normal',
-                 textDecoration: block.metadata?.isUnderlined ? 'underline' : 'none',
-                 lineHeight: '1.7',
-                 textAlign: block.metadata?.textAlign || 'left'
-               }}
-               dangerouslySetInnerHTML={{ __html: block.content }}
-             />
-           </div>
-         );
-      
-             case 'image':
-         return (
-           <div key={index} className="mb-6">
-             <div className="flex justify-center">
-               <img 
-                 src={block.content} 
-                 alt={block.metadata?.alt || 'Imagen del módulo'}
-                 className="max-w-full h-auto rounded-lg shadow-lg border border-[#232323]"
-                 style={{
-                   width: block.metadata?.width || 'auto',
-                   height: block.metadata?.height || 'auto',
-                   maxWidth: '100%',
-                   objectFit: 'contain'
-                 }}
-               />
-             </div>
-             {block.metadata?.caption && (
-               <p className="text-sm text-gray-400 mt-2 text-center italic">{block.metadata.caption}</p>
-             )}
-           </div>
-         );
-      
-             case 'video':
-         return (
-           <div key={index} className="mb-6">
-             <div className="bg-[#1a1a1a] border border-[#232323] rounded-lg p-4">
-               {block.content.includes('youtube.com') || block.content.includes('youtu.be') ? (
-                 <div className="aspect-video bg-[#2a2a2a] rounded-lg border border-[#444] flex items-center justify-center">
-                   <iframe
-                     src={block.content.replace('watch?v=', 'embed/')}
-                     title="Video de YouTube"
-                     className="w-full h-full rounded-lg"
-                     frameBorder="0"
-                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                     allowFullScreen
-                   />
-                 </div>
-               ) : (
-                 <video 
-                   controls 
-                   className="w-full rounded-lg"
-                   src={block.content}
-                   poster={block.metadata?.poster}
-                 >
-                   Tu navegador no soporta el elemento de video.
-                 </video>
-               )}
-               {block.metadata?.caption && (
-                 <p className="text-sm text-gray-400 mt-2 text-center italic">{block.metadata.caption}</p>
-               )}
-             </div>
-           </div>
-         );
-      
-             case 'link':
-         return (
-           <div key={index} className="mb-6">
-             <a 
-               href={block.content} 
-               target="_blank" 
-               rel="noopener noreferrer"
-               className="inline-flex items-center space-x-2 text-[#FFD447] hover:text-[#FFC437] underline break-all bg-[#FFD447]/10 hover:bg-[#FFD447]/20 px-3 py-2 rounded-lg transition-all duration-200"
-             >
-               <span>{block.metadata?.text || block.content}</span>
-               <span className="text-xs">↗</span>
-             </a>
-           </div>
-         );
-      
-             case 'code':
-         return (
-           <div key={index} className="mb-6">
-             <div className="bg-[#1a1a1a] border border-[#444] rounded-lg p-4">
-               <div className="flex items-center justify-between mb-2">
-                 <span className="text-sm text-[#FFD447] font-mono">
-                   {block.metadata?.language || 'text'}
-                 </span>
-                 {block.metadata?.language === 'html' && (
-                   <button
-                     onClick={() => {
-                       const newWindow = window.open('', '_blank');
-                       if (newWindow) {
-                         newWindow.document.write(`
-                           <!DOCTYPE html>
-                           <html>
-                           <head>
-                             <title>Preview - ${module?.title}</title>
-                             <style>
-                               body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
-                             </style>
-                           </head>
-                           <body>
-                             ${block.content}
-                           </body>
-                           </html>
-                         `);
-                         newWindow.document.close();
-                       }
-                     }}
-                     className="text-xs bg-[#FFD447] text-gray-900 px-2 py-1 rounded hover:bg-[#FFC437] transition-colors"
-                   >
-                     Ver Preview
-                   </button>
-                 )}
-               </div>
-               <pre className="text-sm text-white font-mono overflow-x-auto">
-                 <code>{block.content}</code>
-               </pre>
-             </div>
-           </div>
-         );
-      
-             case 'quote':
-         return (
-           <div key={index} className="mb-6">
-             <blockquote className="border-l-4 border-[#FFD447] pl-6 italic text-white bg-[#1a1a1a]/50 rounded-r-lg p-4">
-               <p className="text-xl mb-3 text-[#fafafa] leading-relaxed">"{block.content}"</p>
-               {block.metadata?.author && (
-                 <footer className="text-sm text-[#FFD447] font-medium">— {block.metadata.author}</footer>
-               )}
-             </blockquote>
-           </div>
-         );
-      
-             case 'checklist':
-         return (
-           <div key={index} className="mb-6">
-             <div className="bg-[#1a1a1a] border border-[#232323] rounded-lg p-4">
-               <div className="space-y-3">
-                 {block.content.split('\n').filter((item: string) => item.trim()).map((item: string, itemIndex: number) => {
-                   const isCompleted = item.trim().startsWith('✓');
-                   return (
-                     <div key={itemIndex} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-[#2a2a2a] transition-colors">
-                       <Check 
-                         size={20} 
-                         className={`flex-shrink-0 ${isCompleted ? 'text-green-500' : 'text-[#FFD447]'}`} 
-                       />
-                       <span className={`text-white ${isCompleted ? 'line-through text-gray-400' : ''}`}>
-                         {item.trim().replace(/^✓\s*/, '')}
-                       </span>
-                     </div>
-                   );
-                 })}
-               </div>
-             </div>
-           </div>
-         );
-       
-       case 'divider':
-         return (
-           <div key={index} className="my-8">
-             <div className="flex items-center">
-               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#FFD447] to-transparent"></div>
-               <div className="px-4">
-                 <span className="text-[#FFD447] text-sm font-medium">
-                   {block.content || '✧ ✧ ✧'}
-                 </span>
-               </div>
-               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#FFD447] to-transparent"></div>
-             </div>
-           </div>
-         );
-       
-       default:
-         return (
-           <div key={index} className="mb-6">
-             <p className="text-gray-400">Tipo de contenido no soportado: {block.type}</p>
-           </div>
-         );
+      case 'heading':
+        return (
+          <div key={index} className="mb-6">
+            <h1 className="text-3xl font-bold text-white mb-4">
+              {block.content}
+            </h1>
+          </div>
+        );
+
+      case 'subheading':
+        return (
+          <div key={index} className="mb-6">
+            <h2 className="text-2xl font-semibold text-[#FFD447] mb-3">
+              {block.content}
+            </h2>
+          </div>
+        );
+
+      case 'text':
+        return (
+          <div key={index} className="mb-6">
+            <div 
+              className="text-white leading-relaxed text-lg"
+              style={{
+                fontSize: block.metadata?.fontSize || '1.125rem',
+                fontWeight: block.metadata?.isBold ? 'bold' : 'normal',
+                fontStyle: block.metadata?.isItalic ? 'italic' : 'normal',
+                textDecoration: block.metadata?.isUnderlined ? 'underline' : 'none',
+                lineHeight: '1.7',
+                textAlign: block.metadata?.textAlign || 'left'
+              }}
+              dangerouslySetInnerHTML={{ __html: block.content }}
+            />
+          </div>
+        );
+
+      case 'list':
+        return (
+          <div key={index} className="mb-6">
+            <ul className="list-disc list-inside space-y-2">
+              <li className="text-white text-lg">
+                {block.content}
+              </li>
+            </ul>
+          </div>
+        );
+
+      case 'checklist':
+        return (
+          <div key={index} className="mb-6">
+            <div className="flex items-start space-x-3">
+              <input
+                type="checkbox"
+                checked={block.metadata?.checked || false}
+                readOnly
+                className="mt-1 w-4 h-4 text-[#FFD447] bg-[#2a2a2a] border-[#444] rounded focus:ring-[#FFD447] focus:ring-2"
+              />
+              <span className={`text-white text-lg ${block.metadata?.checked ? 'line-through text-gray-400' : ''}`}>
+                {block.content}
+              </span>
+            </div>
+          </div>
+        );
+
+      case 'image':
+        return (
+          <div key={index} className="mb-6">
+            <div className="flex justify-center">
+              <img 
+                src={block.content} 
+                alt={block.metadata?.alt || 'Imagen del módulo'}
+                className="max-w-full h-auto rounded-lg shadow-lg border border-[#232323]"
+                style={{
+                  width: block.metadata?.width || 'auto',
+                  height: block.metadata?.height || 'auto',
+                  maxWidth: '100%',
+                  objectFit: 'contain'
+                }}
+              />
+            </div>
+            {block.metadata?.caption && (
+              <p className="text-sm text-gray-400 mt-2 text-center italic">{block.metadata.caption}</p>
+            )}
+          </div>
+        );
+
+      case 'video':
+        return (
+          <div key={index} className="mb-6">
+            <div className="bg-[#1a1a1a] border border-[#232323] rounded-lg p-4">
+              {block.content.includes('youtube.com') || block.content.includes('youtu.be') ? (
+                <div className="aspect-video bg-[#2a2a2a] rounded-lg border border-[#444] flex items-center justify-center">
+                  <iframe
+                    src={block.content.includes('youtube.com') ? 
+                      block.content.replace('watch?v=', 'embed/') :
+                      block.content.replace('youtu.be/', 'youtube.com/embed/')
+                    }
+                    title="Video de YouTube"
+                    className="w-full h-full rounded-lg"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              ) : (
+                <video 
+                  controls 
+                  className="w-full rounded-lg"
+                  src={block.content}
+                  poster={block.metadata?.poster}
+                >
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              )}
+              {block.metadata?.caption && (
+                <p className="text-sm text-gray-400 mt-2 text-center italic">{block.metadata.caption}</p>
+              )}
+            </div>
+          </div>
+        );
+
+      case 'link':
+        return (
+          <div key={index} className="mb-6">
+            <a 
+              href={block.content} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-2 text-[#FFD447] hover:text-[#FFC437] underline break-all bg-[#FFD447]/10 hover:bg-[#FFD447]/20 px-3 py-2 rounded-lg transition-all duration-200"
+            >
+              <span>{block.metadata?.text || block.content}</span>
+              <span className="text-xs">↗</span>
+            </a>
+          </div>
+        );
+
+      case 'code':
+        return (
+          <div key={index} className="mb-6">
+            <div className="bg-[#1a1a1a] border border-[#444] rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-[#FFD447] font-mono">
+                  {block.metadata?.language || 'text'}
+                </span>
+                {(block.metadata?.language === 'html' || block.content.includes('<')) && (
+                  <button
+                    onClick={() => {
+                      const newWindow = window.open('', '_blank');
+                      if (newWindow) {
+                        newWindow.document.write(`
+                          <!DOCTYPE html>
+                          <html>
+                          <head>
+                            <title>Preview - ${module?.title}</title>
+                            <style>
+                              body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+                            </style>
+                          </head>
+                          <body>
+                            ${block.content}
+                          </body>
+                          </html>
+                        `);
+                        newWindow.document.close();
+                      }
+                    }}
+                    className="px-3 py-1 bg-[#FFD447] text-[#1a1a1a] text-xs rounded hover:bg-[#FFC437] transition-colors"
+                  >
+                    Ver Preview
+                  </button>
+                )}
+              </div>
+              <pre className="text-sm text-gray-300 font-mono overflow-x-auto">
+                <code>{block.content}</code>
+              </pre>
+            </div>
+          </div>
+        );
+
+      case 'quote':
+        return (
+          <div key={index} className="mb-6">
+            <blockquote className="border-l-4 border-[#FFD447] pl-4 py-2 bg-[#2a2a2a]/50 rounded-r">
+              <p className="text-gray-300 italic text-lg">"{block.content}"</p>
+            </blockquote>
+          </div>
+        );
+
+      case 'divider':
+        return (
+          <div key={index} className="mb-6">
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-[#FFD447] rounded-full"></div>
+              <div className="w-2 h-2 bg-[#FFD447] rounded-full"></div>
+              <div className="w-2 h-2 bg-[#FFD447] rounded-full"></div>
+            </div>
+            <div className="w-full h-px bg-[#444] mt-2"></div>
+          </div>
+        );
+
+      default:
+        return (
+          <div key={index} className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+            <p className="text-red-400 text-sm">
+              Tipo de contenido no soportado: {block.type}
+            </p>
+            <p className="text-gray-300 mt-2">{block.content}</p>
+          </div>
+        );
     }
   };
 

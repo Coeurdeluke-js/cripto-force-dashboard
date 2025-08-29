@@ -746,12 +746,13 @@ export default function TribunalImperialPage() {
         {activeTab === 'crear' && (
           <div className="space-y-6">
             <div className="flex items-center space-x-4 mb-6">
-              <BackButton
+              <button
                 onClick={() => setActiveTab('propuestas')}
-                className="p-2 text-gray-400 hover:text-white hover:bg-[#333] rounded-lg transition-colors"
+                className="flex items-center p-2 text-gray-400 hover:text-white hover:bg-[#333] rounded-lg transition-colors"
               >
+                <ArrowLeft className="mr-2" />
                 Volver
-              </BackButton>
+              </button>
               <h2 className="text-2xl font-bold text-[#FFD700]">Creador de Contenido</h2>
             </div>
             
