@@ -775,7 +775,7 @@ export default function TribunalImperialPage() {
                     content: blocks,
                     category: metadata.category,
                     targetHierarchy: metadata.targetHierarchy,
-                    authorId: userData?.user_id || 'default',
+                    authorId: userData?.id || 'default',
                     authorName: userData?.email || 'Usuario',
                     authorLevel: userData?.user_level || 6,
                     status: 'draft',
