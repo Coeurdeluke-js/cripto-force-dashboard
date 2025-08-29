@@ -221,41 +221,62 @@ export default function ModuloPage() {
         return (
           <div key={index} className="mb-6">
             <div className="bg-[#1a1a1a] border border-[#444] rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-4">
                 <span className="text-sm text-[#FFD447] font-mono">
                   {block.metadata?.language || 'text'}
                 </span>
                 {(block.metadata?.language === 'html' || block.content.includes('<')) && (
                   <button
-                    onClick={() => {
-                      const newWindow = window.open('', '_blank');
-                      if (newWindow) {
-                        newWindow.document.write(`
-                          <!DOCTYPE html>
-                          <html>
-                          <head>
-                            <title>Preview - ${module?.title}</title>
-                            <style>
-                              body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
-                            </style>
-                          </head>
-                          <body>
-                            ${block.content}
-                          </body>
-                          </html>
-                        `);
-                        newWindow.document.close();
+                    onClick={(event) => {
+                      // Toggle entre mostrar preview y código fuente
+                      const previewElement = document.getElementById(`preview-${index}`);
+                      const codeElement = document.getElementById(`code-${index}`);
+                      const button = event.currentTarget as HTMLButtonElement;
+                      
+                      if (previewElement && codeElement) {
+                        if (previewElement.style.display === 'none') {
+                          previewElement.style.display = 'block';
+                          codeElement.style.display = 'none';
+                          button.textContent = 'Ver Código Fuente';
+                        } else {
+                          previewElement.style.display = 'none';
+                          codeElement.style.display = 'block';
+                          button.textContent = 'Ver Preview';
+                        }
                       }
                     }}
                     className="px-3 py-1 bg-[#FFD447] text-[#1a1a1a] text-xs rounded hover:bg-[#FFC437] transition-colors"
                   >
-                    Ver Preview
+                    Ver Código Fuente
                   </button>
                 )}
               </div>
-              <pre className="text-sm text-gray-300 font-mono overflow-x-auto">
-                <code>{block.content}</code>
-              </pre>
+              
+              {/* Preview en tiempo real del HTML/CSS */}
+              {(block.metadata?.language === 'html' || block.content.includes('<')) && (
+                <div 
+                  id={`preview-${index}`}
+                  className="mb-4 p-4 bg-white text-black rounded-lg border border-[#444] min-h-[200px]"
+                >
+                  <div className="text-xs text-[#FFD447] font-medium mb-2 text-black">👁️ Vista Previa en Tiempo Real:</div>
+                  <div 
+                    className="min-h-[150px]"
+                    dangerouslySetInnerHTML={{ __html: block.content }}
+                  />
+                </div>
+              )}
+              
+              {/* Código fuente */}
+              <div 
+                id={`code-${index}`}
+                className="bg-[#1a1a1a] border border-[#444] rounded-lg p-4"
+                style={{ display: 'none' }}
+              >
+                <div className="text-xs text-[#FFD447] font-medium mb-2">💻 Código Fuente:</div>
+                <pre className="text-sm text-gray-300 font-mono overflow-x-auto">
+                  <code>{block.content}</code>
+                </pre>
+              </div>
             </div>
           </div>
         );

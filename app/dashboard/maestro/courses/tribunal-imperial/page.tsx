@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Crown, FileText, CheckCircle, XCircle, Clock, Users, BarChart3, Plus, Eye, Save, Edit, Trash2 } from 'lucide-react';
+import { Crown, FileText, CheckCircle, XCircle, Clock, Users, BarChart3, Plus, Eye, Save, Edit, Trash2, ArrowLeft } from 'lucide-react';
 import { useSafeAuth } from '@/context/AuthContext';
 import { canUserAccessTribunal } from '@/lib/tribunal/permissions';
 import ContentEditor from '@/components/tribunal/ContentEditor';
