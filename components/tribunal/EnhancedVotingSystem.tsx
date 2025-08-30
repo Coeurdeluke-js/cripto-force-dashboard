@@ -18,30 +18,58 @@ export default function EnhancedVotingSystem({ proposal, onVote, onEdit }: Enhan
   const [votingStatus, setVotingStatus] = useState<'idle' | 'voting' | 'success' | 'error'>('idle');
   const [maestrosSistema, setMaestrosSistema] = useState<SystemUser[]>([]);
   const [loading, setLoading] = useState(true);
-  const [localProposal, setLocalProposal] = useState(proposal);
+  const [localProposal, setLocalProposal] = useState(proposal || { id: 'default', status: 'pending', votes: { approvals: [], rejections: [] } });
 
   // Cargar usuarios del sistema desde la base de datos
   useEffect(() => {
+    let isMounted = true;
+    
     const loadSystemUsers = async () => {
       try {
         setLoading(true);
         const users = await getVotingUsers();
-        setMaestrosSistema(users);
-        console.log('✅ Usuarios del sistema cargados:', users);
+        
+        if (isMounted) {
+          // Asegurar que users es un array válido
+          if (Array.isArray(users) && users.length > 0) {
+            setMaestrosSistema(users);
+            console.log('✅ Usuarios del sistema cargados:', users);
+          } else {
+            console.log('⚠️ No se encontraron usuarios válidos, usando array vacío');
+            setMaestrosSistema([]);
+          }
+        }
       } catch (error) {
         console.error('❌ Error al cargar usuarios del sistema:', error);
-        setMaestrosSistema([]);
+        if (isMounted) {
+          setMaestrosSistema([]);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadSystemUsers();
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Sincronizar propuesta local con la propuesta del padre
   useEffect(() => {
-    setLocalProposal(proposal);
+    if (proposal && typeof proposal === 'object') {
+      setLocalProposal(proposal);
+    } else {
+      // Si no hay propuesta válida, crear una por defecto
+      setLocalProposal({
+        id: 'default',
+        status: 'pending',
+        votes: { approvals: [], rejections: [] }
+      });
+    }
   }, [proposal]);
 
   // Determinar el estado de votación de cada maestro

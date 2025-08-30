@@ -57,7 +57,14 @@ export const fetchSystemUsers = async (): Promise<SystemUser[]> => {
 
 // Función para obtener usuarios que pueden votar (nivel 5 o superior)
 export const getVotingUsers = async (): Promise<SystemUser[]> => {
-  return await fetchSystemUsers();
+  try {
+    const users = await fetchSystemUsers();
+    // Asegurar que siempre devolvemos un array válido
+    return Array.isArray(users) ? users : getFallbackUsers();
+  } catch (error) {
+    console.error('❌ Error en getVotingUsers:', error);
+    return getFallbackUsers();
+  }
 };
 
 // Función para obtener el total de usuarios del sistema
