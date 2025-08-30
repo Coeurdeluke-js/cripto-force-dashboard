@@ -40,22 +40,32 @@ const convertBlockToContentBlock = (block: Block): any => {
 
   switch (block.type) {
     case 'heading':
+      return {
+        ...baseBlock,
+        type: 'text',
+        content: block.content,
+        metadata: {
+          ...block.metadata,
+          isHeading: true
+        }
+      };
     case 'subheading':
       return {
         ...baseBlock,
         type: 'text',
-        content: {
-          text: block.content,
-          isHeading: block.type === 'heading',
-          isSubheading: block.type === 'subheading'
+        content: block.content,
+        metadata: {
+          ...block.metadata,
+          isSubheading: true
         }
       };
     case 'list':
       return {
         ...baseBlock,
         type: 'text',
-        content: {
-          text: block.content,
+        content: block.content,
+        metadata: {
+          ...block.metadata,
           isList: true
         }
       };
@@ -142,8 +152,13 @@ export default function NotionEditor({
   initialBlocks = [],
   onBlocksChange,
   onSave,
-  readOnly = false
-}: NotionEditorProps) {
+  readOnly = false,
+  isEditing = false,
+  onUpdate
+}: NotionEditorProps & {
+  isEditing?: boolean;
+  onUpdate?: (blocks: any[], metadata: ProposalMetadata) => void;
+}) {
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [draggedBlock, setDraggedBlock] = useState<Block | null>(null);
@@ -152,12 +167,12 @@ export default function NotionEditor({
   const [slashMenuPosition, setSlashMenuPosition] = useState({ x: 0, y: 0 });
   const [slashMenuFilter, setSlashMenuFilter] = useState('');
   const [showConfigModal, setShowConfigModal] = useState(false);
-  const [proposalMetadata, setProposalMetadata] = useState<ProposalMetadata>({
-    title: '',
-    description: '',
-    category: 'theoretical',
-    targetHierarchy: 6, // Acólito por defecto
-  });
+     const [proposalMetadata, setProposalMetadata] = useState<ProposalMetadata>({
+     title: '',
+     description: '',
+     category: 'theoretical',
+     targetHierarchy: 2, // Acólito por defecto (Nivel 2)
+   });
   const editorRef = useRef<HTMLDivElement>(null);
   const slashMenuRef = useRef<HTMLDivElement>(null);
 
@@ -222,21 +237,34 @@ export default function NotionEditor({
     ));
   };
 
-  // Eliminar bloque
-  const deleteBlock = (id: string) => {
-    if (blocks.length <= 1) return; // No eliminar el último bloque
-    
-    setBlocks(prev => {
-      const newBlocks = prev.filter(block => block.id !== id);
-      // Reordenar
-      newBlocks.forEach((block, index) => {
-        block.order = index;
-      });
-      return newBlocks;
-    });
-    
-    setSelectedBlockId(null);
-  };
+     // Eliminar bloque
+   const deleteBlock = (id: string) => {
+     const blockToDelete = blocks.find(b => b.id === id);
+     
+     // No permitir eliminar bloques obligatorios si son los únicos de su tipo
+     if (blockToDelete?.type === 'heading' && blocks.filter(b => b.type === 'heading').length <= 1) {
+       alert('No puedes eliminar el único bloque de título. Debes tener al menos uno.');
+       return;
+     }
+     
+     if (blockToDelete?.type === 'subheading' && blocks.filter(b => b.type === 'subheading').length <= 1) {
+       alert('No puedes eliminar el único bloque de subtítulo. Debes tener al menos uno.');
+       return;
+     }
+     
+     if (blocks.length <= 2) return; // Mantener al menos título y subtítulo
+     
+     setBlocks(prev => {
+       const newBlocks = prev.filter(block => block.id !== id);
+       // Reordenar
+       newBlocks.forEach((block, index) => {
+         block.order = index;
+       });
+       return newBlocks;
+     });
+     
+     setSelectedBlockId(null);
+   };
 
   // Duplicar bloque
   const duplicateBlock = (id: string) => {
@@ -287,14 +315,27 @@ export default function NotionEditor({
     setBlocks(newBlocks);
   };
 
-  // Cambiar tipo de bloque
-  const changeBlockType = (id: string, newType: string) => {
-    setBlocks(prev => prev.map(block => 
-      block.id === id 
-        ? { ...block, type: newType as Block['type'] }
-        : block
-    ));
-  };
+     // Cambiar tipo de bloque
+   const changeBlockType = (id: string, newType: string) => {
+     const blockToChange = blocks.find(b => b.id === id);
+     
+     // No permitir cambiar el tipo de bloques obligatorios si son los únicos de su tipo
+     if (blockToChange?.type === 'heading' && blocks.filter(b => b.type === 'heading').length <= 1 && newType !== 'heading') {
+       alert('No puedes cambiar el tipo del único bloque de título. Debes mantener al menos uno.');
+       return;
+     }
+     
+     if (blockToChange?.type === 'subheading' && blocks.filter(b => b.type === 'subheading').length <= 1 && newType !== 'subheading') {
+       alert('No puedes cambiar el tipo del único bloque de subtítulo. Debes mantener al menos uno.');
+       return;
+     }
+     
+     setBlocks(prev => prev.map(block => 
+       block.id === id 
+         ? { ...block, type: newType as Block['type'] }
+         : block
+     ));
+   };
 
   // Drag & Drop handlers
   const handleDragStart = (event: DragStartEvent) => {
@@ -373,41 +414,48 @@ export default function NotionEditor({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Inicializar con un bloque si no hay ninguno
-  useEffect(() => {
-    if (blocks.length === 0) {
-      const initialBlock = createBlock('text', '');
-      setBlocks([initialBlock]);
-      setSelectedBlockId(initialBlock.id);
-    }
-  }, []);
+     // Inicializar con bloques obligatorios si no hay ninguno
+   useEffect(() => {
+     if (blocks.length === 0) {
+       const titleBlock = createBlock('heading', 'Título de la propuesta');
+       const subtitleBlock = createBlock('subheading', 'Subtítulo de la propuesta');
+       const initialBlocks = [titleBlock, subtitleBlock];
+       setBlocks(initialBlocks);
+       setSelectedBlockId(titleBlock.id);
+     }
+   }, []);
 
-  // Solo sugerir título y descripción si están vacíos
-  useEffect(() => {
-    if (!proposalMetadata.title && !proposalMetadata.description) {
-      const titleBlock = blocks.find(b => b.type === 'heading');
-      const textBlock = blocks.find(b => b.type === 'text');
-      
-      setProposalMetadata(prev => ({
-        ...prev,
-        title: titleBlock?.content || '',
-        description: textBlock?.content || '',
-      }));
-    }
-  }, [blocks, proposalMetadata.title, proposalMetadata.description]);
+     // Solo sugerir título y descripción si están vacíos
+   useEffect(() => {
+     if (!proposalMetadata.title && !proposalMetadata.description) {
+       const titleBlock = blocks.find(b => b.type === 'heading');
+       const subtitleBlock = blocks.find(b => b.type === 'subheading');
+       
+       setProposalMetadata(prev => ({
+         ...prev,
+         title: titleBlock?.content || '',
+         description: subtitleBlock?.content || '',
+       }));
+     }
+   }, [blocks, proposalMetadata.title, proposalMetadata.description]);
 
   return (
     <div className="min-h-screen bg-[#121212] text-white">
       <div className="max-w-3xl mx-auto py-8 px-4">
-        {/* Header del editor */}
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-[#FFD447] mb-2">
-            Tribunal Imperial
-          </h1>
-          <p className="text-gray-400">
-            Editor de contenido estilo Notion para el sistema de aprobación
-          </p>
-        </div>
+                 {/* Header del editor */}
+         <div className="mb-8 text-center">
+           <h1 className="text-3xl font-bold text-[#FFD447] mb-2">
+             Tribunal Imperial
+           </h1>
+           <p className="text-gray-400">
+             {isEditing ? 'Editando propuesta existente' : 'Editor de contenido estilo Notion para el sistema de aprobación'}
+           </p>
+           {isEditing && (
+             <div className="mt-2 p-2 bg-blue-900/20 border border-blue-500 rounded-lg">
+               <span className="text-blue-300 text-sm">✏️ Modo edición activo</span>
+             </div>
+           )}
+         </div>
 
         {/* Editor principal */}
         <div
@@ -559,29 +607,42 @@ export default function NotionEditor({
         {selectedBlockId && (
           <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#1a1a1a] border border-[#444] rounded-lg shadow-2xl p-2 z-40">
             <div className="flex items-center space-x-2">
+              {/* Botón de Guardar con ícono de diskette */}
               <button
                 onClick={() => setShowConfigModal(true)}
-                className="group relative p-2 text-[#FFD447] hover:text-[#FFC437] transition-colors"
+                className="group relative overflow-hidden p-3 text-[#FFD447] hover:text-[#FFC437] transition-all duration-300 ease-out bg-[#1a1a1a] hover:bg-[#2a2a2a] rounded-lg border border-transparent hover:border-[#FFD447]/30 min-w-[40px]"
                 title="Configurar y Guardar"
               >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h-1v5.586l-2.293-2.293z"/>
+                {/* Ícono de diskette */}
+                <svg className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                  <path d="M14 2v6h6"/>
+                  <path d="M16 13H8"/>
+                  <path d="M16 17H8"/>
+                  <path d="M10 9H8"/>
                 </svg>
-                <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-[#1a1a1a] text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-                  Configurar y Guardar
-                </span>
+                
+                {/* Descripción que aparece dentro del botón */}
+                <div className="absolute inset-0 flex items-center justify-center bg-[#FFD447] text-[#1a1a1a] font-medium text-xs opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform scale-95 group-hover:scale-100">
+                  <span className="whitespace-nowrap text-center">Guardar</span>
+                </div>
               </button>
+              
+              {/* Botón de Deseleccionar */}
               <button
                 onClick={() => setSelectedBlockId(null)}
-                className="group relative p-2 text-gray-400 hover:text-white transition-colors"
+                className="group relative overflow-hidden p-3 text-gray-400 hover:text-white transition-all duration-300 ease-out bg-[#1a1a1a] hover:bg-[#2a2a2a] rounded-lg border border-transparent hover:border-gray-400/30 min-w-[40px]"
                 title="Deseleccionar"
               >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/>
+                {/* Ícono X */}
+                <svg className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
-                <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-[#1a1a1a] text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-                  Deseleccionar
-                </span>
+                
+                {/* Descripción que aparece dentro del botón */}
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-400 text-[#1a1a1a] font-medium text-xs opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out transform scale-95 group-hover:scale-100">
+                  <span className="whitespace-nowrap text-center">Deseleccionar</span>
+                </div>
               </button>
             </div>
           </div>
@@ -594,36 +655,19 @@ export default function NotionEditor({
               <div className="p-6">
                                  <h3 className="text-xl font-semibold text-white mb-4">Configurar Propuesta</h3>
                  
-                 <div className="space-y-4">
-                   {/* Título */}
-                   <div>
-                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                       Título de la Propuesta 
-                       <span className="text-xs text-gray-500 ml-2">(Independiente del contenido)</span>
-                     </label>
-                     <input
-                       type="text"
-                       value={proposalMetadata.title}
-                       onChange={(e) => setProposalMetadata(prev => ({ ...prev, title: e.target.value }))}
-                       className="w-full bg-[#2a2a2a] border border-[#444] rounded px-3 py-2 text-white"
-                       placeholder="Título único para la propuesta..."
-                     />
-                   </div>
-
-                   {/* Descripción */}
-                   <div>
-                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                       Descripción de la Propuesta
-                       <span className="text-xs text-gray-500 ml-2">(Independiente del contenido)</span>
-                     </label>
-                     <textarea
-                       value={proposalMetadata.description}
-                       onChange={(e) => setProposalMetadata(prev => ({ ...prev, description: e.target.value }))}
-                       className="w-full bg-[#2a2a2a] border border-[#444] rounded px-3 py-2 text-white resize-none"
-                       rows={3}
-                       placeholder="Descripción única de la propuesta..."
-                     />
-                   </div>
+                                 <div className="space-y-4">
+                  {/* Información automática */}
+                  <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">i</span>
+                      </div>
+                      <h4 className="text-blue-300 font-medium">Información Automática</h4>
+                    </div>
+                    <p className="text-blue-200 text-sm">
+                      El título y descripción se obtienen automáticamente del primer bloque (Título) y segundo bloque (Subtítulo) del contenido.
+                    </p>
+                  </div>
 
                   {/* Categoría */}
                   <div>
@@ -647,13 +691,82 @@ export default function NotionEditor({
                       onChange={(e) => setProposalMetadata(prev => ({ ...prev, targetHierarchy: parseInt(e.target.value) }))}
                       className="w-full bg-[#2a2a2a] border border-[#444] rounded px-3 py-2 text-white"
                     >
-                      <option value={6}>Acólito (Nivel 6)</option>
-                      <option value={5}>Iniciado (Nivel 5)</option>
-                      <option value={4}>Aprendiz (Nivel 4)</option>
-                      <option value={3}>Padawan (Nivel 3)</option>
-                      <option value={2}>Caballero (Nivel 2)</option>
-                      <option value={1}>Maestro (Nivel 1)</option>
+                      <option value={1} className="flex items-center space-x-2">
+                        <span className="inline-flex items-center space-x-2">
+                          <div className="w-5 h-5 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">1</span>
+                          </div>
+                          <span>Iniciado (Nivel 1)</span>
+                        </span>
+                      </option>
+                      <option value={2} className="flex items-center space-x-2">
+                        <span className="inline-flex items-center space-x-2">
+                          <div className="w-5 h-5 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">2</span>
+                          </div>
+                          <span>Acólito (Nivel 2)</span>
+                        </span>
+                      </option>
+                      <option value={3} className="flex items-center space-x-2">
+                        <span className="inline-flex items-center space-x-2">
+                          <div className="w-5 h-5 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">3</span>
+                          </div>
+                          <span>Warrior (Nivel 3)</span>
+                        </span>
+                      </option>
+                      <option value={4} className="flex items-center space-x-2">
+                        <span className="inline-flex items-center space-x-2">
+                          <div className="w-5 h-5 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">4</span>
+                          </div>
+                          <span>Lord (Nivel 4)</span>
+                        </span>
+                      </option>
+                      <option value={5} className="flex items-center space-x-2">
+                        <span className="inline-flex items-center space-x-2">
+                          <div className="w-5 h-5 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">5</span>
+                          </div>
+                          <span>Darth (Nivel 5)</span>
+                        </span>
+                      </option>
+                      <option value={6} className="flex items-center space-x-2">
+                        <span className="inline-flex items-center space-x-2">
+                          <div className="w-5 h-5 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">6</span>
+                          </div>
+                          <span>Maestro (Nivel 6)</span>
+                        </span>
+                      </option>
                     </select>
+                    
+                    {/* Vista previa de la insignia seleccionada */}
+                    <div className="mt-3 flex items-center space-x-3 p-3 bg-[#1a1a1a] border border-[#444] rounded-lg">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        proposalMetadata.targetHierarchy === 1 ? 'bg-gradient-to-br from-green-400 to-green-600' :
+                        proposalMetadata.targetHierarchy === 2 ? 'bg-gradient-to-br from-yellow-400 to-yellow-600' :
+                        proposalMetadata.targetHierarchy === 3 ? 'bg-gradient-to-br from-orange-400 to-orange-600' :
+                        proposalMetadata.targetHierarchy === 4 ? 'bg-gradient-to-br from-purple-400 to-purple-600' :
+                        proposalMetadata.targetHierarchy === 5 ? 'bg-gradient-to-br from-red-500 to-red-700' :
+                        'bg-gradient-to-br from-gray-500 to-gray-700'
+                      }`}>
+                        <span className="text-white text-sm font-bold">{proposalMetadata.targetHierarchy}</span>
+                      </div>
+                      <div>
+                        <div className="text-white font-medium">
+                          {proposalMetadata.targetHierarchy === 1 ? 'Iniciado' :
+                           proposalMetadata.targetHierarchy === 2 ? 'Acólito' :
+                           proposalMetadata.targetHierarchy === 3 ? 'Warrior' :
+                           proposalMetadata.targetHierarchy === 4 ? 'Lord' :
+                           proposalMetadata.targetHierarchy === 5 ? 'Darth' :
+                           'Maestro'}
+                        </div>
+                        <div className="text-gray-400 text-sm">
+                          Nivel {proposalMetadata.targetHierarchy}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -664,21 +777,52 @@ export default function NotionEditor({
                   >
                     Cancelar
                   </button>
-                  <button
-                                         onClick={() => {
-                       if (proposalMetadata.title.trim() && proposalMetadata.description.trim()) {
+                                     <button
+                     onClick={() => {
+                       // Validar que existan los bloques obligatorios
+                       const hasTitle = blocks.some(b => b.type === 'heading' && b.content.trim());
+                       const hasSubtitle = blocks.some(b => b.type === 'subheading' && b.content.trim());
+                       
+                       if (!hasTitle) {
+                         alert('Debes tener al menos un bloque de tipo "Título" con contenido.');
+                         return;
+                       }
+                       
+                       if (!hasSubtitle) {
+                         alert('Debes tener al menos un bloque de tipo "Subtítulo" con contenido.');
+                         return;
+                       }
+                       
+                       // Obtener título y descripción automáticamente de los bloques
+                       const titleBlock = blocks.find(b => b.type === 'heading');
+                       const subtitleBlock = blocks.find(b => b.type === 'subheading');
+                       
+                       if (titleBlock && subtitleBlock) {
+                         // Actualizar metadata con el contenido de los bloques
+                         const updatedMetadata = {
+                           ...proposalMetadata,
+                           title: titleBlock.content.trim(),
+                           description: subtitleBlock.content.trim()
+                         };
+                         
                          // Convertir bloques al formato del sistema
                          const convertedBlocks = blocks.map(convertBlockToContentBlock);
-                         onSave?.(convertedBlocks, proposalMetadata);
+                         
+                         if (isEditing && onUpdate) {
+                           onUpdate(convertedBlocks, updatedMetadata);
+                         } else if (onSave) {
+                           onSave(convertedBlocks, updatedMetadata);
+                         }
+                         
                          setShowConfigModal(false);
                        } else {
-                         alert('Por favor completa el título y la descripción antes de guardar.');
+                         alert('Error: No se pudieron obtener el título y subtítulo de los bloques.');
                        }
                      }}
-                    className="px-4 py-2 bg-[#FFD447] text-[#1a1a1a] rounded hover:bg-[#FFC437] transition-colors font-medium"
-                  >
-                    Guardar Propuesta
-                  </button>
+                     className="px-4 py-2 bg-[#FFD447] text-[#1a1a1a] rounded hover:bg-[#FFC437] transition-colors font-medium"
+                   >
+                                           {isEditing ? 'Actualizar Propuesta' : 'Guardar Propuesta'}
+                   </button>
                 </div>
               </div>
             </div>

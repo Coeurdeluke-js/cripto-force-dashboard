@@ -83,6 +83,7 @@ export default function NotionBlock({
   const [editContent, setEditContent] = useState(content);
   const [showMenu, setShowMenu] = useState(false);
   const [showTypeMenu, setShowTypeMenu] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -142,6 +143,64 @@ export default function NotionBlock({
 
   const handleBlur = () => {
     handleSave();
+  };
+
+  const handleLocalImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validar tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor selecciona un archivo de imagen válido.');
+      return;
+    }
+
+    // Validar tamaño del archivo (máximo 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('La imagen es demasiado grande. Máximo 5MB permitido.');
+      return;
+    }
+
+    setIsUploading(true);
+
+    const reader = new FileReader();
+    
+    reader.onload = (event) => {
+      try {
+        const result = event.target?.result as string;
+        if (result) {
+          setEditContent(result);
+          onUpdate(id, result, metadata);
+          console.log('Imagen cargada exitosamente:', file.name);
+        } else {
+          throw new Error('No se pudo leer el archivo');
+        }
+      } catch (error) {
+        console.error('Error al procesar imagen:', error);
+        alert('Error al procesar la imagen. Intenta con otra imagen.');
+      } finally {
+        setIsUploading(false);
+      }
+    };
+
+    reader.onerror = () => {
+      console.error('Error en FileReader');
+      alert('Error al leer el archivo. Intenta con otra imagen.');
+      setIsUploading(false);
+    };
+
+    reader.onabort = () => {
+      console.log('Lectura del archivo cancelada');
+      setIsUploading(false);
+    };
+
+    try {
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error al iniciar lectura:', error);
+      alert('Error al procesar la imagen. Intenta con otra imagen.');
+      setIsUploading(false);
+    }
   };
 
   const renderContent = () => {
@@ -281,27 +340,22 @@ export default function NotionBlock({
                 {/* Carga local */}
                 <div>
                   <label className="block text-xs text-gray-400 mb-1">Cargar desde tu computadora:</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                          const result = event.target?.result as string;
-                          setEditContent(result);
-                          onUpdate(id, result, metadata);
-                        };
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                    className="w-full bg-[#2a2a2a] border border-[#444] rounded px-3 py-2 text-white text-sm cursor-pointer"
-                    style={{
-                      backgroundImage: 'none',
-                      background: '#2a2a2a'
-                    }}
-                  />
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleLocalImageUpload}
+                      className="w-full bg-[#2a2a2a] border border-[#444] rounded px-3 py-2 text-white text-sm cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-[#FFD447] file:text-[#1a1a1a] hover:file:bg-[#FFC437]"
+                    />
+                    {isUploading && (
+                      <div className="absolute inset-0 bg-[#2a2a2a]/80 rounded flex items-center justify-center">
+                        <div className="text-[#FFD447] text-sm">Cargando...</div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-xs text-gray-400 mt-1">
+                    Formatos: JPG, PNG, GIF, WebP • Máximo: 5MB
+                  </div>
                 </div>
                 
                 <div className="text-xs text-gray-400">
@@ -311,14 +365,28 @@ export default function NotionBlock({
             ) : (
               <div onClick={handleClick} className="cursor-pointer">
                 {editContent ? (
-                  <img 
-                    src={editContent} 
-                    alt="Imagen" 
-                    className="max-w-full rounded-lg border border-[#444]"
-                    onError={(e) => {
-                      e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbiBubyBlbmNvbnRyYWRhPC90ZXh0Pjwvc3ZnPg==';
-                    }}
-                  />
+                  <div className="relative">
+                    <img 
+                      src={editContent} 
+                      alt="Imagen" 
+                      className="max-w-full rounded-lg border border-[#444]"
+                      onError={(e) => {
+                        // Mostrar mensaje de error más claro
+                        const imgElement = e.currentTarget;
+                        imgElement.style.display = 'none';
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'p-4 bg-red-900/20 border border-red-500 rounded-lg text-center';
+                        errorDiv.innerHTML = `
+                          <div class="text-red-400 text-sm mb-2">⚠️ Error al cargar imagen</div>
+                          <div class="text-red-300 text-xs">${editContent.length > 100 ? 'URL muy larga o inválida' : 'Verifica la URL o archivo'}</div>
+                          <button class="mt-2 px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700" onclick="this.parentElement.previousElementSibling.style.display='block';this.parentElement.remove()">
+                            Reintentar
+                          </button>
+                        `;
+                        imgElement.parentNode?.insertBefore(errorDiv, imgElement.nextSibling);
+                      }}
+                    />
+                  </div>
                 ) : (
                   <div className="text-gray-400 italic">Imagen no especificada</div>
                 )}
@@ -545,16 +613,16 @@ export default function NotionBlock({
       }`}
       onClick={() => onSelect(id)}
     >
-      {/* Handle de Drag & Drop */}
-      <div
-        {...attributes}
-        {...listeners}
-        className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-grab active:cursor-grabbing ${
-          isDragging ? 'opacity-100' : ''
-        }`}
-      >
-        <GripVertical size={16} className="text-gray-400 hover:text-[#FFD447]" />
-      </div>
+             {/* Handle de Drag & Drop */}
+       <div
+         {...attributes}
+         {...listeners}
+         className={`absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-grab active:cursor-grabbing ${
+           isDragging ? 'opacity-100' : ''
+         }`}
+       >
+         <GripVertical size={16} className="text-gray-400 hover:text-[#FFD447]" />
+       </div>
 
       {/* Botón de menú del bloque */}
       <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">

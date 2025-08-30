@@ -8,7 +8,7 @@ export interface TribunalProposal {
   id: string;
   title: string;
   description: string;
-  category: 'theoretical' | 'practical' | 'checkpoint';
+  category: 'theoretical' | 'practical' | 'checkpoint' | 'edit_approved_content' | 'delete_approved_content';
   targetHierarchy: number;
   content: ContentBlock[];
   authorId: string;
@@ -30,6 +30,7 @@ export interface TribunalProposal {
     module1: string;
     module2: string;
   };
+  originalProposalId?: string; // Para solicitudes de edición/eliminación de contenido aprobado
 }
 
 const STORAGE_KEY = 'tribunal_proposals';
@@ -100,16 +101,24 @@ export function useProposals() {
   };
 
   // Actualizar propuesta existente
-  const updateProposal = (id: string, updates: Partial<TribunalProposal>) => {
-    const updatedProposals = proposals.map(proposal =>
-      proposal.id === id
-        ? { ...proposal, ...updates, updatedAt: new Date() }
+  const updateProposal = (id: string, updatedProposal: Partial<TribunalProposal>) => {
+    const updatedProposals = proposals.map(proposal => 
+      proposal.id === id 
+        ? { 
+            ...proposal, 
+            ...updatedProposal, 
+            updatedAt: new Date() 
+          }
         : proposal
     );
     
     setProposals(updatedProposals);
     saveProposals(updatedProposals);
+    
+    return updatedProposals.find(p => p.id === id);
   };
+
+
 
   // Eliminar propuesta
   const deleteProposal = (id: string) => {

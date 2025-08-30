@@ -9,6 +9,9 @@ import NotionEditor from '@/components/tribunal/NotionEditor';
 import BackButton from '@/components/ui/BackButton';
 import { ContentBlock } from '@/lib/tribunal/types';
 import { useProposals, TribunalProposal } from '@/lib/tribunal/hooks/useProposals';
+import EnhancedVotingSystem from '@/components/tribunal/EnhancedVotingSystem';
+import ApprovedContentManager from '@/components/tribunal/ApprovedContentManager';
+import { getTotalSystemUsers } from '@/lib/tribunal/system-users';
 
 interface TribunalStats {
   propuestasPendientes: number;
@@ -18,7 +21,7 @@ interface TribunalStats {
 }
 
 // Componente para mostrar la lista de propuestas
-function ProposalsList() {
+function ProposalsList({ onEditProposal }: { onEditProposal: (proposal: any) => void }) {
   const { proposals, deleteProposal, submitProposal, createProposal, clearAllProposals } = useProposals();
   const { userData } = useSafeAuth();
 
@@ -75,6 +78,34 @@ function ProposalsList() {
                </div>
             </div>
             <div className="flex items-center space-x-2">
+              {/* Botones para el autor de la propuesta */}
+              {proposal.authorId === userData?.id && (
+                <>
+                  {/* Editar propuesta (solo si no está aprobada) */}
+                  {proposal.status !== 'approved' && (
+                    <button
+                      onClick={() => onEditProposal(proposal)}
+                      className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      title="Editar propuesta"
+                    >
+                      <Edit size={16} />
+                    </button>
+                  )}
+                  
+                  {/* Eliminar propuesta (solo si es borrador o pendiente) */}
+                  {(proposal.status === 'draft' || proposal.status === 'pending') && (
+                    <button
+                      onClick={() => handleDelete(proposal.id)}
+                      className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                      title="Eliminar"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
+                </>
+              )}
+              
+              {/* Botones para propuestas en borrador */}
               {proposal.status === 'draft' && (
                 <>
                   <button
@@ -101,29 +132,21 @@ function ProposalsList() {
   );
 }
 
-// Componente para el sistema de votación
-function VotingSystem() {
-  const { proposals, approveProposal, rejectProposal } = useProposals();
-  const { userData } = useSafeAuth();
+// Componente para el sistema de votación mejorado
+function VotingSystem({ onEditProposal }: { onEditProposal: (proposal: any) => void }) {
+  const { proposals } = useProposals();
   
   // Solo mostrar propuestas pendientes para votación
   const pendingProposals = proposals.filter(p => p.status === 'pending');
   
-  const handleApprove = (id: string) => {
-    if (confirm('¿Estás seguro de que quieres APROBAR esta propuesta?')) {
-      approveProposal(id, userData?.id || 'default', userData?.email || 'Maestro');
-      alert('Propuesta aprobada. Se requiere aprobación unánime de todos los Maestros.');
-    }
+  const handleVote = (vote: 'approve' | 'reject') => {
+    // La lógica de votación se maneja en EnhancedVotingSystem
+    console.log('Voto:', vote);
   };
-  
-  const handleReject = (id: string) => {
-    const reason = prompt('¿Por qué rechazas esta propuesta? (Motivo obligatorio)');
-    if (reason && reason.trim()) {
-      rejectProposal(id, userData?.id || 'default', userData?.email || 'Maestro', reason);
-      alert('Propuesta rechazada. El autor será notificado del motivo.');
-    } else if (reason !== null) {
-      alert('Debes proporcionar un motivo para rechazar la propuesta.');
-    }
+
+  const handleEdit = (proposal: any) => {
+    // Implementar edición de propuesta
+    console.log('Editar propuesta:', proposal.id);
   };
   
   if (pendingProposals.length === 0) {
@@ -139,7 +162,7 @@ function VotingSystem() {
   }
   
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {pendingProposals.map((proposal) => (
         <div key={proposal.id} className="bg-[#1a1a1a] border border-[#333] rounded-lg p-6">
           <div className="space-y-4">
@@ -201,7 +224,7 @@ function VotingSystem() {
                               <img 
                                 src={block.content} 
                                 alt="Imagen de la propuesta"
-                                className="max-w-full h-auto rounded-lg border border-[#444]"
+                                className="text-sm text-gray-400"
                                 style={{
                                   maxHeight: '300px',
                                   objectFit: 'contain'
@@ -229,30 +252,12 @@ function VotingSystem() {
               </div>
             </div>
             
-            {/* Botones de votación */}
-            <div className="flex items-center justify-center space-x-4 pt-4 border-t border-[#333]">
-              <button
-                onClick={() => handleApprove(proposal.id)}
-                className="px-8 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center space-x-2"
-              >
-                <CheckCircle size={20} />
-                <span>APROBAR</span>
-              </button>
-              
-              <button
-                onClick={() => handleReject(proposal.id)}
-                className="px-8 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center space-x-2"
-              >
-                <XCircle size={20} />
-                <span>RECHAZAR</span>
-              </button>
-            </div>
-            
-            {/* Información de votación */}
-            <div className="text-center text-sm text-gray-500">
-              <p>Esta propuesta requiere aprobación unánime de todos los Maestros activos</p>
-              <p className="mt-1">Tu voto será registrado y visible para otros Maestros</p>
-            </div>
+            {/* Sistema de votación mejorado */}
+            <EnhancedVotingSystem 
+              proposal={proposal}
+              onVote={handleVote}
+              onEdit={onEditProposal}
+            />
           </div>
         </div>
       ))}
@@ -497,8 +502,9 @@ function RejectedProposals() {
 
 export default function TribunalImperialPage() {
   const { userData, loading, isReady } = useSafeAuth();
-  const { proposals, clearAllProposals, createProposal } = useProposals();
-  const [activeTab, setActiveTab] = useState<'overview' | 'propuestas' | 'crear' | 'votacion' | 'aprobados' | 'rechazados'>('overview');
+  const { proposals, clearAllProposals, createProposal, updateProposal } = useProposals();
+  const [activeTab, setActiveTab] = useState<'overview' | 'propuestas' | 'crear' | 'votacion' | 'aprobados' | 'rechazados' | 'gestion'>('overview');
+  const [editingProposal, setEditingProposal] = useState<any>(null);
   const [stats, setStats] = useState<TribunalStats>({
     propuestasPendientes: 0,
     propuestasAprobadas: 0,
@@ -516,12 +522,29 @@ export default function TribunalImperialPage() {
     const approvedCount = proposals.filter(p => p.status === 'approved').length;
     const rejectedCount = proposals.filter(p => p.status === 'rejected').length;
     
-    setStats({
-      propuestasPendientes: pendingCount,
-      propuestasAprobadas: approvedCount,
-      propuestasRechazadas: rejectedCount,
-              maestrosActivos: 2 // Solo Darth Luke y Darth Nihilus son Maestros
-    });
+    // Cargar estadísticas de usuarios del sistema de forma asíncrona
+    const loadUserStats = async () => {
+      try {
+        const totalUsers = await getTotalSystemUsers();
+        setStats({
+          propuestasPendientes: pendingCount,
+          propuestasAprobadas: approvedCount,
+          propuestasRechazadas: rejectedCount,
+          maestrosActivos: totalUsers
+        });
+      } catch (error) {
+        console.error('Error al cargar estadísticas de usuarios:', error);
+        // Fallback a estadísticas básicas
+        setStats({
+          propuestasPendientes: pendingCount,
+          propuestasAprobadas: approvedCount,
+          propuestasRechazadas: rejectedCount,
+          maestrosActivos: 0
+        });
+      }
+    };
+
+    loadUserStats();
   }, [userData, isReady, proposals]);
 
   // Si no tiene acceso, no renderizar nada
@@ -544,6 +567,35 @@ export default function TribunalImperialPage() {
   const handlePreviewContent = (content: ContentBlock[]) => {
     console.log('Vista previa:', content);
     // La vista previa se maneja internamente en el ContentEditor
+  };
+
+  const handleEditProposal = (proposal: any) => {
+    setEditingProposal(proposal);
+    setActiveTab('crear');
+  };
+
+  const handleUpdateProposal = (blocks: any[], metadata: any) => {
+    if (editingProposal) {
+      const updatedProposal = {
+        ...editingProposal,
+        content: blocks,
+        title: metadata.title,
+        description: metadata.description,
+        category: metadata.category,
+        targetHierarchy: metadata.targetHierarchy,
+        updatedAt: new Date().toISOString()
+      };
+      
+      updateProposal(editingProposal.id, updatedProposal);
+      setEditingProposal(null);
+      setActiveTab('propuestas');
+      alert('Propuesta actualizada exitosamente');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingProposal(null);
+    setActiveTab('propuestas');
   };
 
   return (
@@ -585,7 +637,8 @@ export default function TribunalImperialPage() {
             { id: 'crear', label: 'Crear', icon: <Plus size={20} /> },
             { id: 'votacion', label: 'Votación', icon: <Users size={20} /> },
             { id: 'aprobados', label: 'Aprobados', icon: <CheckCircle size={20} /> },
-            { id: 'rechazados', label: 'Rechazados', icon: <XCircle size={20} /> }
+            { id: 'rechazados', label: 'Rechazados', icon: <XCircle size={20} /> },
+            { id: 'gestion', label: 'Gestión', icon: <Edit size={20} /> }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -738,22 +791,34 @@ export default function TribunalImperialPage() {
               </button>
             </div>
             
-            <ProposalsList />
+            <ProposalsList onEditProposal={handleEditProposal} />
           </div>
         )}
 
         {/* TAB: Crear */}
         {activeTab === 'crear' && (
           <div className="space-y-6">
-            <div className="flex items-center space-x-4 mb-6">
-              <button
-                onClick={() => setActiveTab('propuestas')}
-                className="flex items-center p-2 text-gray-400 hover:text-white hover:bg-[#333] rounded-lg transition-colors"
-              >
-                <ArrowLeft className="mr-2" />
-                Volver
-              </button>
-              <h2 className="text-2xl font-bold text-[#FFD700]">Creador de Contenido</h2>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => setActiveTab('propuestas')}
+                  className="flex items-center p-2 text-gray-400 hover:text-white hover:bg-[#333] rounded-lg transition-colors"
+                >
+                  <ArrowLeft className="mr-2" />
+                  Volver
+                </button>
+                <h2 className="text-2xl font-bold text-[#FFD700]">
+                  {editingProposal ? 'Editar Propuesta' : 'Creador de Contenido'}
+                </h2>
+              </div>
+              {editingProposal && (
+                <button
+                  onClick={handleCancelEdit}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  Cancelar Edición
+                </button>
+              )}
             </div>
             
             {/* Editor de Contenido */}
@@ -761,9 +826,8 @@ export default function TribunalImperialPage() {
               <NotionEditor
                 onBlocksChange={(blocks) => {
                   console.log('Bloques del editor:', blocks);
-                  // Aquí se procesarían los bloques para crear la propuesta
                 }}
-                onSave={(blocks, metadata) => {
+                onSave={editingProposal ? handleUpdateProposal : (blocks, metadata) => {
                   console.log('Guardando propuesta con bloques:', blocks);
                   console.log('Metadata de la propuesta:', metadata);
                   
@@ -834,6 +898,8 @@ export default function TribunalImperialPage() {
                     }, 3000);
                   }
                 }}
+                isEditing={!!editingProposal}
+                initialBlocks={editingProposal?.content || []}
               />
             </div>
           </div>
@@ -849,7 +915,7 @@ export default function TribunalImperialPage() {
               </div>
             </div>
             
-            <VotingSystem />
+            <VotingSystem onEditProposal={handleEditProposal} />
           </div>
         )}
 
@@ -878,6 +944,20 @@ export default function TribunalImperialPage() {
             </div>
             
             <RejectedProposals />
+          </div>
+        )}
+
+        {/* TAB: Gestión de Contenido Aprobado */}
+        {activeTab === 'gestion' && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-[#FFD700]">Gestión de Contenido Publicado</h2>
+              <div className="text-sm text-gray-400">
+                Solicitar edición o eliminación de contenido ya disponible en el carrusel
+              </div>
+            </div>
+            
+            <ApprovedContentManager onEditApprovedContent={handleEditProposal} />
           </div>
         )}
       </div>

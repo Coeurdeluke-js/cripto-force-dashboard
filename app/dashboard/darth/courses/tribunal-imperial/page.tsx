@@ -6,6 +6,7 @@ import { useSafeAuth } from '@/context/AuthContext';
 import { canUserAccessTribunal } from '@/lib/tribunal/permissions';
 import ContentEditor from '@/components/tribunal/ContentEditor';
 import { ContentBlock } from '@/lib/tribunal/types';
+import { getTotalSystemUsers } from '@/lib/tribunal/system-users';
 
 interface TribunalStats {
   propuestasPendientes: number;
@@ -29,13 +30,29 @@ export default function TribunalImperialPage() {
       return;
     }
 
-    // Simular carga de estadísticas
-    setStats({
-      propuestasPendientes: 3,
-      propuestasAprobadas: 12,
-      propuestasRechazadas: 2,
-              maestrosActivos: 2
-    });
+    // Cargar estadísticas de usuarios del sistema de forma asíncrona
+    const loadUserStats = async () => {
+      try {
+        const totalUsers = await getTotalSystemUsers();
+        setStats({
+          propuestasPendientes: 3,
+          propuestasAprobadas: 12,
+          propuestasRechazadas: 2,
+          maestrosActivos: totalUsers
+        });
+      } catch (error) {
+        console.error('Error al cargar estadísticas de usuarios:', error);
+        // Fallback a estadísticas básicas
+        setStats({
+          propuestasPendientes: 3,
+          propuestasAprobadas: 12,
+          propuestasRechazadas: 2,
+          maestrosActivos: 0
+        });
+      }
+    };
+
+    loadUserStats();
   }, [userData, isReady]);
 
   // Si no tiene acceso, no renderizar nada
